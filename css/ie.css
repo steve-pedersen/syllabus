@@ -1,0 +1,35 @@
+/* IE sortable */
+.sortable li {
+	height: 2em;
+	padding: 2px;
+}
+
+
+/* IE form group */
+.fg-nav-list li {
+	line-height: 1em;
+}
+li.fg-nav-item.active .deleteButtonRow {
+	padding-bottom: 5px;
+}
+
+/* IE tabs */
+.inline-block {
+    display: inline;
+    zoom: 1;
+}
+
+#syllabus .module_container {
+    clear: both;
+    zoom: 1;
+    height: auto;
+}
+
+#syllabus .module_title_bar {
+    height: 40px;
+    zoom: 1;
+}
+
+#syllabus .module_items_container {
+    zoom: 1;
+}

@@ -1,0 +1,19 @@
+/**
+ * Messages CSS
+ */
+
+.message {
+    font-size: 1em;
+    padding: .3em 1em;
+    line-height: 1.6em;
+    margin: .5em 0px;
+    border: 5px solid transparent;
+    border-radius: 7px;
+    -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;
+}
+
+.message.info { background-color: #d6e5ec; border-color: #ACD4E5; color: #005360; }
+.message.success { background-color: #daeec2; border-color: #bed6a1; color: #0F6F05; }
+.message.warn { background-color: #FFF4E3; border-color: #F9E7C5; color: #8F5E00; }
+.message.error { background-color: #FFE5E5; border-color: #FFD6D6; color: #9E3200; }

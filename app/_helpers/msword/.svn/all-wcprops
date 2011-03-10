@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/svn/syllabus/!svn/ver/76/source/includes/msword
+END
+Element.php
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element.php
+END
+Document.php
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/syllabus/!svn/ver/76/source/includes/msword/Document.php
+END
+DomUtils.php
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/syllabus/!svn/ver/51/source/includes/msword/DomUtils.php
+END
+HtmlParser.php
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/syllabus/!svn/ver/76/source/includes/msword/HtmlParser.php
+END
+HtmlHandler.php
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/syllabus/!svn/ver/76/source/includes/msword/HtmlHandler.php
+END
+IContributor.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/syllabus/!svn/ver/51/source/includes/msword/IContributor.php
+END
+Font.php
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/syllabus/!svn/ver/51/source/includes/msword/Font.php
+END
+Generator.php
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/syllabus/!svn/ver/51/source/includes/msword/Generator.php
+END

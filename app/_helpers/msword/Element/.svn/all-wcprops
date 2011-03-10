@@ -1,0 +1,161 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/syllabus/!svn/ver/76/source/includes/msword/Element
+END
+TableCellProperty.php
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/TableCellProperty.php
+END
+Style.php
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/Style.php
+END
+Run.php
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/Run.php
+END
+Section.php
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/Section.php
+END
+HyperLink.php
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/HyperLink.php
+END
+Paragraph.php
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/Paragraph.php
+END
+Annotation.php
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/Annotation.php
+END
+SubSection.php
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/SubSection.php
+END
+TableRow.php
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/TableRow.php
+END
+ListProperty.php
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/ListProperty.php
+END
+Text.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/Text.php
+END
+ListDefinition.php
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/ListDefinition.php
+END
+TableCell.php
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/syllabus/!svn/ver/76/source/includes/msword/Element/TableCell.php
+END
+Simple.php
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/Simple.php
+END
+TableProperty.php
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/TableProperty.php
+END
+Footer.php
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/Footer.php
+END
+ListLevel.php
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/ListLevel.php
+END
+RunProperty.php
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/RunProperty.php
+END
+SectionProperty.php
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/SectionProperty.php
+END
+ParagraphProperty.php
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/ParagraphProperty.php
+END
+List.php
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/List.php
+END
+TableRowProperty.php
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/TableRowProperty.php
+END
+InstructionText.php
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/InstructionText.php
+END
+CharacterData.php
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/CharacterData.php
+END
+Table.php
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/Table.php
+END
+Header.php
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/syllabus/!svn/ver/51/source/includes/msword/Element/Header.php
+END

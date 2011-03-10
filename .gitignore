@@ -1,0 +1,4 @@
+# ignore server specific config files and .htaccess files
+.htaccess
+app/config.php
+compiled/

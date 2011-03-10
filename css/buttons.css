@@ -1,0 +1,63 @@
+/* Button Styles */
+.button, .button_large {
+    color: #005787;
+    border: 1px solid #aaa;
+    padding: 4px 8px;
+    font-size: 1em;
+    text-decoration: none;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    background-color: #efefef;
+    background: -moz-linear-gradient(-90deg, #ffffff, #cccccc);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(1, #cccccc));
+    margin: 2px;
+}
+.button_large {
+    padding: 10px;
+    font-size: 1.2em;
+}
+.button:hover,
+.button:active,
+.button_large:hover,
+.button_large:focus
+{
+    border: 1px solid #666;
+    background: -moz-linear-gradient(-90deg, #ffffff, #b5c9e5);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ffffff), color-stop(1, #b5c9e5));
+}
+.button:active, .button_large:active {
+    background-color: #b5c9e5;
+    background: -moz-linear-gradient(-90deg, #b5c9e5, #ffffff);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #b5c9e5), color-stop(1, #ffffff));
+}
+.button_large span.icon {
+    width: 32px;
+    height: 32px;
+    margin-right: 5px;
+    background-image: url(../images/button_sprites.png);
+    background-repeat: no-repeat;
+    vertical-align: middle;
+}
+.button_large span.icon.add { background-position: 0px 0px; }
+.button_large span.icon.share { background-position: 0px -32px; }
+.button_large span.icon.print { background-position: 0px -64px; }
+.button_large span.icon.export { background-position: 0px -96px; }
+.button_large span.icon.expand { background-position: 0px -128px; }
+.button_large span.icon.collapse { background-position: 0px -160px; }
+.button_large span.icon.restore { background-position: 0px -192px; }
+.button_large span.icon.edit { background-position: 0px -224px; }
+.button_large span.icon.users { background-position: 0px -256px; }
+.button_large span.icon.system { background-position: 0px -288px; }
+.button_large span.icon.repository { background-position: 0px -320px; }
+.button_large span.icon.rss { background-position: 0px -352px; }
+
+.cancel_link {
+    margin-left: 10px;
+    color: #7c2e2e;
+    background-repeat: no-repeat;
+    background-position: 7px center;
+    border: none;
+}
+.cancel_link:hover, .cancel_link:focus, .cancel_link:active {
+    border: none;
+}

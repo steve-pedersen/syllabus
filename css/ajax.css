@@ -1,0 +1,11 @@
+#ajax_container {
+    background-color: #fff;
+    padding: 20px 40px;
+    text-align: left;    
+}
+#ajax_notification {
+    margin: .2em 0px;
+}
+#ajax_content {
+    text-align: left;
+}
