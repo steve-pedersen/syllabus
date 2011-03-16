@@ -17,7 +17,7 @@ class BaseController {
     /**
      * @var array Array of methods for which authentication is not necessary. Child methods should be added in the child controller's init() method
      */
-    protected $disable_auth_array = array('login', 'logout');
+    protected $disable_auth_array = array('shibboleth', 'logout', 'maintenance');
     
     /**
      * @var string Name of the method that will be called by the child controller (based on URL)
@@ -106,10 +106,7 @@ class BaseController {
         }
         
         if(!in_array($this->method_name, $this->disable_auth_array)) {
-            if(!Authenticate::isAuthenticated()) {
-                $this->method_name = 'login';
-                $return = false;
-            }
+            Authenticate::isAuthenticated();
         }
         
         $this->buildUserPermissions();
@@ -194,12 +191,6 @@ class BaseController {
      * Login
      */
     protected function login() {
-        $this->View->addNavLink('Login');
-        $this->View->page_title = 'Login';
-        $login = array();
-        $this->View->login = $this->mergePost($login);
-        $this->View->form_action = (CURRENT_URL == 'login') ? 'syllabus' : CURRENT_URL;
-        $this->View->parseTemplate('page_content', 'index/login.tpl.php');
     }
     
     
@@ -208,9 +199,60 @@ class BaseController {
      */
     protected function logout() {
         Authenticate::logout();
-        $_SESSION['messages'] = 'You have successfully logged out';
-        Utility::redirect('login');
     }
+	
+	
+	/**
+	 * Shibboleth landing page. This is the landing page for all Shibboleth requests.  This page parses the shibboleth return headers
+	 * and redirects to the appropriate page
+	 */
+	protected function shibboleth() {
+		if(false != Authenticate::login()) {
+			$this->Permissions->buildUserPermissions($_SERVER['HTTP_UID']);
+			$this->Permissions->setPermissionsToSession();
+			Utility::redirect($_GET['redirect']);
+		} else {
+			$this->View->page_title = 'Login Error';
+			$this->View->addNavLink('Login Error');
+		}
+	}
+	
+	
+	/**
+	 * Login to the sandbox account
+	 */
+	protected function sandbox() {
+		if(SANDBOX_ACCT_ENABLE) {
+			if(isset($_SESSION['user_id']) && $_SESSION['user_id'] != SANDBOX_ACCT_USER) {
+				$this->View->error_message = 'You are already logged in as ' . $_SESSION['user_fname'] . ' ' . $_SESSION['user_lname'] .'. You must logout to use the sandbox account.';
+				$this->View->parseTemplate('page_content', 'index/error.tpl.php');			
+			} else {
+				$_SESSION['user_id'] = 'sandbox';
+				$_SESSION['user_fname'] = 'Sandbox';
+				$_SESSION['user_lname'] = 'User';
+				$this->Permissions->buildUserPermissions(SANDBOX_ACCT_USER);
+				$this->Permissions->setPermissionsToSession();
+				Utility::redirect('syllabus');
+			}
+		} else {
+            $this->View->error_message = 'The sandbox account is not available on this server.';
+            $this->View->parseTemplate('page_content', 'index/error.tpl.php');			
+		}
+	}
+	
+	
+	/**
+	 * output the mainenance page
+	 */
+	protected function maintenance() {
+		if(MAINTENANCE_MODE) {
+			$this->View->page_title = "Scheduled Maintenance";
+			$this->View->maintenance_endtime = date('l M j, Y, g:i a T', strtotime(MAINTENANCE_ENDTIME));
+			$this->View->parseTemplate('page_content', 'index/maintenance.tpl.php');
+		} else {
+			$this->index();
+		}
+	}
 
     
 }

@@ -1,7 +1,6 @@
 <h1>My Syllabi</h1>
 
 {if $has_syllabi || $has_drafts_permission}
-
     <ul class="tabs" id="tabs_syllabi">
     {foreach name=tabs_year from=$syllabi item=ty key=tyk}
         {foreach name=tabs_sem from=$ty item=ts key=tsk}
@@ -73,7 +72,7 @@
                     <tbody>
                         {foreach name=drafts from=$drafts item=c key=id}
                         <tr>
-                            <td><input type="checkbox" name="drafts[]" id="draft-{$key}" class="drafts" value="{$c.syllabus_id}" /><label class="hideJS" for="draft-{$key}">Select this draft</label></td>
+                            <td><input type="checkbox" name="drafts[]" id="{$c.syllabus_id}" class="drafts" value="{$c.syllabus_id}" /><label class="hideJS" for="{$c.syllabus_id}">Select this draft</label></td>
                             <th scope="row"><a href="syllabus/view/{$c.syllabus_id}">{$c.syllabus_class_title}</a></th>
                         </tr>
                         {/foreach}

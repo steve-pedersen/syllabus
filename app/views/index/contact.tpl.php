@@ -4,8 +4,7 @@ Please use the contact form below to send a message to the Syllabus Team.  We wi
 
     
 <form action="{$smarty.const.CURRENT_URL}" method="post">
-    <input type="hidden" name="submit_token" value="{$smarty.const.SUBMIT_TOKEN}" />
-    <input type="hidden" name="return_url" value="contact" />
+    {$smarty.const.SUBMIT_TOKEN_HTML}
     
     <div class="label"><label for="name">Your Name</label></div>
     <div class="input"><input type="text" name="name" id="name" value="{$contact->name}" style="width: 300px;" /></div>
@@ -26,7 +25,7 @@ Please use the contact form below to send a message to the Syllabus Team.  We wi
     <div class="save_row">
         <div class="label">&nbsp;</div>
         <div class="input">
-            <input type="submit" name="command[doContactForm]" class="button" value="Send Message" />
+            <input type="submit" name="command[contactForm]" class="button" value="Send Message" />
             <a href="{$cancel}" class="cancel_link">Cancel</a>
         </div>
         <div style="clear: both;"></div>

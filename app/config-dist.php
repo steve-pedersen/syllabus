@@ -10,7 +10,17 @@
 define('ERROR_REPORTING_LEVEL', E_ERROR); /* set to E_ERROR for production environments */
 define('DEBUG_MODE', false); /* set to false for production environments */
 define('URL_VARS_KEY', 'url_vars_string'); /* this must match the name of the key that the mod_rewrite sends URL params under */
-define('CRON_ENABLED', true);
+define('DISABLE_CRON_SCRIPT', false); /* set to false for production environments */
+define('MAINTENANCE_MODE', false); /* puts the site into maintenance mode and serves up the maintenance page */
+define('MAINTENANCE_ENDTIME', '2/22/11 1pm'); /* time maintenance is set to end (mm/dd/yy hh:mm am/pm) */
+
+
+/**
+ * Sandbox Account
+ */
+define('SANDBOX_ACCT_ENABLE', true); /* set to false for production environments */
+define('SANDBOX_ACCT_USER', 'sandbox');
+define('SANDBOX_ACCT_PASS', 'MRM3eJaPPKlcScCp80AD');
 
 
 /**
@@ -30,7 +40,7 @@ define('BASEHREF', PROTOCOL . HOST . WEB_ROOT);
 define('SMARTY_LIB_DIR', '/usr/share/php/smarty/');
 define('SMARTY_CACHE_DIR', '/usr/share/php/smarty/cache/');
 define('SMARTY_CONFIGS_DIR', '/usr/share/php/smarty/configs/');
-define('SMARTY_TEMPLATES_C_DIR', '/usr/share/php/smarty/templates_c/syllabus/');
+define('SMARTY_TEMPLATES_C_DIR', '/usr/share/php/smarty/templates_c/');
 define('SMARTY_TEMPLATES_DIR', APP_ROOT . 'views/');
 
 
@@ -94,6 +104,14 @@ define('JS_PATHS', '
     js/jquery.tabs.js,
     js/syllabus.js,
 ');
+
+
+/**
+ * Shibboleth constants
+ */
+define('SHIB_IDP', 'https://idp-test.sfsu.edu');
+define('SHIB_DIR', 'https://' . $_SERVER['HTTP_HOST'] . WEB_ROOT . 'shibboleth');
+define('SHIB_SSO', 'https://' . $_SERVER['HTTP_HOST'] . WEB_ROOT . 'Shibboleth.sso');
 
 
 /**

@@ -10,7 +10,7 @@ class IndexModel extends BaseModel {
     /**
      * Submit the contact form
      */
-    public function doContactForm() {
+    public function contactForm() {
         $Mailer = new Mailer();
         $to = (isset($this->to) && !empty($this->to))
             ? $this->to
@@ -21,23 +21,28 @@ class IndexModel extends BaseModel {
             ? $this->subject
             : 'Message via Syllabus website';
         $Mailer->setSubject($subject);
-        $Mailer->setBody($this->body);
+		
+        // remove \r\n which get added via BaseModel::__set() and the mysqli->real_escape_string()
+        // this is pretty hackish ... need to change the sanitize so that it only runs before DB entry or have a way
+        // to prevent fields from being escaped
+        $body = preg_replace('!\\\r\\\n!', '', $this->body);
+        $Mailer->setBody($body);
         
-        if(count($Mailer->getErrors())) {
+        if(count($Mailer->getErrors()) > 0) {
             $return = false;
             foreach($Mailer->getErrors() as $k => $v) {
-                $this->error_messages[] = $v;
+                Messages::addMessage($v, 'error');
             }
         } else {
             if($Mailer->sendMail()) {
                 $return = true;
-                $this->success_messages[] = 'Your message has been sent successfully.';
+                Messages::addMessage('Your message has been sent successfully.', 'success');
             } else {
                 $return = false;
-                $this->error_messages[] = 'An unknown error occurred while attmepting to send your email.';
+                Messages::addMessage('An unknown error occurred while attmepting to send your email.', 'error');
             }
         }
-            
+        
         return $return;
     }
 

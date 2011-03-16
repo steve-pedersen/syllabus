@@ -25,28 +25,27 @@ class Authenticate {
         if(isset($_SESSION['user_id'])) {
             return true;
         } else {
-			self::logout();
-			/*
-			*/
-            return false;
+			$redirect = ($_GET['url_vars_string'] == 'login') ? 'syllabus' : $_GET['url_vars_string'];
+			Utility::redirect(SHIB_DIR . '?redirect=' . urlencode($redirect));
 		}
 	}
 
 	
     /**
      * Local login function.  Attempt to log a user in with the submitted credentials
+     * @return Boolean Returns true if login succeeds, false if it fails
      */
 	public static function login() {
-		
-		$id = $_POST['login_id'];
-		self::$User = new UsersModel;
-		
-		if(false !== ($user = self::$User->getUserById($id))) {
+		$U = new UsersModel();
+		if(false !== ($user = $U->getUserById($_SERVER['HTTP_UID']))) {
 			self::setSession($user);
+			$return = true;
 		} else {
-			echo('user not loaded');
-			exit;
+			Messages::addMessage('Your user does not exist in the Syllabus system.  Please <a href="contact">Contact the Syllabus Team</a> for more information.', 'error');
+			$return = false;
 		}
+		
+		return $return;
     }
 	
 
@@ -66,11 +65,13 @@ class Authenticate {
      * Logout function
      */
 	public function logout() {
-		unset($_SESSION['user_id']);
-		unset($_SESSION['user_fname']);
-		unset($_SESSION['user_lname']);
-		unset($_SESSION['user_email']);
-		unset($_SESSION['user_perms']);
+		if(isset($_SESSION)) {
+            session_destroy();
+            unset($_SESSION);
+        }
+		// Logout of Shibboleth
+		$url = SHIB_SSO . '/Logout?return=' .	urlencode(SHIB_IDP . '/idp/logout.jsp?returnURL=' . urlencode(BASEHREF));
+		Utility::redirect($url);
 	}
 
 

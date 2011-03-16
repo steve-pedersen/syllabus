@@ -6,7 +6,7 @@
 
     <div class="syllabus_content">
         <div id="syllabus_header_container">
-            <h1 id="syllabus_header_edit">{$page_header} <a href="syllabus/{$syllabus_id}" style="font-size: .6em; margin-left: 15px; vertical-align: middle;">[ Exit Edit Mode ]</a></h1>
+            <h1 id="syllabus_header_edit">{$page_header} <a href="syllabus/view/{$syllabus_id}" style="font-size: .6em; margin-left: 15px; vertical-align: middle;">[ Exit Edit Mode ]</a></h1>
             <div id="syllabus_global_controls">
                 <a href="" id="expand-collapse-all" class="enableJS expand-collapse-all button_large inline-block" rel="expand-collapse-all-modules"><span class="icon inline-block expand"></span><span class="text">Expand All</span></a>
                 <a href="syllabus/add_module/{$syllabus.syllabus_id}" id="add_module_link" class="button_large inline-block"><span class="icon inline-block add"></span>Add Module</a>

@@ -7,6 +7,8 @@
         Add an editor for this syllabus.
         <label for="user_email" style="margin-left: 50px;">SFSU email<label><input type="text" name="user_email" id="user_email" style="width: 200px;" />
         <input type="submit" name="command[addSyllabusEditor]" class="button" value="Add Editor" />
+        <!-- Hitting enter in IE will not submit the form if there is only one text field, so we conditionally add another one for IE and hide it -->
+        <!--[if IE]><input type="text" disabled="disabled" style="display: none;" /><![endif]-->
         </div>
     </div>
 </form>

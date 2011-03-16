@@ -3,8 +3,7 @@
 	border: none;
 }
 strong {
-	text-transform: uppercase;
-	font-size: .9em;
+	font-weight: bold;
 }
 abbr {
 	cursor: help;

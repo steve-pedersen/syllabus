@@ -5,13 +5,15 @@
 <base href="{$smarty.const.BASEHREF}" />
 
 {$css_includes}
-<!--[if lte IE 7]> <link href="assets/css/ie.css" type="text/css" rel="stylesheet" /> <![endif]-->
+<!--[if IE]><link href="css/ie.css" type="text/css" rel="stylesheet" /><![endif]-->
 {$js_includes}
 
 </head>
 
-
 <body>
+<!--[if IE 7]><div class="ie7"><![endif]-->
+<!--[if IE 8]><div class="ie8"><![endif]-->
+
 <div id="skiplinks"><a href="{$smarty.const.CURRENT_URL}#content-anchor">Skip to Content</a></div>
 
 <div id="header_container">
@@ -78,6 +80,8 @@ pageTracker._trackPageview();
 {/literal}
 <!-- End Analytics code -->
 
+<!--[if IE 7]></div><![endif]-->
+<!--[if IE 8]></div><![endif]-->
 
 </body>
 </html>
