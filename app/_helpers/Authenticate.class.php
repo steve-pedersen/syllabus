@@ -25,7 +25,7 @@ class Authenticate {
         if(isset($_SESSION['user_id'])) {
             return true;
         } else {
-			$redirect = (isset($_GET[URL_VARS_KEY]) && $_GET[URL_VARS_KEY] == 'login') ? 'syllabus' : $_GET[URL_VARS_KEY];
+			$redirect = (CURRENT_URL == 'login') ? 'syllabus' : CURRENT_URL;
 			Utility::redirect(SHIB_DIR . '?redirect=' . urlencode($redirect));
 		}
 	}

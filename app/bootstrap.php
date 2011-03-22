@@ -60,7 +60,7 @@ if(isset($_GET)) {
     if(isset($_GET[URL_VARS_KEY])) {
         $current_url .= $_GET[URL_VARS_KEY];
         $url_vars_array = explode('/', $_GET[URL_VARS_KEY]);
-        // unset($_GET[URL_VARS_KEY]);
+        unset($_GET[URL_VARS_KEY]);
     }    
     // set the name of the controller for this request
     if(isset($url_vars_array[0])) {

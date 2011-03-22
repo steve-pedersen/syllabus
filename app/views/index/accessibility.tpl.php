@@ -43,7 +43,7 @@ tactics, this site also employs the following accessibility measures:
 <ul>
     <li>All Syllabi can be loaded in a printer-friendly view which removes all non-critical elements from the page, thus greatly simplifying the content.</li>
     <li>Syllabi exported as Microsoft Word documents use our accessible Word Generator script to ensure accessibility</li>
-    <li>All Javascript and <abbr title="Asynchronous Javascript and XML">AJAX</abbr> controls include redundant, plain <abbr title="Hypertext Markup Language">HTML</abbr> controls for browswers with Javascript disabled.</li>
+    <li>All Javascript and <abbr title="Asynchronous Javascript and XML">AJAX</abbr> controls include redundant, plain <abbr title="Hypertext Markup Language">HTML</abbr> controls for browsers with Javascript disabled.</li>
 </ul>
 <div class="return_top"><a href="{$smarty.const.CURRENT_URL}#page">Return to Top</a></div>
 
