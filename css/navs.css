@@ -19,7 +19,7 @@ ul.nav li a {
 ul.nav li.no-link {
     color: #ddd;
     font-style: italic;
-    font-size: 1.1em;
+    font-size: 1em;
 }
 ul.nav li .arrow-point {
     display: block;

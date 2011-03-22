@@ -11,6 +11,13 @@
 </head>
 
 <body>
+	
+<!--[if lte IE 7]>
+<div class="message warn">
+You are using an outdated version of Internet Explorer.  For the best experience, please install the free
+<a href="http://windows.microsoft.com/en-us/internet-explorer/products/ie/home" class="popup">update for Internet Explorer</a>
+</div>
+	
 <!--[if IE 7]><div class="ie7"><![endif]-->
 <!--[if IE 8]><div class="ie8"><![endif]-->
 

@@ -4,7 +4,9 @@
 	{$smarty.const.SUBMIT_TOKEN_HTML}
 	<input type="hidden" name="syllabus_id" value="{$syllabus_id}" />
     <input type="hidden" name="module_type" value="general" />
-    
+   	<!-- Hitting enter in IE will not submit the form if there is only one text field, so we conditionally add another one for IE and hide it -->
+	<!--[if IE]><input type="text" disabled="disabled" style="display: none;" /><![endif]-->
+
     {if !$is_draft }
     <div class="label"><label for="syllabus_class_number">Class Number</label></div>
     <div class="input">{$syllabus.syllabus_class_number}</div>

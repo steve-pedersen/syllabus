@@ -216,6 +216,9 @@ class SyllabusController extends BaseController {
      */
     protected function edit_info() {
         if(false != ($syllabus = $this->load())) {
+			$syllabus['syllabus_phone'] = Utility::formatPhoneNumber($syllabus['syllabus_phone'], 'print');
+			$syllabus['syllabus_mobile'] = Utility::formatPhoneNumber($syllabus['syllabus_mobile'], 'print');
+			$syllabus['syllabus_fax'] = Utility::formatPhoneNumber($syllabus['syllabus_fax'], 'print');
             $this->View->syllabus = $syllabus;
             if($this->Permissions->canEditSyllabus($syllabus['syllabus_id'])) {
                 $this->View->addNavLink($syllabus['syllabus_class_number'], 'syllabus/view/' . $syllabus['syllabus_id']);

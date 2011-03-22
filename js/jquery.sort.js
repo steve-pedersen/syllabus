@@ -81,7 +81,7 @@ jQuery.fn.sort = function() {
                 url: basehref + form_action,
                 data: 'command[saveOrder]=Save+Syllabus&' + form_data + '&syllabus_id=' + syllabus_id,
                 type: 'POST',
-                dataType: 'json',
+                dataType: 'json'
             });
         }
     

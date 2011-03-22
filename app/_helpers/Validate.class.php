@@ -21,6 +21,7 @@ class Validate {
         'schedule_desc',
         'syllabus_class_desc',
         'syllabus_class_prereqs',
+        'syllabus_office_hours',
         'invite_message'
     );
     

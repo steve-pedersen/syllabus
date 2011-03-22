@@ -46,7 +46,13 @@ class AjaxResponse {
     */
    public function editSyllabus() {
         $syllabus = $this->Model->getSyllabusById($this->Model->syllabus_id);
+		// modify vars as necessary
+		$syllabus['syllabus_phone'] = Utility::formatPhoneNumber($syllabus['syllabus_phone'], 'print');
+		$syllabus['syllabus_mobile'] = Utility::formatPhoneNumber($syllabus['syllabus_mobile'], 'print');
+		$syllabus['syllabus_fax'] = Utility::formatPhoneNumber($syllabus['syllabus_fax'], 'print');		
         $this->View->syllabus = $syllabus;
+		$this->View->class_name = (preg_match('!^draft-!', $syllabus['syllabus_id'])) ? 'DRAFT' : $syllabus['syllabus_class_number'];
+		
         $this->View->parseTemplate('update_html', 'modules/general/item.tpl.php');
         $this->response['update_id'] = 'general_item_content';
         $this->response['update_method'] = 'replace_contents';

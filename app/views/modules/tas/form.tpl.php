@@ -5,6 +5,8 @@
 	<input type="hidden" name="syllabus_id" value="{$syllabus_id}" />
 	<input type="hidden" name="module_type" value="{$module.id}" />
 	<input type="hidden" name="item_id" value="{$item.ta_id}" />
+	<!-- Hitting enter in IE will not submit the form if there is only one text field, so we conditionally add another one for IE and hide it -->
+	<!--[if IE]><input type="text" disabled="disabled" style="display: none;" /><![endif]-->
 
     <div class="label"><label for="ta_name" style="padding-left: 20px;">Name</abbr></label></div>
     <div class="input"><input type="text" name="ta_name" id="ta_name" style="width: 200px;" value="{$item.ta_name}" /></div>

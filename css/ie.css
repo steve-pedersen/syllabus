@@ -1,4 +1,5 @@
 /*
+*/
  
 .sortable li {
 	height: 2em;
@@ -14,11 +15,22 @@ li.fg-nav-item.active .deleteButtonRow {
 }
 
 
-ul.nav li .arrow-point {
+ul.nav li .arrow-point, ul.nav li .arrow-border {
 	display: none;
+	margin: 0px;
+	padding: 0px;
+	width: 0px;
 }
-ul.nav li .arrow-border {
-	display: none;
+ul.nav li {
+	padding: 0px 5px 0px 5px;
+	margin: 0px;
+}
+ul.nav li a {
+	background-image: url(../images/ie_nav_bg.png);
+	background-repeat: no-repeat;
+	background-position: right center;
+	padding: 0px 25px 0px 0px;
+	margin: 0px;
 }
 
 
@@ -34,7 +46,6 @@ ul.nav li .arrow-border {
 #syllabus .module_items_container {
     zoom: 1;
 }
-*/
 #site_nav_container { background-color: #074474; }
 #admin_nav_container { background-color: #333; }
 
@@ -42,8 +53,9 @@ ul.nav li .arrow-border {
 	height: 0px;
 }
 
-.button_large { zoom: 1; }
+.ie7 .module_sort_controls .expand-source {
+	position: absolute;
+	top: 0px;
+}
 
-/*
-.ie7 ul.nav li .arrow-point, .ie7 ul.nav li .arrow-border { display: none; }
-*/
+.button_large { zoom: 1; }

@@ -15,7 +15,7 @@
 
     <tr>
         <th scope="row">{$i.ta_name}</th>
-        <td>{Utility->buildEmailLink p1=$i.ta_email}</td>
+        <td>{$i.ta_email}</td>
     </tr>
 
 {if $smarty.foreach.tas.last}
