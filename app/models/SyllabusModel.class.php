@@ -238,9 +238,11 @@ class SyllabusModel extends BaseModel {
 		// get the actual instructor for the class and replace the information in the array
 		foreach($student_syllabi as $key => $syllabus) {
 			$result = $this->getSyllabusById($syllabus['syllabus_id']);
-			foreach($result as $k => $v) {
-				if(strpos($k, 'user_') !== false) {
-					$student_syllabi[$key][$k] = $v;
+			if(is_array($result)) {
+				foreach($result as $k => $v) {
+					if(strpos($k, 'user_') !== false) {
+						$student_syllabi[$key][$k] = $v;
+					}
 				}
 			}
 		}
