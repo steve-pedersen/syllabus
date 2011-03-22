@@ -24,7 +24,7 @@
 
 {foreachelse}
     <tr>
-        <td colspan="4"
+        <td colspan="4">
             <div class="message error">
                 There are no Assignments for this syllabus.
             </div>

@@ -25,7 +25,7 @@ class Authenticate {
         if(isset($_SESSION['user_id'])) {
             return true;
         } else {
-			$redirect = ($_GET['url_vars_string'] == 'login') ? 'syllabus' : $_GET['url_vars_string'];
+			$redirect = (isset($_GET[URL_VARS_KEY]) && $_GET[URL_VARS_KEY] == 'login') ? 'syllabus' : $_GET[URL_VARS_KEY];
 			Utility::redirect(SHIB_DIR . '?redirect=' . urlencode($redirect));
 		}
 	}
@@ -69,8 +69,9 @@ class Authenticate {
             session_destroy();
             unset($_SESSION);
         }
+		
 		// Logout of Shibboleth
-		$url = SHIB_SSO . '/Logout?return=' .	urlencode(SHIB_IDP . '/idp/logout.jsp?returnURL=' . urlencode(BASEHREF));
+		$url = SHIB_IDP . '/idp/Logout';
 		Utility::redirect($url);
 	}
 

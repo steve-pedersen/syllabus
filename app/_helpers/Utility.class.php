@@ -25,7 +25,7 @@ class Utility {
      * @param string $url The URL to redirect to
      */
     public function redirect($url) {
-        $redirectUrl = (!preg_match('!^(https?://)?' . HOST . WEB_ROOT . '!', $url)) 
+        $redirectUrl = (!preg_match('!^(https?://)!', $url)) 
             ? BASEHREF . $url 
             : $url;
         header('Location: ' . $redirectUrl); exit;
