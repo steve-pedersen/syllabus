@@ -95,8 +95,9 @@ class SyllabusModel extends BaseModel {
 	 */
 	public function getSyllabusInstructor($syllabus_id) {
 		Validate::syllabus_id($syllabus_id);
-		$result = $this->query = sprintf("SELECT * FROM enrollment WHERE enroll_class_id='%s' AND enroll_role='instructor';", $syllabus_id);
-		return ($result['count'] > 0) ? $result['enroll_user_id'] : false;
+		$this->query = sprintf("SELECT * FROM enrollment WHERE enroll_class_id='%s' AND enroll_role='instructor';", $syllabus_id);
+		$result = $this->executeQuery();
+        return ($result['count'] > 0) ? $result['enroll_user_id'] : false;
 	}
     
     
