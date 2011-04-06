@@ -43,6 +43,10 @@ class Permissions {
                 }
             }
         }
+        
+        if ($this->isInstructor()) {
+            $this->permissions_array['drafts'] = true;
+        }
     }
     
     
@@ -198,7 +202,7 @@ class Permissions {
     }
      */
     
-	
+    
     /**
      * Checks to see if the user has edit permission for a given syllabus
      * @param string $syllabus_id Unique id of the class that the syllabus belongs to
