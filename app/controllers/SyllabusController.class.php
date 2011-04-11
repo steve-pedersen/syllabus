@@ -198,6 +198,7 @@ class SyllabusController extends BaseController {
             $this->View->is_draft = true;
 			$syllabus_id = 'draft-' . md5($_SESSION['user_id'] . '-' . time());
 			$syllabus = $this->mergePost(array('syllabus_id' => $syllabus_id));
+			$this->View->syllabus_id = $syllabus_id;
 			$this->View->syllabus = $syllabus;
             $this->View->addNavLink('Create Draft');
             $this->View->page_header = "Create Draft Syllabus";
