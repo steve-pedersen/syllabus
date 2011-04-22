@@ -84,7 +84,7 @@ class SyllabusModel extends BaseModel {
 		$this->query = "SELECT * FROM syllabus_modules GROUP BY syllabus_id;";
 		$syllabi = $this->executeQuery();
 		
-		return (isset($syllabi) && is_array($syllabi)) ? count($syllabi) : 0;
+		return (isset($syllabi['count']) && $syllabi['count'] > 0) ? $syllabi['count'] : 0;
 	}
 	
 	

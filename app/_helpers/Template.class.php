@@ -81,7 +81,7 @@ class Template {
     
     
     /**
-     * Parse the given template and return the resulting string
+     * Parse the given template and store the resulting string in a variable
      * @param string $var Name to assign the parsed template string to
      * @param string $template Path to the template to be parsed (relative to the Smarty templates directory)
      * @return string The string of the parsed template
@@ -93,7 +93,7 @@ class Template {
 
 
     /**
-     * Add an element to the breadcrumbs array
+     * Add an element to the navigation array
      * @param string $text Text to add to the breadcrumbs
      * @param string $link Optional path the breadcrumb should link to
      */
@@ -103,7 +103,7 @@ class Template {
 
 
     /**
-     * Add an element to the breadcrumbs array
+     * Add an element to the admin navigation array
      * @param string $text Text to add to the breadcrumbs
      * @param string $link Optional path the breadcrumb should link to
      */
