@@ -18,7 +18,7 @@ class SyllabusController extends BaseController {
 	
 	
 	/**
-	 * Load a user
+	 * Load a syllabus
 	 * @return mixed Returns the result array on success, boolean false on failure
 	 */
 	private function load() {

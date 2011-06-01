@@ -74,6 +74,7 @@ class Template {
 			case 'ajax': 	$view = '_views/ajax.tpl.php'; 		break;
 			case 'feed': 	$view = '_views/feed.tpl.php';		break;
 			case 'print': 	$view = '_views/print.tpl.php'; 	break;
+			case 'service':	$view = '_views/service.tpl.php';	break;
 			default:		$view = $this->view;				break;
 		}
 		$this->view = $view;

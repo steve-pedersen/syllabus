@@ -16,6 +16,12 @@ define('MAINTENANCE_ENDTIME', '2/22/11 1pm'); /* time maintenance is set to end 
 
 
 /**
+ * Service API
+ */
+define('API_KEY', '1Q5P7xRS0_0GnlAlA-mR'); /* the API KEY for accessing the API service
+
+
+/**
  * Sandbox Account
  */
 define('SANDBOX_ACCT_ENABLE', true); /* set to false for production environments */

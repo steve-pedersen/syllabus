@@ -124,7 +124,7 @@ class SyllabusModel extends BaseModel {
      * @param int $user_id The User's id
      * @return array Return the result array
      */
-    public function getSyllabiForUser($user_id = null) {
+    public function getSyllabiForUser($user_id = null, $return_raw = false) {
         if(!is_numeric($user_id) || strlen($user_id) != 9) {
             $user_id = (isset($_SESSION['user_id'])) ? $_SESSION['user_id'] : 0;
         }
@@ -138,15 +138,20 @@ class SyllabusModel extends BaseModel {
         
         $syllabi_array = array_merge($instructor_syllabi, $student_syllabi, $editable_syllabi);
        
-        $return_array = array();
-        foreach($syllabi_array as $k => $v) {
-                $y = $v['syllabus_class_year'];
-                $s = $v['syllabus_class_semester'];
-                $id = $v['syllabus_id'];
-                $return_array[$y][$s][$id] = $v;
-            if(!empty($v['syllabus_id'])) {
-            }
-        }
+		if($return_raw) {
+			$return_array = $syllabi_array;
+		} else {
+			$return_array = array();
+			foreach($syllabi_array as $k => $v) {
+					$y = $v['syllabus_class_year'];
+					$s = $v['syllabus_class_semester'];
+					$id = $v['syllabus_id'];
+					$return_array[$y][$s][$id] = $v;
+				if(!empty($v['syllabus_id'])) {
+				}
+			}
+		}
+		
         return $return_array; 
     }
 

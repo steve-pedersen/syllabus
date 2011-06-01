@@ -37,14 +37,14 @@ class SystemModel extends BaseModel {
 		
 		if($run) {
             // only import the selected data if the SIMS snapshot can be found
-            if(file_exists(SNAPSHOTDIR.'users_sfsuid.lst')) $this->importUsers();
-            if(file_exists(SNAPSHOTDIR.'enroll_sfsuid.lst')) $this->importEnrollment();
-            if(file_exists(SNAPSHOTDIR.'descrip_sfsuid.lst') && file_exists(SNAPSHOTDIR.'courses_sfsuid.lst')) $this->importSyllabi();
+            if(file_exists(SNAPSHOT_DIR . '/users_sfsuid.lst')) $this->importUsers();
+            if(file_exists(SNAPSHOT_DIR . '/enroll_sfsuid.lst')) $this->importEnrollment();
+            if(file_exists(SNAPSHOT_DIR . '/descrip_sfsuid.lst') && file_exists(SNAPSHOT_DIR . '/courses_sfsuid.lst')) $this->importSyllabi();
             
             // clean up orphaned syllabi
             $this->deleteOrphans();
             
-            $this->success_messages[] = 'The System was successfully updated';
+            Messages::addMessage('The System was successfully updated', 'error');
             return true;
 		}
 	}
@@ -71,7 +71,7 @@ class SystemModel extends BaseModel {
         $this->executeQuery();
         
         // load into temporary table
-        $snapshotFile = SNAPSHOTDIR.'users_sfsuid.lst';
+        $snapshotFile = SNAPSHOT_DIR . '/users_sfsuid.lst';
         $this->query= "LOAD DATA LOCAL INFILE '".$snapshotFile."' INTO TABLE snapshot_users FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES";
         $this->executeQuery();
         
@@ -107,7 +107,7 @@ class SystemModel extends BaseModel {
         $this->executeQuery();
         
         // load into temporary table
-        $snapshotFile = SNAPSHOTDIR.'enroll_sfsuid.lst';
+        $snapshotFile = SNAPSHOT_DIR . '/enroll_sfsuid.lst';
         $this->query= "LOAD DATA LOCAL INFILE '".$snapshotFile."' INTO TABLE snapshot_enroll FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES";
         $this->executeQuery();
         
@@ -143,7 +143,7 @@ class SystemModel extends BaseModel {
         $this->executeQuery();
         
         // load into temporary table
-        $snapshotFile = (file_exists(SNAPSHOTDIR . 'descrip_sfsuid.lst'))	?	 SNAPSHOTDIR.'descrip_sfsuid.lst'	:	SNAPSHOTDIR.'descrip.lst'	;
+        $snapshotFile = (file_exists(SNAPSHOT_DIR . '/descrip_sfsuid.lst'))	?	 SNAPSHOT_DIR . '/descrip_sfsuid.lst'	:	SNAPSHOT_DIR . '/descrip.lst'	;
         $this->query= "LOAD DATA LOCAL INFILE '".$snapshotFile."' INTO TABLE snapshot_class_desc FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES";
         $this->executeQuery();
         
@@ -176,7 +176,7 @@ class SystemModel extends BaseModel {
         $this->executeQuery();
         
         // load into temporary table
-        $snapshotFile = SNAPSHOTDIR.'courses_sfsuid.lst';
+        $snapshotFile = SNAPSHOT_DIR . '/courses_sfsuid.lst';
         $this->query= "LOAD DATA LOCAL INFILE '".$snapshotFile."' INTO TABLE snapshot_classes FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES";
         $this->executeQuery();
         
