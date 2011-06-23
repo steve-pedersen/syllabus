@@ -1021,9 +1021,11 @@ class SyllabusModel extends BaseModel {
             $S = new SyllabusModel();
             foreach($this->drafts as $k => $draft) {
                 $syllabus = $S->getSyllabusById($draft);
-                if($this->Permissions->isAdmin() || $S->syllabus_draft_owner == $_SESSION['user_id']) {
+                if($this->Permissions->isAdmin() || $syllabus['syllabus_draft_owner'] == $_SESSION['user_id']) {
                     $this->query = sprintf("DELETE FROM syllabus WHERE syllabus_id='%s';", $draft);
                     $this->executeQuery();
+					$this->query = sprintf("DELETE FROM syllabus_modules WHERE syllabus_id='%s';", $draft);
+					$this->executeQuery();
 					$this->redirect = 'syllabus';
 					Messages::addMessage('<strong>' . $syllabus['syllabus_class_title'] . '</strong> successfully deleted.', 'success');
 					$return = true;

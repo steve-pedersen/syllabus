@@ -22,14 +22,22 @@ class BlogModel extends BaseModel {
      * Customized query to retrieve posts to be displayed on the homepage
      * @return array Returns the result array
      */
-    public function getPublishedPosts($limit = null) {
-        $this->query = sprintf("
-            SELECT * FROM blog b
-            WHERE b.post_publish_date<" . time() . "
-            ORDER BY post_sticky DESC, post_publish_date DESC %s;
-            ",
-            (is_numeric($limit) && $limit > 0) ? 'LIMIT ' . $limit : ''
-        );
+    public function getPublishedPosts($options = array()) {
+        $query = "SELECT * FROM blog b WHERE b.post_publish_date<" . time();
+        $values = array();
+        
+        if(!isset($options['show_archived']) || $options['show_archived'] == false) {
+            $query .= " AND b.post_archived=0";
+        }
+        
+        $query .= " ORDER BY post_sticky DESC, post_publish_date DESC ";
+        
+        if(isset($options['limit']) && is_numeric($options['limit'])) {
+            $query .= " LIMIT %s";
+            $values[] = $options['limit'];
+        }
+        
+        $this->query = vsprintf($query, $values);
         $result = $this->executeQuery();
         return ($result['count'] > 0) ? $result['data'] : array();
     }
@@ -167,6 +175,24 @@ class BlogModel extends BaseModel {
      */
     private function doUnimportant($id) {
         $this->query = sprintf("UPDATE blog SET post_important=0 WHERE post_id=%d;", $id);
+        $this->executeQuery();
+    }
+    
+    
+    /**
+     * Add archive flag
+     */
+    private function doArchive($id) {
+        $this->query = sprintf("UPDATE blog SET post_archived=1 WHERE post_id=%d;", $id);
+        $this->executeQuery();
+    }
+    
+    
+    /**
+     * Remove archive flag
+     */
+    private function doUnarchive($id) {
+        $this->query = sprintf("UPDATE blog SET post_archived=0 WHERE post_id=%d;", $id);
         $this->executeQuery();
     }
 

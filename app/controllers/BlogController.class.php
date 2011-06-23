@@ -43,7 +43,7 @@ class BlogController extends BaseController {
     protected function index() {
 		
         $this->View->page_title = 'Blog Archive';
-        $this->View->posts = $this->Model->getPublishedPosts();
+        $this->View->posts = $this->Model->getPublishedPosts(array('show_archived'=>true));
         $this->View->parseTemplate('page_sidebar', '_fragments/sidebar_blog.tpl.php');
         $this->View->parseTemplate('page_content', 'blog/index.tpl.php');
     }

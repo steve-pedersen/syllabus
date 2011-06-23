@@ -19,7 +19,7 @@ class Validate {
         'objective_text',
         'policy_text',
         'schedule_desc',
-        'syllabus_class_desc',
+        'syllabus_class_description',
         'syllabus_class_prereqs',
         'syllabus_office_hours',
         'invite_message'

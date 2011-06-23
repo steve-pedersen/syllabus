@@ -36,5 +36,7 @@ a.icon:hover, a.icon:focus {
 .icon.important_off             { background-position: 0px -240px; }
 .icon.rss                       { background-position: 0px -260px; }
 .icon.archive                   { background-position: 0px -280px; }
+.icon.archive_off               { background-position: 0px -300px; }
+.icon.archive_on                { background-position: 0px -320px; }
 
 

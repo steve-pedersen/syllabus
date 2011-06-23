@@ -24,7 +24,7 @@ class IndexController extends BaseController {
      */
     protected function index() {
         $B = new BlogModel();
-        $posts = $B->getPublishedPosts(5);
+        $posts = $B->getPublishedPosts(array('limit'=>5, 'show_archived'=>false));
         $this->View->posts = $posts;
         $this->View->page_title = 'Home';
         $this->View->parseTemplate('page_sidebar', '_fragments/sidebar_blog.tpl.php');

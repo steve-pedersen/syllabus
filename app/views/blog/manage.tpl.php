@@ -14,6 +14,7 @@
             <tr>
             <th scope="col" style="width: 15px;"><label for="posts" class="hideJS">Select all Posts</label><input type="checkbox" id="posts" class="check-all" /></th>
             <th scope="col" style="width: 25px;"><span class="icon"><span class="icon inline-block sticky_on"><span><span class="text">Sticky</span></span></th>
+            <th scope="col" style="width: 25px;"><span class="icon"><span class="icon inline-block archive_on"><span><span class="text">Visible</span></span></th>
             <th scope="col" style="width: 25px;"><span class="icon"><span class="icon inline-block important_on"><span><span class="text">Important</span></span></th>
             <th scope="col" style="width: 100px;">Publish Date</th>
             <th scope="col" style="width: 600px;">Post Title</th>
@@ -36,6 +37,16 @@
                     {assign var='sticky_text' value='This post is not sticky'}
                 {/if}
                 <span class="icon"><span class="icon {$sticky_class} inline-block"></span><span class="text">{$sticky_text}</span></span>
+            </td>
+            <td>
+                {if $p.post_archived == 1}
+                    {assign var='archive_class' value='archive_on'}
+                    {assign var='archive_text' value='This post is archived'}
+                {else}
+                    {assign var='archive_class' value='archive_off'}
+                    {assign var='archive_text' value='This post is not archived'}
+                {/if}
+                <span class="icon"><span class="icon {$archive_class} inline-block"></span><span class="text">{$archive_text}</span></span>
             </td>
             <td>
                 {if $p.post_important == 1}
@@ -63,6 +74,8 @@
             <option value="unsticky">Remove Sticky</option>
             <option value="important">Make Important</option>
             <option value="unimportant">Remove Important</option>
+            <option value="archive">Archive (hide)</option>
+            <option value="unarchive">Unarchive (unhide)</option>			
             <option value="delete">Delete</option>
         </select>
         <input type="submit" name="command[changeStatus]" class="button" value="Submit" />
