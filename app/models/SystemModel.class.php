@@ -42,9 +42,13 @@ class SystemModel extends BaseModel {
             if(file_exists(SNAPSHOT_DIR . '/descrip_sfsuid.lst') && file_exists(SNAPSHOT_DIR . '/courses_sfsuid.lst')) $this->importSyllabi();
             
             // clean up orphaned syllabi
-            $this->deleteOrphans();
-            
-            Messages::addMessage('The System was successfully updated', 'error');
+            // $this->deleteOrphans();
+			
+			// now, finally drop the snapshot_classes temp table
+			$this->query= "DROP TABLE snapshot_classes";
+			$this->executeQuery();
+		    
+            Messages::addMessage('The System was successfully updated', 'success');
             return true;
 		}
 	}
@@ -120,6 +124,8 @@ class SystemModel extends BaseModel {
         // drop temporary table		
         $this->query= "DROP TABLE snapshot_enroll";
         $this->executeQuery();
+		
+		exit;
     }
     
     
@@ -235,9 +241,9 @@ class SystemModel extends BaseModel {
         
         $this->query= "DELETE FROM permissions WHERE permissions.syllabus_id NOT IN (SELECT External_Course_Key FROM snapshot_classes)";
 		$this->executeQuery();
-        
-        $this->query= "DROP TABLE snapshot_classes";
-        $this->executeQuery();
+		
 	}
+
+
 	
 } // end class
