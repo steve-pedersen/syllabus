@@ -16,6 +16,7 @@ class SystemModel extends BaseModel {
      * Run an update of the system from the SIMS database
      */
 	public function systemUpdate() {
+		
         // set a flag for whether the script was executed via command line
         // for this, we need to check $_SERVER['argv'][1] since [0] is the name of the script
         $is_command_line_script = (isset($_SERVER['argv'][1]) && $_SERVER['argv'][1] == 'cli')
@@ -124,8 +125,6 @@ class SystemModel extends BaseModel {
         // drop temporary table		
         $this->query= "DROP TABLE snapshot_enroll";
         $this->executeQuery();
-		
-		exit;
     }
     
     
@@ -213,7 +212,7 @@ class SystemModel extends BaseModel {
     /**
      * Remove orphaned data from the database. Only information that exists in the snapshot should exist in the DB
      */
-	public function deleteOrphans() {
+	private function deleteOrphans() {
         
 		$this->query= "DELETE FROM syllabus WHERE syllabus.syllabus_id NOT IN (SELECT External_Course_Key FROM snapshot_classes) AND syllabus.syllabus_id NOT LIKE '%draft-%'";
 		$this->executeQuery();
