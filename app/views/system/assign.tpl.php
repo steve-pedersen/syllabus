@@ -8,7 +8,7 @@
 	</div>
     
     <div class="label"><label for="enroll_user_id">User Id</label></div>
-    <div class="input"><input type="text" name="enroll_user_id" id="enroll_user_id" style="width: 150px;" value="{$smarty.const.TEST_IDP_USER}" /></div>
+    <div class="input"><input type="text" name="enroll_user_id" id="enroll_user_id" style="width: 150px;" /></div>
     <div style="clear: both;"></div>
 	
     <div class="label"><label for="enroll_class_id">Course Id</label></div>
