@@ -338,6 +338,10 @@ function ajaxPageUpdate(response) {
         case 'error':
             update_target.empty().html(response.messages);    
         break;
+	
+		case 'redirect':
+			window.location = response.redirect;
+		break;
         
         default: break;
     }

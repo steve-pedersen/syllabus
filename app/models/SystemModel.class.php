@@ -155,7 +155,7 @@ class SystemModel extends BaseModel {
         // insert (update duplicates)
         $this->query= "INSERT INTO syllabus (syllabus_id, syllabus_class_schedule_number, syllabus_class_title, syllabus_class_description, syllabus_class_prereqs)  
             SELECT External_Course_Key, catlg, title, crs_description, prereq_description FROM snapshot_class_desc
-            ON DUPLICATE KEY UPDATE syllabus_class_title=title, syllabus_class_description=crs_description, syllabus_class_prereqs=prereq_description";
+            ON DUPLICATE KEY UPDATE syllabus_class_title=title, syllabus_class_prereqs=prereq_description";
         $this->executeQuery();
         
         // drop temporary table		
@@ -241,6 +241,110 @@ class SystemModel extends BaseModel {
         $this->query= "DELETE FROM permissions WHERE permissions.syllabus_id NOT IN (SELECT External_Course_Key FROM snapshot_classes)";
 		$this->executeQuery();
 		
+	}
+	
+	
+	/**
+	 * Run modifications to the DB
+	 * Grants ownership and other permissions to a TEST user (available via test IDP) for QA and iLearn integration testing
+	 */
+	public function createUsers() {
+		if(DEBUG_MODE) {
+			// insert the user
+			$this->query = "INSERT IGNORE INTO users SET user_id='T60000001', user_fname='Test 1', user_lname='User', user_preferred_name='Testing User 1' ";
+			$this->executeQuery();
+			$this->query = "INSERT IGNORE INTO users SET user_id='T60000002', user_fname='Test 2', user_lname='User', user_preferred_name='Testing User 2' ";
+			$this->executeQuery();
+			$this->query = "INSERT IGNORE INTO users SET user_id='T60000003', user_fname='Test 3', user_lname='User', user_preferred_name='Testing User 3' ";
+			$this->executeQuery();
+			$this->query = "INSERT IGNORE INTO users SET user_id='T60000004', user_fname='Test 4', user_lname='User', user_preferred_name='Testing User 4' ";
+			$this->executeQuery();
+			// remove permissions just in case .. then re-insert
+			$this->query = "DELETE FROM permissions WHERE user_id='T60000001';";
+			$this->executeQuery();
+			$this->query = "INSERT INTO permissions SET user_id='T60000001', permission='admin';";
+			$this->executeQuery();
+			
+			Messages::addMessage('Users created.  <a href="login">Login</a> to gain access.', 'success');
+			$this->redirect = 'system/create_users';
+			$return = true;
+		} else {				
+			Messages::addMessage('Testing users can only be created for sites that are in debug mode (non-production sites).  Set debug mode in the config file.', 'error');
+			$return = false;
+		}
+		
+		return $return;
+	}
+
+
+	/**
+	 * Assign a specific user to a specific course in the selected role
+	 */
+	public function assignUser() {
+		if($this->Permissions->isAdmin()) {
+			$valid = true;
+			
+			// make sure we have a valid user
+			if(isset($this->enroll_user_id)) {
+				$U = new UsersModel;
+				$this->query = sprintf("SELECT * FROM users WHERE user_id='%s';", $this->enroll_user_id);
+				$result = $this->executeQuery();
+				if($result['count']) {
+					$valid = true;
+				} else {
+					$valid = false;
+					Messages::addMessage('User does not exist in the Database', 'error');
+				}
+			} else {
+				$valid = false;
+			}
+			
+			// make sure the course exists in the enrollment table
+			if(isset($this->enroll_class_id)) {
+				$this->query = sprintf("SELECT * FROM enrollment WHERE enroll_class_id='%s';", $this->enroll_class_id);
+				$result = $this->executeQuery();
+				if($result['count']) {
+					$valid = true;
+				} else {
+					$valid = false;
+					Messages::addMessage('Class does not exist in the Database', 'error');
+				}
+			} else {
+				Messages::addMessage('Please enter a class id', 'error');
+				$valid = false;
+			}
+			
+			if($valid) {
+				switch($this->enroll_role) {
+					case 'instructor':
+						$this->query = sprintf("UPDATE enrollment SET enroll_user_id='%s' WHERE enroll_class_id='%s' AND enroll_role='instructor';", $this->enroll_user_id, $this->enroll_class_id);
+						$this->executeQuery();
+						Messages::addMessage('User assigned as instructor', 'success');
+						$return = true;
+						break;
+					
+					case 'student':
+						$this->query = sprintf("INSERT INTO enrollment SET enroll_user_id='%s', enroll_class_id='%s', enroll_role='student';", $this->enroll_user_id, $this->enroll_class_id);
+						$this->executeQuery();
+						Messages::addMessage('User assigned as student', 'success');
+						$return = true;
+						break;
+					
+					default:
+						Messages::addMessage('Invalid Action', 'error');
+						$return = false;
+						break;
+				}
+			}
+			
+			$return = true;
+		} else {
+			Messages::addMessage('You must be an administrator to perform this action.', 'error');
+			$return = false;
+		}
+		
+		$this->redirect = 'system/assign';
+		return $return;
 	}
 
 

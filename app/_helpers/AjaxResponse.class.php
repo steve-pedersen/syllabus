@@ -46,6 +46,7 @@ class AjaxResponse {
     */
    public function editSyllabus() {
         $syllabus = $this->Model->getSyllabusById($this->Model->syllabus_id);
+		/*
 		// modify vars as necessary
 		$syllabus['syllabus_phone'] = Utility::formatPhoneNumber($syllabus['syllabus_phone'], 'print');
 		$syllabus['syllabus_mobile'] = Utility::formatPhoneNumber($syllabus['syllabus_mobile'], 'print');
@@ -57,6 +58,12 @@ class AjaxResponse {
         $this->response['update_id'] = 'general_item_content';
         $this->response['update_method'] = 'replace_contents';
         $this->response['update_html'] = $this->View->update_html;
+		*/
+		
+		// switched response to a redirect since it can potentially update multiple areas on the page
+		// and the ajax response isn't currently configured to modify multiple nodes
+		$this->response['update_method'] = 'redirect';
+		$this->response['redirect'] = BASEHREF . 'syllabus/edit/' . $syllabus['syllabus_id'];
     }
    
     /**

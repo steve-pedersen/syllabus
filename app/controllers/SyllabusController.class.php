@@ -446,7 +446,7 @@ class SyllabusController extends BaseController {
             }
         }
     }
-    
+	
     
     /**
      * Ping the syllabus.  This is the entrance point for external services to gather information about a syllabus

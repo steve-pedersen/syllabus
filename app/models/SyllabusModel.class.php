@@ -950,8 +950,14 @@ class SyllabusModel extends BaseModel {
                 Utility::formatPhoneNumber($this->syllabus_fax),
                 $this->syllabus_id
 			);
-			
             $this->executeQuery();
+			
+			// if the syllabus is a draft, allow changing the title
+			if(preg_match('! ^draft-.+ !x', $this->syllabus_id) && isset($this->syllabus_class_title)) {
+				$this->query = sprintf("UPDATE syllabus SET syllabus_class_title='%s' WHERE syllabus_id='%s';", $this->syllabus_class_title, $this->syllabus_id);
+				$this->executeQuery();
+			}
+			
             Messages::addMessage('Syllabus Information saved.', 'success');
 			$this->redirect = 'syllabus/edit/' . $this->syllabus_id;
             $return = true;
