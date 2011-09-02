@@ -14,7 +14,7 @@ class IndexModel extends BaseModel {
         $Mailer = new Mailer();
         $to = (isset($this->to) && !empty($this->to))
             ? $this->to
-            : 'workshop@sfsu.edu';
+            : 'online@sfsu.edu';
         $Mailer->setTo($to);
         $Mailer->setFrom($this->from);
         $subject = (isset($this->subject) && !empty($this->subject))

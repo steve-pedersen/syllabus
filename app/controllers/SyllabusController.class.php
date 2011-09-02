@@ -113,8 +113,6 @@ class SyllabusController extends BaseController {
             } else {
                 $this->View->parseTemplate('page_content', 'syllabus/request_view_token.tpl.php');
             }
-        } else {
-			Messages::addMessage('Invalid Syllabus.', 'error');
         }
     }
     

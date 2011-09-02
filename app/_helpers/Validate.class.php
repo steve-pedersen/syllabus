@@ -12,6 +12,7 @@ class Validate {
      * @var array Array of fields that are allowed to have HTML.  All other variables will have HTML tags stripped
      */
     private static $allow_html = array(
+        'body',
         'assignment_desc',
         'post_text',
         'material_info',
