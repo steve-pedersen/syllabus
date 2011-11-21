@@ -12,7 +12,7 @@
     <div class="input">
         <select name="schedule_period" id="schedule_period" style="width: 140px;">
             <option value="d"{if $item.schedule_period == 'd'} selected="selected"{/if}>For the Day of</option>
-            <option value="w"{if $item.schedule_period == 'd'} selected="selected"{/if}>For the Week beginning</option>
+            <option value="w"{if $item.schedule_period == 'w'} selected="selected"{/if}>For the Week beginning</option>
         </select>
         
         <label for="schedule_date" style="padding-left: 10px;">Date <span class="form_note">(<abbr title="Please enter date in a month / day / year format">mm/dd/yy</abbr>)</span></label>
