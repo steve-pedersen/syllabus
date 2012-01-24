@@ -100,10 +100,11 @@ class UsersModel extends BaseModel {
     public function editUser() {
         if($this->Permissions->hasPermission(PERM_USERS_EDIT) || $this->user_id == $_SESSION['user_id']) {
             $this->query = sprintf(
-                "UPDATE users SET user_preferred_name='%s', user_email='%s', user_office='%s', user_phone='%s', user_mobile='%s', user_fax='%s' WHERE user_id='%s';",
+                "UPDATE users SET user_preferred_name='%s', user_email='%s', user_office='%s', user_website='%s', user_phone='%s', user_mobile='%s', user_fax='%s' WHERE user_id='%s';",
                 $this->user_preferred_name,
                 $this->user_email,
                 $this->user_office,
+                $this->user_website,
                 Utility::formatPhoneNumber($this->user_phone),
                 Utility::formatPhoneNumber($this->user_mobile),
                 Utility::formatPhoneNumber($this->user_fax),

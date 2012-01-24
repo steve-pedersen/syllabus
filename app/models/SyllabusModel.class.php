@@ -936,6 +936,7 @@ class SyllabusModel extends BaseModel {
                 syllabus_email='%s',
                 syllabus_office='%s',
                 syllabus_office_hours='%s',
+                syllabus_website='%s',
                 syllabus_mobile='%s',
                 syllabus_fax='%s'
                 WHERE syllabus_id='%s'
@@ -946,6 +947,7 @@ class SyllabusModel extends BaseModel {
                 $this->syllabus_email,
                 $this->syllabus_office,
                 $this->syllabus_office_hours,
+                $this->syllabus_website,
                 Utility::formatPhoneNumber($this->syllabus_mobile),
                 Utility::formatPhoneNumber($this->syllabus_fax),
                 $this->syllabus_id
