@@ -25,6 +25,17 @@ class WordDocElementSection extends WordDocElement
     {
         return $this->createChildElement('Paragraph', $style);
     }
+
+    /**
+     * Create a new run inside a new paragraph in this section.
+     *
+     * @param $style mixed
+     * @return WordDocElementRun
+     */
+    public function createRun ($style = null)
+    {
+        return $this->createParagraph()->createRun($style);
+    }
     
     /**
      * Create a new table in this section

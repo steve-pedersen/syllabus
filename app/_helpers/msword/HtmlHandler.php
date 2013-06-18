@@ -94,11 +94,6 @@ class WordDocHtmlHandler
             $name = $node->getAttribute('name');
         }
         
-        if ($node->hasAttribute('id'))
-        {
-            $name = $node->getAttribute('id');
-        }
-        
         if ($name)
         {
             $wordDocElement = $wordDocElement->createAnnotation($name);
