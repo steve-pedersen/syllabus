@@ -21,7 +21,7 @@ You are using an outdated version of Internet Explorer.  For the best experience
 <!--[if IE 7]><div class="ie7"><![endif]-->
 <!--[if IE 8]><div class="ie8"><![endif]-->
 
-<div id="skiplinks"><a href="{$smarty.const.CURRENT_URL}#content-anchor">Skip to Content</a></div>
+<div id="skiplinks"><a href="{$smarty.server.REQUEST_URI|escape}#content-anchor">Skip to Content</a></div>
 
 <div id="header_container">
 	<div id="header">
