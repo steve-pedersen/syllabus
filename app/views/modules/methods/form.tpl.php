@@ -1,6 +1,6 @@
 <h1>{$page_header}</h1>
 
-<form action="{$smarty.const.CURRENT_URL}" method="post" id="module_save_form">
+<form action="{$smarty.server.REQUEST_URI}" method="post" id="module_save_form">
 	{$smarty.const.SUBMIT_TOKEN_HTML}
 	<input type="hidden" name="syllabus_id" value="{$syllabus_id}" />
 	<input type="hidden" name="module_type" value="{$module.id}" />

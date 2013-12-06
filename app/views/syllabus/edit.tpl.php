@@ -1,6 +1,6 @@
 <div id="syllabus">
 
-<form action="{$smarty.const.CURRENT_URL}" method="post">
+<form action="{$smarty.server.REQUEST_URI}" method="post">
 	{$smarty.const.SUBMIT_TOKEN_HTML}
 	<input type="hidden" name="syllabus_id" value="{$syllabus_id}" />
 
@@ -12,7 +12,7 @@
                 <a href="syllabus/add_module/{$syllabus.syllabus_id}" id="add_module_link" class="button_large inline-block"><span class="icon inline-block add"></span>Add Module</a>
                 <a href="syllabus/share/{$syllabus.syllabus_id}" class="button_large inline-block"><span class="icon inline-block share"></span>Share</a>
                 <a href="syllabus/view/{$syllabus.syllabus_id}?view=print" class="button_large popup noicon inline-block"><span class="icon inline-block print"></span>Printer-Friendly</a>
-                <a href="syllabus/export/{$syllabus.syllabus_id}?export_msg=true&ref={$smarty.const.CURRENT_URL}" class="button_large inline-block colorbox"><span class="icon inline-block export"></span>Export</a>
+                <a href="syllabus/export/{$syllabus.syllabus_id}?export_msg=true&ref={$smarty.server.REQUEST_URI}" class="button_large inline-block colorbox"><span class="icon inline-block export"></span>Export</a>
                 <a href="syllabus/backup_restore/{$syllabus.syllabus_id}" class="button_large inline-block"><span class="icon inline-block restore"></span>Backup / Restore</a>
             </div>
         </div>

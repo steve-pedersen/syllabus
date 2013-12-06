@@ -3,7 +3,7 @@
 Please use the contact form below to send a message to the Syllabus Team.  We will respond to you as quickly as possible.
 
     
-<form action="{$smarty.const.CURRENT_URL}" method="post">
+<form action="{$smarty.server.REQUEST_URI}" method="post">
     {$smarty.const.SUBMIT_TOKEN_HTML}
     
     <div class="label"><label for="name">Your Name</label></div>

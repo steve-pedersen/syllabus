@@ -1,6 +1,6 @@
 <h1 class="form_header">{$page_header}</h1>
 
-<form action="{$smarty.const.CURRENT_URL}" method="post">
+<form action="{$smarty.server.REQUEST_URI}" method="post">
 	<input type="hidden" name="submit_token" value="{$smarty.const.SUBMIT_TOKEN}" />
     <input type="hidden" name="post_id" value="{$post.post_id}" />
     <input type="hidden" name="return_url" value="{$return_url}" />

@@ -3,7 +3,7 @@
 
 {foreach from=$repository name="tabs" item=m key=k}
     {if $smarty.foreach.tabs.first}<ul class="tabs" id="repository_tabs">{/if}
-    <li id="tab-{$k}"><a href="{$smarty.const.CURRENT_URL}#tabcontent-{$k}">{$m.name}</a></li>
+    <li id="tab-{$k}"><a href="{$smarty.server.REQUEST_URI}#tabcontent-{$k}">{$m.name}</a></li>
     {if $smarty.foreach.tabs.last}</ul>{/if}
 {/foreach}
 

@@ -1,6 +1,6 @@
 <h1>Manually update database</h1>
 
-<form action="{$smarty.const.CURRENT_URL}" method="post">
+<form action="{$smarty.server.REQUEST_URI}" method="post">
 	<input type="hidden" name="submit_token" value="{$smarty.const.SUBMIT_TOKEN}" />
     <input type="hidden" name="return_url" value="{$return_url}" />
     
@@ -29,7 +29,7 @@
 {if $show_merge_legacy}
 
 <h2>Merge data from legacy database</h2>
-<form action="{$smarty.const.CURRENT_URL}" method="post">
+<form action="{$smarty.server.REQUEST_URI}" method="post">
 	<input type="hidden" name="submit_token" value="{$smarty.const.SUBMIT_TOKEN}" />
     <input type="hidden" name="return_url" value="{$return_url}" />
     

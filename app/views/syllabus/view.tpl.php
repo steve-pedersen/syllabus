@@ -4,8 +4,8 @@
         {if $can_edit}
         <a href="syllabus/edit/{$syllabus.syllabus_id}" class="button_large inline-block"><span class="icon inline-block edit"></span>Edit</a>
         {/if}
-        <a href="{$smarty.const.BASEHREF}{$smarty.const.CURRENT_URL}?view=print" class="button_large popup noicon inline-block"><span class="icon inline-block print"></span>Printer-Friendly</a>
-        <a href="syllabus/export/{$syllabus.syllabus_id}?export_msg=true&amp;ref={$smarty.const.CURRENT_URL}" class="button_large inline-block colorbox"><span class="icon inline-block export"></span>Export</a>
+        <a href="{$smarty.const.BASEHREF}{$smarty.server.REQUEST_URI}?view=print" class="button_large popup noicon inline-block"><span class="icon inline-block print"></span>Printer-Friendly</a>
+        <a href="syllabus/export/{$syllabus.syllabus_id}?export_msg=true&amp;ref={$smarty.server.REQUEST_URI}" class="button_large inline-block colorbox"><span class="icon inline-block export"></span>Export</a>
     </div>
 </div>
 

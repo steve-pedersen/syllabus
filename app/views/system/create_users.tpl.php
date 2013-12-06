@@ -1,6 +1,6 @@
 <h1>Create Admin User for Testing</h1>
 
-<form action="{$smarty.const.CURRENT_URL}" method="post">
+<form action="{$smarty.server.REQUEST_URI}" method="post">
 	<input type="hidden" name="submit_token" value="{$smarty.const.SUBMIT_TOKEN}" />
     
     <div class="message warn">

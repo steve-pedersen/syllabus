@@ -2,7 +2,7 @@
 Restoring a syllabus is a non-reversible procedure.  If you delete old content in the process, it will be lost.
 </div>
 
-<form action="{$smarty.const.CURRENT_URL}" method="post" enctype="multipart/form-data">
+<form action="{$smarty.server.REQUEST_URI}" method="post" enctype="multipart/form-data">
 	{$smarty.const.SUBMIT_TOKEN_HTML}
 	<input type="hidden" name="syllabus_id" value="{$syllabus.syllabus_id}" />
 

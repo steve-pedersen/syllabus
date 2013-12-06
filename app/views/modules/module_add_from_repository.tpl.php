@@ -1,7 +1,7 @@
 <h1>{$page_header}</h1>
 
 {if $m.items} 
-    <form action="{$smarty.const.CURRENT_URL}" method="post">
+    <form action="{$smarty.server.REQUEST_URI}" method="post">
         {$smarty.const.SUBMIT_TOKEN_HTML}
         <input type="hidden" name="syllabus_id" value="{$syllabus.syllabus_id}" />
         <input type="hidden" name="module_type" value="{$m.id}" />

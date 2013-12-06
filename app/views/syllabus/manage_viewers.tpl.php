@@ -1,4 +1,4 @@
-<form action="{$smarty.const.CURRENT_URL}" method="post">
+<form action="{$smarty.server.REQUEST_URI}" method="post">
     <input type="hidden" name="submit_token" value="{$smarty.const.SUBMIT_TOKEN}" />
     <input type="hidden" name="syllabus_id" value="{$syllabus.syllabus_id}" />
     <input type="hidden" name="return_url" value="syllabus/{$syllabus.syllabus_id}/share" />

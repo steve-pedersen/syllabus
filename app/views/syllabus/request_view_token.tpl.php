@@ -18,7 +18,7 @@ to enter the password.
 {/if}
 
 <div class="message info">
-<form action="{$smarty.const.CURRENT_URL}" method="get" style="margin: 0px;">
+<form action="{$smarty.server.REQUEST_URI}" method="get" style="margin: 0px;">
     <label for="token">Password for this syllabus</label>
     <input type="text" name="token" id="token" style="width: 300px;" />
     <input type="submit" class="button" value="Submit Password" />

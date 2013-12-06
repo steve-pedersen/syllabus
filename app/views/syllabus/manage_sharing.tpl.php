@@ -6,7 +6,7 @@ the recipients will be able to view the syllabus regardless of what the current
 recipients, you will have to <a href="syllabus/reset_token/{$syllabus.syllabus_id}">reset the password</a>.
 </div>
     
-<form action="{$smarty.const.CURRENT_URL}" method="post">
+<form action="{$smarty.server.REQUEST_URI}" method="post">
     {$smarty.const.SUBMIT_TOKEN_HTML}
     <input type="hidden" name="syllabus_id" value="{$syllabus.syllabus_id}" />
     <input type="hidden" name="to" value="pony@sfsu.edu" />

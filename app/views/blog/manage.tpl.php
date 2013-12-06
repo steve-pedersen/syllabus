@@ -5,7 +5,7 @@
 {foreach name=posts from=$posts item=p}
 
     {if $smarty.foreach.posts.first}
-    <form action="{$smarty.const.CURRENT_URL}" method="post">
+    <form action="{$smarty.server.REQUEST_URI}" method="post">
 	{$smarty.const.SUBMIT_TOKEN_HTML}
     <input type="hidden" name="return_url" value="blog/manage" />
 

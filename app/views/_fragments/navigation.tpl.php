@@ -61,7 +61,7 @@
         {if $smarty.session.in_ghost_mode}
             <div id="ghost_status">
             You are currently in Ghost Mode
-            <a href="users/unghost?return_url={$smarty.const.CURRENT_URL}">Exit Ghost Mode</a>
+            <a href="users/unghost?return_url={$smarty.server.REQUEST_URI}">Exit Ghost Mode</a>
             </div>
         {/if}
             </div>

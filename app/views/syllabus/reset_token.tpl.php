@@ -1,6 +1,6 @@
 <h1>Reset Syllabus Password</h1>
 
-<form action="{$smarty.const.CURRENT_URL}" method="post">
+<form action="{$smarty.server.REQUEST_URI}" method="post">
     {$smarty.const.SUBMIT_TOKEN_HTML}
     <input type="hidden" name="syllabus_id" value="{$syllabus.syllabus_id}" />
     

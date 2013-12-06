@@ -4,7 +4,7 @@
 Required fields are marked with an asterisk (<span class="required">*</span>)
 </div>
 
-<form action="{$smarty.const.CURRENT_URL}" method="post" id="module_save_form">
+<form action="{$smarty.server.REQUEST_URI}" method="post" id="module_save_form">
 	{$smarty.const.SUBMIT_TOKEN_HTML}
 	<input type="hidden" name="syllabus_id" value="{$syllabus.syllabus_id}" />
 	<!-- Hitting enter in IE will not submit the form if there is only one text field, so we conditionally add another one for IE and hide it -->

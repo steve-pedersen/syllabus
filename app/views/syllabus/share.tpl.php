@@ -1,9 +1,9 @@
 <h1>{$page_header}</h1>
 
 <ul id="syllabus_sharing" class="tabs">
-    <li id="tab_edit"><a href="{$smarty.const.CURRENT_URL}#tabcontent-edit"><strong>Who can edit this syllabus?</strong></a></li>
-    <li id="tab_view"><a href="{$smarty.const.CURRENT_URL}#tabcontent-view"><strong>Who can see this syllabus?</strong></a></li>
-    <li id="tab_share"><a href="{$smarty.const.CURRENT_URL}#tabcontent-share"><strong>Share this syllabus</strong></a></li>
+    <li id="tab_edit"><a href="{$smarty.server.REQUEST_URI}#tabcontent-edit"><strong>Who can edit this syllabus?</strong></a></li>
+    <li id="tab_view"><a href="{$smarty.server.REQUEST_URI}#tabcontent-view"><strong>Who can see this syllabus?</strong></a></li>
+    <li id="tab_share"><a href="{$smarty.server.REQUEST_URI}#tabcontent-share"><strong>Share this syllabus</strong></a></li>
 </ul>
 
 <div id="tabcontent-edit">

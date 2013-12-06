@@ -8,12 +8,12 @@
             {if $tsk == 2}{assign var='semester_name' value='Spring'}{/if}
             {if $tsk == 3}{assign var='semester_name' value='Summer'}{/if}
             {if $tsk == 4}{assign var='semester_name' value='Fall'}{/if}            
-            <li id="tab_{$tyk}{$tsk}"><a href="{$smarty.const.CURRENT_URL}#tabcontent-{$tyk}{$tsk}"><strong>{$semester_name} {$tyk}</strong></a></li>
+            <li id="tab_{$tyk}{$tsk}"><a href="{$smarty.server.REQUEST_URI}#tabcontent-{$tyk}{$tsk}"><strong>{$semester_name} {$tyk}</strong></a></li>
         {/foreach}
     {/foreach}
     
     {if $has_drafts_permission }
-    <li id="tab_drafts"><a href="{$smarty.const.CURRENT_URL}#tabcontent-drafts"><strong>Drafts</strong></a></li>
+    <li id="tab_drafts"><a href="{$smarty.server.REQUEST_URI}#tabcontent-drafts"><strong>Drafts</strong></a></li>
     {/if}
     </ul>
     
@@ -58,7 +58,7 @@
             <div class="save_row"><a href="syllabus/draft" class="icon"><span class="icon inline-block add"></span> Create Draft</a></div>
             
             {if !is_null($drafts) }
-            <form action="{$smarty.const.CURRENT_URL}" method="post">
+            <form action="{$smarty.server.REQUEST_URI}" method="post">
                 <input type="hidden" name="submit_token" value="{$smarty.const.SUBMIT_TOKEN}" />
                 <input type="hidden" name="return_url" value="syllabus" />
                 

@@ -1,6 +1,6 @@
 <h1><a href="users/view/{$user.user_id}">{$user.user_fname} {$user.user_lname}</a></h1>
 
-<form action="{$smarty.const.CURRENT_URL}" method="post">
+<form action="{$smarty.server.REQUEST_URI}" method="post">
 	{$smarty.const.SUBMIT_TOKEN_HTML}
     <input type="hidden" name="user_id" value="{$user.user_id}" />
     

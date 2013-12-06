@@ -1,10 +1,10 @@
 <h1>Accessibility</h1>
 
 <ul>
-<li><a href="{$smarty.const.CURRENT_URL}#whatis" class="anchor">What is Accessibility?</a></li>	
-<li><a href="{$smarty.const.CURRENT_URL}#csu" class="anchor">Accessibility in the <abbr title="California State University">CSU</abbr> System</a></li>	
-<li><a href="{$smarty.const.CURRENT_URL}#quickguides" class="anchor">Accessibility for QuickGuides</a></li>	
-<li><a href="{$smarty.const.CURRENT_URL}#contact" class="anchor">Contact</a></li>	
+<li><a href="{$smarty.server.REQUEST_URI}#whatis" class="anchor">What is Accessibility?</a></li>	
+<li><a href="{$smarty.server.REQUEST_URI}#csu" class="anchor">Accessibility in the <abbr title="California State University">CSU</abbr> System</a></li>	
+<li><a href="{$smarty.server.REQUEST_URI}#quickguides" class="anchor">Accessibility for QuickGuides</a></li>	
+<li><a href="{$smarty.server.REQUEST_URI}#contact" class="anchor">Contact</a></li>	
 </ul>
 
 
@@ -21,7 +21,7 @@ more detailed introduction to Web accessibility, visit the
 <a href="http://www.w3.org" class="popup">World Wide Web Consortium</a>
 (<abbr title="World Wide Web Consortium">W3C</abbr>) website.
 </p>
-<div class="return_top"><a href="{$smarty.const.CURRENT_URL}#page">Return to Top</a></div>
+<div class="return_top"><a href="{$smarty.server.REQUEST_URI}#page">Return to Top</a></div>
 
 
 <a id="csu"></a>
@@ -31,7 +31,7 @@ The Accessible Technology Initiative (ATI) reflects the California State Univers
 information, resources and technologies to individuals with disabilities.  For more information, please visit the
 <a href="http://www.calstate.edu/accessibility" class="popup">Accessible Technology Initiative page</a> on the CSU website.
 </p>
-<div class="return_top"><a href="{$smarty.const.CURRENT_URL}#page">Return to Top</a></div>
+<div class="return_top"><a href="{$smarty.server.REQUEST_URI}#page">Return to Top</a></div>
 
 
 <a id="quickguides"></a>
@@ -45,7 +45,7 @@ tactics, this site also employs the following accessibility measures:
     <li>Syllabi exported as Microsoft Word documents use our accessible Word Generator script to ensure accessibility</li>
     <li>All Javascript and <abbr title="Asynchronous Javascript and XML">AJAX</abbr> controls include redundant, plain <abbr title="Hypertext Markup Language">HTML</abbr> controls for browsers with Javascript disabled.</li>
 </ul>
-<div class="return_top"><a href="{$smarty.const.CURRENT_URL}#page">Return to Top</a></div>
+<div class="return_top"><a href="{$smarty.server.REQUEST_URI}#page">Return to Top</a></div>
 
 
 
@@ -56,4 +56,4 @@ We take accessibility very seriously and work hard to ensure that our product is
 encounter any accessibility or usability problems while using this application, please <a href="contact">contact the Syllabus Team</a> so that we can examine the problem and
 find a solution as quickly as possible.  
 </p>
-<div class="return_top"><a href="{$smarty.const.CURRENT_URL}#page">Return to Top</a></div>
+<div class="return_top"><a href="{$smarty.server.REQUEST_URI}#page">Return to Top</a></div>
