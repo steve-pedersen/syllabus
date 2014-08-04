@@ -133,10 +133,12 @@ class SyllabusModel extends BaseModel {
         
         // get the various syllabi
         $instructor_syllabi = $this->getInstructorSyllabi($user_id);
+        
         $student_syllabi = $this->getStudentSyllabi($user_id);
         $editable_syllabi = $this->getEditableSyllabi($user_id);
         
         $syllabi_array = array_merge($instructor_syllabi, $student_syllabi, $editable_syllabi);
+
        
 		if($return_raw) {
 			$return_array = $syllabi_array;
@@ -151,7 +153,7 @@ class SyllabusModel extends BaseModel {
 				}
 			}
 		}
-		
+
         return $return_array; 
     }
 
@@ -171,7 +173,7 @@ class SyllabusModel extends BaseModel {
     }
 
     /**
-     * Get all syllabi for a particular instructor
+     * Get all Visible syllabi for a particular instructor
      * @param int $user_id The user's unique id
      * @return array Returns an array of classes
      */
@@ -184,13 +186,15 @@ class SyllabusModel extends BaseModel {
             SELECT * FROM enrollment e 
             INNER JOIN users u ON e.enroll_user_id=u.user_id
             INNER JOIN syllabus s ON e.enroll_class_id=s.syllabus_id
-            WHERE e.enroll_user_id='%s' AND e.enroll_role='instructor' AND e.enroll_class_id REGEXP '^[0-9]{5}\-[A-Z]\-[0-9]{5}$'
+            INNER JOIN semester_info su ON s.syllabus_sem_id=su.id
+            WHERE e.enroll_user_id='%s' AND e.enroll_role='instructor'AND su.visibility=1
             GROUP BY s.syllabus_id
             ORDER BY s.syllabus_class_year DESC, s.syllabus_class_semester DESC, s.syllabus_class_number ASC, s.syllabus_class_section ASC;",
 			$user_id
 		);
 		
 		$result = $this->executeQuery();
+        
 		return($result['count'] > 0) ? $result['data'] : array();
 	}
 
@@ -218,7 +222,7 @@ class SyllabusModel extends BaseModel {
 
 
     /**
-     * Get all syllabi for a particular student
+     * Get all Visible syllabi for a particular student
      * @param int $user_id The user's unique id
      * @return array Returns an array of classes
      */
@@ -228,17 +232,21 @@ class SyllabusModel extends BaseModel {
                 ? $_SESSION['user_id']
                 : 0;
         }
+        
 		$this->query= sprintf("
             SELECT * FROM enrollment e
             INNER JOIN syllabus s ON e.enroll_class_id=s.syllabus_id
+            INNER JOIN semester_info su ON s.syllabus_sem_id=su.id
             INNER JOIN users u ON e.enroll_user_id=u.user_id
-            WHERE e.enroll_user_id='%s' AND e.enroll_role='student' AND e.enroll_class_id REGEXP '^[0-9]{5}\-[A-Z]\-[0-9]{5}$'
+            WHERE e.enroll_user_id='%s' AND e.enroll_role='student' AND e.enroll_class_id REGEXP '^[0-9]{5}$' AND su.visibility=1
             GROUP BY s.syllabus_id
             ORDER BY s.syllabus_class_year DESC, s.syllabus_class_semester DESC, s.syllabus_class_number ASC, s.syllabus_class_section ASC;",
 			$user_id
 		);
 		
 		$student_syllabi_result = $this->executeQuery();
+        
+        
 		$student_syllabi = ($student_syllabi_result['count'] > 0) ? $student_syllabi_result['data'] : array();
 		
 		// get the actual instructor for the class and replace the information in the array
@@ -296,8 +304,9 @@ class SyllabusModel extends BaseModel {
         $this->query = sprintf("
             SELECT * FROM permissions p
             INNER JOIN syllabus s ON p.syllabus_id=s.syllabus_id
+            INNER JOIN semester_info su ON s.syllabus_sem_id=su.id
             INNER JOIN users u ON p.user_id=u.user_id
-            WHERE p.user_id='%s' AND p.permission='edit_syllabus' AND p.syllabus_id IS NOT NULL;",
+            WHERE p.user_id='%s' AND p.permission='edit_syllabus' AND p.syllabus_id IS NOT NULL AND su.visibility=1;",
             $user_id
         );
 		

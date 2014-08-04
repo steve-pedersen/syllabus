@@ -5,9 +5,9 @@
     {foreach name=tabs_year from=$syllabi item=ty key=tyk}
         {foreach name=tabs_sem from=$ty item=ts key=tsk}
             {if $tsk == 1}{assign var='semester_name' value='Winter'}{/if}
-            {if $tsk == 2}{assign var='semester_name' value='Spring'}{/if}
-            {if $tsk == 3}{assign var='semester_name' value='Summer'}{/if}
-            {if $tsk == 4}{assign var='semester_name' value='Fall'}{/if}            
+            {if $tsk == 3}{assign var='semester_name' value='Spring'}{/if}
+            {if $tsk == 5}{assign var='semester_name' value='Summer'}{/if}
+            {if $tsk == 7}{assign var='semester_name' value='Fall'}{/if}            
             <li id="tab_{$tyk}{$tsk}"><a href="{$smarty.server.REQUEST_URI}#tabcontent-{$tyk}{$tsk}"><strong>{$semester_name} {$tyk}</strong></a></li>
         {/foreach}
     {/foreach}
@@ -21,9 +21,9 @@
     {foreach name=tabs_year from=$syllabi item=ty key=tyk}
         {foreach name=tabs_sem from=$ty item=ts key=tsk}
             {if $tsk == 1}{assign var='semester_name' value='Winter'}{/if}
-            {if $tsk == 2}{assign var='semester_name' value='Spring'}{/if}
-            {if $tsk == 3}{assign var='semester_name' value='Summer'}{/if}
-            {if $tsk == 4}{assign var='semester_name' value='Fall'}{/if}            
+            {if $tsk == 3}{assign var='semester_name' value='Spring'}{/if}
+            {if $tsk == 5}{assign var='semester_name' value='Summer'}{/if}
+            {if $tsk == 7}{assign var='semester_name' value='Fall'}{/if}            
             <div id="tabcontent-{$tyk}{$tsk}">
             <h2 class="tab-header">{$semester_name} {$tyk}</h2>
             <table summary="Syllabi from the {$semester_name} {$tyk} semester" cellpadding="0" cellspacing="0">

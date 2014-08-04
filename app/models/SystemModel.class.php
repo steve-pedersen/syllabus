@@ -4,16 +4,22 @@
  * Require classes if necessary (autoload function will not be available if running from Command Line so they must be manually included)
  */
 require_once('_helpers/Messages.class.php');
+require_once('_helpers/sims_service.php');
 
 
 /**
  * SystemModel
  */
 class SystemModel extends BaseModel {	
-	
-	
+	private $sims_service;
+    private $r; //this is the result produced by the sims_service
+    private $semesters=array();
+    private $semester_Names=array();
+    private $semester_Years=array();
+	    
 	/**
      * Run an update of the system from the SIMS database
+     * Used by the cron to update the active semester ids only
      */
 	public function systemUpdate() {
 		
@@ -37,58 +43,273 @@ class SystemModel extends BaseModel {
 		}
 		
 		if($run) {
-            // only import the selected data if the SIMS snapshot can be found
-            if(file_exists(SNAPSHOT_DIR . '/users_sfsuid.lst')) $this->importUsers();
-            if(file_exists(SNAPSHOT_DIR . '/enroll_sfsuid.lst')) $this->importEnrollment();
-            if(file_exists(SNAPSHOT_DIR . '/descrip_sfsuid.lst') && file_exists(SNAPSHOT_DIR . '/courses_sfsuid.lst')) $this->importSyllabi();
+                
+                
+                //Get all the active semester ids from the the DB
+                $this->query = "SELECT id FROM semester_info WHERE activity= 1 ORDER BY id;";
+                $semArray = $this->executeQuery();
             
-            // clean up orphaned syllabi
-            // $this->deleteOrphans();
-			
-			// now, finally drop the snapshot_classes temp table
-			$this->query= "DROP TABLE snapshot_classes";
-			$this->executeQuery();
-		    
+                if($semArray['count']>0){
+                    //for each active semester id from the dB,
+                    // run the Sims service::getChanges to get the Active semester data
+                    foreach ($semArray['data'] as $active_sem) {
+                        $this->sims_service = new sims_service();
+                        $this->r= $this->sims_service->getChanges($active_sem['id']);
+
+                        //Load data from SIMS to the syllabi dB
+                        $this->importUsers();
+                        $this->importEnrollment();
+                        $this->importSyllabi();
+                    }
+		        }
             Messages::addMessage('The System was successfully updated', 'success');
+           // $this->redirect = 'https://www.google.com/';
             return true;
 		}
 	}
 
+    /**
+     * Get all semester information(id,visibility,activity) from the dB
+     * @param string $sem, which is the semester
+     * @return array Return the semester to display in table
+     */
+    public function getData() {
+            $this->query = "SELECT id,visibility,activity FROM semester_info ORDER BY id;";
+            $semesters = $this->executeQuery();
+            
+            if($semesters['count']>0){
+                //separate the semesters string by ','
+                foreach($semesters['data'] as $semester){
+                    //store each semester in the semesters array
+                    $this->setSemestersArray($semester['id'],$semester['visibility'],$semester['activity']);   
+                }   
+            }
+    }
+
+    /**
+     * Get all current semesters in dB to populate the textfield with attainable ids
+     * @return array Return the semester ids to display in textfield as default values if the field is empty
+     */
+    public function populateTextField() {
+        $temp = array();
+        $default = $this->semesters_string;
+        if( $default == "") //if empty string, then replace with current ids in db to help user
+        {
+            $this->query = "SELECT id FROM semester_info ORDER BY id;";
+            $semArray = $this->executeQuery();
+            if($semArray['count']>0){
+                //separate the semesters string by ','
+                foreach($semArray['data'] as $semester){
+                    //store each semester in the temp array
+                    array_push($temp, $semester['id']);     
+                }
+                $default = implode(',', $temp);
+            }
+        }
+        return $default;            
+    }
+
+    /**
+     * Saves the visibility and activity settings(boolean values) for each semester id in the dB
+     */
+    public function saveChanges() {
+
+          //set visibility to true in dB for each checked visibility checkbox
+          if(isset($this->vid) && is_array($this->vid) && count($this->vid)>0) {
+
+                foreach($this->vid as $k => $v) {
+                    $this->query = "UPDATE semester_info SET visibility=1 WHERE id='$v';";
+                    $this->executeQuery();
+                }
+                //set visibility to false for any unchecked visibility checkbox
+                $this->query = "UPDATE semester_info SET visibility=0 WHERE id NOT IN ( '" . implode($this->vid, "', '") . "' )";
+                $this->executeQuery();
+            }
+            //set activity to true in dB for each checked activity checkbox
+          if(isset($this->aid) && is_array($this->aid) && count($this->aid)>0) {
+                foreach($this->aid as $k => $a) {
+                    $this->query = "UPDATE semester_info SET activity=1 WHERE id='$a';";
+                    $this->executeQuery();
+                }
+                //set activity to false for any unchecked activity checkbox
+                $this->query = "UPDATE semester_info SET activity=0 WHERE id NOT IN ( '" . implode($this->aid, "', '") . "' )";
+                $this->executeQuery();
+            }
+            //
+            $this->redirect = 'system/update'; //refresh the page
+            return true;
+            
+    }
+
+    /**
+     * Form button: Sets and Validates the semester ids in the dB:semester_info
+     */
+    public function setSemesters() {
+        //initialize semesters string to be textfield string of ids
+       $semesters = $this->semesters_string;
+       //if string is empty, then delete all current ids in dB
+       if(empty($semesters)){
+            $this->query ="DELETE FROM semester_info;";
+            $this->executeQuery();
+            return false;
+       }
+
+       $id= explode(',', $semesters);
+       //validate each semester id in the string
+       foreach($id as $semester){
+                //use regex pattern to check for incorrect id formats
+                $isMatch=$this->validateSemester($semester);
+                if(!$isMatch){
+                    $error='Semester '.$semester.' is NOT in correct format';
+                    Messages::addMessage($error, 'error');
+                    return false;
+                }
+        }
+        
+        //flip the key with the values so the key is now the unique student id
+        $web_results=array_flip($id);
+        //delete the records that are not in the string of ids
+        $this->query = "DELETE FROM semester_info WHERE id NOT IN ( '" . implode($id, "', '") . "' )";
+        $dB_results = $this->executeQuery();
+    
+        
+        //get list of all ids in dB
+        $this->query = "SELECT id FROM semester_info;";
+        $dB_results = $this->executeQuery();
+        //if dB has records, then compare string with each dB records and unset duplicates
+         if ($dB_results['count']>0) {
+             //parse the dbResults to get the id
+            foreach ($dB_results['data'] as $sId) {
+            
+                if(array_key_exists($sId['id'], $web_results)){
+                    unset($web_results[$sId['id']]);     
+                }
+            }
+         }
+        
+        //create an array of the leftover ids, which are the leftover keys from web_results
+        $newIds = array_keys($web_results);
+        //insert the id,visibility, activity for each newId into the database
+        foreach ($newIds as $nid) {
+            $this->query = "INSERT INTO semester_info (id, visibility, activity)  
+            Values('$nid',0,0);";
+        $this->executeQuery(); 
+        }
+        
+    }
+
+    /**
+     * Get all semesters for the current user
+     * @param string $sem, which is the semester
+     * @return array Return the semester to display in table
+     */
+    public function getSemesters() {
+        return $this->semesters;
+    }
+    
+   
+    /**
+     * Set each semester information for the current user in the semesters array
+     * @param string semester id, boolean visibility, boolean activity 
+     */
+    private function setSemestersArray($sem,$vis,$act) {
+        $name = substr($sem,3,1);
+        switch($name){
+            case 1:
+                $name ='Winter ';
+                break;
+            case 3:
+                $name ='Spring ';
+                break;
+            case 5:
+                $name ='Summer ';
+                break;
+            default:
+                $name ='Fall ';
+        }
+        if($vis==1){
+            $vis = 'checked= "checked"';
+        }else{
+            $vis = '';
+        }
+        if($act==1){
+            $act = 'checked= "checked"';
+        }else{
+            $act = '';
+        }
+        $temp = array('semester_id'=>$sem,
+                      'semester_name' =>$name,
+                      'semester_year'=> str_pad(substr($sem,1,2),4,"20",STR_PAD_LEFT),
+                      'semester_visibility' =>$vis,
+                      'semester_activity' =>$act);
+        array_push($this->semesters,$temp);
+       
+    }
+
+    
+    /**
+     * Validate the semester by checking if string is in correct format("20121")
+     */
+    private function validateSemester($sem) {
+        $regex= '/^2([0-9]{2,3})([1-9])$/';
+        if(preg_match($regex, $sem, $matches)){
+            //if there is a match then relate the second match(the semester number 1,3,5,7) 
+            //with the semester name(Winter,Spring,Summer,Fall)
+            
+            return array($matches,true);
+        }
+        return false;
+    }
 
     /**
      * Import users into the system from the SIMS file
      */
     private function importUsers() {
+        
         // build the temporary table		
-        $this->query= "CREATE TEMPORARY TABLE `snapshot_users` (
-            `SFSUid` INT( 9 ) NOT NULL ,
-            `External_Person_Key` INT( 6 ) NOT NULL ,
-            `User_ID` VARCHAR( 100 ) NOT NULL ,
-            `Passwd` VARCHAR( 6 ) NOT NULL ,
-            `Firstname` VARCHAR( 30 ) NOT NULL ,
-            `Lastname` VARCHAR( 30 ) NOT NULL ,
-            `Email` VARCHAR( 30 ) NOT NULL ,
-            `Institution_Role` VARCHAR( 20 ) NOT NULL ,
-            `System_Role` VARCHAR( 20 ) NOT NULL ,
-            `Available_Ind` VARCHAR( 1 ) NOT NULL ,
-            `Row_Status` VARCHAR( 10 ) NOT NULL
+        $this->query= "CREATE TABLE `susers` (
+            `SFSUid` INT( 9 )  ,
+            `External_Person_Key` INT( 6 )  ,
+            `User_ID` VARCHAR( 100 )  ,
+            `Passwd` VARCHAR( 6 )  ,
+            `Firstname` VARCHAR( 30 )  ,
+            `Lastname` VARCHAR( 30 )  ,
+            `Email` VARCHAR( 30 )  ,
+            `Institution_Role` VARCHAR( 20 )  ,
+            `System_Role` VARCHAR( 20 )  ,
+            `Available_Ind` VARCHAR( 1 )  ,
+            `Row_Status` VARCHAR( 10 ) 
             ) TYPE = MYISAM ;";
         $this->executeQuery();
+
+       
+
+       //Load JSON data of users into temp table
+        foreach( $this->r[1]['users'] as $sId => $user )
+        {
+            foreach( $user as $d )
+            {
+                
+                $d['d']['first'] = $this->mysqli->escape_string($d['d']['first']);
+                $d['d']['last'] = $this->mysqli->escape_string($d['d']['last']);
+                $d['d']['mail'] = $this->mysqli->escape_string($d['d']['mail']);
+                $this->query = "INSERT INTO susers (SFSUid, Firstname, Lastname, Email)  
+                Values('".$sId." ','".$d['d']['first']." ',' ".$d['d']['last']." ','".$d['d']['mail']."');";
+                $this->executeQuery();
+                
+            }
+        }
         
-        // load into temporary table
-        $snapshotFile = SNAPSHOT_DIR . '/users_sfsuid.lst';
-        $this->query= "LOAD DATA LOCAL INFILE '".$snapshotFile."' INTO TABLE snapshot_users FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES";
+        //insert (update duplicates)
+        $this->query = "INSERT INTO users (user_id,user_fname, user_lname, user_email)  
+            SELECT SFSUid,Firstname, Lastname, Email FROM susers WHERE Firstname != ''
+            ON DUPLICATE KEY UPDATE user_id=SFSUid, user_fname=Firstname, user_lname=Lastname, user_email=Email;";
+        $this->executeQuery(); 
+
+        //drop temporary table     
+        $this->query= "DROP TABLE susers";
         $this->executeQuery();
-        
-        // insert (update duplicates)
-        $this->query = "INSERT INTO users (user_id, user_ext_id, user_fname, user_lname, user_email)  
-            SELECT SFSUid, External_Person_Key, Firstname, Lastname, Email FROM snapshot_users WHERE Firstname != ''
-            ON DUPLICATE KEY UPDATE user_fname=Firstname, user_lname=Lastname, user_email=Email;";
-        $this->executeQuery();
-        
-        // drop temporary table		
-        $this->query= "DROP TABLE snapshot_users";
-        $this->executeQuery();
+     
     }
 
 
@@ -97,81 +318,96 @@ class SystemModel extends BaseModel {
      * Import the data into the enrollment table
      */
     private function importEnrollment() {
-        // begin by truncating the enrollment table so we get a fresh set of data and no duplicates
-        $this->query= "TRUNCATE enrollment;";
+        //drop temporary table     
+        $this->query= "DROP TABLE IF EXISTS senroll;";
         $this->executeQuery();
         // build the temporary table
-        $this->query= "CREATE TEMPORARY TABLE `snapshot_enroll` (
+        $this->query= "CREATE TEMPORARY TABLE `senroll` (
             `SFSUid` INT( 9 ) NOT NULL ,
             `External_Course_Key` VARCHAR( 13 ) NOT NULL ,
-            `External_Person_Key` INT( 6 ) NOT NULL ,
-            `Role` VARCHAR( 10 ) NOT NULL ,
-            `Available_Ind` VARCHAR( 1 ) NOT NULL ,
-            `Row_Status` VARCHAR( 10 ) NOT NULL
+            `External_Person_Key` INT( 6 )  ,
+            `Role` VARCHAR( 10 )  ,
+            `Available_Ind` VARCHAR( 1 ) ,
+            `Row_Status` VARCHAR( 10 ) 
             ) TYPE = MYISAM ;";
         $this->executeQuery();
         
-        // load into temporary table
-        $snapshotFile = SNAPSHOT_DIR . '/enroll_sfsuid.lst';
-        $this->query= "LOAD DATA LOCAL INFILE '".$snapshotFile."' INTO TABLE snapshot_enroll FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES";
-        $this->executeQuery();
+       echo"<pre>";
+            print_r($this->r[1]['enrollments']);
+            die;
+
+
+        // load into enrollment table
+        //ck=class Key, role= student/instructor, v= value of each class key, sId= student Id
+        foreach ( $this->r[1]['enrollments'] as $cK => $v ) 
+        {
+            echo"<pre>";
+            print_r($this->r[1]['enrollments']);
+            die;
+
+            foreach ( $v as $sId )
+            {
+                // Remove the +- and si characters from the beginning of student id
+                $sId = $this->mysqli->escape_string($sId);
+                $role=$sId[1]; // this value is i/s and we need to change to instructor/student
+                $role = ($role=='i') ? 'instructor' : 'student' ;
+                $sId=substr( $sId, 2 );
+                $sId=(int)$sId;
+                $this->query = "INSERT INTO senroll (External_Course_Key, SFSUid, Role)
+                Values('".$cK." ', ".$sId.",'".$role." ');";
+                $this->executeQuery();
+                
+            }     
+        }
+        //insert (update duplicates)
+        $this->query = "INSERT INTO enrollment (enroll_class_id, enroll_user_id, enroll_role)  
+            SELECT External_Course_Key,SFSUid,Role FROM senroll 
+            ON DUPLICATE KEY UPDATE enroll_class_id=External_Course_Key,enroll_user_id=SFSUid, enroll_role=Role;";
+        $this->executeQuery(); 
+
         
-        // insert (update duplicates)
-        $this->query= "INSERT INTO enrollment (enroll_user_id, enroll_class_id, enroll_role)  
-            SELECT SFSUid, External_Course_Key, Role FROM snapshot_enroll
-            ON DUPLICATE KEY UPDATE enroll_user_id=SFSUid, enroll_class_id=External_Course_Key, enroll_role=Role;";
-        $this->executeQuery();
-        
-        // drop temporary table		
-        $this->query= "DROP TABLE snapshot_enroll";
-        $this->executeQuery();
     }
-    
-    
     
     /**
      * Import data into the syllabi table
      */
     private function importSyllabi() {
+        //local variables
+        $c_number;
+        $c_section;
+        $c_sem=0;
+        $c_year;
+        $c_sem_id;
+        $this->query="DROP TABLE IF EXISTS sclass_desc;";
+        $this->executeQuery();
+        $this->query="DROP TABLE IF EXISTS classes;";
+        $this->executeQuery();
         // build the temporary table		
-        $this->query= "CREATE TEMPORARY TABLE `snapshot_class_desc` (
-            `External_Course_Key` VARCHAR( 13 ) NOT NULL ,
-            `title` VARCHAR( 100 ) NOT NULL ,
-            `units` TINYINT( 1 ) NOT NULL ,
-            `catlg` INT( 5 ) NOT NULL ,
-            `school` INT( 3 ) NOT NULL ,
-            `dept` INT( 3 ) NOT NULL ,
-            `computer_req` TINYINT( 1 ) NOT NULL ,
-            `crs_description` TEXT NOT NULL ,
-            `prereq_description` TEXT NOT NULL
+        $this->query= "CREATE TABLE `sclass_desc` (
+            `External_Course_Key` VARCHAR( 13 ) ,
+            `title` VARCHAR( 100 )  ,
+            `sem_id` VARCHAR( 10 )  ,
+            `units` TINYINT( 1 )  ,
+            `catlg` INT( 5 )  ,
+            `school` INT( 3 )  ,
+            `dept` INT( 3 )  ,
+            `computer_req` TINYINT( 1 )  ,
+            `crs_description` TEXT  ,
+            `prereq_description` TEXT 
             ) TYPE = MYISAM ;";
         $this->executeQuery();
+
+        /*Also, we need to get the rest of the necessary information for the syllabus table*/
         
-        // load into temporary table
-        $snapshotFile = (file_exists(SNAPSHOT_DIR . '/descrip_sfsuid.lst'))	?	 SNAPSHOT_DIR . '/descrip_sfsuid.lst'	:	SNAPSHOT_DIR . '/descrip.lst'	;
-        $this->query= "LOAD DATA LOCAL INFILE '".$snapshotFile."' INTO TABLE snapshot_class_desc FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES";
-        $this->executeQuery();
-        
-        // insert (update duplicates)
-        $this->query= "INSERT INTO syllabus (syllabus_id, syllabus_class_schedule_number, syllabus_class_title, syllabus_class_description, syllabus_class_prereqs)  
-            SELECT External_Course_Key, catlg, title, crs_description, prereq_description FROM snapshot_class_desc
-            ON DUPLICATE KEY UPDATE syllabus_class_title=title, syllabus_class_prereqs=prereq_description";
-        $this->executeQuery();
-        
-        // drop temporary table		
-        $this->query= "DROP TABLE snapshot_class_desc";
-        $this->executeQuery();
-        
-        
-        /*
-        Here we need to load a second snapshot file to get the rest of the necessary information for the syllabus table
-        */
-        
-        // build the temporary table		
-        $this->query= "CREATE TEMPORARY TABLE `snapshot_classes` (
+        // build the temporary table        
+        $this->query= "CREATE TABLE `classes` (
             `External_Course_Key` VARCHAR( 13 ) NOT NULL ,
             `Course_ID` VARCHAR( 30 ) NOT NULL ,
             `Course_Name` VARCHAR( 100 ) NOT NULL ,
+            `Course_Num` VARCHAR( 100 ) NOT NULL ,
+            `Course_Sec` INT(2) NOT NULL ,
+            `Course_Sem` INT(2) NOT NULL ,
+            `Course_Year` INT(5) NOT NULL ,
             `Available_Ind` VARCHAR( 1 ) NOT NULL ,
             `Row_Status` VARCHAR( 10 ) NOT NULL ,
             `Abs_Limit` INT( 6 ) NOT NULL ,
@@ -180,31 +416,90 @@ class SystemModel extends BaseModel {
             ) ENGINE = MYISAM ;";
         $this->executeQuery();
         
+       
         // load into temporary table
-        $snapshotFile = SNAPSHOT_DIR . '/courses_sfsuid.lst';
-        $this->query= "LOAD DATA LOCAL INFILE '".$snapshotFile."' INTO TABLE snapshot_classes FIELDS TERMINATED BY '|' LINES TERMINATED BY '\n' IGNORE 1 LINES";
+        foreach ( $this->r[1]['courses'] as $cK => $v ) 
+        {
+
+            foreach ( $v as $s ) //$v= each value of the course key
+            {
+                //only insert into syllabus dB if there is a key called ['d'] in the JSON object
+                //which contains info for the title and course description
+                if (array_key_exists("d",$s)){
+
+                
+                    if (array_key_exists("title",$s['d']))
+                    {
+                        $v[0]['d']['title'] = $this->mysqli->escape_string($v[0]['d']['title']);
+                    
+                    }else{
+                        $v[0]['d']['title'] = NULL;
+                    }
+                    if (array_key_exists("desc",$s['d']))
+                    {
+                        $v[0]['d']['desc'] = $this->mysqli->escape_string($v[0]['d']['desc']);
+                    }else{
+                        $v[0]['d']['desc'] = NULL;
+                    }
+                    //Parse the Course Section
+                    $c_sec = preg_split('[-]', $v[0]['d']['sn']);
+                    $c_sec = $c_sec[2];
+
+                    //Parse the semester from the short name
+                    if (strpos($v[0]['d']['sn'],'Fall') !== false) {
+                        $c_sem=7;
+                    }elseif (strpos($v[0]['d']['sn'],'Winter') !== false) {
+                        $c_sem=1;
+                    }elseif (strpos($v[0]['d']['sn'],'Spring') !== false) {
+                        $c_sem=3;
+                    }else{
+                        $c_sem=5;
+                    }
+                    //Parse the Course year and build the semester id string '2147'
+                    $c_year = preg_split('[-]', $v[0]['d']['sn']);
+                    $c_year = $c_year[4];
+                    $c_sem_id = preg_split('[0]', $c_year);
+                    $c_sem_id = '2'.$c_sem_id[1].$c_sem;
+                
+                    $this->query = "INSERT INTO sclass_desc (External_Course_Key, title, crs_description,sem_id)
+                    Values('".$cK." ', '".$v[0]['d']['title']."','".$v[0]['d']['desc']."','".$c_sem_id." ');";
+                    $this->executeQuery(); 
+
+                    //Enter 2nd set of data into 'classes' after parsing the course key($cK)
+                    $this->query = "INSERT INTO classes (External_Course_Key, Course_Name, Course_Sem,Course_Sec, Course_Year)
+                    Values('".$cK." ', '".$v[0]['d']['sn']."','".$c_sem." ','".$c_sec." ','".$c_year." ');";
+                    $this->executeQuery(); 
+
+                } 
+            }    
+        }  
+        
+         //A_U-0425-01-Fall-2014
+        // insert first set of data into syllabus(update duplicates)
+        $this->query= "INSERT INTO syllabus (syllabus_id, syllabus_class_title, syllabus_class_description,syllabus_sem_id)  
+            SELECT External_Course_Key,title, crs_description,sem_id FROM sclass_desc
+            ON DUPLICATE KEY UPDATE syllabus_class_title=title";
         $this->executeQuery();
         
-        // insert (update duplicates)
+        // insert second set of data into syllabus(update duplicates)
         $hash_str = 'ai#9@LC8_2*';        
-        $this->query= "INSERT INTO syllabus (syllabus_id, syllabus_class_number, syllabus_class_section, syllabus_class_semester, syllabus_class_year, syllabus_view_token )  
+       $this->query= "INSERT INTO syllabus (syllabus_id, syllabus_class_number, syllabus_class_section, syllabus_class_semester, syllabus_class_year, syllabus_view_token )  
             SELECT 
                 External_Course_Key,
-                SUBSTR(Course_Name, 1, LOCATE('-', Course_Name, 1) - 1),
-                SUBSTR(Course_Name, LOCATE('-', Course_Name, 1) + 1, 2), 
-                SUBSTR(External_Course_Key, 5, 1),
-                SUBSTR(External_Course_Key, 1, 4),
-				MD5(CONCAT('" . $hash_str . "', External_Course_Key))
-            FROM snapshot_classes
+                REPLACE(SUBSTR(Course_Name, 1, 8),'-',' '),
+                Course_Sec, 
+                Course_Sem, 
+                Course_Year,
+                MD5(CONCAT('" . $hash_str . "', External_Course_Key))
+            FROM classes
             ON DUPLICATE KEY UPDATE 
-                syllabus_class_number=SUBSTR(Course_Name, 1, LOCATE('-', Course_Name, 1) - 1), 
-                syllabus_class_section=SUBSTR(Course_Name, LOCATE('-',Course_Name, 1) + 1, 2), 
-                syllabus_class_semester=SUBSTR(External_Course_Key, 5, 1),
-                syllabus_class_year=SUBSTR(External_Course_Key, 1, 4),
-				syllabus_view_token=MD5(CONCAT('" . $hash_str . "', External_Course_Key))
+                syllabus_class_number=REPLACE(SUBSTR(Course_Name, 1, 8),'-',' '), 
+                syllabus_class_section=Course_Sec, 
+                syllabus_class_semester=Course_Sem,
+                syllabus_class_year=Course_Year,
+                syllabus_view_token=MD5(CONCAT('" . $hash_str . "', External_Course_Key))
             ";
         $this->executeQuery();
-        // Don't drop the temporary table yet. We will use it again at the end of the script to delete orphans
         
     }
 

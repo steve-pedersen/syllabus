@@ -130,6 +130,6 @@ define('DB_NAME', '');
 
 
 /**
- * SIMS anapshot directory for user database update
+ * SIMS snapshot directory for user database update
  */
 define('SNAPSHOT_DIR', '/var/local/sims/');

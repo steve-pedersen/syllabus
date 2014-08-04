@@ -8,12 +8,14 @@
  * Once the config file is included, we can make use of the normal application constants for other includes, etc
  */
 
-require '/var/www/syllabus/app/config.php';
-
+//require '/var/www/syllabus/app/config.php';
+require '/home/smehta/public_html/syllabus/app/config.php';
 // only run the cron if CRON has not been disabled in the config file
 if(DISABLE_CRON_SCRIPT == false) {
     require (APP_ROOT . 'models/BaseModel.class.php');
     require (APP_ROOT . 'models/SystemModel.class.php');
+    
     $System = new SystemModel();
+    //Updates only the active semester ids
     $System->systemUpdate();
 }

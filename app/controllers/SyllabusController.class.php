@@ -54,6 +54,7 @@ class SyllabusController extends BaseController {
             ? $drafts
             : null;
         $syllabi = $this->Model->getSyllabiForUser();
+        
         if(count($syllabi) > 0) {
             $this->View->syllabi = $syllabi;
             $this->View->has_syllabi = true;

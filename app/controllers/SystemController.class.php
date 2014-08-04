@@ -52,6 +52,21 @@ class SystemController extends BaseController {
 		if($this->Permissions->isAdmin()) {
 			$this->View->page_title = 'System';
 			$this->View->show_merge_legacy = false;
+			
+			$this->Model->getData();//get all ids,visibility,activity settings from dB
+			$semesters = $this->Model->getSemesters(); //get array that has semesters info from dB
+			/*echo"<pre>";
+			print_r($semesters);
+			die;
+			*/
+			$default = $this->Model->populateTextField();
+			$this->View->default = $default; //set default values for the textfield
+			//if dB is not empty, allow View to access the semesters array
+        	if(count($semesters) > 0) {
+
+            	$this->View->semesters = $semesters; 	
+        	}
+
 			$this->View->parseTemplate('page_content', 'system/update.tpl.php');
 		} else {
 			Messages::addMessage('You do not have permission to access this page.', 'error');
