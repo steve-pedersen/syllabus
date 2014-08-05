@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS semester_info;
 
 CREATE TABLE semester_info (
     id  int(11) NOT NULL,
