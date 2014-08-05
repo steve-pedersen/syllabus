@@ -58,6 +58,9 @@ class SyllabusModel extends BaseModel {
 				$result['data'][0]['syllabus_fax'] = $result['data'][0]['user_fax'];
 				$result['data'][0]['syllabus_fax'] = $result['data'][0]['user_fax'];
 			}
+            if(isset($result['data'][0]['syllabus_id'])) {
+                $result['data'][0]['syllabus_id'] = trim($result['data'][0]['syllabus_id']);
+            }
 		}
 		
 		return ($result['count'] > 0) ? $result['data'][0] : false;
