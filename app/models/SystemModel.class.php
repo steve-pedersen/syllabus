@@ -478,14 +478,14 @@ class SystemModel extends BaseModel {
        $this->query= "INSERT INTO syllabus (syllabus_id, syllabus_class_number, syllabus_class_section, syllabus_class_semester, syllabus_class_year, syllabus_view_token )  
             SELECT 
                 External_Course_Key,
-                REPLACE(SUBSTR(Course_Name, 1, 8),'-',' '),
+                REPLACE(SUBSTR(Course_Name, 1, 9),'-',' '),
                 Course_Sec, 
                 Course_Sem, 
                 Course_Year,
                 MD5(CONCAT('" . $hash_str . "', External_Course_Key))
             FROM classes
             ON DUPLICATE KEY UPDATE 
-                syllabus_class_number=REPLACE(SUBSTR(Course_Name, 1, 8),'-',' '), 
+                syllabus_class_number=REPLACE(SUBSTR(Course_Name, 1, 9),'-',' '), 
                 syllabus_class_section=Course_Sec, 
                 syllabus_class_semester=Course_Sem,
                 syllabus_class_year=Course_Year,
