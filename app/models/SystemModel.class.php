@@ -16,6 +16,20 @@ class SystemModel extends BaseModel {
     private $semesters=array();
     private $semester_Names=array();
     private $semester_Years=array();
+
+    static $OldSemesterCodes = array(
+        1 => 'Winter',
+        2 => 'Spring',
+        3 => 'Summer',
+        4 => 'Fall',
+    );
+
+    static $NewSemesterCodes = array(
+        1 => 'Winter',
+        3 => 'Spring',
+        5 => 'Summer',
+        7 => 'Fall',
+    );
 	    
 	/**
      * Run an update of the system from the SIMS database
@@ -84,6 +98,8 @@ class SystemModel extends BaseModel {
                     $this->setSemestersArray($semester['id'],$semester['visibility'],$semester['activity']);   
                 }   
             }
+
+            krsort($this->semesters);
     }
 
     /**
@@ -213,20 +229,23 @@ class SystemModel extends BaseModel {
      * @param string semester id, boolean visibility, boolean activity 
      */
     private function setSemestersArray($sem,$vis,$act) {
-        $name = substr($sem,3,1);
-        switch($name){
-            case 1:
-                $name ='Winter ';
-                break;
-            case 3:
-                $name ='Spring ';
-                break;
+        $length = strlen("$sem");
+        $semString = "$sem";
+        switch ($length) {
             case 5:
-                $name ='Summer ';
+                $semester = substr($semString, 4, 1);
+                $name = self::$OldSemesterCodes[$semester];
+                $year = substr($semString, 0, 4);
+                $sortKey = $semString;
                 break;
-            default:
-                $name ='Fall ';
+            case 4:
+                $semester = substr($semString, 3, 1);
+                $name = self::$NewSemesterCodes[$semester];
+                $year = '20' . substr($semString, 1, 2);
+                $sortKey = $semString[0] . '0' . substr($semString, 1);
+                break;
         }
+        
         if($vis==1){
             $vis = 'checked= "checked"';
         }else{
@@ -239,11 +258,11 @@ class SystemModel extends BaseModel {
         }
         $temp = array('semester_id'=>$sem,
                       'semester_name' =>$name,
-                      'semester_year'=> str_pad(substr($sem,1,2),4,"20",STR_PAD_LEFT),
+                      'semester_year'=> $year,
                       'semester_visibility' =>$vis,
                       'semester_activity' =>$act);
-        array_push($this->semesters,$temp);
-       
+
+        $this->semesters[$sortKey] = $temp;
     }
 
     

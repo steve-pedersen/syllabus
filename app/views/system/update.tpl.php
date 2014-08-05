@@ -61,7 +61,7 @@
                         <tr>
                             
 
-                            <th scope="row">{$semester.semester_name}{$semester.semester_year}</th>
+                            <th scope="row">{$semester.semester_name} {$semester.semester_year}</th>
                             <td><input type="checkbox" name="vid[]" id="{$semester.semester_id}" {$semester.semester_visibility} value="{$semester.semester_id}"><label> Visible</label></td>
                             <td><input type="checkbox" name="aid[]" id="{$semester.semester_id}" {$semester.semester_activity} value="{$semester.semester_id}"><label> Active</label></td>
                             <td><input type="hidden" name="sem[]" value="{$semester.semester_id}" /></td>
