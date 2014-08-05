@@ -5,6 +5,19 @@
  */
 class SyllabusController extends BaseController {
 
+    static $OldSemesterCodes = array(
+        1 => 'Winter',
+        2 => 'Spring',
+        3 => 'Summer',
+        4 => 'Fall',
+    );
+
+    static $NewSemesterCodes = array(
+        1 => 'Winter',
+        3 => 'Spring',
+        5 => 'Summer',
+        7 => 'Fall',
+    );
 
     /**
      * The optional setup() method can be used to handle any child-specific setup that needs to take place before the more
@@ -54,9 +67,52 @@ class SyllabusController extends BaseController {
             ? $drafts
             : null;
         $syllabi = $this->Model->getSyllabiForUser();
+
+        // echo "<pre>";
+        // print_r($syllabi);
+        // die;
         
         if(count($syllabi) > 0) {
-            $this->View->syllabi = $syllabi;
+            $flattened = array();
+            foreach ($syllabi as $year => $semesters) {
+                foreach ($semesters as $semester => $classes) {
+                    foreach ($classes as $syllabus) {
+                        // echo "<pre>";
+                        // print_r($syllabus);
+                        // echo "</pre>";
+
+                        $semesterId = $syllabus['syllabus_sem_id'];
+                        $length = strlen("$semesterId");
+                        $sem = '';
+
+                        switch ($length) {
+                            case 5:
+                                $sem = self::$OldSemesterCodes[$semester] . ' ' . $year;
+                                break;
+                            case 4:
+                                $sem = self::$NewSemesterCodes[$semester] . ' ' . $year;
+                                $semesterId = "$semesterId";
+                                $semesterId = $semesterId[0] . '0' . substr($semesterId, 1);
+                                break;
+                        }
+
+                        if ($semesterId) {
+                            if (!isset($flattened[$semesterId])) {
+                                $flattened[$semesterId] = array('semester_name' => $sem, 'data' => array());
+                            }
+
+                            $flattened[$semesterId]['data'][] = $syllabus;
+                        }
+                    }
+                }
+            }
+
+            krsort($flattened);
+
+            // echo "<pre>";
+            // print_r($flattened);
+            // die;
+            $this->View->syllabi = $flattened;
             $this->View->has_syllabi = true;
         } else {
             $this->View->has_syllabi = false;
@@ -512,7 +568,6 @@ class SyllabusController extends BaseController {
             }
         }
     }
-
 
 }
 

@@ -2,14 +2,8 @@
 
 {if $has_syllabi || $has_drafts_permission}
     <ul class="tabs" id="tabs_syllabi">
-    {foreach name=tabs_year from=$syllabi item=ty key=tyk}
-        {foreach name=tabs_sem from=$ty item=ts key=tsk}
-            {if $tsk == 1}{assign var='semester_name' value='Winter'}{/if}
-            {if $tsk == 3}{assign var='semester_name' value='Spring'}{/if}
-            {if $tsk == 5}{assign var='semester_name' value='Summer'}{/if}
-            {if $tsk == 7}{assign var='semester_name' value='Fall'}{/if}            
-            <li id="tab_{$tyk}{$tsk}"><a href="{$smarty.server.REQUEST_URI}#tabcontent-{$tyk}{$tsk}"><strong>{$semester_name} {$tyk}</strong></a></li>
-        {/foreach}
+    {foreach from=$syllabi item='info' key='semester'}            
+        <li id="tab_{$semester}"><a href="{$smarty.server.REQUEST_URI}#tabcontent-{$semester}"><strong>{$info.semester_name}</strong></a></li>
     {/foreach}
     
     {if $has_drafts_permission }
@@ -18,38 +12,30 @@
     </ul>
     
     
-    {foreach name=tabs_year from=$syllabi item=ty key=tyk}
-        {foreach name=tabs_sem from=$ty item=ts key=tsk}
-            {if $tsk == 1}{assign var='semester_name' value='Winter'}{/if}
-            {if $tsk == 3}{assign var='semester_name' value='Spring'}{/if}
-            {if $tsk == 5}{assign var='semester_name' value='Summer'}{/if}
-            {if $tsk == 7}{assign var='semester_name' value='Fall'}{/if}            
-            <div id="tabcontent-{$tyk}{$tsk}">
-            <h2 class="tab-header">{$semester_name} {$tyk}</h2>
-            <table summary="Syllabi from the {$semester_name} {$tyk} semester" cellpadding="0" cellspacing="0">
-                <thead>
+    {foreach from=$syllabi item='info' key='semester'}           
+    <div id="tabcontent-{$semester}">
+        <h2 class="tab-header">{$info.semester_name}</h2>
+        <table summary="Syllabi from the {$info.semester_name} semester" cellpadding="0" cellspacing="0">
+            <thead>
+            <tr>
+                <th scope="col" width="14%">Semester</th>
+                <th scope="col" width="15">Course Number</th>
+                <th scope="col" width="40%">Course Name</th>            
+                <th scope="col" width="25%">Instructor</th>
+            </tr>
+            </thead>
+            <tbody>
+                {foreach name=class from=$info.data item=c key=id}
                 <tr>
-                    <th scope="col" width="7%"><abbr title="Semester">Sem</abbr></th>
-                    <th scope="col" width="7%">Year</th>
-                    <th scope="col" width="15">Course Number</th>
-                    <th scope="col" width="40%">Course Name</th>            
-                    <th scope="col" width="25%">Instructor</th>
+                    <td>{$info.semester_name}</td>
+                    <td>{$c.syllabus_class_number} &ndash; {"%02d"|sprintf:$c.syllabus_class_section}</td>
+                    <td><a href="syllabus/view/{$c.syllabus_id}">{$c.syllabus_class_title}</a></td>
+                    <td>{$c.user_preferred_name}</td>
                 </tr>
-                </thead>
-                <tbody>
-                    {foreach name=class from=$ts item=c key=id}
-                    <tr>
-                        <td>{$semester_name}</td>
-                        <td>{$tyk}</td>
-                        <td>{$c.syllabus_class_number} &ndash; {"%02d"|sprintf:$c.syllabus_class_section}</td>
-                        <td><a href="syllabus/view/{$c.syllabus_id}">{$c.syllabus_class_title}</a></td>
-                        <td>{$c.user_preferred_name}</td>
-                    </tr>
-                    {/foreach}
-                </tbody>
-            </table>
-            </div>
-        {/foreach}
+                {/foreach}
+            </tbody>
+        </table>
+    </div>
     {/foreach}
     
     {if $has_drafts_permission }

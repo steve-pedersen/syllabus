@@ -331,20 +331,12 @@ class SystemModel extends BaseModel {
             `Row_Status` VARCHAR( 10 ) 
             ) TYPE = MYISAM ;";
         $this->executeQuery();
-        
-       echo"<pre>";
-            print_r($this->r[1]['enrollments']);
-            die;
 
 
         // load into enrollment table
         //ck=class Key, role= student/instructor, v= value of each class key, sId= student Id
         foreach ( $this->r[1]['enrollments'] as $cK => $v ) 
         {
-            echo"<pre>";
-            print_r($this->r[1]['enrollments']);
-            die;
-
             foreach ( $v as $sId )
             {
                 // Remove the +- and si characters from the beginning of student id

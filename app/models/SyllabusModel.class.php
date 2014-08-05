@@ -254,7 +254,7 @@ class SyllabusModel extends BaseModel {
 			$result = $this->getSyllabusById($syllabus['syllabus_id']);
 			if(is_array($result)) {
 				foreach($result as $k => $v) {
-					if(strpos($k, 'user_') !== false) {
+					if(strpos($k, 'user_') !== false || $k === 'syllabus_sem_id') {
 						$student_syllabi[$key][$k] = $v;
 					}
 				}
