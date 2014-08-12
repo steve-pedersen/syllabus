@@ -134,7 +134,18 @@ class SyllabusController extends BaseController {
 			
 			$syllabus['syllabus_phone'] = Utility::formatPhoneNumber($syllabus['syllabus_phone'], 'print');
 			$syllabus['syllabus_mobile'] = Utility::formatPhoneNumber($syllabus['syllabus_mobile'], 'print');
-			$syllabus['syllabus_fax'] = Utility::formatPhoneNumber($syllabus['syllabus_fax'], 'print');            
+			$syllabus['syllabus_fax'] = Utility::formatPhoneNumber($syllabus['syllabus_fax'], 'print'); 
+            $semesterId = trim($syllabus['syllabus_sem_id']);
+            $length = strlen("$semesterId");
+            $semester= $syllabus['syllabus_class_semester'];
+            switch ($length) {
+                case 5:
+                    $syllabus['semester_name'] = self::$OldSemesterCodes[$semester];
+                    break;
+                case 4:
+                    $syllabus['semester_name'] = self::$NewSemesterCodes[$semester];
+                    break;
+            }
 			
             $this->View->syllabus = $syllabus;
             $this->View->page_title = $syllabus['syllabus_class_number'];
@@ -152,7 +163,6 @@ class SyllabusController extends BaseController {
                     $result = $this->Model->{$method_name}($syllabus['syllabus_id']);
                     $this->View->$k = $result;
                 }
-                
                 // after the other modules are built, merge the general module to the beginning
                 // can't do this earlier because there is no getGeneralForSyllabus() method and the script will error out.
                 $general_module = array('general' => true);
