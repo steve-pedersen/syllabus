@@ -81,7 +81,7 @@ class SyllabusController extends BaseController {
                         // print_r($syllabus);
                         // echo "</pre>";
 
-                        $semesterId = $syllabus['syllabus_sem_id'];
+                        $semesterId = trim($syllabus['syllabus_sem_id']);
                         $length = strlen("$semesterId");
                         $sem = '';
 

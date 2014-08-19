@@ -191,9 +191,10 @@ class UsersController extends BaseController {
             unset($_SESSION['in_ghost_mode']);
         }
 		
+		
 		if($redirect) {
 			Messages::addMessage('Ghost unset', 'success');
-			Utility::redirect($_GET['return_url']);
+			Utility::redirect('users');
 		}
 	}
 
