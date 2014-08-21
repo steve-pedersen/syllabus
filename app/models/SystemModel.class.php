@@ -284,7 +284,9 @@ class SystemModel extends BaseModel {
      * Import users into the system from the SIMS file
      */
     private function importUsers() {
-        
+        //drop temporary table     
+        $this->query= "DROP TABLE IF EXISTS susers";
+        $this->executeQuery();
         // build the temporary table		
         $this->query= "CREATE TABLE `susers` (
             `SFSUid` INT( 9 )  ,
@@ -324,10 +326,6 @@ class SystemModel extends BaseModel {
             SELECT SFSUid,Firstname, Lastname, Email FROM susers WHERE Firstname != ''
             ON DUPLICATE KEY UPDATE user_id=SFSUid, user_fname=Firstname, user_lname=Lastname, user_email=Email;";
         $this->executeQuery(); 
-
-        //drop temporary table     
-        $this->query= "DROP TABLE susers";
-        $this->executeQuery();
      
     }
 
@@ -441,44 +439,44 @@ class SystemModel extends BaseModel {
                 
                     if (array_key_exists("title",$s['d']))
                     {
-                        $v[0]['d']['title'] = $this->mysqli->escape_string($v[0]['d']['title']);
+                        $s['d']['title'] = $this->mysqli->escape_string($s['d']['title']);
                     
                     }else{
-                        $v[0]['d']['title'] = NULL;
+                        $s['d']['title'] = NULL;
                     }
                     if (array_key_exists("desc",$s['d']))
                     {
-                        $v[0]['d']['desc'] = $this->mysqli->escape_string($v[0]['d']['desc']);
+                        $s['d']['desc'] = $this->mysqli->escape_string($s['d']['desc']);
                     }else{
-                        $v[0]['d']['desc'] = NULL;
+                        $s['d']['desc'] = NULL;
                     }
                     //Parse the Course Section
-                    $c_sec = preg_split('[-]', $v[0]['d']['sn']);
+                    $c_sec = preg_split('[-]', $s['d']['sn']);
                     $c_sec = $c_sec[2];
 
                     //Parse the semester from the short name
-                    if (strpos($v[0]['d']['sn'],'Fall') !== false) {
+                    if (strpos($s['d']['sn'],'Fall') !== false) {
                         $c_sem=7;
-                    }elseif (strpos($v[0]['d']['sn'],'Winter') !== false) {
+                    }elseif (strpos($s['d']['sn'],'Winter') !== false) {
                         $c_sem=1;
-                    }elseif (strpos($v[0]['d']['sn'],'Spring') !== false) {
+                    }elseif (strpos($s['d']['sn'],'Spring') !== false) {
                         $c_sem=3;
                     }else{
                         $c_sem=5;
                     }
                     //Parse the Course year and build the semester id string '2147'
-                    $c_year = preg_split('[-]', $v[0]['d']['sn']);
+                    $c_year = preg_split('[-]', $s['d']['sn']);
                     $c_year = $c_year[4];
                     $c_sem_id = preg_split('[0]', $c_year);
                     $c_sem_id = '2'.$c_sem_id[1].$c_sem;
                 
                     $this->query = "INSERT INTO sclass_desc (External_Course_Key, title, crs_description,sem_id)
-                    Values('".$cK." ', '".$v[0]['d']['title']."','".$v[0]['d']['desc']."','".$c_sem_id." ');";
+                    Values('".$cK." ', '".$s['d']['title']."','".$s['d']['desc']."','".$c_sem_id." ');";
                     $this->executeQuery(); 
 
                     //Enter 2nd set of data into 'classes' after parsing the course key($cK)
                     $this->query = "INSERT INTO classes (External_Course_Key, Course_Name, Course_Sem,Course_Sec, Course_Year)
-                    Values('".$cK." ', '".$v[0]['d']['sn']."','".$c_sem." ','".$c_sec." ','".$c_year." ');";
+                    Values('".$cK." ', '".$s['d']['sn']."','".$c_sem." ','".$c_sec." ','".$c_year." ');";
                     $this->executeQuery(); 
 
                 } 
