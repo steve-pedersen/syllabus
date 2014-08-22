@@ -151,8 +151,8 @@ class SystemModel extends BaseModel {
                 $this->query = "UPDATE semester_info SET activity=0 WHERE id NOT IN ( '" . implode($this->aid, "', '") . "' )";
                 $this->executeQuery();
             }
-            //
             $this->redirect = 'system/update'; //refresh the page
+            Messages::addMessage('Settings for the selected semesters have been saved', 'success');
             return true;
             
     }
