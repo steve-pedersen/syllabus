@@ -21,7 +21,19 @@ class SyllabusWordRenderer {
      */
     private $current_module_header;
     
-    
+    static $OldSemesterCodes = array(
+        1 => 'Winter',
+        2 => 'Spring',
+        3 => 'Summer',
+        4 => 'Fall',
+    );
+
+    static $NewSemesterCodes = array(
+        1 => 'Winter',
+        3 => 'Spring',
+        5 => 'Summer',
+        7 => 'Fall',
+    );
     
     /**
      * Constructor
@@ -80,13 +92,17 @@ class SyllabusWordRenderer {
         $tableCellBorder = array('style' => 'single', 'color' => 'cccccc', 'width' => '6');
         $footerBorder = array('style' => 'single', 'color' => 'dddddd', 'width' => '6');
         
-        // build the course Semester
-        switch($this->syllabus['syllabus_class_semester']) {
-            case '1': $semester = 'Winter'; break;
-            case '2': $semester = 'Spring'; break;
-            case '3': $semester = 'Summer'; break;
-            case '4': $semester = 'Fall'; break;
-            default: $semester = ''; break;
+        $semesterId = trim($this->syllabus['syllabus_sem_id']);
+        $length = strlen("$semesterId");
+        $sem = '';
+
+        switch ($length) {
+              case 5:
+                      $sem = self::$OldSemesterCodes[$this->syllabus['syllabus_class_semester']];
+                      break;
+              case 4:
+                      $sem = self::$NewSemesterCodes[$this->syllabus['syllabus_class_semester']];
+                      break;
         }
         
         $this->cursor = new WordDocDocument();
@@ -269,7 +285,7 @@ class SyllabusWordRenderer {
                    ->addBreak()
                    ->addText('Class Syllabus')
                    ->addTab()
-                   ->addText($semester . ' ' . $this->syllabus['syllabus_class_year'])
+                   ->addText($sem . ' '. $this->syllabus['syllabus_class_year'])
                ->end()
             ->end()
        ->end()->end()
