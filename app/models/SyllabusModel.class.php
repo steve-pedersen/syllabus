@@ -241,7 +241,7 @@ class SyllabusModel extends BaseModel {
             INNER JOIN syllabus s ON e.enroll_class_id=s.syllabus_id
             INNER JOIN semester_info su ON s.syllabus_sem_id=su.id
             INNER JOIN users u ON e.enroll_user_id=u.user_id
-            WHERE e.enroll_user_id='%s' AND e.enroll_role='student' AND e.enroll_class_id REGEXP '^[0-9]{5}$' AND su.visibility=1
+            WHERE e.enroll_user_id='%s' AND e.enroll_role='student' AND su.visibility=1
             GROUP BY s.syllabus_id
             ORDER BY s.syllabus_class_year DESC, s.syllabus_class_semester DESC, s.syllabus_class_number ASC, s.syllabus_class_section ASC;",
 			$user_id
