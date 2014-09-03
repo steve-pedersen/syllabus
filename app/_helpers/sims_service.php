@@ -449,7 +449,7 @@ class sims_service
         return $url . '&s=' . sha1($this->api_secret . $url);
     }
     
-    protected function getEnrollments ($semester, $role = null)
+    public function getEnrollments ($semester, $role = null)
     {
         $paramMap = array('ids' => true);
         

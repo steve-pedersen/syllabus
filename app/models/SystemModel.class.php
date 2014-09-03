@@ -13,6 +13,7 @@ require_once('_helpers/sims_service.php');
 class SystemModel extends BaseModel {	
 	private $sims_service;
     private $r; //this is the result produced by the sims_service
+    private $enrol;
     private $semesters=array();
     private $semester_Names=array();
     private $semester_Years=array();
@@ -69,7 +70,7 @@ class SystemModel extends BaseModel {
                     foreach ($semArray['data'] as $active_sem) {
                         $this->sims_service = new sims_service();
                         $this->r= $this->sims_service->getChanges($active_sem['id']);
-
+                        $this->enrol= $this->sims_service->getEnrollments($active_sem['id']);
                         //Load data from SIMS to the syllabi dB
                         $this->importUsers();
                         $this->importEnrollment();
@@ -340,7 +341,7 @@ class SystemModel extends BaseModel {
         $this->executeQuery();
         // build the temporary table
         $this->query= "CREATE TEMPORARY TABLE `senroll` (
-            `SFSUid` INT( 9 ) NOT NULL ,
+            `SFSUid` VARCHAR( 15 ) NOT NULL ,
             `External_Course_Key` VARCHAR( 13 ) NOT NULL ,
             `External_Person_Key` INT( 6 )  ,
             `Role` VARCHAR( 10 )  ,
@@ -349,10 +350,9 @@ class SystemModel extends BaseModel {
             ) TYPE = MYISAM ;";
         $this->executeQuery();
 
-
         // load into enrollment table
         //ck=class Key, role= student/instructor, v= value of each class key, sId= student Id
-        foreach ( $this->r[1]['enrollments'] as $cK => $v ) 
+        foreach ( $this->enrol[1] as $cK=>$v ) 
         {
             foreach ( $v as $sId )
             {
@@ -360,21 +360,19 @@ class SystemModel extends BaseModel {
                 $sId = $this->mysqli->escape_string($sId);
                 $role=$sId[1]; // this value is i/s and we need to change to instructor/student
                 $role = ($role=='i') ? 'instructor' : 'student' ;
-                $sId=substr( $sId, 2 );
-                $sId=(int)$sId;
+                $sId=substr( $sId, 1 );
+                $sId = trim($sId);
                 $this->query = "INSERT INTO senroll (External_Course_Key, SFSUid, Role)
                 Values('".$cK." ', ".$sId.",'".$role." ');";
                 $this->executeQuery();
-                
             }     
         }
+    
         //insert (update duplicates)
         $this->query = "INSERT INTO enrollment (enroll_class_id, enroll_user_id, enroll_role)  
             SELECT External_Course_Key,SFSUid,Role FROM senroll 
             ON DUPLICATE KEY UPDATE enroll_class_id=External_Course_Key,enroll_user_id=SFSUid, enroll_role=Role;";
-        $this->executeQuery(); 
-
-        
+        $this->executeQuery();         
     }
     
     /**
