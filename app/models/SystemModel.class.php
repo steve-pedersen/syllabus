@@ -72,9 +72,9 @@ class SystemModel extends BaseModel {
                         $this->r= $this->sims_service->getChanges($active_sem['id']);
                         $this->enrol= $this->sims_service->getEnrollments($active_sem['id']);
                         //Load data from SIMS to the syllabi dB
-                        $this->importUsers();
+                        //$this->importUsers();
                         $this->importEnrollment();
-                        $this->importSyllabi();
+                        //$this->importSyllabi();
                     }
 		        }
             Messages::addMessage('The System was successfully updated', 'success');
@@ -358,7 +358,7 @@ class SystemModel extends BaseModel {
             {
                 // Remove the +- and si characters from the beginning of student id
                 $sId = $this->mysqli->escape_string($sId);
-                $role=$sId[1]; // this value is i/s and we need to change to instructor/student
+                $role=$sId[0]; // this value is i/s and we need to change to instructor/student
                 $role = ($role=='i') ? 'instructor' : 'student' ;
                 $sId=substr( $sId, 1 );
                 $sId = trim($sId);
