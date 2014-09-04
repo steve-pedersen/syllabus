@@ -72,9 +72,9 @@ class SystemModel extends BaseModel {
                         $this->r= $this->sims_service->getChanges($active_sem['id']);
                         $this->enrol= $this->sims_service->getEnrollments($active_sem['id']);
                         //Load data from SIMS to the syllabi dB
-                        //$this->importUsers();
+                        $this->importUsers();
                         $this->importEnrollment();
-                        //$this->importSyllabi();
+                        $this->importSyllabi();
                     }
 		        }
             Messages::addMessage('The System was successfully updated', 'success');
