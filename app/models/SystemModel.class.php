@@ -340,7 +340,7 @@ class SystemModel extends BaseModel {
         $this->query= "DROP TABLE IF EXISTS senroll;";
         $this->executeQuery();
         // build the temporary table
-        $this->query= "CREATE TEMPORARY TABLE `senroll` (
+        $this->query= "CREATE TABLE `senroll` (
             `SFSUid` VARCHAR( 15 ) NOT NULL ,
             `External_Course_Key` VARCHAR( 13 ) NOT NULL ,
             `External_Person_Key` INT( 6 )  ,
@@ -348,6 +348,8 @@ class SystemModel extends BaseModel {
             `Available_Ind` VARCHAR( 1 ) ,
             `Row_Status` VARCHAR( 10 ) 
             ) TYPE = MYISAM ;";
+        $this->executeQuery();
+        $this->query= "create index CK on senroll (External_Course_Key)";
         $this->executeQuery();
 
         // load into enrollment table
@@ -372,8 +374,15 @@ class SystemModel extends BaseModel {
         $this->query = "INSERT INTO enrollment (enroll_class_id, enroll_user_id, enroll_role)  
             SELECT External_Course_Key,SFSUid,Role FROM senroll 
             ON DUPLICATE KEY UPDATE enroll_class_id=External_Course_Key,enroll_user_id=SFSUid, enroll_role=Role;";
+        $this->executeQuery();
+
+        // Delete enrollment entries that are of the semester selected and are not a part of senroll(Current class data update)
+        // Uses indexes to speed up query, refer to sql update 9/5/14
+        $this->query = "delete from enrollment where enroll_class_id IN( Select sy.syllabus_id From syllabus sy 
+            Left Join senroll se On se.External_Course_Key = sy.syllabus_id Where se.External_Course_Key IS NULL AND sy.syllabus_sem_id=2147)";
         $this->executeQuery();         
     }
+
     
     /**
      * Import data into the syllabi table
