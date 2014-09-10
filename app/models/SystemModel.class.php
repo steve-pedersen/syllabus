@@ -68,13 +68,17 @@ class SystemModel extends BaseModel {
                     //for each active semester id from the dB,
                     // run the Sims service::getChanges to get the Active semester data
                     foreach ($semArray['data'] as $active_sem) {
-                        $this->sims_service = new sims_service();
-                        $this->r= $this->sims_service->getChanges($active_sem['id']);
-                        $this->enrol= $this->sims_service->getEnrollments($active_sem['id']);
-                        //Load data from SIMS to the syllabi dB
-                        $this->importUsers();
-                        $this->importEnrollment();
-                        $this->importSyllabi();
+                        //Update only semesters that are of the new format, ie. 2147 or after
+                        $length = strlen($active_sem['id']);
+                        if($length==4){
+                            $this->sims_service = new sims_service();
+                            $this->r= $this->sims_service->getChanges($active_sem['id']);
+                            $this->enrol= $this->sims_service->getEnrollments($active_sem['id']);
+                            //Load data from SIMS to the syllabi dB
+                            $this->importUsers();
+                            $this->importEnrollment($active_sem['id']);
+                            $this->importSyllabi();
+                        }
                     }
 		        }
             Messages::addMessage('The System was successfully updated', 'success');
@@ -335,7 +339,7 @@ class SystemModel extends BaseModel {
     /**
      * Import the data into the enrollment table
      */
-    private function importEnrollment() {
+    private function importEnrollment($active_sem) {
         //drop temporary table     
         $this->query= "DROP TABLE IF EXISTS senroll;";
         $this->executeQuery();
@@ -345,11 +349,10 @@ class SystemModel extends BaseModel {
             `External_Course_Key` VARCHAR( 13 ) NOT NULL ,
             `External_Person_Key` INT( 6 )  ,
             `Role` VARCHAR( 10 )  ,
+            `Sem_Year` VARCHAR( 7 ) DEFAULT '2147'  ,
             `Available_Ind` VARCHAR( 1 ) ,
             `Row_Status` VARCHAR( 10 ) 
             ) TYPE = MYISAM ;";
-        $this->executeQuery();
-        $this->query= "create index CK on senroll (External_Course_Key)";
         $this->executeQuery();
 
         // load into enrollment table
@@ -376,11 +379,39 @@ class SystemModel extends BaseModel {
             ON DUPLICATE KEY UPDATE enroll_class_id=External_Course_Key,enroll_user_id=SFSUid, enroll_role=Role;";
         $this->executeQuery();
 
-        // Delete enrollment entries that are of the semester selected and are not a part of senroll(Current class data update)
-        // Uses indexes to speed up query, refer to sql update 9/5/14
-        $this->query = "delete from enrollment where enroll_class_id IN( Select sy.syllabus_id From syllabus sy 
-            Left Join senroll se On se.External_Course_Key = sy.syllabus_id Where se.External_Course_Key IS NULL AND sy.syllabus_sem_id=2147)";
-        $this->executeQuery();         
+        $this->query= "Select Count(*) from senroll;";
+        if($this->executeQuery()>0){
+            $this->query = "Create index CK on senroll (External_Course_Key);";
+            $this->executeQuery();
+            $this->query = "Create index PK on senroll (External_Person_Key);";
+            $this->executeQuery();
+            $this->query = "Create index RL on senroll (Role);";
+            $this->executeQuery();
+
+            $this->query = "SELECT id,visibility,activity FROM semester_info ORDER BY id;";
+            $count = $this->executeQuery();
+            
+            //if senroll is not empty, then delete the records in enrollment that are not in senroll
+        $this->query=   "DELETE FROM enrollment 
+                        WHERE (enroll_user_id,enroll_class_id,enroll_role) IN
+                        (SELECT enroll_user_id,enroll_class_id,enroll_role
+                        FROM (
+                        SELECT enroll_user_id,enroll_class_id,enroll_role
+                        FROM enrollment 
+                        INNER JOIN syllabus 
+                        ON syllabus.syllabus_id = enrollment.enroll_class_id  
+                        LEFT JOIN senroll 
+                        ON senroll.SFSUid = enrollment.enroll_user_id 
+                        AND senroll.External_Course_Key = enrollment.enroll_class_id 
+                        AND senroll.Role = enrollment.enroll_role 
+                        WHERE senroll.External_Person_Key IS NULL
+                        AND senroll.External_Course_Key IS NULL
+                        AND senroll.Role IS NULL
+                        AND syllabus.syllabus_sem_id = '".$active_sem."'
+                        )x);";
+        $this->executeQuery();             
+        }
+
     }
 
     
