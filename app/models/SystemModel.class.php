@@ -339,7 +339,7 @@ class SystemModel extends BaseModel {
     /**
      * Import the data into the enrollment table
      */
-    private function importEnrollment($active_sem) {
+    private function importEnrollment($active_sem) { 
         //drop temporary table     
         $this->query= "DROP TABLE IF EXISTS senroll;";
         $this->executeQuery();
@@ -387,16 +387,9 @@ class SystemModel extends BaseModel {
             $this->executeQuery();
             $this->query = "Create index RL on senroll (Role);";
             $this->executeQuery();
-
-            $this->query = "SELECT id,visibility,activity FROM semester_info ORDER BY id;";
-            $count = $this->executeQuery();
-            
+    
             //if senroll is not empty, then delete the records in enrollment that are not in senroll
-        $this->query=   "DELETE FROM enrollment 
-                        WHERE (enroll_user_id,enroll_class_id,enroll_role) IN
-                        (SELECT enroll_user_id,enroll_class_id,enroll_role
-                        FROM (
-                        SELECT enroll_user_id,enroll_class_id,enroll_role
+            $this->query=   "SELECT enroll_user_id,enroll_class_id,enroll_role
                         FROM enrollment 
                         INNER JOIN syllabus 
                         ON syllabus.syllabus_id = enrollment.enroll_class_id  
@@ -407,11 +400,24 @@ class SystemModel extends BaseModel {
                         WHERE senroll.External_Person_Key IS NULL
                         AND senroll.External_Course_Key IS NULL
                         AND senroll.Role IS NULL
-                        AND syllabus.syllabus_sem_id = '".$active_sem."'
-                        )x);";
-        $this->executeQuery();             
-        }
+                        AND syllabus.syllabus_sem_id =2147
+                        ;";
+            $senroll= $this->executeQuery(); 
+            $q=array();
+    
+            foreach ($senroll['data'] as $s_class) {
+                $class = $this->mysqli->escape_string($s_class['enroll_class_id']);
+                $user = $this->mysqli->escape_string($s_class['enroll_user_id']);
+                $role = $this->mysqli->escape_string($s_class['enroll_role']);
+                $this->query=   "Delete From enrollment
+                            Where enroll_class_id = '".$class."'
+                            AND enroll_user_id = '".$user."'
+                            AND enroll_role = '".$role."';";
+                array_push($q, $this->query);
+            }
 
+            $this->transaction($q);
+       } 
     }
 
     

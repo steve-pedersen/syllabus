@@ -156,6 +156,31 @@ class BaseModel {
 			$return = false;
 		}
 	}
+	/* Pass an array of queries that are a part of a transaction*/
+	public function transaction ($Q){
+
+		//this is the same as begin_transaction()
+		$this->mysqli->autocommit(FALSE);
+		
+
+       for ($i = 0; $i < count ($Q); $i++){
+           if (!$this->mysqli->query($Q[$i])){
+               if(DEBUG_MODE) {
+				Messages::printMessage('Query error transaction: ' . $this->mysqli->error . '<p>' . $Q[$i] . '</p>', 'error');
+				}
+               break;
+           }       
+       }
+
+       if ($i == count ($Q)){
+           $this->mysqli->commit();
+           return 1;
+       }
+       else {
+           $this->mysqli->rollback();
+           return 0;
+       }
+   }
 
 
 }
