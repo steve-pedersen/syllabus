@@ -201,7 +201,6 @@ class SystemModel extends BaseModel {
          if ($dB_results['count']>0) {
              //parse the dbResults to get the id
             foreach ($dB_results['data'] as $sId) {
-            
                 if(array_key_exists($sId['id'], $web_results)){
                     unset($web_results[$sId['id']]);     
                 }
@@ -404,6 +403,7 @@ class SystemModel extends BaseModel {
                         ;";
             $senroll= $this->executeQuery(); 
             $q=array();
+        if (array_key_exists("data",$senroll)){
     
             foreach ($senroll['data'] as $s_class) {
                 $class = $this->mysqli->escape_string($s_class['enroll_class_id']);
@@ -415,7 +415,7 @@ class SystemModel extends BaseModel {
                             AND enroll_role = '".$role."';";
                 array_push($q, $this->query);
             }
-
+        }
             $this->transaction($q);
        } 
     }
