@@ -14,10 +14,7 @@
     <tr>
         <th>Semester / Year</th>
         <td valign="top">
-        {if $syllabus.syllabus_class_semester==1}Winter{/if}
-        {if $syllabus.syllabus_class_semester==2}Spring{/if}
-        {if $syllabus.syllabus_class_semester==3}Summer{/if}
-        {if $syllabus.syllabus_class_semester==4}Fall{/if}
+        {$syllabus.semester_name}
         {$syllabus.syllabus_class_year}        
         </td>
     </tr>

@@ -135,17 +135,7 @@ class SyllabusController extends BaseController {
 			$syllabus['syllabus_phone'] = Utility::formatPhoneNumber($syllabus['syllabus_phone'], 'print');
 			$syllabus['syllabus_mobile'] = Utility::formatPhoneNumber($syllabus['syllabus_mobile'], 'print');
 			$syllabus['syllabus_fax'] = Utility::formatPhoneNumber($syllabus['syllabus_fax'], 'print'); 
-            $semesterId = trim($syllabus['syllabus_sem_id']);
-            $length = strlen("$semesterId");
-            $semester= $syllabus['syllabus_class_semester'];
-            switch ($length) {
-                case 5:
-                    $syllabus['semester_name'] = self::$OldSemesterCodes[$semester];
-                    break;
-                case 4:
-                    $syllabus['semester_name'] = self::$NewSemesterCodes[$semester];
-                    break;
-            }
+            $syllabus['semester_name'] = $this->get_semester_name($syllabus['syllabus_sem_id'], $syllabus['syllabus_class_semester']);
 			
             $this->View->syllabus = $syllabus;
             $this->View->page_title = $syllabus['syllabus_class_number'];
@@ -212,6 +202,7 @@ class SyllabusController extends BaseController {
 			$syllabus['syllabus_phone'] = Utility::formatPhoneNumber($syllabus['syllabus_phone'], 'print');
 			$syllabus['syllabus_mobile'] = Utility::formatPhoneNumber($syllabus['syllabus_mobile'], 'print');
 			$syllabus['syllabus_fax'] = Utility::formatPhoneNumber($syllabus['syllabus_fax'], 'print');
+            $syllabus['semester_name'] = $this->get_semester_name($syllabus['syllabus_sem_id'], $syllabus['syllabus_class_semester']);
 			
             $this->View->syllabus = $syllabus;
 			
@@ -577,6 +568,23 @@ class SyllabusController extends BaseController {
                 Messages::addMessage('You do not have permission to reset the password for this syllabus.', 'error');
             }
         }
+    }
+
+
+    private function get_semester_name($semesterId, $semesterNumber) {
+        $semesterId = trim($semesterId);
+        $length = strlen("$semesterId");
+        $name = '';
+        switch ($length) {
+            case 5:
+                $name = self::$OldSemesterCodes[$semesterNumber];
+                break;
+            case 4:
+                $name = self::$NewSemesterCodes[$semesterNumber];
+                break;
+        }
+
+        return $name;
     }
 
 }
