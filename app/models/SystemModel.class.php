@@ -339,6 +339,21 @@ class SystemModel extends BaseModel {
      * Import the data into the enrollment table
      */
     private function importEnrollment($active_sem) { 
+        $active_sem_length = strlen($active_sem);
+
+        switch ($active_sem_length) {
+            case 5:
+                $active_sem_year = substr($active_sem, 0, 4);
+                break;
+
+            case 4:
+                $active_sem_year = '20' . $active_sem[2] . $active_sem[3];
+                break;
+            
+            default:
+                $active_sem_year = date('Y');
+                break;
+        }
         //drop temporary table     
         $this->query= "DROP TABLE IF EXISTS senroll;";
         $this->executeQuery();
@@ -348,7 +363,7 @@ class SystemModel extends BaseModel {
             `External_Course_Key` VARCHAR( 13 ) NOT NULL ,
             `External_Person_Key` INT( 6 )  ,
             `Role` VARCHAR( 10 )  ,
-            `Sem_Year` VARCHAR( 7 ) DEFAULT '2147'  ,
+            `Sem_Year` VARCHAR( 7 ) DEFAULT '$active_sem_year'  ,
             `Available_Ind` VARCHAR( 1 ) ,
             `Row_Status` VARCHAR( 10 ) 
             ) TYPE = MYISAM ;";
@@ -399,7 +414,7 @@ class SystemModel extends BaseModel {
                         WHERE senroll.External_Person_Key IS NULL
                         AND senroll.External_Course_Key IS NULL
                         AND senroll.Role IS NULL
-                        AND syllabus.syllabus_sem_id =2147
+                        AND syllabus.syllabus_sem_id = $active_sem
                         ;";
             $senroll= $this->executeQuery(); 
             $q=array();
