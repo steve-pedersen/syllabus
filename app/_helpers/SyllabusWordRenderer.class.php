@@ -717,7 +717,7 @@ class SyllabusWordRenderer {
             // loop all schedule items
             foreach($schedules as $k => $v) {
                 // set the week string
-                if($v['schedule_period'] == 'w') $schedule_date = 'Week of ' . date('m/d/y', strtotime($v['schedule_date']));
+                if($v['schedule_period'] == 'w') $schedule_date = 'Week of ' . $v['schedule_date'];
                 else $schedule_date = date('l', strtotime($v['schedule_date'])) . ', ' . date('m/d/y', strtotime($v['schedule_date']));
                 
                 $this->cursor = $this->cursor
