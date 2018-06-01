@@ -1,0 +1,15 @@
+/*a[href]:after {
+  content:"" !important;
+}
+
+abbr[title]:after { content: "" !important; }
+
+.sticky-footer { position: relative;}
+
+div.container {
+    width: 100%!important;
+}
+
+form button.btn {
+    display: none;
+}*/

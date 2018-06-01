@@ -1,0 +1,24 @@
+@mixin border-radius($radius) {
+	-webkit-border-radius: $radius;
+	-moz-border-radius: $radius;
+	-ms-border-radius: $radius;
+	border-radius: $radius;
+}
+@mixin at-gradient($start-color: #533b6d, $mid-color: #321c4a, $end-color: #284a80, $deg: 45deg) {
+    background-repeat: repeat-x;
+    background-image: -webkit-linear-gradient($deg, $start-color, $mid-color, $end-color); // Safari 5.1-6, Chrome 10+
+    background-image: -o-linear-gradient($deg, $start-color,  $mid-color, $end-color); // Opera 12
+    background-image: linear-gradient($deg, $start-color,  $mid-color, $end-color); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
+}
+@mixin navbar-link-active-disabled($color: $btn-link-disabled-color, $bg-color: $sfsu-alt-purple-lte-2) {
+	&:hover,
+	&:focus {
+		color: $color;
+		background-color: $bg-color;
+	}
+}
+@mixin navbar-link($link-color: $navbar-default-link-color, $hover-color: $navbar-default-link-hover-color, $hover-bg: $navbar-default-link-hover-bg) {
+	color: $link-color;
+	text-transform: uppercase;
+	@include navbar-link-active-disabled($hover-color, $hover-bg);
+}

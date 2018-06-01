@@ -1,4 +1,5 @@
 # ignore server specific config files and .htaccess files
+var
+bss.init.php
 .htaccess
-app/config.php
-compiled/
+public/assets

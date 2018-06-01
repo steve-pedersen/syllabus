@@ -1,0 +1,10 @@
+#!/bin/bash
+HERE=$(cd "$(dirname "$BASH_SOURCE")" && pwd)
+[ -z "$BSS_FRAMEWORK_DIR" ] && BSS_FRAMEWORK_DIR="$(dirname "$HERE")/framework"
+[ -z "$BSS_CONFIG_PATH" ] && BSS_CONFIG_PATH="$HERE/var/app.conf"
+
+echo "Framework dir (BSS_FRAMEWORK_DIR): $BSS_FRAMEWORK_DIR"
+echo "App config path (BSS_CONFIG_PATH): $BSS_CONFIG_PATH"
+echo
+
+php "$BSS_FRAMEWORK_DIR/scripts/bss-scan.php" "$BSS_CONFIG_PATH"

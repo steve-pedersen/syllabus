@@ -1,0 +1,57 @@
+$icon-font-path:          	"../fonts/";
+$font-family-sans-serif:  	"Helvetica Neue", Helvetica, Arial, sans-serif;
+$headings-font-family:    	"Montserrat", sans-serif;
+$headings-font-weight:    	800;
+$headings-line-height:    	1.1;
+$headings-color:          	#1c1325;
+$input-border-focus:      	#9d94ff;
+
+
+$sfsu-alt-purple-lte-1:		#321c4a;
+$sfsu-alt-purple-lte-2:		#67448d;
+$sfsu-alt-purple-lte-3:		#806aaf;
+$sfsu-shadow-purple:		#693e88;
+$sfsu-header-footer-purple: #330333;
+$sfsu-primary-purple-dark:	#231161;
+$sfsu-primary-purple-lte:	#463077;
+$sfsu-primary-yellow-dark:	#C99700;
+$sfsu-primary-yellow-lte:	#E9D597;
+$sfsu-secondary-blue:			#004F71;
+$sfsu-secondary-green:			#ABAD00;
+$sfsu-secondary-red-lte:		#B04A5A;
+$sfsu-secondary-red:			#9A3324;
+$sfsu-secondary-gray:			#53565A;
+
+$footer-background-color: 		$sfsu-header-footer-purple !important;
+$footer-row-1-background-color: #1B2A4B !important;
+$footer-row-2-background-color: $footer-background-color;
+$footer-text-white: 			#fff;
+$footer-text-blue: 				#aebee1;
+$footer-text-blue-lte: 			#d9e1f1;
+
+$navbar-default-link-color: 		#d5f1ef;
+$navbar-default-link-hover-color: 	#fff;
+$navbar-default-link-hover-bg: 		#2b3d71;
+$breadcrumb-color: 					$navbar-default-link-color;
+
+
+$primary:       #3d2756;
+$success:       #2f5133;
+$info:          #365285;
+$info-lte:      $navbar-default-link-color; 	// #365285
+$warning:       $sfsu-primary-yellow-dark;		// not overridden
+$danger:        $sfsu-secondary-red;			// #a93f3d
+$dark:          $sfsu-secondary-gray;
+
+$brand-primary: 	$primary;
+$brand-success: 	$success;
+$brand-info: 		$info;
+$brand-warning: 	$warning;
+$brand-danger: 		$danger;
+$brand-dark: 		$dark;
+
+
+// $body-bg:       #f8f9fa;
+
+
+

@@ -1,0 +1,118 @@
+
+
+// HEADER ////////////////////////////////////////////////////
+.at {
+
+	.navbar {
+		@include at-gradient;
+		background-color: $sfsu-alt-purple-lte-1;
+		border-color: $sfsu-alt-purple-lte-2;
+		margin-bottom: 0;
+		color: #fff;
+		
+		.navbar-brand {
+			@include navbar-link(#fff, #fbf1fe, #321c4a);
+			text-transform: none;
+			font-family: $headings-font-family;
+			font-weight: bold;
+			margin-left: -0.5rem;
+			border-radius: 3px;
+		}
+		.navbar-text {
+			color: #fff;
+		}
+		.navbar-toggler {
+			color: #fff;
+			border-color: #fff;
+			&:hover,
+			&:focus {
+				background-color: $sfsu-header-footer-purple;
+			}
+			.icon-bar {
+				background-color: #fff;
+			}
+		}
+		.navbar-nav {
+			> li > a {
+				@include navbar-link;
+			}
+			.nav-item .logout-form > button {
+				@include navbar-link;
+				background-color: transparent;
+			}
+			> .active > a,
+			li > .active {
+				@include navbar-link-active-disabled($navbar-dark-active-color);
+			}
+			> .disabled > a,
+			li > .disabled {
+				@include navbar-link-active-disabled($navbar-dark-disabled-color, inherit);
+			}
+			.nav-item {
+			    letter-spacing: -0.5px;
+			}
+		}
+
+		// Dropdown menu items
+		.navbar-nav {
+			// Remove background color from open dropdown
+			> .show > a {
+				@include navbar-link-active-disabled($navbar-dark-active-color);
+				border-radius: 2px;
+			}
+			.dropdown-menu {
+				// background-color: $sfsu-primary-yellow-lte;
+			}
+
+			@media (max-width: 990px) {
+				// Dropdowns get custom display when collapsed
+				// .show .dropdown,
+				.show .dropdown-menu {
+					> li > a {
+						@include navbar-link;
+					}
+					> .active > a {
+						@include navbar-link-active-disabled($navbar-dark-active-color);
+					}
+					> .disabled > a {
+						@include navbar-link-active-disabled($navbar-dark-disabled-color, inherit);
+					}
+				}
+			}
+		}
+
+
+	}
+}
+
+// BREADCRUMBS
+$line-height-computed:    	floor(($font-size-base * $line-height-base));
+// $breadcrumb-color: 			$navbar-default-link-color;
+.at {
+	margin-bottom: $line-height-computed;
+	.bc {
+		background-color: $breadcrumb-bg;
+	}
+	.breadcrumb {
+		padding: $breadcrumb-padding-y 0;
+		margin-bottom: 0;
+		list-style: none;
+		background-color: $breadcrumb-bg;
+		border-radius: 0;
+
+		> li {
+			display: inline-block;
+
+			+ li:before {
+				content: "${breadcrumb-separator}\00a0"; // Unicode space added since inline-block means non-collapsing white-space
+				padding: 0 5px;
+				color: $breadcrumb-color;
+			}
+		}
+
+		> .active {
+			color: $breadcrumb-active-color;
+		}
+	}
+}
+

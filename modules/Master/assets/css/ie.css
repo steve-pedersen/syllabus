@@ -1,0 +1,8 @@
+/* Emulate inline-block for IE6+7 */
+/*#user-links li,
+.pagination,
+.pagination li,
+form .subfield,
+a.command-button
+{ *display: inline; zoom: 1; }
+*/
