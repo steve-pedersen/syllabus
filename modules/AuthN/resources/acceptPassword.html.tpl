@@ -1,4 +1,4 @@
-<div class="col-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+<div class="col col-sm-8 col-md-6 col-lg-4 mx-auto">
     <h1>Syllabus Tool Login</h1>
     <div class="panel-padding panel panel-default">
         <div class="panel-heading">Login</div>

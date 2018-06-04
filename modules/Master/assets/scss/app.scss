@@ -1,3 +1,31 @@
 @import "at-variables";
 @import "bootstrap-4.1.1";
 @import "at-theme";
+
+
+.at-jumbotron {
+	background-color: #6C6C6C;
+	background-image: url("../images/lecture02.jpg");
+	-webkit-background-size: 100% 100%;
+	-moz-background-size: 100% 100%;
+	-o-background-size: 100% 100%;
+	background-size: 100% 100%;
+	background-size: cover;
+	background-position: center bottom;
+	background-position: 50% 65%;
+	background-blend-mode: exclusion;
+	border-radius: 0;
+
+	.container {
+		p {
+			color: #fff;
+		}
+		hr {
+			border: 1px solid $navbar-default-link-color;
+		}
+	}
+
+	
+
+// background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('landingpagepic.jpg');
+}

@@ -18,16 +18,17 @@ class Syllabus_Welcome_Controller extends Syllabus_Master_Controller
     
     public function welcome ()
     {
-        $siteSettings = $this->getApplication()->siteSettings;
+        $app = $this->getApplication();
+        $siteSettings = $app->siteSettings;
+        $moduleManager = $app->moduleManager;
+
+        $welcomeHeroPartial = 'partial:_welcomeHero.html.tpl';
+        $this->template->registerResource('partial', new Bss_Template_PartialResource($this));
+        $this->template->headerPartial = $welcomeHeroPartial;
 
         if ($welcomeText = $siteSettings->getProperty('welcome-text'))
         {
             $this->template->welcomeText = $welcomeText;
-        }
-        
-        // if ($account = $this->getAccount())
-        // {
-        //     $this->response->redirect('/');
-        // }
+        }        
     }
 }

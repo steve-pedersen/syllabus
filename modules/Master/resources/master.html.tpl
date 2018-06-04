@@ -6,7 +6,7 @@
 {*may not be needed*}    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<title>{if $pageTitle}{$pageTitle|escape} &mdash; {/if}{$appName|escape}</title>
 		<base href="{$baseUrl|escape}/">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
 		<!-- <link rel="stylesheet" type="text/css" href="assets/less/app.less.css"> -->
 		<link rel="stylesheet" type="text/css" href="assets/scss/app.scss.css">
 		<link rel="stylesheet" type="text/css" href="assets/css/fontawesome-all.min.css">
@@ -55,7 +55,7 @@
 						{/if}
 						<li class="nav-item">
 							<form method="post" action="logout" class="form logout-form">
-								<button class="btn nav-link logout  w-100" type="submit" name="command[logout]" id="logout-button" value="Logout">Logout</button>
+								<button class="btn nav-link logout w-100" type="submit" name="command[logout]" id="logout-button" value="Logout">Logout</button>
 							</form>
 						</li>
 					{else}
@@ -71,7 +71,7 @@
 				<div class="container">
 					<ol class="at breadcrumb">
 						{foreach name="breadcrumbs" item="crumb" from=$breadcrumbList}
-						<li{if $smarty.foreach.breadcrumbs.last} class="active"{elseif $smarty.foreach.breadcrumbs.first} class="first"{/if}>
+						<li {if $crumb@last} class="active"{elseif $crumb@first} class="first"{/if}>
 						{l text=$crumb.text href=$crumb.href}
 						{if !$smarty.foreach.breadcrumbs.last}{/if}
 						</li>
@@ -80,7 +80,8 @@
 				</div>
 				{/if}
 			</div>
-			</header>
+		</header>
+		
 		{if $app->siteSettings->siteNotice}
 		<div class="site-notice action notice">
 			{$app->siteSettings->siteNotice}
@@ -104,6 +105,12 @@
 		</div> 
 		{/if}
 
+		<!-- This is good for things like Hero images or sections for a homepage or main section -->
+		{if $headerPartial}
+			{include file=$headerPartial}
+		{/if}
+
+		<!-- Main content here -->
 		<div class="container" id="content">
 			{include file=$contentTemplate}
 		</div>
@@ -123,6 +130,7 @@
 			</div>
 		</div>
 		{/if}
+
 		<footer class="sticky-footer">
 			<nav class="navbar at-footer">
 				<div class="footer-row-1 container-fluid">
@@ -156,7 +164,7 @@
 				</div>
 				<div class="footer-row-2 container-fluid">
 					<div class="container">
-						<div class="row" >
+						<div class="row">
 							<div id="contact-university" class="col">
 								<a href="http://www.sfsu.edu/"> <img src="assets/images/logo.png" alt="San Francisco State University Logo" width="50" class="logo"></a>
 								<ul class="list-unstyled">

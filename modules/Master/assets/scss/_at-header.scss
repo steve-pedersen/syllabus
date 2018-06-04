@@ -104,9 +104,10 @@ $line-height-computed:    	floor(($font-size-base * $line-height-base));
 			display: inline-block;
 
 			+ li:before {
-				content: "${breadcrumb-separator}\00a0"; // Unicode space added since inline-block means non-collapsing white-space
-				padding: 0 5px;
-				color: $breadcrumb-color;
+				display: inline-block; // Suppress underlining of the separator in modern browsers
+				content: "#{$breadcrumb-separator}\00a0"; // Unicode space added since inline-block means non-collapsing white-space
+				padding: 0 5px 0 15px;
+				color: $breadcrumb-divider-color;
 			}
 		}
 
