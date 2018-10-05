@@ -10,8 +10,9 @@
                     <div class="field-label-wrapper">
                         <label class="field-label field-linked" for="welcome-text">Welcome Text</label>
                     </div>
+
                     <div class="field-control-wrapper field">
-                        <textarea class="form-control" name="welcome-text" id="welcome-text" style="height:auto;" rows="10">{$welcomeText}</textarea>
+                        <textarea class="form-control wysiwyg wysiwyg-full wysiwyg-moono-color" name="welcome-text" id="welcome-text">{$welcomeText}</textarea>
                     </div>
                 </div>
             </div>
@@ -20,7 +21,7 @@
             {generate_form_post_key}
             {if $module->inDatasource}<input type="hidden" name="module[id]" value="{$module->id}" />{/if}
             <button class="btn btn-primary" type="submit" name="command[save]">Save</button>
-            <a class="btn btn-secondary" href="admin">cancel</a>
+            <a class="btn btn-secondary" href="admin">Cancel</a>
         </div>
     </div>
 </form>

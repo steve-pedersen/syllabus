@@ -12,7 +12,9 @@ body {
 	margin-bottom: 260px;
 
 	#content {
-		min-height: 520px;
+		min-height: 260px;
+    margin-bottom: 80px;
+    margin-top: 20px;
 	}
 }
 
@@ -33,9 +35,14 @@ h1, h2, h3, h4, h5, h6,
 
   }
 }
+h3 {
+    text-transform: uppercase; 
+    font-weight:700;
+    font-size: $font-size-base * 1.50;
+}
 
 #user-message {
-  margin-top: -$line-height-computed;
+  // margin-top: -$line-height-computed;
 }
 
 .alert { 
@@ -47,12 +54,6 @@ h1, h2, h3, h4, h5, h6,
         opacity:.7;
         filter: alpha(opacity=70);
     }
-}
-
-h3 {
-    text-transform: uppercase; 
-    font-weight:700;
-    font-size: $font-size-base * 1.50;
 }
 
 // TABLES
@@ -205,3 +206,17 @@ table.hide-exempt tr.exempt { display: none; }
 //     border-color: #c6c8ca !important;
 // }
 
+
+// FORMS  ////////////////////////////////////////////////////
+// form[action="login"] {
+//   @extend .form-inline;
+//   .field {
+//     flex-flow: row !important;
+//   }
+//   input, select {
+//     @extend .form-control;
+//   }
+//   label, input, select, button, a {
+//     margin: 5px;
+//   }
+// }

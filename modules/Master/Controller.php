@@ -41,15 +41,20 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
         // framework controllers.
     }
 
-    protected function flash ($content) {
+    protected function flash ($content, $class='success') {
         $session = $this->request->getSession();
         $session->flashContent = $content;
+        $session->flashClass = $class;
     }
 
-    // protected function beforeCallback ($callback)
-    // {
-    //     $this->template->pAdmin = $this->hasPermission('admin');
-    // }
+    protected function printData ($data, $die = true)
+    {
+        echo "<pre>";
+        print_r($data);
+        echo "</pre>";
+
+        if ($die) die;
+    }
 
     protected function afterCallback ($callback)
     {
@@ -66,9 +71,31 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
             $this->template->flashContent = $session->flashContent;
             unset($session->flashContent);
         }
+        if (isset($session->flashClass))
+        {
+            $this->template->flashClass = $session->flashClass;
+            unset($session->flashClass);
+        }
 
         parent::afterCallback($callback);
     }
+
+    // public function homePage ()
+    // {
+    //     // add 'Home' breadcrumb so long as not on homepage
+    //     $path = $this->request->getFullRequestedUri();
+    //     if (($path !== '') && ($path !== '/') && ($path !== '/home') && ($path !== '/syllabus') &&
+    //         ($path !== '/syllabus/') && ($path !== '/syllabus/home'))
+    //     {
+    //         $this->addBreadcrumb('home', 'Home');
+    //     }
+    //     $homePage = false;
+    //     if ($path === '' || $path === '/' || $path === '/syllabus' || $path === '/syllabus/')
+    //     {
+    //         $homePage = true;
+    //     }
+    //     return $homePage;
+    // }
 
     public function userMessage ($primary, $details = null)
     {

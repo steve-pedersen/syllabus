@@ -89,7 +89,8 @@
 $line-height-computed:    	floor(($font-size-base * $line-height-base));
 // $breadcrumb-color: 			$navbar-default-link-color;
 .at {
-	margin-bottom: $line-height-computed;
+	// padding-bottom: $line-height-computed;
+	background-color: #e9ecef;
 	.bc {
 		background-color: $breadcrumb-bg;
 	}

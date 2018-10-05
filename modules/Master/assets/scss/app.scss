@@ -1,11 +1,14 @@
 @import "at-variables";
 @import "bootstrap-4.1.1";
 @import "at-theme";
+@import "quill";
+
 
 
 .at-jumbotron {
+	position: relative;
 	background-color: #6C6C6C;
-	background-image: url("../images/lecture02.jpg");
+	background-image: url("../images/organize01.jpg");
 	-webkit-background-size: 100% 100%;
 	-moz-background-size: 100% 100%;
 	-o-background-size: 100% 100%;
@@ -16,16 +19,98 @@
 	background-blend-mode: exclusion;
 	border-radius: 0;
 
+ /* the fallback for IE 10, 11 and Edge. */
+	@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+     	&:after {
+     		content:'';
+     		background: rgba(110,110,110, 0.9);
+			position: absolute;
+			left: 0;
+			top:0;
+			bottom:0;
+			width:100%;
+		}
+	}
+
 	.container {
+		z-index: 1;
+		position: relative;
+		// // container bg
+		// // background-color: #ffffff44;
+		// background-color: rgba(120,120,120,0.5);
+		// padding-top: 1rem;
+		// padding: 1rem;
+		// border-radius: 3px;
+		// // end container bg
+
 		p {
-			color: #fff;
+			color: #ffffff;
+			text-shadow: 0px 0px 1px #000;
+			&.lead {
+				// text-shadow: 0px 0px 1px #000;
+				// font-weight: 600;
+			}
+			&.login {
+				// color: $navbar-default-link-color;
+				// text-shadow: 0px 0px 1px #000;
+			}
 		}
 		hr {
 			border: 1px solid $navbar-default-link-color;
 		}
+		h1 {
+			color: #000;
+			text-shadow: 0px 0px 1px $navbar-default-link-color;
+		}
 	}
+	margin-bottom: 0;
+}
+@supports (-ms-ime-align:auto) {
+	.at-jumbotron:after {
+		content:'';
+		background: rgba(110,110,110, 0.9);
+		position: absolute;
+		left: 0;
+		top:0;
+		bottom:0;
+		width:100%;
+	}
+}
 
-	
 
-// background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('landingpagepic.jpg');
+// Welcome module cards
+.card {
+	.card-img-container {
+		background-color: #6c6c6c;
+	}
+	img.card-img-top {
+		opacity: 0.7;
+	}
+	// .card-img-container {
+	// 	>img:hover {
+	// 		// box-shadow: 0 0 20px $navbar-default-link-color;
+	// 		box-shadow: 0 0 20px #000;
+	// 		opacity: 0.8;
+	// 	}
+	// }
+}
+.card:hover {
+	box-shadow: 0 0 10px $navbar-default-link-color;
+	.card-img-container {
+		>img {			
+			opacity: 0.8;
+		}
+	}	
+}
+
+.segment {
+	height: 8vh;
+	background: linear-gradient(#e9ecef, $navbar-default-link-color);
+	// background: #e9ecef;
+}
+svg#triangle-svg {
+	width: 100%;
+	height: 4vh;
+	fill: $navbar-default-link-color;
+	// fill: #e9ecef;
 }

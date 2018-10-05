@@ -7,11 +7,12 @@
 		<title>{if $pageTitle}{$pageTitle|escape} &mdash; {/if}{$appName|escape}</title>
 		<base href="{$baseUrl|escape}/">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-		<!-- <link rel="stylesheet" type="text/css" href="assets/less/app.less.css"> -->
-		<link rel="stylesheet" type="text/css" href="assets/scss/app.scss.css">
+		<link rel="stylesheet" type="text/css" href="assets/scss/app.scss.css?cache=2018062800">
+		<!-- <link rel="stylesheet" type="text/css" href="assets/css/app.css"> -->
 		<link rel="stylesheet" type="text/css" href="assets/css/fontawesome-all.min.css">
-		<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.5.2/animate.min.css"> -->
+		<link rel="stylesheet" href="assets/js/highlight/styles/monokai-sublime.css">
 		<link rel="stylesheet" type="text/css" media="print" href="assets/css/app-print.css">
+		<!-- <link rel="stylesheet" type="text/css" href="assets/css/ie.css" media="screen"> -->
 		<link href='//fonts.googleapis.com/css?family=Montserrat:400,700|Lato:400,700,900' rel='stylesheet' type='text/css'>
 		<link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico" />
 		<script>document.write('<link rel="stylesheet" type="text/css" href="assets/css/app-js.css" media="screen">');</script>
@@ -19,7 +20,7 @@
 
 	<body>
 		<a href="#content" class="sr-only sr-only-focusable">Skip Navigation</a>
-		<header class="at">
+		<header class="at {if !$viewer || $homePage}pb-3{/if}">
 			<nav class="navbar navbar-expand-md navbar-dark bg-dark" style="">
 				<a class="navbar-brand px-2" href="{$baseUrl}">Syllabus</a>
 				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -89,7 +90,7 @@
 		{/if}
 
 		{if $flashContent}
-		<div id="user-message" class="alert alert-success alert-dismissable">
+		<div id="user-message" class="alert alert-{$flashClass} alert-dismissable">
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 			<div class="primary">{$flashContent}</div>
 		</div> 
@@ -111,8 +112,8 @@
 		{/if}
 
 		<!-- Main content here -->
-		<div class="container" id="content">
-			{include file=$contentTemplate}
+		<div class="container main-content" id="content">
+			{include file=$contentTemplate}		
 		</div>
 
 		{if !$viewer}
@@ -182,8 +183,12 @@
 				</div>
 			</nav>
 		</footer>
-
+		<script> 
+			var CKEDITOR_BASEPATH = "{$baseUrl|escape}/assets/js/ckeditor/"; 
+			window.CKEDITOR_BASEPATH = CKEDITOR_BASEPATH;
+		</script>
 		<script src="assets/js/app.js"></script>
+
 
 		{if $analyticsCode}{literal}
 		<script>

@@ -37,8 +37,12 @@ class Syllabus_Master_NotFoundErrorHandler extends Syllabus_Master_ErrorHandler
         // If you want to allow an identity provider to create accounts, here's
         // where you'd put your code.
         
-        $this->template->identity = $identity;
-        $this->template->identityProvider = $identity->getIdentityProvider();
+        if ($identity)
+        {
+            $this->template->identity = $identity;
+            $this->template->identityProvider = $identity->getIdentityProvider();            
+        }
+
         parent::handleError($error);
     }
 }

@@ -20,8 +20,10 @@ class Syllabus_Welcome_AdminController extends At_Admin_Controller
         $siteSettings = $this->getApplication()->siteSettings;
         
         if ($this->getPostCommand() == 'save' && $this->request->wasPostedByUser())
-        {           
-            if ($welcomeText = $this->request->getPostParameter('welcome-text'))
+        {        
+            $welcomeText = $this->request->getPostParameter('welcome-text');
+            $welcomeText2 = $this->request->getPostParameter('welcome-text2'); 
+            if ($welcomeText || $welcomeText2)
             {
                 $siteSettings->setProperty('welcome-text', $welcomeText);
                 $this->flash('The welcome text has been saved.');

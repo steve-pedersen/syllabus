@@ -39,5 +39,25 @@ class Syllabus_Master_Template extends Bss_Master_Template
         // template is rendered.
         
         // $this->assign('someTemplateVariable', 'A value');
+        $this->homePage = $this->homePage();
+    }
+
+    public function homePage ()
+    {
+        // add 'Home' breadcrumb so long as not on homepage
+        $path = $this->request->getFullRequestedUri();
+        if (($path !== '') && ($path !== '/') && ($path !== '/home') && ($path !== '/syllabus') &&
+            ($path !== '/syllabus/') && ($path !== '/syllabus/home'))
+        {
+            $this->addBreadcrumb('home', 'Home');
+        }
+        $homePage = false;
+        if ($path === '' || $path === '/' || $path === '/syllabus' || $path === '/syllabus/' || 
+            $path === '/syllabus/home')
+        {
+            $homePage = true;
+        }
+
+        return $homePage;
     }
 }
