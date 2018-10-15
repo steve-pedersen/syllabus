@@ -3,6 +3,7 @@
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\ServerException;
 use GuzzleHttp\Exception\ConnectException;
 use Psr\Http\Message\ResponseInterface;
@@ -30,6 +31,9 @@ class Syllabus_Services_Screenshotter
 
     // GuzzleHttp client
     private $client;
+
+    //
+    private $redisClient;
 
     // The image to use for when Screenshotter can't access a given URL
     private $defaultImgName;
@@ -60,9 +64,21 @@ class Syllabus_Services_Screenshotter
         $this->options = !empty($options) ? $this->parseOptions($options) : $defaultOptions;
         $this->defaultImgName = $this->setDefaultImage($app, $defaultImgName);
         $this->client = new Client( array('base_uri' => $this->apiUrl) );
+        $this->redisClient = new Predis\Client();
     }
 
-    public function concurrentRequests ($captureUrls, $cachedVersions=true)
+    public static function CutUid ($key)
+    {
+    	$client = new Predis\Client();
+    	if ($uid = $client->get($key))
+    	{
+    		$client->del($key);
+    	}
+
+    	return $uid;
+    }
+
+    public function concurrentRequests ($captureUrls, $cachedVersions=true, $tokenPrefix='')
     {
         $results = $imageUrls = $responses = $messages = $promises = array();
 
@@ -72,7 +88,9 @@ class Syllabus_Services_Screenshotter
             foreach ($captureUrls as $key => $url)
             {          
                 $imageUrls[$key] = $this->defaultImgName;
-                $promises[$key] = $this->client->getAsync('?url=' . urlencode($url) . $query);
+                $token = $this->redisClient->get($tokenPrefix . $key);
+				$options = array('headers' => array('Access-Token' => $token));
+                $promises[$key] = $this->client->getAsync('?url=' . urlencode($url) . $query, $options);
             }
 
         } catch (ConnectException $e) {
@@ -108,6 +126,19 @@ class Syllabus_Services_Screenshotter
 
         return json_encode($results);
     }
+
+	public function saveUids ($eid, $sids)
+	{
+		if (!is_array($sids)) $sids = array($sids);
+
+		foreach ($sids as $sid)
+		{
+			$key = "{$eid}-{$sid}";
+			$uid = uniqid($key . ':');
+			$this->redisClient->set($key, $uid);		
+		}
+
+	}
 
     protected function formatQueryString ($cachedVersions=true)
     {
