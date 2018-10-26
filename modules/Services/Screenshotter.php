@@ -1,12 +1,11 @@
 <?php
 
-use GuzzleHttp\Psr7;
-use GuzzleHttp\Client;
-use GuzzleHttp\Promise;
-use GuzzleHttp\Psr7\Request;
-use GuzzleHttp\Exception\ServerException;
-use GuzzleHttp\Exception\ConnectException;
-use Psr\Http\Message\ResponseInterface;
+// use GuzzleHttp\Psr7;
+// use GuzzleHttp\Promise;
+// use GuzzleHttp\Psr7\Request;
+// use GuzzleHttp\Exception\ServerException;
+// use GuzzleHttp\Exception\ConnectException;
+// use Psr\Http\Message\ResponseInterface;
 
 /**
  * The service functionality to connect to the Screenshotter API
@@ -32,7 +31,7 @@ class Syllabus_Services_Screenshotter
     // GuzzleHttp client
     private $client;
 
-    //
+    // Redis client - saves Access-Tokens for access to protected screenshot URL endpoints
     private $redisClient;
 
     // The image to use for when Screenshotter can't access a given URL
@@ -63,11 +62,11 @@ class Syllabus_Services_Screenshotter
         $this->apiSecret = $siteSettings->getProperty('screenshotter-api-secret');      
         $this->options = !empty($options) ? $this->parseOptions($options) : $defaultOptions;
         $this->defaultImgName = $this->setDefaultImage($app, $defaultImgName);
-        $this->client = new Client( array('base_uri' => $this->apiUrl) );
+        $this->client = new GuzzleHttp\Client( array('base_uri' => $this->apiUrl) );
         $this->redisClient = new Predis\Client();
     }
 
-    public static function CutUid ($key)
+    public static function CutUid ($key='')
     {
     	$client = new Predis\Client();
     	if ($uid = $client->get($key))
@@ -93,21 +92,21 @@ class Syllabus_Services_Screenshotter
                 $promises[$key] = $this->client->getAsync('?url=' . urlencode($url) . $query, $options);
             }
 
-        } catch (ConnectException $e) {
+        } catch (GuzzleHttp\Exception\ConnectException $e) {
             $messages[] = 'Could not connect to the Screenshotter service.';
         } 
 
         // Wait on all of the requests to complete. Throws a ConnectException
         // if any of the requests fail
         try {
-            $responses = Promise\unwrap($promises);          
+            $responses = GuzzleHttp\Promise\unwrap($promises);          
         } catch (Exception $e) {
             $messages[] = "Failed to obtain screenshots.";
         } 
 
         // Wait for the requests to complete, even if some of them fail
         try {
-            $responses = Promise\settle($promises)->wait();        
+            $responses = GuzzleHttp\Promise\settle($promises)->wait();        
         } catch (Exception $e) {
             $messages[] = 'Screenshotter service failed.';
         } 
@@ -133,11 +132,12 @@ class Syllabus_Services_Screenshotter
 
 		foreach ($sids as $sid)
 		{
-			$key = "{$eid}-{$sid}";
-			$uid = uniqid($key . ':');
+			// $key = "{$eid}-{$sid}";
+			// $uid = uniqid($key . ':');
+            $key = "{$eid}-{$sid}";
+            $uid = uniqid();
 			$this->redisClient->set($key, $uid);		
 		}
-
 	}
 
     protected function formatQueryString ($cachedVersions=true)
