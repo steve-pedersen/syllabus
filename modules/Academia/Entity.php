@@ -14,7 +14,7 @@ abstract class Syllabus_Academia_Entity extends Bss_ActiveRecord_Base
      *
      * @return ActiveRecord
      */
-	abstract public function getEntity ();
+	abstract public function getConcreteEntity ();
 
     /**
      * Should return get_class($this)

@@ -6,7 +6,7 @@
  * @author      Steve Pedersen (pedersen@sfsu.edu)
  * @copyright   Copyright &copy; San Francisco State University.
  */
-class Syllabus_Services_AdminController extends At_Admin_Controller
+class Syllabus_Services_AdminController extends Syllabus_Master_AdminController
 {
     public static function getRouteMap ()
     {

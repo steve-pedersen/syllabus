@@ -10,6 +10,7 @@ require_once 'bss/core/Application.php';
 require_once 'bss/core/Request.php';
 require_once 'bss/core/Response.php';
 
+
 function Bss_App_Start ()
 {
     $app = Bss_Core_Application::initApplication(BSS_APP_CONFIG_FILE);

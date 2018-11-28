@@ -2,7 +2,7 @@
 {if $pAdmin}
 	<fieldset class="field">
 		<legend>Roles</legend>
-		<ul class="list-group">
+		<ul class="list-group list-unstyled">
 {foreach item="role" from=$roleList}
 			<li>
 				<label for="account-role-{$role->id}">

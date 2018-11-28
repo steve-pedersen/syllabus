@@ -1,6 +1,6 @@
 <?php
 
-class Syllabus_Welcome_AdminController extends At_Admin_Controller
+class Syllabus_Welcome_AdminController extends Syllabus_Master_AdminController
 {
     public static function getRouteMap ()
     {

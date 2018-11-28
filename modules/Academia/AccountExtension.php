@@ -30,7 +30,7 @@ class Syllabus_Academia_AccountExtension extends Bss_AuthN_AccountExtension impl
                     'entity_id' => 'string', 
                     'creation_date' => 'datetime'
                 ),
-                // 'orderBy' => array('_map.name', 'name', 'id'),          
+            )       
         );
     }
  

@@ -1,12 +1,5 @@
 <?php
 
-// use GuzzleHttp\Psr7;
-// use GuzzleHttp\Promise;
-// use GuzzleHttp\Psr7\Request;
-// use GuzzleHttp\Exception\ServerException;
-// use GuzzleHttp\Exception\ConnectException;
-// use Psr\Http\Message\ResponseInterface;
-
 /**
  * The service functionality to connect to the Screenshotter API
  *
@@ -36,7 +29,6 @@ class Syllabus_Services_Screenshotter
 
     // The image to use for when Screenshotter can't access a given URL
     private $defaultImgName;
-
 
     public function __construct($app, $options=array(), $defaultImgName='')
     {
@@ -68,13 +60,22 @@ class Syllabus_Services_Screenshotter
 
     public static function CutUid ($key='')
     {
-    	$client = new Predis\Client();
-    	if ($uid = $client->get($key))
-    	{
-    		$client->del($key);
-    	}
+        $client = new Predis\Client();
+        if ($uid = $client->get($key))
+        {
+            $client->del($key);
+        }
+        return $uid;
+    }
 
-    	return $uid;
+    public function saveUids ($eid, $sids)
+    {
+        if (!is_array($sids)) $sids = array($sids);
+
+        foreach ($sids as $sid)
+        {
+            $this->redisClient->set("{$eid}-{$sid}", uniqid());
+        }
     }
 
     public function concurrentRequests ($captureUrls, $cachedVersions=true, $tokenPrefix='')
@@ -85,28 +86,28 @@ class Syllabus_Services_Screenshotter
         try {
             $query = $this->formatQueryString($cachedVersions);
             foreach ($captureUrls as $key => $url)
-            {          
+            {
                 $imageUrls[$key] = $this->defaultImgName;
                 $token = $this->redisClient->get($tokenPrefix . $key);
 				$options = array('headers' => array('Access-Token' => $token));
                 $promises[$key] = $this->client->getAsync('?url=' . urlencode($url) . $query, $options);
             }
-
-        } catch (GuzzleHttp\Exception\ConnectException $e) {
+        // } catch (GuzzleHttp\Exception\ConnectException $e) {
+        } catch (Exception $e) {
             $messages[] = 'Could not connect to the Screenshotter service.';
-        } 
+        }
 
         // Wait on all of the requests to complete. Throws a ConnectException
         // if any of the requests fail
         try {
-            $responses = GuzzleHttp\Promise\unwrap($promises);          
+            $responses = GuzzleHttp\Promise\unwrap($promises);
         } catch (Exception $e) {
-            $messages[] = "Failed to obtain screenshots.";
-        } 
+            $messages[] = 'Failed to obtain some screenshots.';
+        }
 
         // Wait for the requests to complete, even if some of them fail
         try {
-            $responses = GuzzleHttp\Promise\settle($promises)->wait();        
+            $responses = GuzzleHttp\Promise\settle($promises)->wait();
         } catch (Exception $e) {
             $messages[] = 'Screenshotter service failed.';
         } 
@@ -125,20 +126,6 @@ class Syllabus_Services_Screenshotter
 
         return json_encode($results);
     }
-
-	public function saveUids ($eid, $sids)
-	{
-		if (!is_array($sids)) $sids = array($sids);
-
-		foreach ($sids as $sid)
-		{
-			// $key = "{$eid}-{$sid}";
-			// $uid = uniqid($key . ':');
-            $key = "{$eid}-{$sid}";
-            $uid = uniqid();
-			$this->redisClient->set($key, $uid);		
-		}
-	}
 
     protected function formatQueryString ($cachedVersions=true)
     {
@@ -190,19 +177,18 @@ class Syllabus_Services_Screenshotter
     // TODO: Update this to use file upload...
     protected function setDefaultImage ($app, $defaultImgName='')
     {
-        $imageName = 'screenshotter_sfsu_default.jpg'; // the fail-safe default
-        if (($defaultImgName !== '') && (file_exists('assets/images/' . $defaultImgName)))
+        $path = 'assets/images/';
+        $imageName = 'screenshotter_sfsu_default.jpg';
+
+        if (($defaultImgName !== '') && (file_exists($path . $defaultImgName)))
         {
             $imageName = $defaultImgName;
         }
         elseif ($settingsImage = $app->siteSettings->getProperty('screenshotter-default-img-name'))
         {
-            if (file_exists('assets/images/' . $settingsImage))
-            {
-                $imageName = $settingsImage;
-            }
+            $imageName = $settingsImage;
         }
 
-        return $imageName;
+        return $path . $imageName;
     }
 }

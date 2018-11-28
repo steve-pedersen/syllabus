@@ -7,7 +7,7 @@
 		<title>{if $pageTitle}{$pageTitle|escape} &mdash; {/if}{$appName|escape}</title>
 		<base href="{$baseUrl|escape}/">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
-		<link rel="stylesheet" type="text/css" href="assets/scss/app.scss.css?cache=2018062800">
+		<link rel="stylesheet" type="text/css" href="assets/scss/app.scss.css?cache=2018103100">
 		<!-- <link rel="stylesheet" type="text/css" href="assets/css/app.css"> -->
 		<link rel="stylesheet" type="text/css" href="assets/css/fontawesome-all.min.css">
 		<link rel="stylesheet" href="assets/js/highlight/styles/monokai-sublime.css">
@@ -90,7 +90,7 @@
 		{/if}
 
 		{if $flashContent}
-		<div id="user-message" class="alert alert-{$flashClass} alert-dismissable">
+		<div id="user-message" class="alert alert-{$flashClass} alert-dismissable my-3 rounded-0 fade show" role="alert">
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 			<div class="primary">{$flashContent}</div>
 		</div> 

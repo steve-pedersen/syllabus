@@ -5,7 +5,7 @@
         <div class="card-body">
             <form method="post" action="login/complete/sfsu-pw" class="prominent data">
                 <div class="form-group">
-                    <input type="text" class="form-control" id="password-username" name="username" placeholder="Username/Email" alt="Username/Email">
+                    <input type="text" class="form-control" id="password-username" name="username" placeholder="Username/Email" alt="Username/Email" autofocus>
                 </div>
 
                 <div class="form-group">
