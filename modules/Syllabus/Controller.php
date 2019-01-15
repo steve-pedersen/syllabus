@@ -34,7 +34,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         // $keyPrefix = "{$eid}-";
 
         // get all syllabus ids for this entity based on offset and limit=10
-        $sids = array('1', '6', '4', '7', '3', '8', '5', '9', '2', '10');
+        // $sids = array('1', '6', '4', '7', '3', '8', '5', '9', '2', '10');
+        $sids = array('1', '6', '4');
 
         // generate some key/value access tokens for each render page
         $keyPrefix = "{$eid}-";

@@ -80,22 +80,10 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
         parent::afterCallback($callback);
     }
 
-    // public function homePage ()
-    // {
-    //     // add 'Home' breadcrumb so long as not on homepage
-    //     $path = $this->request->getFullRequestedUri();
-    //     if (($path !== '') && ($path !== '/') && ($path !== '/home') && ($path !== '/syllabus') &&
-    //         ($path !== '/syllabus/') && ($path !== '/syllabus/home'))
-    //     {
-    //         $this->addBreadcrumb('home', 'Home');
-    //     }
-    //     $homePage = false;
-    //     if ($path === '' || $path === '/' || $path === '/syllabus' || $path === '/syllabus/')
-    //     {
-    //         $homePage = true;
-    //     }
-    //     return $homePage;
-    // }
+    protected function beforeCallback ($callback)
+    {
+        parent::beforeCallback($callback);
+    }
 
     public function userMessage ($primary, $details = null)
     {

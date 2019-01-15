@@ -36,34 +36,18 @@ class Syllabus_AuthN_AdminController extends Syllabus_Master_Controller
     {
         $this->setPageTitle('Administrate accounts');
         $accounts = $this->schema('Bss_AuthN_Account');
-        $roles = $this->schema('Syllabus_AuthN_Role');
         
         if ($this->getPostCommand() == 'become' && $this->request->wasPostedByUser())
         {
-
             $commandMap = $this->request->getPostParameter('command');
             $accountIds = array_keys($commandMap['become']);
-
-			$returnTo = $this->request->getQueryParameter('returnTo', $this->request->getFullRequestedUri());
-            
+            $accountToBecome = $accounts->get($accountIds[0]);
+            $returnTo = $this->request->getQueryParameter('returnTo', $this->request->getFullRequestedUri());
+    
             $userContext = $this->getUserContext();
-            $userContext->becomeAccount($accounts->get($accountIds[0]), $returnTo);
-
-            $account = $userContext->getAccount();
-
-            $adminRole = $roles->findOne($roles->name->equals('Administrator'));
-
-            if ($account->roles->has($adminRole))
-            {
-                $this->response->redirect('admin');
-            }
-            else
-            {
-                $this->response->redirect('/');
-            }
-            
+            $userContext->becomeAccount($accountToBecome, $returnTo);
         }
-
+        
         $page = $this->request->getQueryParameter('page', 1);
         $limit = $this->request->getQueryParameter('limit', 20);
         $searchQuery = $this->request->getQueryParameter('sq');
@@ -84,7 +68,6 @@ class Syllabus_AuthN_AdminController extends Syllabus_Master_Controller
             {
                 $optionMap['offset'] = $offset;
             }
-            if ($limit == 99999) set_time_limit(0);
         }
         
         switch ($sortBy)
@@ -94,7 +77,7 @@ class Syllabus_AuthN_AdminController extends Syllabus_Master_Controller
                 break;
             
             case 'email':
-                $optionMap['orderBy'] = array($dirPrefix . 'emailAddress', $dirPrefix . 'id');
+                $optionMap['orderBy'] = array($dirPrefix . 'email', $dirPrefix . 'id');
                 break;
             
             case 'uni':
@@ -105,85 +88,7 @@ class Syllabus_AuthN_AdminController extends Syllabus_Master_Controller
                 $optionMap['orderBy'] = array($dirPrefix . 'lastLoginDate', $dirPrefix . 'lastName', $dirPrefix . 'firstName', $dirPrefix . 'id');
                 break;
         }
-
-        // $nonStudentRoles = $roles->find($roles->name->notEquals('Student')->andIf($roles->name->notEquals('Anonymous')), $roleOptionMap);       
-    
-        // Always places Student role at end of list
-        $total = 0;
-
-        if ($sortBy === 'role')
-        {
-            $accs = array();
-            $foundIds = array();
-            $counter = 0;    
-            $page = $page ?? 1;
-            $offset = $page * $limit - $limit;
-            // $offset = $page > 1 ? $offset-1 : $offset;
-            $upperLimit = $limit * $page;
-            
-            // add application admin
-            if ($page == 1)
-            {
-                $accs[] = $accounts->get(1);
-                $foundIds[] = 1;
-                $counter = 1;                
-            }
-
-            // add non student roles, e.g. Administrator, Teacher, CC Teacher
-            $roleOptionMap['orderBy'] = '+name';
-            $nonStudentRoles = $roles->find($roles->name->notEquals('Student'), $roleOptionMap);
-            foreach ($nonStudentRoles as $role)
-            {
-                if (($counter + $offset) < $upperLimit)
-                {
-                    foreach ($role->accounts as $i => $acc)
-                    {
-                        if ($i < $offset) continue;
-                        if (!in_array($acc->id, $foundIds) && $counter < $limit)
-                        {
-                            $accs[] = $acc;
-                            $foundIds[] = $acc->id;
-                            $counter++;
-                        }
-                    }
-                }
-                // keep track of all non student accs so that we do not include them when finding students
-                foreach ($role->accounts as $acc)
-                {
-                    if (!in_array($acc->id, $foundIds))
-                    {
-                        $foundIds[] = $acc->id;
-                    }
-                }
-            }
-            // echo "<pre>"; var_dump($counter, $page, $limit, $offset, $upperLimit, ($upperLimit - ($counter + $offset))); die;
-            $total = $accounts->count($accounts->id->notInList($foundIds));
-            
-            // add remaining accounts, i.e. students and accs that may not have an assigned role
-            $roleOptionMap['orderBy'] = $dirPrefix . 'lastName';
-            $roleOptionMap['page'] = $page;
-            $roleOptionMap['limit'] = $upperLimit - ($counter + $offset);
-            if (count($accs) === 0) $roleOptionMap['offset'] = ($page-1) * $limit;
-            if ($roleOptionMap['limit'] > 0)
-            {
-                $remainingAccs = $accounts->find($accounts->id->notInList($foundIds), $roleOptionMap);
-                foreach ($remainingAccs as $acc)
-                {
-                    if (($counter + $offset) < $upperLimit)
-                    {
-                        if (!in_array($acc->id, $foundIds)  && $counter < $limit)
-                        {
-                            $accs[] = $acc;
-                            $foundIds[] = $acc->id;
-                            $counter++;
-                        }
-                    }
-                }
-            }
-            
-            $accounts = $accs;
-        }
-
+        
         $condition = null;
         
         if (!empty($searchQuery))
@@ -193,17 +98,16 @@ class Syllabus_AuthN_AdminController extends Syllabus_Master_Controller
                 $accounts->firstName->lower()->like($pattern)->orIf(
                     $accounts->lastName->lower()->like($pattern),
                     $accounts->middleName->lower()->like($pattern),
-                    $accounts->emailAddress->lower()->like($pattern),
-                    $accounts->username->like($pattern)
+                    $accounts->emailAddress->lower()->like($pattern)
                 );
         }
         
-        $totalAccounts = (is_array($accounts) ? $total : $accounts->count($condition));
+        $totalAccounts = $accounts->count($condition);
         $pageCount = ceil($totalAccounts / $limit);
         
         $this->template->pagesAroundCurrent = $this->getPagesAroundCurrent($page, $pageCount);
         
-        $accountList = (is_array($accounts) ? $accounts : $accounts->find($condition, $optionMap));
+        $accountList = $accounts->find($condition, $optionMap);
         
         $this->template->searchQuery = $searchQuery;
         $this->template->totalAccounts = $totalAccounts;
@@ -216,56 +120,56 @@ class Syllabus_AuthN_AdminController extends Syllabus_Master_Controller
         $this->template->limit = $limit;
     }
 
-    public function editAccount ()
-    {
-        $viewer = $this->requireLogin();
-        $id = $this->getRouteVariable('id');
-        $accounts = $this->schema('Bss_AuthN_Account');
-        $returnTo = $this->request->getQueryParameter('returnTo', 'admin/accounts');
+    // public function editAccount ()
+    // {
+    //     $viewer = $this->requireLogin();
+    //     $id = $this->getRouteVariable('id');
+    //     $accounts = $this->schema('Bss_AuthN_Account');
+    //     $returnTo = $this->request->getQueryParameter('returnTo', 'admin/accounts');
         
-        if ($id == 'new')
-        {
-            $this->setPageTitle('New account');
-            $account = $accounts->createInstance();
-            $newAccount = true;
-        }
-        else
-        {
-            if (!($account = $accounts->get($id)))
-            {
-                $this->notFound();
-            }
-            $newAccount = false;
-            $this->setPageTitle('Edit ' . $account->displayName);
-        }
+    //     if ($id == 'new')
+    //     {
+    //         $this->setPageTitle('New account');
+    //         $account = $accounts->createInstance();
+    //         $newAccount = true;
+    //     }
+    //     else
+    //     {
+    //         if (!($account = $accounts->get($id)))
+    //         {
+    //             $this->notFound();
+    //         }
+    //         $newAccount = false;
+    //         $this->setPageTitle('Edit ' . $account->displayName);
+    //     }
 
-        $roles = $this->schema('Syllabus_AuthN_Role');
-        $roleList = $roles->find($roles->isSystemRole->equals(true), array('orderBy' => '+name'));
+    //     $roles = $this->schema('Syllabus_AuthN_Role');
+    //     $roleList = $roles->find($roles->isSystemRole->equals(true), array('orderBy' => '+name'));
         
-        if ($this->request->wasPostedByUser())
-        {
-            if ($account->handleSettings($this->request, true, $roleList))
-            {
-                if ($id == 'new')
-                {
-                    $account->source = 'admin';
-                    $account->createdDate = new DateTime;
-                }
+    //     if ($this->request->wasPostedByUser())
+    //     {
+    //         if ($account->handleSettings($this->request, true, $roleList))
+    //         {
+    //             if ($id == 'new')
+    //             {
+    //                 $account->source = 'admin';
+    //                 $account->createdDate = new DateTime;
+    //             }
                 
-                $account->save();
-                $this->response->redirect($returnTo);
-            }
-            else
-            {
-                $this->template->errorMap = $account->getValidationMessages();
-            }
-        }
+    //             $account->save();
+    //             $this->response->redirect($returnTo);
+    //         }
+    //         else
+    //         {
+    //             $this->template->errorMap = $account->getValidationMessages();
+    //         }
+    //     }
 
-        $this->template->newAccount = $newAccount;
-        $this->template->account = $account;
-        $this->template->roleList = $roleList;
-        $this->template->returnTo = $returnTo;
-    }
+    //     $this->template->newAccount = $newAccount;
+    //     $this->template->account = $account;
+    //     $this->template->roleList = $roleList;
+    //     $this->template->returnTo = $returnTo;
+    // }
 
     private function getQueryString ($merge = null)
     {

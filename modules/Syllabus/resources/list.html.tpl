@@ -1,3 +1,15 @@
+  <!-- Dropdown Trigger -->
+  <a class='dropdown-trigger btn' href='syllabus/entity/999#' data-target='dropdown1'>Drop Me!</a>
+
+  <!-- Dropdown Structure -->
+  <ul id='dropdown1' class='dropdown-content'>
+    <li><a href="syllabus/entity/999#!">one</a></li>
+    <li><a href="syllabus/entity/999#!">two</a></li>
+    <li class="divider" tabindex="-1"></li>
+    <li><a href="syllabus/entity/999#!">three</a></li>
+    <li><a href="syllabus/entity/999#!"><i class="material-icons">view_module</i>four</a></li>
+    <li><a href="syllabus/entity/999#!"><i class="material-icons">cloud</i>five</a></li>
+  </ul>
 <div class="welcome-module">
   <div class="album py-3 bg-light">
     <div class="container">

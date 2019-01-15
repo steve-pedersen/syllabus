@@ -9,6 +9,8 @@
 // #require vendor/ckeditor/ckeditor/ckeditor.js
 #require js/ckeditor.js
 
+#require js/materialize.js
+
 
 (function ($) {
     $(function () {

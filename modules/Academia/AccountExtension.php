@@ -36,6 +36,7 @@ class Syllabus_Academia_AccountExtension extends Bss_AuthN_AccountExtension impl
  
     public function getSubjectProxies ($account)
     {
+        return array();
         return $account->entity_roles->asArray();
     }
     

@@ -37,9 +37,8 @@ class Syllabus_Master_Template extends Bss_Master_Template
         // Setup template variables here. For a template used in a controller,
         // this happens AFTER your callback has run, immediately before the
         // template is rendered.
-        
         // $this->assign('someTemplateVariable', 'A value');
-        $this->homePage = $this->homePage();
+        $this->assign('homePage', $this->homePage());
     }
 
     public function homePage ()

@@ -33,7 +33,6 @@ class Syllabus_Master_AdminController extends At_Admin_Controller
             $this->template->flashClass = $session->flashClass;
             unset($session->flashClass);
         }
-
         parent::afterCallback($callback);
     }
 }

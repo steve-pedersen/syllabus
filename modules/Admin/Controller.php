@@ -8,7 +8,7 @@ class Syllabus_Admin_Controller extends Syllabus_Master_Controller
     {
         return array(        
             // '/admin' => array('callback' => 'index'),
-            '/admin/colophon' => array('callback' => 'colophon'),
+            // '/admin/colophon' => array('callback' => 'colophon'),
 			'/admin/apc' => array('callback' => 'clearMemoryCache'),
             '/admin/cron' => array('callback' => 'cron'),
             '/admin/settings/siteNotice' => array('callback' => 'siteNotice'),
@@ -32,13 +32,6 @@ class Syllabus_Admin_Controller extends Syllabus_Master_Controller
         $this->setPageTitle('Administrate');
     }
 
-    /**
-     */
-    public function colophon ()
-    {
-        $moduleManager = $this->getApplication()->moduleManager;
-        $this->template->moduleList = $moduleManager->getModules();
-    }
 
     /**
      * Set the site notice.
