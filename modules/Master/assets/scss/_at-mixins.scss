@@ -4,21 +4,40 @@
 	-ms-border-radius: $radius;
 	border-radius: $radius;
 }
-@mixin at-gradient($start-color: #533b6d, $mid-color: #321c4a, $end-color: #284a80, $deg: 45deg) {
+$theme6: #384874;
+$theme7: #2e4865;
+// @mixin at-gradient($start-color: #533b6d, $mid-color: #321c4a, $end-color: #284a80, $deg: 45deg) {
+@mixin at-gradient($start-color: #1B2A4B, $mid-color: #415A77, $end-color: #0C6291, $deg: 45deg) {
     background-repeat: repeat-x;
     background-image: -webkit-linear-gradient($deg, $start-color, $mid-color, $end-color); // Safari 5.1-6, Chrome 10+
     background-image: -o-linear-gradient($deg, $start-color,  $mid-color, $end-color); // Opera 12
     background-image: linear-gradient($deg, $start-color,  $mid-color, $end-color); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
+	// background-image: linear-gradient(to right, #243949 0%, #517fa4 100%);
 }
-@mixin navbar-link-active-disabled($color: $btn-link-disabled-color, $bg-color: $sfsu-alt-purple-lte-2) {
+@mixin navbar-link-active-disabled($color: $btn-link-disabled-color, $bg-color: #415A77) {
 	&:hover,
 	&:focus {
 		color: $color;
-		background-color: $bg-color;
+		// background-color: $bg-color;
 	}
 }
 @mixin navbar-link($link-color: $navbar-default-link-color, $hover-color: $navbar-default-link-hover-color, $hover-bg: $navbar-default-link-hover-bg) {
 	color: $link-color;
 	text-transform: uppercase;
+	transition: background-color 0.1s;
 	@include navbar-link-active-disabled($hover-color, $hover-bg);
+}
+
+@mixin alert-variant($background, $border, $color) {
+  color: $color;
+  @include gradient-bg(lighten($background, 80%));
+  border-color: lighten($border, 60%);
+
+  hr {
+    border-top-color: darken($border, 5%);
+  }
+
+  .alert-link {
+    color: darken($color, 10%);
+  }
 }

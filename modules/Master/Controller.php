@@ -85,6 +85,31 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
         parent::beforeCallback($callback);
     }
 
+    public function buildHeader ($file, $title='', $subtitle='', $description='', $ctrl=null)
+    {
+        $ctrl = $ctrl ?? $this;
+        $partialVars = [
+            'varName' => 'headerPartial',
+            'fileName' => ($file ?? 'partial:_header.html.tpl'),
+            'varKey' => 'headerVars',
+            'vars' => [
+                'title' => $title,
+                'subtitle' => $subtitle,
+                'description' => $description,
+            ],
+        ];
+        $this->setPartialTemplate($ctrl, $partialVars);
+    }
+
+    public function setPartialTemplate ($controller, $vars)
+    {
+        $this->template->registerResource('partial', new Bss_Template_PartialResource($controller));
+        $key = $vars['varName'];
+        $this->template->$key = $vars['fileName'];
+        $key = $vars['varKey'];
+        $this->template->$key = $vars['vars'];
+    }
+
     public function userMessage ($primary, $details = null)
     {
         $this->userMessageList[] = array(

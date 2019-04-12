@@ -23,8 +23,15 @@ class Syllabus_Academia_Course extends Bss_ActiveRecord_BaseWithAuthorization //
             'createdDate' => array('datetime', 'nativeName' => 'created_date'),
             'modifiedDate' => array('datetime', 'nativeName' => 'modified_date'),
 
-            'departments' => array('1:N', 'to' => 'Syllabus_Academia_Department', 'reverseOf' => 'course', 'orderBy' => array('created_date')), 
-
+            // 'departments' => array('1:N', 'to' => 'Syllabus_Academia_Department', 'reverseOf' => 'course', 'orderBy' => array('created_date')),
+            'departments' => array('N:M',
+                'to' => 'Syllabus_Academia_Department',
+                'via' => 'syllabus_course_departments',
+                'fromPrefix' => 'course',
+                'toPrefix' => 'department',
+                'properties' => array('sort_order' => 'int', 'is_hidden' => 'bool', 'college' => 'int'),
+                'orderBy' => array('+_map.sort_order')
+            ),
         );
     }
 

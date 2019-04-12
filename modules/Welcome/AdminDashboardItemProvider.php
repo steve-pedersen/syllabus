@@ -2,7 +2,7 @@
 
 /**
  * 
- * @author      Daniel A. Koepke (dkoepke@sfsu.edu)
+ * @author      Steve Pedersen (pedersen@sfsu.edu)
  * @copyright   Copyright &copy; San Francisco State University.
  */
 class Syllabus_Welcome_AdminDashboardItemProvider extends At_Admin_DashboardItemProvider

@@ -1,0 +1,14 @@
+@import "_edit";
+@import "_view";
+
+.editor-main-container {
+	// height: 100%;
+	.syllabus-editor {
+		.form-control-label {
+			font-weight: bold;
+		}
+	}
+	.section-title {
+	    font-size: 1.2rem;
+	}
+}

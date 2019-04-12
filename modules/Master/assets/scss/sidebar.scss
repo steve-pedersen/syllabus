@@ -1,0 +1,35 @@
+#sidebar {
+	i.my-syllabi {
+	    font-size: 2.2em;
+	}
+	&.sidebar-minimized {
+    // -webkit-transition: all 0.1s ease;
+    // -moz-transition: all 0.1s ease;
+    // -o-transition: all 0.1s ease;
+    // transition: all 0.1s ease;
+		max-width: 5%;
+		padding-left: 0;
+		.sidebar-text {
+			display: none;
+		}
+	}
+}
+.at .navbar > .brand-minimized {
+    // -webkit-transition: all 0.1s ease;
+    // -moz-transition: all 0.1s ease;
+    // -o-transition: all 0.1s ease;
+    // transition: all 0.1s ease;
+	max-width: 5%;
+	padding-right: 3em;
+	#brandLogo {
+		margin-left: -0.2em;
+	}
+	.brand-text {
+		display: none;
+	}
+	#sidebarToggle  {
+		&.fa-chevron-left {
+			display: none;
+		}
+	}
+}

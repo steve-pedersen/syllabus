@@ -1,10 +1,34 @@
-// @import "materialize";
+
 @import "at-variables";
 @import "bootstrap-4.1.1";
 @import "at-theme";
+@import "sidebar";
+@import "syllabus";
 
 
 
+$theme1: #3b3c3c;
+$theme2: #0c5454;
+$theme3: #10ad87;
+$theme4: #8ac33c;
+$theme5: #0a7c7c;
+$theme6: #384874;
+$theme7: #2e4865;
+$theme8: #316c54;
+
+body {
+	// font-family: "Lato", Arial, Tahoma, sans-serif;
+	// background: url("../images/color-tiles03-1000x120px.svg") #fff;
+}
+
+div.main-content {
+	background-color: #ffffff;
+	padding: 1em;
+}
+#mainContent {
+	// background-color: $gold_light_5;
+	min-height: 60em;
+}
 
 .at-jumbotron {
 	position: relative;
@@ -19,8 +43,13 @@
 	background-position: 50% 65%;
 	background-blend-mode: exclusion;
 	border-radius: 0;
+    margin-left: -1em !important;
+    margin-right: -1em !important;
+    margin-bottom: 0;
+    margin-bottom: 1em;
+    height: 12em;
 
- /* the fallback for IE 10, 11 and Edge. */
+ 	/* the fallback for IE 10, 11 and Edge. */
 	@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
      	&:after {
      		content:'';
@@ -33,20 +62,12 @@
 		}
 	}
 
-	.container {
-		z-index: 1;
-		position: relative;
-		// // container bg
-		// // background-color: #ffffff44;
-		// background-color: rgba(120,120,120,0.5);
-		// padding-top: 1rem;
-		// padding: 1rem;
-		// border-radius: 3px;
-		// // end container bg
-
+	.container, .container-fluid {
+		margin-top: 1em;
 		p {
 			color: #ffffff;
 			text-shadow: 0px 0px 1px #000;
+			
 			&.lead {
 				// text-shadow: 0px 0px 1px #000;
 				// font-weight: 600;
@@ -62,9 +83,12 @@
 		h1 {
 			color: #000;
 			text-shadow: 0px 0px 1px $navbar-default-link-color;
+			> small {
+				color: $smoke_dark_5;
+			}
 		}
 	}
-	margin-bottom: 0;
+	
 }
 @supports (-ms-ime-align:auto) {
 	.at-jumbotron:after {
@@ -76,42 +100,4 @@
 		bottom:0;
 		width:100%;
 	}
-}
-
-
-// Welcome module cards
-.card {
-	.card-img-container {
-		background-color: #6c6c6c;
-	}
-	img.card-img-top {
-		opacity: 0.7;
-	}
-	// .card-img-container {
-	// 	>img:hover {
-	// 		// box-shadow: 0 0 20px $navbar-default-link-color;
-	// 		box-shadow: 0 0 20px #000;
-	// 		opacity: 0.8;
-	// 	}
-	// }
-}
-.card:hover {
-	box-shadow: 0 0 10px $navbar-default-link-color;
-	.card-img-container {
-		>img {			
-			opacity: 0.8;
-		}
-	}	
-}
-
-.segment {
-	height: 8vh;
-	background: linear-gradient(#e9ecef, $navbar-default-link-color);
-	// background: #e9ecef;
-}
-svg#triangle-svg {
-	width: 100%;
-	height: 4vh;
-	fill: $navbar-default-link-color;
-	// fill: #e9ecef;
 }
