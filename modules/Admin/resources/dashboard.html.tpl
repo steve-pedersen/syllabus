@@ -1,3 +1,4 @@
+<div class="col">
 <h1>Admin Dashboard</h1>
 
 {foreach item="section" from=$sectionList}
@@ -22,3 +23,4 @@
     </div>
     {/if}
 {/foreach}
+</div>

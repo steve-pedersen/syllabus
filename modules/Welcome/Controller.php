@@ -3,7 +3,7 @@
 /**
  * The welcome (landing) page.
  * 
- * @author      Daniel A. Koepke <dkoepke@sfsu.edu>
+ * @author      Steve Pedersen (pedersen@sfsu.edu)
  * @copyright   Copyright &copy; San Francisco State University
  */
 class Syllabus_Welcome_Controller extends Syllabus_Master_Controller
@@ -22,9 +22,9 @@ class Syllabus_Welcome_Controller extends Syllabus_Master_Controller
         $siteSettings = $app->siteSettings;
         $moduleManager = $app->moduleManager;
 
-        $welcomeHeroPartial = 'partial:_welcomeHero.html.tpl';
-        $this->template->registerResource('partial', new Bss_Template_PartialResource($this));
-        $this->template->headerPartial = $welcomeHeroPartial;
+        // $welcomeHeroPartial = 'partial:_welcomeHero.html.tpl';
+        // $this->template->registerResource('partial', new Bss_Template_PartialResource($this));
+        // $this->template->headerPartial = $welcomeHeroPartial;
 
         if ($welcomeText = $siteSettings->getProperty('welcome-text'))
         {

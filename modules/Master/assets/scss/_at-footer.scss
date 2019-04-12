@@ -6,7 +6,10 @@
 	width:100%;
 	padding-top:2em;
 	font-family: Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif;
-	ul {margin-top:10px;}
+	// line-height: 1.4285em;
+	font-size: 14px;
+	// font-family: 'Julius Sans One', sans-serif;
+	ul { margin-top:10px; }
 	a, strong, h2 {
 		color: $footer-text-white;
 		&:hover{ color:#ebebeb; }
@@ -18,7 +21,7 @@
 		background-color: $footer-background-color;
 	}	
 	.footer-row-1 {
-		background-color: $footer-row-1-background-color;
+		// background-color: $footer-row-1-background-color;
 		padding: 2.5rem 0 1rem 0;
 		h1 {
 			color: $footer-text-blue;
@@ -40,6 +43,7 @@
 	}
 	.footer-row-2 {
 		padding-top: 1rem;
+		font-family: 'Julius Sans One', sans-serif;
 		#contact-university {
 			img {
 				float: left;

@@ -15,76 +15,51 @@
 		<link rel="stylesheet" href="assets/js/highlight/styles/monokai-sublime.css">
 		<link rel="stylesheet" type="text/css" media="print" href="assets/css/app-print.css">
 		<!-- <link rel="stylesheet" type="text/css" href="assets/css/ie.css" media="screen"> -->
-		<link href='//fonts.googleapis.com/css?family=Montserrat:400,700|Lato:400,700,900' rel='stylesheet' type='text/css'>
+		<!-- <link href='//fonts.googleapis.com/css?family=Montserrat:400,700|Lato:400,700,900' rel='stylesheet' type='text/css'> -->
+		<link rel="stylesheet" id="Lato-css" href="https://fonts.googleapis.com/css?family=Lato%3A1%2C100%2C300%2C400%2C400italic%2C700&amp;ver=4.9.9" type="text/css" media="all">
 		<link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico" />
 		<script>document.write('<link rel="stylesheet" type="text/css" href="assets/css/app-js.css" media="screen">');</script>
 	</head>
 
 	<body>
-		<a href="#content" class="sr-only sr-only-focusable">Skip Navigation</a>
-		<header class="at {if !$viewer || $homePage}pb-3{/if}">
-			<nav class="navbar navbar-expand-md navbar-dark bg-dark" style="">
-				<a class="navbar-brand px-2" href="{$baseUrl}">Syllabus</a>
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="sr-only">Toggle navigation</span>
-					<span class="navbar-toggler-icon"></span>
-				</button>
+		<a href="#mainContent" class="sr-only sr-only-focusable">Skip Navigation</a>
+		<!-- <header class="at {if !$viewer || $homePage}pb-3{/if}"> -->
 
-				<div class="collapse navbar-collapse" id="navbarSupportedContent">
-					<ul class="nav navbar-nav ml-md-auto">
-					{if $viewer}
-						<li class="nav-item navbar-text mr-sm-4 text-center">
-						{if $viewer->faculty}
-							Hello, Professor {$viewer->faculty->lastName}
-						{else}
-							Hello, {$viewer->firstName}
-						{/if}
-						</li>
-						<li class="nav-item dropdown">
-							<a class="btn btn-default nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							Options
-							</a>
-							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<a class="dropdown-item" href="#">Archived</a>
-								<a class="dropdown-item" href="#">Settings</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="#">Create New Syllabus</a>
-							</div>
-						</li>
-						{if $pAdmin}
-						<li class="nav-item text-center mr-0">
-							<a class="btn btn-link nav-link" href="admin"><i class="fas fa-cog"></i> Administrate</a>
-						</li>
-						{/if}
-						<li class="nav-item">
-							<form method="post" action="logout" class="form logout-form">
-								<button class="btn nav-link logout w-100" type="submit" name="command[logout]" id="logout-button" value="Logout">Logout</button>
-							</form>
-						</li>
-					{else}
-						<li class="nav-item text-center">
-							<a class="login-button nav-link" href="{$app->baseUrl('login')}">Login</a>
-						</li>
-					{/if} 
-					</ul>
+		<header class="at" >
+			<span id="goToTop" class="hidden" aria-hidden="true"></span>
+		    <nav class="navbar navbar-light flex-md-nowrap">
+		    	<div class="navbar-brand col-sm-3 col-md-2 bg-light {if $minimized}brand-minimized{/if}">
+			      	<a class="pr-3" href="{$baseUrl}" >
+			      		<img src="assets/images/AT-Syllabus-Icon-600x403-20pxBorder.png" height="35" class="d-inline-block align-middle" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pl-2 brand-text">Syllabus</span></a>
+					{if $viewer}<i class="fa fa-chevron-left d-block-inline" id="sidebarToggle"></i>{/if}
+					<!-- <i class="fa fa-chevron-right hidden" id="sidebarToggle2"></i> -->
 				</div>
-			</nav>
-			<div class="bc">
-				{if $breadcrumbList}
-				<div class="container">
-					<ol class="at breadcrumb">
-						{foreach name="breadcrumbs" item="crumb" from=$breadcrumbList}
-						<li {if $crumb@last} class="active"{elseif $crumb@first} class="first"{/if}>
-						{l text=$crumb.text href=$crumb.href}
-						{if !$smarty.foreach.breadcrumbs.last}{/if}
-						</li>
-						{/foreach}
-					</ol>
-				</div>
+		      	<!-- <input class="form-control form-control-dark w-25 " type="text" placeholder="Search" aria-label="Search"> -->
+		      	<ul class="navbar-nav p-2 ml-auto">
+				{if $viewer}
+					{if $pAdmin}
+					<li class="nav-item">
+						<a class="nav-link" href="admin"><i class="fas fa-cog"></i> Administrate</a>
+					</li>
+					{/if}
+			
+				{else}
+					<li class="nav-item">
+						<a class="login-button nav-link" href="{$app->baseUrl('login')}">Login</a>
+					</li>
+				{/if} 
+				</ul>
+				{if $viewer}
+					<form method="post" action="logout" class="form logout-form p-2">
+						<button class="btn btn-outline-secondary logout " type="submit" name="command[logout]" id="logout-button" value="Logout">Logout</button>
+					</form>
 				{/if}
-			</div>
-		</header>
-		
+		    </nav>
+
+		</header>		
+
+
+
 		{if $app->siteSettings->siteNotice}
 		<div class="site-notice action notice">
 			{$app->siteSettings->siteNotice}
@@ -108,15 +83,98 @@
 		</div> 
 		{/if}
 
-		<!-- This is good for things like Hero images or sections for a homepage or main section -->
-		{if $headerPartial}
-			{include file=$headerPartial}
-		{/if}
+		<div class="container-fluid">
+			<div class="row">
+				{if $viewer}
+				<!-- TODO: put this in a partial template and generate links programmatically -->
+				<nav class="col-md-2 d-none d-md-block sidebar bg-light {if $minimized}sidebar-minimized{/if}" id="sidebar">
+					<div class="sidebar-sticky">
+						<br><br><br>
+						<ul class="nav flex-column">
+							<li class="nav-item mb-5">
+								<a class="nav-link" href="syllabi">
+									<h6 class="sidebar-heading mt-4 mb-1 text-muted">
+										<i class="fas fa-user fa-2x ml-2"></i>
+									</h6>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" href="syllabi">
+									<h6 class="sidebar-heading d-flex justify-content-between align-items-center mt-4 mb-1 text-muted">
+										<span><i class="my-syllabi fas fa-home fa-2x pr-2"></i> <span class="sidebar-text">My Syllabi</span></span>
+									</h6>
+								</a>
+								<ul class="nav flex-column pl-3">
+									<li class="nav-item">
+										<a class="nav-link" href="syllabus/new">
+											<span class="sidebar-text">Create New Syllabus</span>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="syllabi">
+											<span class="sidebar-text">Overview</span>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="syllabi?mode=course">
+											<span class="sidebar-text">Courses</span>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="syllabi?mode=submission">
+											<span class="sidebar-text">Submissions</span>
+										</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
 
-		<!-- Main content here -->
-		<div class="container main-content" id="content">
-			{include file=$contentTemplate}		
-		</div>
+						<ul class="nav flex-column">
+							<li class="nav-item">
+								<a class="nav-link" href="#">
+									<h6 class="sidebar-heading d-flex justify-content-between align-items-center mt-4 mb-1 text-muted">
+										<span><i class="fas fa-school fa-2x pr-2"></i> <span class="sidebar-text">My Groups</span></span>
+									</h6>
+								</a>
+								<ul class="nav flex-column pl-3">
+									<li class="nav-item">
+										<a class="nav-link" href="#">
+											<span class="sidebar-text">English</span>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="#">
+											<span class="sidebar-text">Liberal & Creative Arts</span>
+										</a>
+									</li>
+									<li class="nav-item">
+										<a class="nav-link" href="#">
+											<span class="sidebar-text">CEETL</span>
+										</a>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</nav>
+				{/if}
+				
+				
+				{if $headerPartial}
+				<!-- <main role="main" class="col-md-9 col-lg-10 px-3 mt-0" id="mainContent"> -->
+				<main role="main" class="col px-3 mt-0" id="mainContent">
+					{include file=$headerPartial headerVars=$headerVars}
+				{else}
+				<!-- <main role="main" class="col-md-9 col-lg-10 px-3 mt-3" id="mainContent"> -->
+				<main role="main" class="col px-3 mt-3" id="mainContent">
+				{/if}
+					<!-- MAIN CONTENT -->
+					{include file=$contentTemplate}
+				</main>
+
+			</div>
+		</div>       
+
 
 		{if !$viewer}
 		<div id="login-box" class="modal fade">
@@ -134,7 +192,7 @@
 		</div>
 		{/if}
 
-		<footer class="sticky-footer">
+		<footer class="sticky-footer fixed-bottom">
 			<nav class="navbar at-footer">
 				<div class="footer-row-1 container-fluid">
 					<div class="container">
@@ -185,6 +243,7 @@
 				</div>
 			</nav>
 		</footer>
+
 		<script> 
 			var CKEDITOR_BASEPATH = "{$baseUrl|escape}/assets/js/ckeditor/"; 
 			window.CKEDITOR_BASEPATH = CKEDITOR_BASEPATH;
@@ -203,5 +262,6 @@
 			ga('send', 'pageview');
 		</script>
 		{/literal}{/if}
+
 	</body>
 </html>

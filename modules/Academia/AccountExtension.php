@@ -3,7 +3,7 @@
 /**
  * Adds properties/methods to accounts.
  * 
- * @author      Daniel A. Koepke (dkoepke@sfsu.edu)
+ * @author      Steve Pedersen (pedersen@sfsu.edu)
  * @copyright   Copyright &copy; San Francisco State University.
  */
 class Syllabus_Academia_AccountExtension extends Bss_AuthN_AccountExtension implements Bss_AuthN_IAccountSettingsExtension
@@ -116,6 +116,8 @@ class Syllabus_Academia_AccountExtension extends Bss_AuthN_AccountExtension impl
     {
         $account->roles->removeAll();
         $account->roles->save();
+        $account->entity_roles->removeAll();
+        $account->entity_roles->save();
         $account->enrollments->removeAll();
         $account->enrollments->save();
     }
