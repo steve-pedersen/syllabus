@@ -25,20 +25,6 @@ abstract class Syllabus_Syllabus_SectionExtension extends Bss_Core_NamedExtensio
             return $this->getApplication()->schemaManager->getSchema($recordClass);
         }
     }
-
-    // public function getExtensionProperties ()
-    // {
-    //     return array(
-    //         'sectionVersions' => array('N:M',
-    //             'to' => 'Syllabus_Syllabus_SectionVersion',
-    //             'via' => 'syllabus_syllabus_version_section_map',
-    //             'fromPrefix' => 'syllabus_version',
-    //             'toPrefix' => 'section_version',
-    //             'properties' => array('sort_order' => 'int', 'read_only' => 'bool', 'is_anchored' => 'bool', 'log' => 'string'),
-    //             'orderBy' => array('+_map.sort_order')
-    //         ),
-    //     );
-    // }
     
     public function initializeRecord (Bss_ActiveRecord_Base $record) {}
 

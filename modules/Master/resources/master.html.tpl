@@ -17,7 +17,7 @@
 		<!-- <link rel="stylesheet" type="text/css" href="assets/css/ie.css" media="screen"> -->
 		<!-- <link href='//fonts.googleapis.com/css?family=Montserrat:400,700|Lato:400,700,900' rel='stylesheet' type='text/css'> -->
 		<link rel="stylesheet" id="Lato-css" href="https://fonts.googleapis.com/css?family=Lato%3A1%2C100%2C300%2C400%2C400italic%2C700&amp;ver=4.9.9" type="text/css" media="all">
-		<link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.ico" />
+		<link rel="shortcut icon" type="image/x-icon" href="assets/images/3_lines_32px.png" />
 		<script>document.write('<link rel="stylesheet" type="text/css" href="assets/css/app-js.css" media="screen">');</script>
 	</head>
 
@@ -25,40 +25,69 @@
 		<a href="#mainContent" class="sr-only sr-only-focusable">Skip Navigation</a>
 		<!-- <header class="at {if !$viewer || $homePage}pb-3{/if}"> -->
 
-		<header class="at" >
+		<header class="at">
 			<span id="goToTop" class="hidden" aria-hidden="true"></span>
-		    <nav class="navbar navbar-light flex-md-nowrap">
-		    	<div class="navbar-brand col-sm-3 col-md-2 bg-light {if $minimized}brand-minimized{/if}">
-			      	<a class="pr-3" href="{$baseUrl}" >
-			      		<img src="assets/images/AT-Syllabus-Icon-600x403-20pxBorder.png" height="35" class="d-inline-block align-middle" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pl-2 brand-text">Syllabus</span></a>
-					{if $viewer}<i class="fa fa-chevron-left d-block-inline" id="sidebarToggle"></i>{/if}
-					<!-- <i class="fa fa-chevron-right hidden" id="sidebarToggle2"></i> -->
-				</div>
-		      	<!-- <input class="form-control form-control-dark w-25 " type="text" placeholder="Search" aria-label="Search"> -->
-		      	<ul class="navbar-nav p-2 ml-auto">
-				{if $viewer}
-					{if $pAdmin}
-					<li class="nav-item">
-						<a class="nav-link" href="admin"><i class="fas fa-cog"></i> Administrate</a>
-					</li>
-					{/if}
-			
-				{else}
-					<li class="nav-item">
-						<a class="login-button nav-link" href="{$app->baseUrl('login')}">Login</a>
-					</li>
-				{/if} 
-				</ul>
+			<nav class="navbar navbar-expand-lg navbar-light">
+				<div class="navbar-brand d-block-inline col-md-3 col-lg-2 col-xl-2 d-flex justify-content-between">
+					<a class="" href="{$baseUrl}">
+						<img src="assets/images/Asset4.png" width="40" height="40" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
+					{if $viewer}<i class="fa fa-chevron-left d-block-inline pl-2 mt-2" id="sidebarToggle"></i>{/if}
+				</div>				
+				<button class="navbar-toggler mr-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav ml-auto">
+					{if $viewer}
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<i class="fas fa-bell"></i> Notifications
+							</a>
+							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
+								<a class="dropdown-item" href="#">Action</a>
+								<a class="dropdown-item" href="#">Another action</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="#">Something else here</a>
+							</div>
+						</li>
+					
+						{if $pAdmin}
+						<li class="nav-item">
+							<a class="nav-link" href="admin"><i class="fas fa-cog"></i> Administrate</a>
+						</li>
+						{/if}
+
+					{else}
+						<li class="nav-item">
+							<a class="login-button nav-link" href="{$app->baseUrl('login')}">Login</a>
+						</li>
+					{/if} 
+					</ul>
 				{if $viewer}
 					<form method="post" action="logout" class="form logout-form p-2">
 						<button class="btn btn-outline-secondary logout " type="submit" name="command[logout]" id="logout-button" value="Logout">Logout</button>
 					</form>
 				{/if}
-		    </nav>
-
+				</div>
+			</nav>
+			        <div class="bc">
+						{if $breadcrumbList}
+						<div class="container">
+							<div class="col">
+							<ol class="at breadcrumb">
+								{foreach name="breadcrumbs" item="crumb" from=$breadcrumbList}
+								<li{if $smarty.foreach.breadcrumbs.last} class="active"{elseif $smarty.foreach.breadcrumbs.first} class="first"{/if}>
+								{l text=$crumb.text href=$crumb.href}
+								{if !$smarty.foreach.breadcrumbs.last}{/if}
+								</li>
+								{/foreach}
+							</ol>
+							</div>
+						</div>
+						{/if}
+			        </div>
 		</header>		
-
-
 
 		{if $app->siteSettings->siteNotice}
 		<div class="site-notice action notice">
@@ -87,21 +116,29 @@
 			<div class="row">
 				{if $viewer}
 				<!-- TODO: put this in a partial template and generate links programmatically -->
-				<nav class="col-md-2 d-none d-md-block sidebar bg-light {if $minimized}sidebar-minimized{/if}" id="sidebar">
+				<nav class="col-md-2 d-none d-md-block sidebar {if $minimized}sidebar-minimized{/if}" id="sidebar">
 					<div class="sidebar-sticky">
-						<br><br><br>
 						<ul class="nav flex-column">
-							<li class="nav-item mb-5">
-								<a class="nav-link" href="syllabi">
-									<h6 class="sidebar-heading mt-4 mb-1 text-muted">
-										<i class="fas fa-user fa-2x ml-2"></i>
+							<li class="nav-item nav-user-item text-center">
+								<a class="nav-link sidebar-user-max" href="profile" id="sidebarUserInfo">
+									<h6 class="sidebar-heading mt-4 mb-1 ">
+										<i class="fas fa-user-circle fa-4x"></i>
+										<br>
+										<div class="user-info-text-container">
+											<span class="user-info-text">
+												Dr. Steven Pedersen<br>
+												<small>Professor of Anthropology, PhD, MD, DDS.</small>
+											</span>
+										</div>
 									</h6>
 								</a>
 							</li>
+						</ul>
+						<ul class="nav flex-column">
 							<li class="nav-item">
 								<a class="nav-link" href="syllabi">
-									<h6 class="sidebar-heading d-flex justify-content-between align-items-center mt-4 mb-1 text-muted">
-										<span><i class="my-syllabi fas fa-home fa-2x pr-2"></i> <span class="sidebar-text">My Syllabi</span></span>
+									<h6 class="sidebar-heading mt-4 mb-1 ">
+										<span><i class="my-syllabi fas fa-home fa-2x"></i> <span class="sidebar-text">My Syllabi</span></span>
 									</h6>
 								</a>
 								<ul class="nav flex-column pl-3">
@@ -132,14 +169,14 @@
 						<ul class="nav flex-column">
 							<li class="nav-item">
 								<a class="nav-link" href="#">
-									<h6 class="sidebar-heading d-flex justify-content-between align-items-center mt-4 mb-1 text-muted">
-										<span><i class="fas fa-school fa-2x pr-2"></i> <span class="sidebar-text">My Groups</span></span>
+									<h6 class="sidebar-heading mt-4 mb-1 ">
+										<span><i class="fas fa-school fa-2x"></i> <span class="sidebar-text">My Organizations</span></span>
 									</h6>
 								</a>
 								<ul class="nav flex-column pl-3">
 									<li class="nav-item">
-										<a class="nav-link" href="#">
-											<span class="sidebar-text">English</span>
+										<a class="nav-link" href="departments">
+											<span class="sidebar-text">Departments</span>
 										</a>
 									</li>
 									<li class="nav-item">

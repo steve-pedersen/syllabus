@@ -1,4 +1,4 @@
-
+<div class="col">
 	<h1>Identity Provider Login</h1>
 	<p class="text-info">
 		An identity provider is a service or organization with which you have an
@@ -6,3 +6,4 @@
 	    Login button.!!
 	</p>
 	{include file="partial:_wayf"}
+</div>

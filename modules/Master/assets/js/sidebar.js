@@ -3,6 +3,8 @@ var brandLogo = $('#brandLogo');
 var sidebar = $('#sidebar');
 var sidebarText = $('.sidebar-text');
 var sidebarToggle = $('#sidebarToggle');
+var sidebarUserItem = $('.nav-user-item');
+var sidebarUser = $('#sidebarUserInfo');
 var main = $('#mainContent');
 var minimized = true;
 var transitionDuration = 0;
@@ -10,9 +12,14 @@ var transitionDuration = 0;
 const toggleSidebar = function() {
   if (sidebar.hasClass('col-md-2')) {
     closeSidebar(true);
-    // brand.mouseenter( openSidebar );
   } else {
     openSidebar(true);
+  }
+};
+
+const openSidebarIfClosed = function() {
+  if (minimized) {
+    openSidebar();
   }
 };
 
@@ -30,7 +37,9 @@ function openSidebar (forceOpen) {
     brand.addClass('col-md-2').addClass('col-sm-3');
     sidebar.addClass('col-md-2');
     sidebarText.show();
-    sidebarToggle.removeClass('fa-chevron-right').addClass('fa-chevron-left');
+    sidebarToggle.removeClass('fa-chevron-right').addClass('fa-chevron-left').show();
+    sidebarUserItem.removeClass('min').addClass('max');
+    sidebarUser.removeClass('sidebar-user-min').addClass('sidebar-user-max');
   }
   minimized = false;
 }
@@ -48,6 +57,8 @@ function closeSidebar (forceClose) {
     sidebar.removeClass('col-md-2');
     sidebarText.hide();
     sidebarToggle.removeClass('fa-chevron-left').addClass('fa-chevron-right');
+    sidebarUserItem.removeClass('max').addClass('min');
+    sidebarUser.removeClass('sidebar-user-max').addClass('sidebar-user-min');
   }
   minimized = true;
 }

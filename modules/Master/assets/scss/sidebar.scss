@@ -1,28 +1,131 @@
 #sidebar {
+	background-color: $navbar-bg-color;
+	background-color: $smoke_light_2;
 	i.my-syllabi {
 	    font-size: 2.2em;
 	}
 	&.sidebar-minimized {
-    // -webkit-transition: all 0.1s ease;
-    // -moz-transition: all 0.1s ease;
-    // -o-transition: all 0.1s ease;
-    // transition: all 0.1s ease;
-		max-width: 5%;
+	    -webkit-transition: all 0.1s ease;
+	    -moz-transition: all 0.1s ease;
+	    -o-transition: all 0.1s ease;
+	    transition: all 0.1s ease;
+		// max-width: 5%;
+		max-width: 5em;
 		padding-left: 0;
 		.sidebar-text {
 			display: none;
 		}
+		.nav.flex-column {
+		    margin-bottom: 1em;
+			> li.nav-item {
+				> ul.flex-column {
+					> li.nav-item {
+						> a.nav-link {
+							border-bottom: none;
+						}
+					}
+				}
+				> a.nav-link > h6 > span {
+				    > i.my-syllabi {
+						margin-top: 0.8em;
+				    }
+				    > i.fa-school {
+				    	margin-top: 1.9em;
+				    }
+				}
+			}
+		}		
+	}
+
+	ul.nav.flex-column {
+		margin-bottom: 0;
+		> li.nav-item {
+			> a.nav-link {
+				padding: 0.3rem 1rem;
+				> h6 {
+					> span > span.sidebar-text {
+						padding-left: 0.5em;
+						font-size: 1.1rem;
+					}
+					> span > i:hover,
+					> span > i:focus {
+						color: #000;
+					}
+				}
+			}
+			> ul.flex-column {
+				> li.nav-item {
+					> a.nav-link {
+						border-bottom: 1px solid $smoke_light_4;
+						> .sidebar-text {
+							color: #000;
+						}
+					}
+					&:hover,
+					&:focus {
+						background-color: $smoke_light_4;
+					}
+				}
+			}
+		}
+	}
+	.nav-user-item {
+    	&.max {
+			margin-top: initial;
+    	}
+    	&.min {
+			margin-top: 1.8em;
+    	}
+	}
+	#sidebarUserInfo {
+		> h6 {
+			> i {
+				padding-bottom: 0.2em;
+			}
+		}
+		&.sidebar-user-min {
+			margin-bottom: 3rem;
+			
+			> h6 {
+				border-bottom: none;
+				> i {
+				
+					margin-left: 0;
+					font-size: 2.5em;
+				}
+				> .user-info-text-container {
+					display: none;
+					padding-left: initial;
+					padding-right: initial;
+				}
+			}
+		}
+		&.sidebar-user-max {
+			margin-bottom: 1rem;
+			> h6 {
+				> i {
+					margin-left: 0;
+					font-size: 6em;					
+				}
+				> .user-info-text-container {
+					display: initial;
+					padding-left: 0.3em;
+					padding-right: 0.3em;
+				}
+			}
+		}
 	}
 }
 .at .navbar > .brand-minimized {
-    // -webkit-transition: all 0.1s ease;
-    // -moz-transition: all 0.1s ease;
-    // -o-transition: all 0.1s ease;
-    // transition: all 0.1s ease;
+    -webkit-transition: all 0.1s ease;
+    -moz-transition: all 0.1s ease;
+    -o-transition: all 0.1s ease;
+    transition: all 0.1s ease;
 	max-width: 5%;
+	// max-width: 5em;
 	padding-right: 3em;
 	#brandLogo {
-		margin-left: -0.2em;
+		// margin-left: -0.2em;
 	}
 	.brand-text {
 		display: none;

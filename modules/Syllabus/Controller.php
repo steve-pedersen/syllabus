@@ -10,15 +10,15 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
     public static function getRouteMap ()
     {
-        return array(
-            'syllabi'                           => array('callback' => 'mySyllabi'),
-            'syllabus/:id'                      => array('callback' => 'edit',  ':id' => '[0-9]+|new'),
-            // 'syllabus/:id/:version'             => array('callback' => 'view',  ':id' => '[0-9]+|new'),
-        	// 'syllabus/entity/:eid'              => array('callback' => 'list', 	':eid' => '[0-9]+'),
-        	// 'syllabus/entity/:eid/view/:sid'    => array('callback' => 'view', 	':eid' => '[0-9]+', ':sid' => '[0-9]+'),
-        	// 'syllabus/entity/:eid/edit/:sid'    => array('callback' => 'edit', 	':eid' => '[0-9]+', ':sid' => '[0-9]+|new'),
-            // 'syllabus/entity/:eid/render/:sid'  => array('callback' => 'render',':eid' => '[0-9]+', ':sid' => '[0-9]+'),
-        );
+        return [
+            'syllabi'                           => ['callback' => 'mySyllabi'],
+            'syllabus/:id'                      => ['callback' => 'edit',  ':id' => '[0-9]+|new'],
+            // 'syllabus/:id/:version'             => ['callback' => 'view',  ':id' => '[0-9]+|new'],
+        	// 'syllabus/entity/:eid'              => ['callback' => 'list', 	':eid' => '[0-9]+'],
+        	// 'syllabus/entity/:eid/view/:sid'    => ['callback' => 'view', 	':eid' => '[0-9]+', ':sid' => '[0-9]+'],
+        	// 'syllabus/entity/:eid/edit/:sid'    => ['callback' => 'edit', 	':eid' => '[0-9]+', ':sid' => '[0-9]+|new'],
+            // 'syllabus/entity/:eid/render/:sid'  => ['callback' => 'render',':eid' => '[0-9]+', ':sid' => '[0-9]+'],
+        ];
     }
 
     public function mySyllabi ()
@@ -44,7 +44,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $sections = $this->schema('Syllabus_Syllabus_Section');
         $sectionVersions = $this->schema('Syllabus_Syllabus_SectionVersion');
         
-        $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id', array('allowNew' => true));
+        $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id', ['allowNew' => true]);
 
         $data = $this->request->getPostParameters();
         if (isset($data['syllabus']['version']))
@@ -261,14 +261,14 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $app = $this->getApplication();
         $eid = $this->getRouteVariable('eid');
         $eid = 999;
-        $urls = array();
-        $messages = array();
+        $urls = [];
+        $messages = [];
         $cachedVersions = true;
         // $keyPrefix = "{$eid}-";
 
         // get all syllabus ids for this entity based on offset and limit=10
-        // $sids = array('1', '6', '4', '7', '3', '8', '5', '9', '2', '10');
-        $sids = array('1', '6', '4');
+        // $sids = ['1', '6', '4', '7', '3', '8', '5', '9', '2', '10'];
+        $sids = ['1', '6', '4'];
 
         // generate some key/value access tokens for each render page
         $keyPrefix = "{$eid}-";
