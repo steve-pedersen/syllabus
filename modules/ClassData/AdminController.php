@@ -21,8 +21,7 @@ class Syllabus_ClassData_AdminController extends At_Admin_Controller
     {
         parent::beforeCallback($callback);
         $this->requirePermission('admin');
-        // $this->template->clearBreadcrumbs();
-        // $this->addBreadcrumb('home', 'Home');
+        $this->template->clearBreadcrumbs();
         $this->addBreadcrumb('admin', 'Admin');
     }    
     
@@ -97,14 +96,14 @@ class Syllabus_ClassData_AdminController extends At_Admin_Controller
     {
         $this->setPageTitle('Manage departments');
 
-        $this->template->departments = $this->schema('At_CS_Department')->getAll(['orderBy' => 'name']);
+        $this->template->departments = $this->schema('Syllabus_AcademicOrganizations_Department')->getAll(['orderBy' => 'name']);
     }
 
 
     public function editDepartment ()
     {
         $this->addBreadcrumb('admin/departments', 'Manage Departments');
-        $department = $this->helper('activeRecord')->fromRoute('At_CS_Department', 'id', ['allowNew' => true]);
+        $department = $this->helper('activeRecord')->fromRoute('Syllabus_AcademicOrganizations_Department', 'id', ['allowNew' => true]);
 
         $this->setPageTitle(($department->inDatasource ? 'Edit' : 'New') . ' Department');
 
@@ -161,11 +160,11 @@ class Syllabus_ClassData_AdminController extends At_Admin_Controller
 
     public function departmentCourses ()
     {
-        $department = $this->helper('activeRecord')->fromRoute('At_CS_Department', 'id');
+        $department = $this->helper('activeRecord')->fromRoute('Syllabus_AcademicOrganizations_Department', 'id');
         $this->setPageTitle('Department Courses');
         $this->addBreadcrumb('admin/departments', 'Manage Departments');
 
-        $courses = $this->schema('At_CS_Course');
+        $courses = $this->schema('Syllabus_ClassData_CourseSection');
         $this->template->department = $department;
         $this->template->courses = $courses->find($courses->department_id->equals($department->id), ['orderBy' => 'shortName']);
     }
@@ -368,7 +367,7 @@ class Syllabus_ClassData_AdminController extends At_Admin_Controller
 
         if ($courseMap)
         {
-            $courses = $this->schema('At_CS_Course');
+            $courses = $this->schema('Syllabus_ClassData_CourseSection');
             foreach ($courses->find($courses->id->inList(array_keys($courseMap)), ['returnIterator' => true]) as $course)
             {
                 $courseMap[$course->id] = $course->shortName;
@@ -377,7 +376,7 @@ class Syllabus_ClassData_AdminController extends At_Admin_Controller
 
         if ($userMap)
         {
-            $users = $this->schema('At_CS_User');
+            $users = $this->schema('Syllabus_ClassData_User');
             foreach ($users->find($users->id->inList(array_keys($userMap)), ['returnIterator' => true]) as $user)
             {
                 $userMap[$user->id] = implode(', ', array_filter([$user->lastName, $user->firstName]));
@@ -395,14 +394,14 @@ class Syllabus_ClassData_AdminController extends At_Admin_Controller
     public function sectionInfo ()
     {
         $this->addBreadcrumb('admin/audit', 'Audit log');
-        $courses = $this->schema('At_CS_Course');
+        $courses = $this->schema('Syllabus_ClassData_CourseSection');
         $course = $this->requireExists($courses->get($this->getRouteVariable('id')));
 
         if ($this->request->wasPostedByUser())
         {
             if ($departmentId = $this->request->getPostParameter('department_id'))
             {
-                $department = $this->schema('At_CS_Department')->get($departmentId);
+                $department = $this->schema('Syllabus_AcademicOrganizations_Department')->get($departmentId);
 
                 if ($department)
                 {
@@ -416,14 +415,14 @@ class Syllabus_ClassData_AdminController extends At_Admin_Controller
 
         $this->setPageTitle("$course->shortName ({$course->id})");
         $this->template->course = $course;
-        $this->template->academicGroups = $this->schema('At_CS_AcademicGroup')->getAll(['orderBy' => 'name']);
+        $this->template->academicGroups = $this->schema('Syllabus_AcademicOrganizations_College')->getAll(['orderBy' => 'name']);
     }
 
 
     public function userInfo ()
     {
         $this->addBreadcrumb('admin/audit', 'Audit log');
-        $users = $this->schema('At_CS_User');
+        $users = $this->schema('Syllabus_ClassData_User');
         $user = $this->requireExists($users->get($this->getRouteVariable('id')));
 
         if ($this->request->wasPostedByUser())
@@ -436,7 +435,7 @@ class Syllabus_ClassData_AdminController extends At_Admin_Controller
                 case 'add-department':
                     if ($departmentId = $this->request->getPostParameter('department'))
                     {
-                        $department = $this->schema('At_CS_AcademicOrganization')->get($departmentId);
+                        $department = $this->schema('Syllabus_AcademicOrganizations_Department')->get($departmentId);
 
                         if ($department)
                         {
@@ -452,7 +451,7 @@ class Syllabus_ClassData_AdminController extends At_Admin_Controller
 
         $this->setPageTitle("$user->lastName, $user->firstName ({$user->id})");
         $this->template->user = $user;
-        $this->template->academicGroups = $this->schema('At_CS_AcademicGroup')->getAll(['orderBy' => 'name']);
+        $this->template->academicGroups = $this->schema('Syllabus_AcademicOrganizations_College')->getAll(['orderBy' => 'name']);
     }
 
 

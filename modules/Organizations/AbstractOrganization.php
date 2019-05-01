@@ -49,12 +49,22 @@ abstract class Syllabus_Organizations_AbstractOrganization extends Bss_ActiveRec
     abstract public function addModerators ($users=[]);
     abstract public function addManagers ($users=[]);
 
+    public function getDashboardTemplate ()
+    {
+        return $this->getOrganizationTemplate('dashboard');
+    }
+
     public function getManageUsersTemplate ()
     {
-		$template = new DivaTemplate;
+		return $this->getOrganizationTemplate('manageUsers');
+    }
+
+    public function getOrganizationTemplate ($callback)
+    {
+        $template = new DivaTemplate;
         $template->setDefaultResourceDirectory(glue_path(dirname(__FILE__), 'resources'));
-		$template->setTemplateFile('manageUsers.html.tpl');
-		
-		return $template;
+        $template->setTemplateFile($callback . '.html.tpl');
+        
+        return $template;
     }
 }

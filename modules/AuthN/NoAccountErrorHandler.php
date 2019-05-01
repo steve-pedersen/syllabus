@@ -5,16 +5,18 @@
  * There are three different cases of interest here:
  * 
  * 1. The user is authenticated by Shibboleth (or another remote identity
- *    provider) and has a Fresca account, but their Fresca account's username
+ *    provider) and has a Syllabus account, but their Syllabus account's username
  *    equals their e-mail address rather than the username returned by 
  *    Shibboleth. We fix the acocunt's username and log them in seamlessly.
  * 
- * 2. The user is authenticated but they do not have a Fresca account with a
+ * 2. The user is authenticated but they do not have a Syllabus account with a
  *    username that matches either their Shibboleth username or e-mail
- *    address. It's still possible that the person has a Fresca account under a
+ *    address. It's still possible that the person has a Syllabus account under a
  *    different e-mail address, but we deal with these mismatches through 
  *    manual intervention. If the user is of the appropriate role, they should
- *    be allowed to create a new account.
+ *    be allowed to create a new account. If the user is enrolled as an instructor
+ *    via ClassData, give them Faculty Role and add them as members to any
+ *    departments and colleges that they should be associated with.
  * 
  * 3. The user is unauthenticated and no account could be found. This generally
  *    occurs because the user entered the wrong username (e-mail address) for
@@ -22,6 +24,7 @@
  *    Bss_AuthN_ExLoginRequired.
  * 
  * @author      Daniel A. Koepke (dkoepke@sfsu.edu)
+ * @author      Steve Pedersen (pedersen@sfsu.edu)
  * @copyright   Copyright &copy; San Francisco State University.
  */
 class Syllabus_AuthN_NoAccountErrorHandler extends Syllabus_Master_ErrorHandler
@@ -46,9 +49,9 @@ class Syllabus_AuthN_NoAccountErrorHandler extends Syllabus_Master_ErrorHandler
             // account for them. This only happens for Shibboleth, LDAP, and
             // similar remote authentication systems, where we can verify
             // the person's identity independent of knowing that they own a
-            // particular Fresca account.
+            // particular Syllabus account.
             
-            // This situation can occur if the person doesn't have a Fresca
+            // This situation can occur if the person doesn't have a Syllabus
             // account at all, or if they have an older account where the
             // username is their e-mail address.
             
@@ -76,8 +79,18 @@ class Syllabus_AuthN_NoAccountErrorHandler extends Syllabus_Master_ErrorHandler
                     $this->getUserContext()->login($account);
                 }
             }
-
-            $this->template->setPageTitle('Account creation disallowed');
+            if (($allowCreateAccount = $identity->getProperty('allowCreateAccount')))
+            {
+                $accountManager = new Syllabus_ClassData_AccountManager($this->getApplication());
+                $account = $accountManager->createUserAccount($identity);
+                
+                $this->getUserContext()->login($account);
+                // $this->response->redirect('home');
+            }
+            else
+            {
+                $this->template->setPageTitle('Account creation disallowed');
+            }
             
             $this->template->identity = $identity;
             $this->template->allowCreateAccount = $allowCreateAccount;
@@ -95,7 +108,7 @@ class Syllabus_AuthN_NoAccountErrorHandler extends Syllabus_Master_ErrorHandler
     
     private function getAffiliations ($identity)
     {
-        if (($affiliationList = $identity->getProperty('affiliation', array())))
+        if (($affiliationList = $identity->getProperty('affiliation', [])))
         {
             if (is_string($affiliationList))
             {
@@ -116,7 +129,7 @@ class Syllabus_AuthN_NoAccountErrorHandler extends Syllabus_Master_ErrorHandler
     private function guessUniversity ($identity, $provider)
     {
         $universities = $this->schema('Bss_Academia_University');
-        $condList = array();
+        $condList = [];
         
         // If we have an organization from Shibboleth, see if it matches the
         // university abbreviation.

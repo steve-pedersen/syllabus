@@ -11,8 +11,9 @@ class Syllabus_AcademicOrganizations_CollegeController extends Syllabus_Organiza
         ];
     }
 
-	public function getOrganization ()
+	public function getOrganization ($id=null)
 	{
-		return $this->schema('Syllabus_AcademicOrganizations_College');
+		$schema = $this->schema('Syllabus_AcademicOrganizations_College');
+		return $schema->get($id) ?? $schema->createInstance();
 	}
 }

@@ -7,6 +7,8 @@ class Syllabus_AcademicOrganizations_DepartmentController extends Syllabus_Organ
     public static function getRouteMap ()
     {
         return [
+            'organizations'             => ['callback' => 'myOrganizations'],
+            'organizations/admin/import'=> ['callback' => 'import'],
         	'departments'				=> ['callback' => 'listOrganizations'],
         	'departments/create'		=> ['callback' => 'create'],
         	'departments/:id'			=> ['callback' => 'dashboard', ':id' => '[0-9]'],
@@ -20,11 +22,25 @@ class Syllabus_AcademicOrganizations_DepartmentController extends Syllabus_Organ
     	
     }
 
-    public function dashboard ()
+    // public function dashboard ()
+    // {
+    // 	$viewer = $this->requireLogin();
+    // 	$department = $this->helper('activeRecord')->fromRoute('Syllabus_AcademicOrganizations_Department', 'id');
+    // 	$this->template->organization = $department;
+    // }
+
+    public function myOrganizations ()
     {
-    	$viewer = $this->requireLogin();
-    	$department = $this->helper('activeRecord')->fromRoute('Syllabus_AcademicOrganizations_Department', 'id');
-    	$this->template->organization = $department;
+        parent::myOrganizations();
+
+        // $this->template->departments = ;
+    }
+
+    public function import ()
+    {
+        parent::import();
+
+        // $this->template->departments = ;
     }
 
     public function create ()
@@ -55,8 +71,9 @@ class Syllabus_AcademicOrganizations_DepartmentController extends Syllabus_Organ
     }
 
 
-	public function getOrganization ()
+	public function getOrganization ($id=null)
 	{
-		return $this->schema('Syllabus_AcademicOrganizations_Department')->createInstance();
+        $schema = $this->schema('Syllabus_AcademicOrganizations_Department');
+		return $schema->get($id) ?? $schema->createInstance();
 	}
 }

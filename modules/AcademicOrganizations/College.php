@@ -6,23 +6,21 @@ class Syllabus_AcademicOrganizations_College extends Syllabus_Organizations_Abst
 {
     public static function SchemaInfo ()
     {
-        return array(
+        return [
             '__type' => 'syllabus_colleges',
-            '__pk' => array('id'),
+            '__pk' => ['id'],
             '__azidPrefix' => 'at:syllabus:organizations/College/',
             
             'id' => 'int',
             'name' => 'string',
             'abbreviation' => 'string',
-            'displayName' => array('string', 'nativeName' => 'display_name'),
+            'displayName' => ['string', 'nativeName' => 'display_name'],
             'description' => 'string',
-            
-            'createdDate' => array('datetime', 'nativeName' => 'created_date'),
-            'modifiedDate' => array('datetime', 'nativeName' => 'modified_date'),
+            'createdDate' => ['datetime', 'nativeName' => 'created_date'],
+            'modifiedDate' => ['datetime', 'nativeName' => 'modified_date'],
 
-            // 'parent' => array('1:1', 'to' => 'Syllabus_AcademicOrganizations_College'),
-            // 'children' => array('1:N', 'to' => 'Syllabus_AcademicOrganizations_Department', 'reverseOf' => 'parent', 'orderBy' => array('id')),
-        );
+            'departments' => ['1:N', 'to' => 'Syllabus_AcademicOrganizations_Department', 'reverseOf' => 'parent', 'orderBy' => ['id']],
+        ];
     }
 
     public function getAuthorizationId () { return "at:syllabus:organizations/College/{$this->id}"; }
@@ -39,7 +37,21 @@ class Syllabus_AcademicOrganizations_College extends Syllabus_Organizations_Abst
     public function getRepositoryManagers ($reload=false) {}
     public function getModerators ($reload=false) {}
 
-    public function addMembers ($users=[]) {}
+    public function addMembers ($users=[])
+    {
+        $authZ = $this->getApplication()->authorizationManager;
+        $users = is_array($users) ? $users : [$users];
+        foreach ($users as $user)
+        {
+            $authZ->grantPermission($user, 'view org', $this);
+            $authZ->grantPermission($user, 'view org templates', $this);
+            $authZ->grantPermission($user, 'view org members', $this);
+            $authZ->grantPermission($user, 'view communications', $this);
+            $authZ->grantPermission($user, 'view public repository', $this);
+        }
+        $authZ->updateCache();
+    }
+
     public function addCommunicators ($users=[]) {}
     public function addCreators ($users=[]) {}
     public function addRepositoryManagers ($users=[]) {}

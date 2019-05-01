@@ -14,7 +14,9 @@ class Syllabus_ClassData_Course extends Bss_ActiveRecord_Base
             'id' => 'string',  
             'createdDate' => ['datetime', 'nativeName' => 'created_date'],
             'modifiedDate' => ['datetime', 'nativeName' => 'modified_date'],
-            'deleted' => 'bool',   
+            'deleted' => 'bool',
+
+            'department'    => ['1:1', 'to' => 'Syllabus_AcademicOrganizations_Department', 'keyMap' => ['department_id' => 'id']],  
         ];
     }
 

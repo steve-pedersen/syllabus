@@ -11,8 +11,9 @@ class Syllabus_Organizations_GroupController extends Syllabus_Organizations_Base
         ];
     }
 
-	public function getOrganization ()
+	public function getOrganization ($id=null)
 	{
-		return $this->schema('Syllabus_Organizations_Group');
+		$schema = $this->schema('Syllabus_Organizations_Group');
+		return $schema->get($id) ?? $schema->createInstance();
 	}
 }

@@ -18,6 +18,8 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
 
     protected function getTemplateClass () { return 'Syllabus_Master_Template'; }
 
+    protected function getThis () { return $this; }
+
     protected function initController ()
     {
         parent::initController();

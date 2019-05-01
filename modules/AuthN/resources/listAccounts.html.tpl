@@ -104,7 +104,7 @@
     </div>
 </form>
 
-{if $pageCount > 0}
+{if $pageCount > 1}
 
     <nav>
       <ul class="pagination">

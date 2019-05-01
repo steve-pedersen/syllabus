@@ -15,10 +15,11 @@ class Syllabus_ClassData_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModul
                 $siteSettings->defineProperty('classdata-api-secret', 'The secret for the ClassData/SIMS API', 'string');
             
                 $def = $this->createEntityType('syllabus_classdata_courses', $this->getDataSource('Syllabus_ClassData_Course'));
-                $def->addProperty('id', 'string', ['primaryKey' => true, 'sequence' => true]);   
+                $def->addProperty('id', 'string', ['primaryKey' => true, 'sequence' => true]);
                 $def->addProperty('created_date', 'datetime');
                 $def->addProperty('modified_date', 'datetime');
                 $def->addProperty('deleted', 'bool');
+                $def->addProperty('department_id', 'int');
                 $def->save();
 
                 $def = $this->createEntityType('syllabus_classdata_course_sections', $this->getDataSource('Syllabus_ClassData_CourseSection'));

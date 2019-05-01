@@ -16,12 +16,11 @@ class Syllabus_AcademicOrganizations_Department extends Syllabus_Organizations_A
             'abbreviation'  => 'string',
             'description'   => 'string',
             'displayName'   => ['string', 'nativeName' => 'display_name'],
-            'externalKey'   => ['string', 'nativeName' => 'external_key'],
-            
+            'externalKey'   => ['string', 'nativeName' => 'external_key'],        
             'createdDate'   => ['datetime', 'nativeName' => 'created_date'],
             'modifiedDate'  => ['datetime', 'nativeName' => 'modified_date'],
 
-            // 'parent'    => ['1:1', 'to' => 'Syllabus_AcademicOrganizations_College', 'keyMap' => ['college_id' => 'id']],
+            'parent'    => ['1:1', 'to' => 'Syllabus_AcademicOrganizations_College', 'keyMap' => ['college_id' => 'id']],
             'children'  => ['1:N', 'to' => 'Syllabus_AcademicOrganizations_Department', 'reverseOf' => 'parent', 'orderBy' => ['id']],
         ];
     }

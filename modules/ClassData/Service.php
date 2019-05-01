@@ -198,7 +198,7 @@ class Syllabus_ClassData_Service
                         $department = $departments->createInstance();
                         $department->createdDate = new DateTime;
                         $department->name = $departmentName;
-                        $department->college_id = $allColleges[$collegeName];
+                        $department->college_id = $allColleges[$collegeName] ?? $college->id ?? null;
                         $department->externalKey = $id;
                         $department->abbreviation = $id;
                         $department->save();
@@ -531,6 +531,7 @@ class Syllabus_ClassData_Service
             $course->createdDate = new DateTime;
             $course->modifiedDate = new DateTime;
             $course->deleted = false;
+            $course->department_id = $this->allDepartments[$data['department']] ?? '';
             $course->save($tx);
             $this->allCourses[$data['course']] = $course->id;
         }

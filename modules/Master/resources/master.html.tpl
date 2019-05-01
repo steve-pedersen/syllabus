@@ -168,7 +168,7 @@
 
 						<ul class="nav flex-column">
 							<li class="nav-item">
-								<a class="nav-link" href="#">
+								<a class="nav-link" href="organizations">
 									<h6 class="sidebar-heading mt-4 mb-1 ">
 										<span><i class="fas fa-school fa-2x"></i> <span class="sidebar-text">My Organizations</span></span>
 									</h6>
@@ -180,13 +180,13 @@
 										</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" href="#">
-											<span class="sidebar-text">Liberal & Creative Arts</span>
+										<a class="nav-link" href="colleges">
+											<span class="sidebar-text">Colleges</span>
 										</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" href="#">
-											<span class="sidebar-text">CEETL</span>
+										<a class="nav-link" href="groups">
+											<span class="sidebar-text">Groups</span>
 										</a>
 									</li>
 								</ul>

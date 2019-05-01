@@ -49,7 +49,7 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
     // public function getInstructors ($reload = false)
     // {
     //     $users = $this->getSchema('Syllabus_ClassData_User');
-    //     $courseSym = new Bss_ActiveRecord_RawSymbol('enrollments', 'course_id', 'string');
+    //     $courseSym = new Bss_ActiveRecord_RawSymbol('enrollments', 'course__section_id', 'string');
     //     $cond = $courseSym->equals($this->id);
     //     $roleSym = new Bss_ActiveRecord_RawSymbol('enrollments', 'role', 'string');
     //     $cond = $cond->andIf($roleSym->equals('instructor'));

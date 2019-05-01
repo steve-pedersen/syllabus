@@ -34,6 +34,7 @@ class Syllabus_ClassData_User extends Bss_ActiveRecord_Base
                     'created_date' => 'datetime',
                     'modified_date' => 'datetime',
                 ],
+                // 'orderBy' => ['user_id'],
             ],
         ];
     }
