@@ -17,9 +17,10 @@ class Syllabus_AuthN_AccountExtension extends Bss_AuthN_AccountExtension impleme
      */
     public function getExtensionProperties ()
     {
-        return array(
-            'roles' => array('N:M', 'to' => 'Syllabus_AuthN_Role', 'via' => 'syllabus_authn_account_roles', 'fromPrefix' => 'account', 'toPrefix' => 'role'),
-        );
+        return [
+            'roles' => ['N:M', 'to' => 'Syllabus_AuthN_Role', 'via' => 'syllabus_authn_account_roles', 'fromPrefix' => 'account', 'toPrefix' => 'role'],
+            'classDataUser' => ['1:1', 'to' => 'Syllabus_ClassData_User', 'keyMap' => ['username' => 'id']],
+        ];
     }
     
     public function getSubjectProxies ($account)
@@ -34,7 +35,7 @@ class Syllabus_AuthN_AccountExtension extends Bss_AuthN_AccountExtension impleme
      */
     public function getExtensionMethods ()
     {
-        return array('handleSettings');
+        return ['handleSettings'];
     }
         
      /**
@@ -92,7 +93,7 @@ class Syllabus_AuthN_AccountExtension extends Bss_AuthN_AccountExtension impleme
             $roleList = $roles->find($roles->isSystemRole->equals(true));
 			
 			// Build a map of role ids to roles for convenience.
-			$roleMap = array();
+			$roleMap = [];
 			foreach ($roleList as $role)
 			{
 				$roleMap[$role->id] = $role;
@@ -122,14 +123,14 @@ class Syllabus_AuthN_AccountExtension extends Bss_AuthN_AccountExtension impleme
     public function getAccountSettingsTemplateVariables (Bss_Routing_Handler $handler)
     {
         $roles = $handler->schema('Syllabus_AuthN_Role');
-		$roleList = $roles->find($roles->isSystemRole->equals(true), array('orderBy' => '+name'));
+		$roleList = $roles->find($roles->isSystemRole->equals(true), ['orderBy' => '+name']);
         
-        return array('roleList' => $roleList);
+        return ['roleList' => $roleList];
     }
     
     public function initializeRecord (Bss_ActiveRecord_Base $account)
     {
-        $account->addEventHandler('before-delete', array($this, 'deleteAccount'));
+        $account->addEventHandler('before-delete', [$this, 'deleteAccount']);
     }
     
     public function deleteAccount (Bss_ActiveRecord_Base $account)

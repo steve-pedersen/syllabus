@@ -1,5 +1,5 @@
 
-<div class="row editor-main-container">
+<div class="row editor-main-container mh-100">
 	<nav class="col-md-2 d-none d-md-block anchor-links-sidebar bg-dark text-white" >
 		<div class="sidebar-sticky mb-3">
 			<br><br>

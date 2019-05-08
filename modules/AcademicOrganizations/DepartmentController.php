@@ -7,73 +7,28 @@ class Syllabus_AcademicOrganizations_DepartmentController extends Syllabus_Organ
     public static function getRouteMap ()
     {
         return [
-            'organizations'             => ['callback' => 'myOrganizations'],
-            'organizations/admin/import'=> ['callback' => 'import'],
-        	'departments'				=> ['callback' => 'listOrganizations'],
-        	'departments/create'		=> ['callback' => 'create'],
-        	'departments/:id'			=> ['callback' => 'dashboard', ':id' => '[0-9]'],
-        	'departments/:id/manage'	=> ['callback' => 'manageOrganization', ':id' => '[0-9]'],
-        	'departments/:id/users'		=> ['callback' => 'manageUsers', ':id' => '[0-9]'],
+        	'/departments'             => ['callback' => 'listOrganizations'],
+        	'/departments/create'      => ['callback' => 'create'],
+        	'/departments/:oid'		   => ['callback' => 'dashboard', ':oid' => '[0-9]'],
+        	'/departments/:oid/manage'  => ['callback' => 'manageOrganization', ':oid' => '[0-9]'],
+            '/departments/:oid/settings' => ['callback' => 'manageOrganization', ':oid' => '[0-9]'],
+        	'/departments/:oid/users'   => ['callback' => 'manageUsers', ':oid' => '[0-9]'],
+            '/departments/:oid/users/:uid' => ['callback' => 'editUser', ':oid' => '[0-9]'],
         ];
     }
 
-    public function listOrganizations ()
+    public function beforeCallback($callback)
     {
-    	
+        parent::beforeCallback($callback);
+        parent::$callback();
     }
-
-    // public function dashboard ()
-    // {
-    // 	$viewer = $this->requireLogin();
-    // 	$department = $this->helper('activeRecord')->fromRoute('Syllabus_AcademicOrganizations_Department', 'id');
-    // 	$this->template->organization = $department;
-    // }
-
-    public function myOrganizations ()
-    {
-        parent::myOrganizations();
-
-        // $this->template->departments = ;
-    }
-
-    public function import ()
-    {
-        parent::import();
-
-        // $this->template->departments = ;
-    }
-
-    public function create ()
-   	{
-    	$viewer = $this->requireLogin();
-    	$this->requirePermission('manage org');
-
-   		$department = $this->schema('Syllabus_AcademicOrganizations_Department')->createInstance();
-   		$this->template->organization = $department;
-   	}
-
-    public function manageOrganization ()
-    {
-    	$viewer = $this->requireLogin();
-    	$this->requirePermission('manage org');
-
-    	$department = $this->helper('activeRecord')->fromRoute('Syllabus_AcademicOrganizations_Department', 'id');
-    	$this->template->organization = $department;
-    }
-
-    public function manageUsers ()
-    {
-    	$viewer = $this->requireLogin();
-    	$this->requirePermission('manage org users');
-
-    	$department = $this->helper('activeRecord')->fromRoute('Syllabus_AcademicOrganizations_Department', 'id');
-    	$this->template->organization = $department;
-    }
-
 
 	public function getOrganization ($id=null)
 	{
-        $schema = $this->schema('Syllabus_AcademicOrganizations_Department');
-		return $schema->get($id) ?? $schema->createInstance();
+		return $this->organizationSchema->get($id) ?? $this->organizationSchema->createInstance();
 	}
+
+    public function getOrganizationSchema () { return $this->schema($this->schemaName); }
+
+    public function getSchemaName () { return 'Syllabus_AcademicOrganizations_Department'; }
 }

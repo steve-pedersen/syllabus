@@ -1,1 +1,1 @@
-<h2>Create {$organization->getOrgType()}</h2>
+<h2>Create {$organization->getOrganizationType()}</h2>

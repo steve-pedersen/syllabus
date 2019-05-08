@@ -1,8 +1,5 @@
-<div class="col">
-
-	{if $pAdmin}
-	<div class="col mt-3">
-		<p><a href="organizations/admin/import">Import users to organizations</a></p>
-	</div>
-	{/if}
+<div class="container-fluid mt-3"> 
+	{foreach $allOrganizations as $typeKey => $organizations}
+		{include file="partial:_organizations.list.html.tpl"}
+	{/foreach}
 </div>

@@ -28,7 +28,8 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
 
     public function getLatestVersion ()
     {
-        return array_pop($this->versions->asArray());
+        $versions = $this->versions->asArray();
+        return array_pop($versions);
     }
 
     // $withExt - adds a 'section' property to the section object containing it's extension

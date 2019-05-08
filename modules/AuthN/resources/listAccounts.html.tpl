@@ -54,7 +54,7 @@
                     <span aria-hidden="true">&hellip;</span>
                 </span>
                 {else}
-                <span>{l text=$page.display href=$page.href unlink=$unlink}<span class="sr-only">(current)</span></span>
+                <span>{l text=$page.display href=$page.href unlink=$unlink class="page-link"}<span class="sr-only">(current)</span></span>
                 {/if}
             </li>
         {/foreach}
@@ -121,7 +121,7 @@
                     <span aria-hidden="true">&hellip;</span>
                 </span>
                 {else}
-                <span>{l text=$page.display href=$page.href unlink=$unlink}<span class="sr-only">(current)</span></span>
+                <span>{l text=$page.display href=$page.href unlink=$unlink class="page-link"}<span class="sr-only">(current)</span></span>
                 {/if}
             </li>
         {/foreach}

@@ -30,7 +30,7 @@
 			<nav class="navbar navbar-expand-lg navbar-light">
 				<div class="navbar-brand d-block-inline col-md-3 col-lg-2 col-xl-2 d-flex justify-content-between">
 					<a class="" href="{$baseUrl}">
-						<img src="assets/images/Asset4.png" width="40" height="40" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
+						<img src="assets/images/128px_5lines.png" width="43" height="43" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
 					{if $viewer}<i class="fa fa-chevron-left d-block-inline pl-2 mt-2" id="sidebarToggle"></i>{/if}
 				</div>				
 				<button class="navbar-toggler mr-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -117,7 +117,7 @@
 				{if $viewer}
 				<!-- TODO: put this in a partial template and generate links programmatically -->
 				<nav class="col-md-2 d-none d-md-block sidebar {if $minimized}sidebar-minimized{/if}" id="sidebar">
-					<div class="sidebar-sticky">
+					<div class="sidebar-sticky h-100">
 						<ul class="nav flex-column">
 							<li class="nav-item nav-user-item text-center">
 								<a class="nav-link sidebar-user-max" href="profile" id="sidebarUserInfo">
@@ -126,8 +126,8 @@
 										<br>
 										<div class="user-info-text-container">
 											<span class="user-info-text">
-												Dr. Steven Pedersen<br>
-												<small>Professor of Anthropology, PhD, MD, DDS.</small>
+												{$viewer->fullName}<br>
+												<small class="text-dark">Professor of Anthropology, PhD, MD, DDS.</small>
 											</span>
 										</div>
 									</h6>
@@ -184,11 +184,11 @@
 											<span class="sidebar-text">Colleges</span>
 										</a>
 									</li>
-									<li class="nav-item">
+<!-- 									<li class="nav-item">
 										<a class="nav-link" href="groups">
 											<span class="sidebar-text">Groups</span>
 										</a>
-									</li>
+									</li> -->
 								</ul>
 							</li>
 						</ul>
@@ -199,11 +199,11 @@
 				
 				{if $headerPartial}
 				<!-- <main role="main" class="col-md-9 col-lg-10 px-3 mt-0" id="mainContent"> -->
-				<main role="main" class="col px-3 mt-0" id="mainContent">
+				<main role="main" class="col px-3 mt-0 min-vh-70" id="mainContent">
 					{include file=$headerPartial headerVars=$headerVars}
 				{else}
 				<!-- <main role="main" class="col-md-9 col-lg-10 px-3 mt-3" id="mainContent"> -->
-				<main role="main" class="col px-3 mt-3" id="mainContent">
+				<main role="main" class="col px-3 mt-3 min-vh-70" id="mainContent">
 				{/if}
 					<!-- MAIN CONTENT -->
 					{include file=$contentTemplate}

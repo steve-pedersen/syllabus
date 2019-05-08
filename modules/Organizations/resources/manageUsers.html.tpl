@@ -1,16 +1,12 @@
 <div class="row">
-    <div class="col">
-        <h1 class="display-4">{$organization->getOrgType()}: {$organization->displayName} - <small>Manage Users</small></h1>
-    </div>
     {if $searchQuery}
     <div class="col">
-        <p class="minor detail pull-right badge">Found {$totalAccounts} matching your search</p>
+        <p class="minor detail badge badge-{if $totalAccounts > 0}success{else}danger{/if}">Found {$totalAccounts} matching your search</p>
     </div>
     {/if}
 </div>
 
 <form method="get" action="{$smarty.server.REQUEST_URI|escape}" class="form-horizontal form-inline my-4">
-<!-- <div class="form-row"> -->
     <div class="col">
         <div class="form-group">
             <label for="account-search" class="">Search accounts: </label>
@@ -18,7 +14,7 @@
             <label class="sr-only" for="account-search-button">Search</label>
             <input class="btn btn-info" type="submit" id="account-search-button" name="btn" value="Search">
             <div class="search-container"></div>
-            {if $searchQuery}<a href="admin/accounts?sort={$sortBy|escape}&amp;dir={$dir|escape}&amp;limit={$limit|escape}">Remove search</a>{/if}
+            {if $searchQuery}<a href="{$organization->routeName}/{$organization->id}/users?sort={$sortBy|escape}&amp;dir={$dir|escape}&amp;limit={$limit|escape}" class="ml-3"> Remove search</a>{/if}
         </div>
     </div>
     <div class="col">
@@ -34,10 +30,7 @@
             <input class="btn btn-info" type="submit" id="update-account-limit" name="btn" value="Update">
         </div>
     </div>
-<!-- </div> -->
 </form>
-
-
 
 {if $pageCount > 1}
     <nav>
@@ -48,13 +41,13 @@
             {else}
                 {assign var="unlink" value=false}
             {/if}
-            <li{if $page.current} class="active"{elseif $page.disabled} class="disabled"{/if}>
+            <li {if $page.current} class="page-item active" {elseif $page.disabled} class="page-item disabled"{/if}>
                 {if $page.separator}
                 <span>
                     <span aria-hidden="true">&hellip;</span>
                 </span>
                 {else}
-                <span>{l text=$page.display href=$page.href unlink=$unlink}<span class="sr-only">(current)</span></span>
+                <span>{l text=$page.display href=$page.href unlink=$unlink class="page-link"}<span class="sr-only">(current)</span></span>
                 {/if}
             </li>
         {/foreach}
@@ -65,34 +58,38 @@
 <form method="post" action="{$smarty.server.REQUEST_URI|escape}">
     <div class="row">
         <div class="col">
-            <table class="table table-bordered account-table">
+            <table class="table table-striped">
                 <thead class="thead-dark">
                     <tr>
-                        <td ><a href="admin/accounts?sort=name&amp;dir={if $sortBy=="name"}{$oppositeDir}{else}asc{/if}&amp;limit={$limit|escape}&amp;sq={$searchQuery|escape}">Name</a></td>
-                        <td ><a href="admin/accounts?sort=email&amp;dir={if $sortBy=="email"}{$oppositeDir}{else}asc{/if}&amp;limit={$limit|escape}&amp;sq={$searchQuery|escape}">E-mail address</td>
-                        <td ><a href="admin/accounts?sort=uni&amp;dir={if $sortBy=="uni"}{$oppositeDir}{else}asc{/if}&amp;limit={$limit|escape}&amp;sq={$searchQuery|escape}">Username</td>
-                        <td ><a href="admin/accounts?sort=login&amp;dir={if $sortBy=="login"}{$oppositeDir}{else}asc{/if}&amp;limit={$limit|escape}&amp;sq={$searchQuery|escape}">Last login</td>
-                        <td>Status</td>
-                        <td>Options</td>
+                        <td scope="col">Name</td>
+                        <td scope="col">E-mail address</td>
+                        <td scope="col">Username</td>
+                        <td scope="col">Last login</td>
+                        <td scope="col">Roles</td>
+                        <td scope="col">Options</td>
                     </tr>
                 </thead>
                 
                 <tbody>
-            {foreach item="account" from=$organization->getMembers()}
-                    <tr class="{cycle values='even,odd'}">
-                        <td><a class="text-capitalize" href="admin/accounts/{$account->id}?returnTo={$smarty.server.REQUEST_URI|escape|escape}">{$account->lastName|escape}, {$account->firstName|escape} {$account->middleName|escape}</a></td>
-                        <td>{$account->emailAddress|escape}</td>
-                        <td>{$account->username|escape|default:'<span class="detail">n/a</a>'}</td>
+
+            {foreach $organization->getRoleUsers('member') as $account}
+                    <tr class="">
+                        <td scope="row"><a class="text-capitalize" href="{$organization->routeName}/{$organization->id}/users/{$account->id}?returnTo={$smarty.server.REQUEST_URI|escape|escape}">{$account->lastName|escape}, {$account->firstName|escape} {$account->middleName|escape}</a></td>
+                        <td>{$account->emailAddress}</td>
+                        <td>{$account->username|default:'<span class="detail">n/a</a>'}</td>
                         <td style="font-size:9pt;">{if $account->lastLoginDate}{$account->lastLoginDate->format('M j, Y')}{else}<span class="detail">never</span>{/if}</td>
-                        <td>{if $account->isActive}Active{else}Inactive{/if}</td>
                         <td>
-                            <a class="btn btn-info btn-sm" href="admin/accounts/{$account->id}?returnTo={$smarty.server.REQUEST_URI|escape|escape}">Edit</a>
-                            <input class="btn btn-primary btn-sm" type="submit" name="command[become][{$account->id}]" value="Become" title="Switch to account {$account->displayName}">
+                            {foreach $organization->getUserRoles($account, true) as $role => $displayName}
+                                {$displayName}{if !$displayName@last}, {/if}
+                            {/foreach}
+                        </td>
+                        <td>
+                            <a class="btn btn-info btn-sm" href="{$organization->routeName}/{$organization->id}/users/{$account->id}?returnTo={$smarty.server.REQUEST_URI|escape|escape}">Edit</a>
                         </td>
                     </tr>
             {foreachelse}
                     <tr>
-                        <td colspan="6" class="notice">
+                        <td scope="row" colspan="6" class="notice">
                             No accounts match your search criteria.
                         </td>
                     </tr>
@@ -104,34 +101,25 @@
     </div>
 </form>
 
-{if $pageCount > 0}
-
+{if $pageCount > 1}
     <nav>
-      <ul class="pagination">
+        <ul class="pagination">
         {foreach item="page" from=$pagesAroundCurrent}
-        
             {if $page.current || $page.disabled}
                 {assign var="unlink" value=true}
             {else}
                 {assign var="unlink" value=false}
             {/if}
-            <li{if $page.current} class="active"{elseif $page.disabled} class="disabled"{/if}>
+            <li {if $page.current} class="page-item active" {elseif $page.disabled} class="page-item disabled"{/if}>
                 {if $page.separator}
                 <span>
                     <span aria-hidden="true">&hellip;</span>
                 </span>
                 {else}
-                <span>{l text=$page.display href=$page.href unlink=$unlink}<span class="sr-only">(current)</span></span>
+                <span>{l text=$page.display href=$page.href unlink=$unlink class="page-link"}<span class="sr-only">(current)</span></span>
                 {/if}
             </li>
         {/foreach}
       </ul>
     </nav>
-
 {/if}
-
-<br><hr>
-<div class="new-account">
-    <a href="admin/accounts/new" class="btn btn-success"><span class="glyphicon glyphicon-plus"> </span> Add new account</a>
-</div>
-

@@ -186,6 +186,7 @@ class Syllabus_ClassData_Service
                 {
                     $college = $colleges->createInstance();
                     $college->createdDate = new DateTime;
+                    $college->modifiedDate = new DateTime;
                     $college->name = $collegeName;
                     $college->save();
                     $allColleges[$collegeName] = $college->id;
@@ -197,6 +198,7 @@ class Syllabus_ClassData_Service
                     {
                         $department = $departments->createInstance();
                         $department->createdDate = new DateTime;
+                        $department->modifiedDate = new DateTime;
                         $department->name = $departmentName;
                         $department->college_id = $allColleges[$collegeName] ?? $college->id ?? null;
                         $department->externalKey = $id;

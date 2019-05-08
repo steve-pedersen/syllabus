@@ -12,6 +12,7 @@ class Syllabus_Organizations_TaskDefinitionProvider extends Bss_AuthZ_TaskDefini
         	'view communications'		=> 'view communications from organization',
         	'create communications'		=> 'create and send communications to organization',
         	'view org templates' 		=> 'view organization templates',
+            'create org templates'      => 'create new organization templates',
         	'edit org templates'		=> 'edit organization templates',
         	'delete org templates'		=> 'delete organization templates',
         	'delete own org templates'	=> 'delete organization templates that have been created by you',

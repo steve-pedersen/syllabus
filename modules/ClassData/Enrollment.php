@@ -23,6 +23,13 @@ class Syllabus_ClassData_Enrollment extends Bss_ActiveRecord_Base
             'role' => 'string',
             
             // 'users' => ['1:N', , 'to' => 'Syllabus_ClassData', 'reverseOf' => '', 'orderBy' => ['lastName']],
+            // 'courseSections' => ['1:N', , 'to' => 'Syllabus_ClassData', 'reverseOf' => '', 'orderBy' => ['lastName']],
         ];
+    }
+
+    // write a query function to avoid N:M collections thing
+    public function findCurrentCourseSections ($user)
+    {
+
     }
 }

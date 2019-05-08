@@ -79,7 +79,7 @@ class Syllabus_ClassData_AccountManager
         // auto grant instructors membership into their course departments
         foreach ($userDepartments as $department)
         {
-            $department->addMembers($account);
+            $department->grantUsersRole($account, 'member');
             if (!$userColleges[$department->parent->id])
             {
                 $userColleges[$department->parent->id] = $department->parent;
@@ -88,7 +88,7 @@ class Syllabus_ClassData_AccountManager
         // auto grant instructors membership into their department colleges
         foreach ($userColleges as $college)
         {
-            $college->addMembers($account);
+            $college->grantUsersRole($account, 'member');
         }
 
         return $account;
