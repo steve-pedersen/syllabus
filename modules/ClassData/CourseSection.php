@@ -15,8 +15,8 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
             
             'id' => 'string',
             'title' => 'string',           
-            'section_number' => 'string',
-            'class_number' => 'string',
+            'sectionNumber' => ['string', 'nativeName' => 'section_number'],
+            'classNumber' => ['string', 'nativeName' => 'class_number'],
             'semester' => 'string',
             'year' => 'string',
             'description' => 'string',  
@@ -41,10 +41,38 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
 
             'course'        => ['1:1', 'to' => 'Syllabus_ClassData_Course', 'keyMap' => ['course_id' => 'id']],
             'department'    => ['1:1', 'to' => 'Syllabus_AcademicOrganizations_Department', 'keyMap' => ['department_id' => 'id']],
-            // 'syllabus'      => ['1:1', 'to' => 'Syllabus_Syllabus_Syllabus', 'keyMap' => ['syllabus_id' => 'id']],
+            // TODO: Handle this section and multiple syllabi...
+            'syllabus'      => ['1:1', 'to' => 'Syllabus_Syllabus_Syllabus', 'keyMap' => ['syllabus_id' => 'id']],
         ];
     }
 
+    public function getSemester ($display=false)
+    {
+        $sem = $this->_fetch('semester');
+        if ($display && (strlen($sem) === 1))
+        {
+            switch ($sem) {
+                case '1':
+                    $sem = 'Winter'; break;
+                case '3':
+                    $sem = 'Spring'; break;
+                case '5':
+                    $sem = 'Summer'; break;
+                case '7':
+                    $sem = 'Fall'; break;
+                default:
+            }
+        }
+        return $sem;
+    }
+
+    public function getShortName ()
+    {
+        $cn = $this->_fetch('classNumber');
+        $section = $this->_fetch('sectionNumber');
+        // return $cn . " - Section $section";
+        return $cn . ".$section";
+    }
 
     // public function getInstructors ($reload = false)
     // {

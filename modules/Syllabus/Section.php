@@ -13,18 +13,18 @@ class Syllabus_Syllabus_Section extends Bss_ActiveRecord_Base implements Syllabu
 
     public static function SchemaInfo ()
     {
-        return array(
+        return [
             '__type' => 'syllabus_sections',
-            '__pk' => array('id'),
+            '__pk' => ['id'],
             
             'id' => 'int',       
-            'createdById' => array('int', 'nativeName' => 'created_by_id'),      
-            'createdDate' => array('datetime', 'nativeName' => 'created_date'),
-            'modifiedDate' => array('datetime', 'nativeName' => 'modified_date'),
+            'createdById' => ['int', 'nativeName' => 'created_by_id'],
+            'createdDate' => ['datetime', 'nativeName' => 'created_date'],
+            'modifiedDate' => ['datetime', 'nativeName' => 'modified_date'],
 
-            'createdBy' => array('1:1', 'to' => 'Bss_AuthN_Account', 'keyMap' => array('created_by_id' => 'id')),
-            'versions' => array('1:N', 'to' => 'Syllabus_Syllabus_SectionVersion', 'reverseOf' => 'section', 'orderBy' => array('+createdDate')),
-        );
+            'createdBy' => ['1:1', 'to' => 'Bss_AuthN_Account', 'keyMap' => ['created_by_id' => 'id']],
+            'versions' => ['1:N', 'to' => 'Syllabus_Syllabus_SectionVersion', 'reverseOf' => 'section', 'orderBy' => ['+createdDate']],
+        ];
     }
 
     public function getLatestVersion ()

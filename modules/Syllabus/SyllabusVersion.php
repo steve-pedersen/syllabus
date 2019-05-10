@@ -14,27 +14,27 @@ class Syllabus_Syllabus_SyllabusVersion extends Bss_ActiveRecord_Base
 
     public static function SchemaInfo ()
     {
-        return array(
+        return [
             '__type' => 'syllabus_syllabus_versions',
-            '__pk' => array('id'),
+            '__pk' => ['id'],
             
             'id' => 'int',
             'title' => 'string',
             'description' => 'string', 
-            'syllabusId' => array('int', 'nativeName' => 'syllabus_id'),
-            'createdDate' => array('datetime', 'nativeName' => 'created_date'),
+            'syllabusId' => ['int', 'nativeName' => 'syllabus_id'],
+            'createdDate' => ['datetime', 'nativeName' => 'created_date'],
            
-            'syllabus' => array('1:1', 'to' => 'Syllabus_Syllabus_Syllabus', 'keyMap' => array('syllabus_id' => 'id')),
+            'syllabus' => ['1:1', 'to' => 'Syllabus_Syllabus_Syllabus', 'keyMap' => ['syllabus_id' => 'id']],
 
-            'sectionVersions' => array('N:M',
+            'sectionVersions' => ['N:M',
                 'to' => 'Syllabus_Syllabus_SectionVersion',
                 'via' => 'syllabus_syllabus_version_section_map',
                 'fromPrefix' => 'syllabus_version',
                 'toPrefix' => 'section_version',
-                'properties' => array('sort_order' => 'int', 'read_only' => 'bool', 'is_anchored' => 'bool', 'log' => 'string'),
-                'orderBy' => array('+_map.sort_order')
-            ),
-        );
+                'properties' => ['sort_order' => 'int', 'read_only' => 'bool', 'is_anchored' => 'bool', 'log' => 'string'],
+                'orderBy' => ['+_map.sort_order']
+            ],
+        ];
     }
 
     /**

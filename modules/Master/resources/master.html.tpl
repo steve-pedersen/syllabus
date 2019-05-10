@@ -116,8 +116,8 @@
 			<div class="row">
 				{if $viewer}
 				<!-- TODO: put this in a partial template and generate links programmatically -->
-				<nav class="col-md-2 d-none d-md-block sidebar {if $minimized}sidebar-minimized{/if}" id="sidebar">
-					<div class="sidebar-sticky h-100">
+				<nav class="col-md-2 d-none d-md-block sidebar {if $sidebarMinimized}sidebar-minimized{/if}" id="sidebar">
+					<div class="sidebar-sticky">
 						<ul class="nav flex-column">
 							<li class="nav-item nav-user-item text-center">
 								<a class="nav-link sidebar-user-max" href="profile" id="sidebarUserInfo">

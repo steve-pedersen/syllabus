@@ -6,7 +6,7 @@ class Syllabus_Syllabus_TaskDefinitionProvider extends Bss_AuthZ_TaskDefinitionP
 {
     public function getTaskDefinitions ()
     {
-        $tasks =  array(
+        $tasks =  [
             'syllabus list' => 'see in a list - syllabus',
             'syllabus view' => 'view the contents of syllabus',
             'syllabus edit' => 'edit the information for syllabus',
@@ -18,7 +18,7 @@ class Syllabus_Syllabus_TaskDefinitionProvider extends Bss_AuthZ_TaskDefinitionP
             'section share' => 'share the section with others',
             'section delete' => 'delete the section',
             'section make required' => 'make a section required for this syllabus (template) and editable by you only',
-        );
+        ];
 
         $extensions = $this->getApplication()->moduleManager->getExtensions('at:syllabus:syllabus/sectionExtensions');
         foreach ($extensions as $extension) {

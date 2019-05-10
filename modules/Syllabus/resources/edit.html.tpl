@@ -1,5 +1,5 @@
 
-<div class="row editor-main-container mh-100">
+<div class="row editor-main-container">
 	<nav class="col-md-2 d-none d-md-block anchor-links-sidebar bg-dark text-white" >
 		<div class="sidebar-sticky mb-3">
 			<br><br>
@@ -11,12 +11,12 @@
 					<strong><i class="fas fa-arrow-up pr-2"></i> Go To Top</strong>
 					</a>
 				</li>
-			{foreach $sections as $section}
+			{foreach $sections as $i => $section}
 				{if ($section->version->resolveSection()->id != $realSection->id) && $section->isAnchored}
 					{assign var=ext value=$section->extension}
 					{assign var=extName value=$ext::getExtensionName()}
 				<li class="nav-item sidebar-anchor-item">
-					<a class="nav-link" href="{$smarty.server.REQUEST_URI}#section{$extName}">
+					<a class="nav-link" href="{$smarty.server.REQUEST_URI}#section{$extName}{$i}">
 					{if $section->version->title}{$section->version->title}{else}{$ext->getDisplayName()}{/if}
 					</a>
 				</li>
@@ -26,7 +26,7 @@
 				{assign var=extName value=$sectionExtension::getExtensionName()}
 				{assign var=displayName value=$sectionExtension->getDisplayName()}
 				<li class="nav-item sidebar-anchor-item">
-					<a class="nav-link active text-white" href="{$smarty.server.REQUEST_URI}#section{$extName}">
+					<a class="nav-link active text-white" href="{$smarty.server.REQUEST_URI}#section{$extName}Edit">
 					{if $sectionVersion}{$sectionVersion->title}{else}{$displayName}{/if}
 					</a>
 				</li>
@@ -47,16 +47,7 @@
 						<select name="addSection" class="form-control">
 							<option value="false">Choose Section to Add...</option>
 						{foreach $sectionExtensions as $ext}
-							{if $sections}
-								{assign var=extKey value=$ext->getExtensionKey()}
-								{foreach $sections as $section}
-									{if $section->extension->getExtensionKey() != $extKey}
-										<option value="{$ext->getRecordClass()}">{$ext::getDisplayName()}</option>
-									{/if}
-								{/foreach}
-							{else}
-								<option value="{$ext->getRecordClass()}">{$ext::getDisplayName()}</option>
-							{/if}
+							<option value="{$ext->getRecordClass()}">{$ext->getDisplayName()}</option>
 						{/foreach}
 						</select>
 						<input class="btn btn-primary" type="submit" name="command[addsection]" value="Add" />
@@ -67,7 +58,19 @@
 						<input class="btn btn-secondary" type="submit" name="command[previewsyllabus]" value="Preview" />
 						<button type="button" class="btn btn-link btn">Cancel</button>						
 					</div>
-
+	
+					<!-- <div class="sort-container-overall"> -->
+						<input type="hidden" name="syllabusVersion[id]" value="{$syllabusVersion->id}">
+						<!-- Cycle through existing sections and render their view templates -->
+						{foreach $syllabusVersion->sectionVersions as $i => $sectionVersion}
+							<!-- Check if not rendering a section that is currently being edited. -->
+							{if ($genericSection->id != $sectionVersion->section->id)}
+							<div class="sort-item">
+								<input type="hidden" class="sort-order-value-overall" name="section[{$sectionVersion->id}][sortOrder]" value="{$i+1}">
+							</div> 
+							{/if}
+						{/foreach}
+					<!-- </div> -->
     				{generate_form_post_key}
 				</form>
 			</div>
@@ -98,30 +101,38 @@
 			<!-- End Metadata Section -->
 
 
+
+<!-- <form class="form"> -->
+	<div class="sort-container">
+
 			<!-- Cycle through existing sections and render their view templates -->
-			{foreach $sections as $section}
-			{if ($genericSection->id != $section->id)}
-				{assign var=ext value=$section->extension}
+			{foreach $syllabusVersion->sectionVersions as $i => $sectionVersion}
+				<!-- Check if not rendering a section that is currently being edited. -->
+				{if ($genericSection->id != $sectionVersion->section->id)}
+
+				{assign var=ext value=$sectionVersion->section->extension}
 				{assign var=extName value=$ext::getExtensionName()}
-			<div class="editor-{$extName} mt-3" id="section{$extName}">
-				<a class="d-block bg-light p-2 section-collapse-link" data-toggle="collapse" href="#{$extName}Collapse" role="button" aria-expanded="false" aria-controls="{$extName}Collapse">			
-					<div class="text-left d-inline-block" id="{$extName}Heading"> 
+			<div class="sort-item editor-{$extName} mt-3" id="section{$extName}{$i}">
+				<input type="hidden" class="sort-order-value-overall" id="form-field-{$i+1}-sort-order" name="section[{$sectionVersion->id}][sortOrder]" value="{$i+1}">
+				<a class="d-block bg-light p-2 section-collapse-link dragdrop-handle" data-toggle="collapse" href="#{$extName}Collapse{$i}" role="button" aria-expanded="false" aria-controls="{$extName}Collapse{$i}"><i class="fas fa-bars fa-2x dragdrop-handle mr-2"></i><div class="text-left d-inline-block" id="{$extName}Heading">
 						<span class="mb-0 section-title">
+							<strong>{$sectionVersion->title}</strong>
 							<small><i class="fas fa-chevron-down text-dark"></i></small> 
-							<strong>{$section->version->title}</strong>
 						</span>
-						{if $section->version->description} - <small class="text-dark">{$section->version->description}</small>{/if}
+						{if $sectionVersion->description} - <small class="text-dark">{$sectionVersion->description}</small>{/if}
 					</div>
 				</a>
-				<div class="collapse multi-collapse show section-collapsible" id="{$extName}Collapse">
+				<div class="collapse multi-collapse show section-collapsible" id="{$extName}Collapse{$i}">
 					<div class="card card-outline-secondary rounded-0">
 						<div class="card-body">
 							{include file="{$ext->getViewFragment()}"}
-							<form action="{$smarty.server.REQUEST_URI}" method="post" class="form" role="form"id="{$section->version->title}View">
+							<form action="{$smarty.server.REQUEST_URI}" method="post" class="form" role="form" id="{$sectionVersion->title}View">
 								<input type="hidden" name="syllabusVersion[id]" value="{$syllabusVersion->id}">
 								<input type="hidden" name="editSection" value="{$ext->getRecordClass()}">
-								<input type="hidden" name="section[version][id]" value="{$section->version->id}">
-								<input type="hidden" name="section[properties][sortOrder]" value="{$section->sortOrder}">
+								<input type="hidden" name="section[version][id]" value="{$sectionVersion->id}">
+								<!-- TODO: Add controller logic for containers -->
+								<input type="hidden" name="section[version][container][id]" value="{$sectionVersion->container->id}">
+								<input type="hidden" class="sort-order-value" id="form-field-{$i+1}-sort-order" name="section[properties][sortOrder]" value="{$i+1}">
 								<input type="hidden" name="section[properties][isAnchored]" value="{$section->isAnchored}">
 								<input type="hidden" name="section[properties][readOnly]" value="{$section->readOnly}">
 								<input type="hidden" name="section[properties][log]" value="{$section->log}">
@@ -133,19 +144,23 @@
 							    </div>
 						    	{generate_form_post_key}
 							</form>
-						    {if $section->dateModified || $section->dateCreated}
+						    {if $sectionVersion->dateCreated}
 						    <div class="card-footer text-muted">
-						        {if $section->dateCreated}<small class="text-muted">Date created - {$section->dateCreated}</small>{/if}
-						        {if $section->dateModified}<small class="text-muted">Last edited - {$section->dateModified}</small>{/if}
+						        <small class="text-muted">Date created - {$sectionVersion->dateCreated->format('Y m, d')}</small>
 						    </div>
 						    {/if}
 						</div>
 					</div>
 				</div>
 			</div>
-			{/if}
+
+				{/if}
 			{/foreach}
 			<!-- End cycle through existing sections and render their view templates -->			
+		
+	</div> <!-- End sort-container -->
+<!-- </form> -->
+
 
 
 			{if !$syllabus->inDataSource && $realSection}
@@ -156,8 +171,8 @@
 				{assign var=extName value=$sectionExtension::getExtensionName()}
 				{assign var=displayName value=$sectionExtension->getDisplayName()}
 			<br>
-			<div class="editor-{$extName}">
-				<a class="d-block bg-light p-2 section-collapse-link" data-toggle="collapse" href="#{$extName}Collapse" role="button" aria-expanded="false" aria-controls="{$extName}Collapse">			
+			<div class="editor-{$extName}" id="section{$extName}Edit">
+				<a class="d-block bg-light p-2 section-collapse-link" data-toggle="collapse" href="#{$extName}CollapseEdit" role="button" aria-expanded="false" aria-controls="{$extName}CollapseEdit">			
 					<div class="text-left d-inline-block" id="{$extName}Heading"> 
 						<span class="mb-0 section-title">
 							<small><i class="fas fa-chevron-down text-dark"></i></small>
@@ -166,6 +181,9 @@
 						{if $sectionExtension->getHelpText()} - <small class="text-dark">{$sectionExtension->getHelpText()}</small>{/if}
 					</div>
 				</a>
+		        {if $sectionExtension->getAddonFormFragment()}
+ 					{include file="{$sectionExtension->getAddonFormFragment()}"}
+		        {/if}
 				<form action="{$smarty.server.REQUEST_URI}" method="post" class="form sectionEditor" role="form" autocomplete="off" id="sectionForm">
 					<input type="hidden" name="syllabusVersion[id]" value="{$syllabusVersion->id}">
 					{if $sectionVersion}
@@ -178,7 +196,7 @@
 						<input type="hidden" name="section[sortOrder]" value="{$genericSection->sortOrder}">
 						<input type="hidden" name="section[readOnly]" value="{$genericSection->readOnly}">
 					{/if}
-					<div class="collapse multi-collapse show" id="{$extName}Collapse">
+					<div class="collapse multi-collapse show" id="{$extName}CollapseEdit">
 						<div class="section-metadata bg-light">
 				            <div class="text-center mb-3">
 				                <h4 class="">{if $genericSection->title}{$genericSection->title}{else}{$displayName}{/if} Title & Description Text</h4>
@@ -221,7 +239,7 @@
 						<select name="section[add]" class="form-control">
 							<option value="">Choose Section to Add...</option>
 						{foreach $sectionExtensions as $ext}
-							<option value="{$ext->getExtensionKey}">{$ext::getDisplayName()}</option>
+							<option value="{$ext->getExtensionKey}">{$ext->getDisplayName()}</option>
 						{/foreach}
 						</select>
 						<button type="button" class="btn btn-primary btn">Add Section</button>

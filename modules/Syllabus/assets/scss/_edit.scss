@@ -9,3 +9,20 @@
     // background-color: $footer-text-blue-lte;
     // color: #fff;
 }
+
+.drop-placeholder {
+	background-color: lightgray;
+	height: 3.5em;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	line-height: 1.2em;
+}
+#sortable { 
+	list-style-type: none; margin: 0; padding: 0; width: 60%; 
+}
+.ui-state-highlight { 
+	height: 8em; 
+	margin-top: 1em;
+	background-color: $warning;
+	opacity: .4;
+}

@@ -12,18 +12,18 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
 {
     public static function SchemaInfo ()
     {
-        return array(
+        return [
             '__type' => 'syllabus_syllabus',
-            '__pk' => array('id'),
+            '__pk' => ['id'],
             
             'id' => 'int',       
-            'createdById' => array('int', 'nativeName' => 'created_by_id'),      
-            'createdDate' => array('datetime', 'nativeName' => 'created_date'),
-            'modifiedDate' => array('datetime', 'nativeName' => 'modified_date'),
+            'createdById' => ['int', 'nativeName' => 'created_by_id'],
+            'createdDate' => ['datetime', 'nativeName' => 'created_date'],
+            'modifiedDate' => ['datetime', 'nativeName' => 'modified_date'],
            
-            'createdBy' => array('1:1', 'to' => 'Bss_AuthN_Account', 'keyMap' => array('created_by_id' => 'id')),
-            'versions' => array('1:N', 'to' => 'Syllabus_Syllabus_SyllabusVersion', 'reverseOf' => 'syllabus', 'orderBy' => array('+createdDate')),
-        );
+            'createdBy' => ['1:1', 'to' => 'Bss_AuthN_Account', 'keyMap' => ['created_by_id' => 'id']],
+            'versions' => ['1:N', 'to' => 'Syllabus_Syllabus_SyllabusVersion', 'reverseOf' => 'syllabus', 'orderBy' => ['+createdDate']],
+        ];
     }
 
     public function getLatestVersion ()

@@ -13,32 +13,35 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
 
     public static function SchemaInfo ()
     {
-        return array(
+        return [
             '__type' => 'syllabus_section_versions',
-            '__pk' => array('id'),
+            '__pk' => ['id'],
             '__azidPrefix' => 'at:syllabus:syllabus/Section/',
             '__extensionPoint' => 'at:syllabus:syllabus/sectionExtensions',
             
             'id' => 'int',
             'title' => 'string',
             'description' => 'string', 
-            'sectionId' => array('int', 'nativeName' => 'section_id'),
-            'createdDate' => array('datetime', 'nativeName' => 'created_date'),
+            'sectionId' => ['int', 'nativeName' => 'section_id'],
+            'createdDate' => ['datetime', 'nativeName' => 'created_date'],
            
-            'section' => array('1:1', 'to' => 'Syllabus_Syllabus_Section', 'keyMap' => array('section_id' => 'id')),
-            'subsections' => array('1:N', 'to' => '', 'reverseOf' => 'parent', 'orderBy' => array('+sortOrder')),
+            'section' => ['1:1', 'to' => 'Syllabus_Syllabus_Section', 'keyMap' => ['section_id' => 'id']],
+            // 'subsections' => array('1:N', 'to' => '', 'reverseOf' => 'parent', 'orderBy' => array('+sortOrder')),
+
+            'container' => ['1:1', 'to' => 'Syllabus_Syllabus_SectionVersion', 'keyMap' => ['container_group_id' => 'id']],
+            'containerItems' => ['1:N', 'to' => 'Syllabus_Syllabus_SectionVersion', 'reverseOf' => 'container', 'orderBy' => ['+sortOrder']],
 
             // probably don't need this
-            'syllabusVersions' => array('N:M',
+            'syllabusVersions' => ['N:M',
                 'to' => 'Syllabus_Syllabus_SyllabusVersion',
                 'via' => 'syllabus_syllabus_version_section_map',
                 'fromPrefix' => 'section_version',
                 'toPrefix' => 'syllabus_version',
-                'properties' => array('sort_order' => 'int', 'read_only' => 'bool', 'is_anchored' => 'bool', 'log' => 'string'),
-                'orderBy' => array('+_map.sort_order')
-            ),
+                'properties' => ['sort_order' => 'int', 'read_only' => 'bool', 'is_anchored' => 'bool', 'log' => 'string'],
+                'orderBy' => ['+_map.sort_order']
+            ],
 
-        );
+        ];
     }
 
     public function resolveSection ()

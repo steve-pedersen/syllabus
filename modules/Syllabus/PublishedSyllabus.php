@@ -10,25 +10,25 @@ class Syllabus_Syllabus_PublishedSyllabus extends Bss_ActiveRecord_Base
 {
     public static function SchemaInfo ()
     {
-        return array(
+        return [
             '__type' => 'syllabus_syllabus',
-            '__pk' => array('id'),
+            '__pk' => ['id'],
             
             'id' => 'int',
-            'syllabusId' => array('int', 'nativeName' => 'syllabus_id'),
-            'publishedDate' => array('datetime', 'nativeName' => 'published_date'),
+            'syllabusId' => ['int', 'nativeName' => 'syllabus_id'],
+            'publishedDate' => ['datetime', 'nativeName' => 'published_date'],
 
-            'syllabus' => array('1:1', 'to' => 'Syllabus_Syllabus_Syllabus', 'keyMap' => array('syllabus_id' => 'id')),
+            'syllabus' => ['1:1', 'to' => 'Syllabus_Syllabus_Syllabus', 'keyMap' => ['syllabus_id' => 'id']],
 
-            'sections' => array('N:M',
+            'sections' => ['N:M',
                 'to' => 'Syllabus_Syllabus_Section',
                 'via' => 'syllabus_published_syllabus_section_map',
                 'fromPrefix' => 'published_syllabus',
                 'toPrefix' => 'section_id',
-                'properties' => array('sort_order' => 'int', 'is_anchored' => 'bool'),
-                'orderBy' => array('+_map.sort_order')
-            ),         
-        );
+                'properties' =>['sort_order' => 'int', 'is_anchored' => 'bool'],
+                'orderBy' =>['+_map.sort_order']
+            ],         
+        ];
     }
 
     // returns the latest version of the Syllabus with this id

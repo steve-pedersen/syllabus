@@ -38,4 +38,19 @@ class Syllabus_ClassData_User extends Bss_ActiveRecord_Base
             ],
         ];
     }
+
+    public function getCurrentEnrollments ()
+    {
+        $y = date('Y');
+        $current = [];
+        foreach ($this->enrollments as $courseSection)
+        {
+            if ($courseSection->year >= $y)
+            {
+                $current[] = $courseSection;
+            }
+        }
+
+        return $current;
+    }
 }

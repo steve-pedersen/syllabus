@@ -1,15 +1,11 @@
 <!-- Metadata Section - View -->
 <div class="card card-outline-secondary rounded-0">
     <div class="card-body">
-        <div class="form-group row">
-            <div class="col">
-                <h2 class="display-5">{if $syllabusVersion}{$syllabusVersion->title}{else}{$syllabus->title}{/if}</h2>
-            </div>
+        <div class="col">
+            <h2 class="display-5">{if $syllabusVersion}{$syllabusVersion->title}{else}{$syllabus->title}{/if}</h2>
         </div>
-        <div class="form-group row">
-            <div class="col">
-                <p class="lead">{if $syllabusVersion}{$syllabusVersion->description}{else}{$syllabus->description}{/if}</p>
-            </div>
+        <div class="col">
+            <p class="lead">{if $syllabusVersion}{$syllabusVersion->description}{else}{$syllabus->description}{/if}</p>
         </div>
         <form action="{$smarty.server.REQUEST_URI}" method="post" class="form" role="form" autocomplete="off" id="metadataView">
             {if $syllabusVersion}

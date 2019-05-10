@@ -10,5 +10,5 @@ class Syllabus_Syllabus_SectionExtensionPoint extends Bss_Core_ExtensionPoint
 {
     public function getUnqualifiedName () { return 'sectionExtensions'; }
     public function getDescription () { return 'Extensions add properties and methods to the Syllabus_Syllabus_Section active record.'; }
-    public function getRequiredInterfaces () { return array('Syllabus_Syllabus_SectionExtension'); }
+    public function getRequiredInterfaces () { return ['Syllabus_Syllabus_SectionExtension']; }
 }
