@@ -18,14 +18,12 @@
             <div class="col-lg-9">
                 <a href="{$smarty.server.REQUEST_URI}" class="btn btn-secondary">Cancel</a>
                 <input class="btn btn-primary" type="submit" name="command[savesection]" value="Save Section" />
-                <!-- <input type="button" class="btn btn-primary" value="Save Section"> -->
             </div>
         </div>
     </div>
-    {if $syllabus->dateModified || $syllabus->dateCreated}
+    {if $currentSectionVersion->dateCreated}
     <div class="card-footer text-muted">
-        {if $syllabus->dateCreated}<small class="text-muted">Date created - {$syllabus->dateCreated}</small>{/if}
-        {if $syllabus->dateModified}<small class="text-muted">Last edited - {$syllabus->dateModified}</small>{/if}
+        <small class="text-muted">Date modified - {$currentSectionVersion->dateCreated->format('Y m, d')}</small>
     </div>
     {/if}
 </div>

@@ -3,7 +3,7 @@
 
     if ($('#syllabusEditor').length) {
       closeSidebar(true);
-      $('#sidebar').mouseenter( openSidebar ).mouseleave( closeSidebar );
+      // $('#sidebar').on('click', toggleSidebar);
     }
 
 	$('.section-collapsible').on('hide.bs.collapse', function () {
@@ -16,30 +16,6 @@
 	});
 
 
-	$('#editorMainControlsTop input').on('click', function (e) {
-		if ($( '#sectionForm' ).length) {
-			// save section
-			if ($(this).attr("value") === "Save Syllabus") {
-				e.preventDefault();
-				e.stopPropagation();
-				$( '#sectionForm' ).find('[name="command[savesection]"]').click();
-				// $(this).submit();
-			}
-		}
-	});
-
-	$('#editorMainControlsBottom input').on('click', function (e) {
-		if ($( '#sectionForm' ).length) {
-			// save section
-			if ($(this).attr("value") === "Save Syllabus") {
-				e.preventDefault();
-				e.stopPropagation();
-				$( '#sectionForm' ).find('[name="command[savesection]"]').click();
-				// $(this).submit();
-			}
-		}
-	});
-
 	// TODO: https://johnny.github.io/jquery-sortable/
     $('.sort-container').sortable({
         placeholder: "ui-state-highlight",
@@ -48,10 +24,7 @@
         cursor: "move",
         update: function (event, ui) {
             $('.sort-order-value').each(function (index, value) {
-                $(value).val(index + 1);
-            });
-            $('.sort-order-value-overall').each(function (index, value) {
-                $(value).val(index + 1);
+                $(value).val(index+1);
             });
         }
     });
@@ -74,17 +47,15 @@
 
 	var autofillCourseForm = function (data) {
 		var results = [];
-		var courseForm = $('#sectionForm');
+		var courseForm = $('#courseForm');
 
 		for (var id in data) {
-			var value, text = data[id];
+			var value = data[id];
+			var text = data[id];
 
-			if (id === 'id') {
-				id = 'external_key';
-				var extKey = $('<input type="hidden" name="section[real][external_key]">');
-				courseForm.prepend(extKey);
-			} else if (id === 'semester') {
-				text, value = getSemesterDisplay(text);
+			if (id === 'semester') {
+				text = getSemesterDisplay(text);
+				value = text;
 			}
 
 			var formEm = courseForm.find(`[name="section[real][${id}]"]`);
@@ -117,20 +88,8 @@
 		});
     });
 
-    
-
-
 
   });
 })(jQuery);
-
-// const courseSelect = function (e) {
-
-// 	console.log('welp made it here');
-// 	console.log(e);
-
-// }
-
-
 
 

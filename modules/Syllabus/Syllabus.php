@@ -43,6 +43,25 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
         return $sections;
     }
 
+    /**
+     * Returns the relative version number for a particular SyllabusVersion
+     * belonging to this Syllabus.
+     */   
+    public function getNormalizedVersion ($trueId=null)
+    {
+        $trueId = $trueId ?? $this->latestVersion->id;
+        $counter = 1;
+        foreach ($this->versions as $version)
+        {
+            if ($trueId === $version->id)
+            {
+                return $counter;
+            }
+            $counter++;
+        }
+        return $trueId;
+    }
+
     // TODO: add param for specific versions
     public function getTitle ()
     {

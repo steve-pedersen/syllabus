@@ -64,12 +64,48 @@ class Syllabus_Syllabus_SyllabusVersion extends Bss_ActiveRecord_Base
             }
             $section->sortOrder     = $this->sectionVersions->getProperty($sv, 'sort_order');
             $section->readOnly      = $this->sectionVersions->getProperty($sv, 'read_only');
-            $section->isAnchored    = $this->sectionVersions->getProperty($sv, 'is_anchored');
             $section->log           = $this->sectionVersions->getProperty($sv, 'log');
+            $a                      = $this->sectionVersions->getProperty($sv, 'is_anchored');
+            $section->isAnchored    = ($a===null || $a===true || $a==='true') ? true : false;
             $sections[] = $section;
         }
 
         return $sections;
+    }
+
+    public function getSectionVersionsWithExt ($withExt=true, $normalizeVersions=true)
+    {
+        $sectionVersions = [];
+        if ($this->sectionVersions)
+        {
+            foreach ($this->sectionVersions as $sv)
+            {
+                if ($withExt)
+                {
+                    $sv->extension = $sv->getExtensionByName(get_class($sv->resolveSection()));
+                }
+                $sv->sortOrder     = $this->sectionVersions->getProperty($sv, 'sort_order');
+                $sv->readOnly      = $this->sectionVersions->getProperty($sv, 'read_only');
+                $sv->log           = $this->sectionVersions->getProperty($sv, 'log');
+                $a                 = $this->sectionVersions->getProperty($sv, 'is_anchored');
+                $sv->isAnchored    = ($a===null || $a===true || $a==='true') ? true : false;
+                $sv->normalizedVersion = $sv->section->getNormalizedVersion($sv->id);
+                $sectionVersions[] = $sv;
+                $counter++;
+            }
+        }
+
+        return $sectionVersions;
+    }
+    
+    public function getNormalizedVersion ()
+    {
+        return $this->syllabus->getNormalizedVersion($this->id);
+    }
+
+    public function getSectionCount ()
+    {
+        return count($this->sectionVersions);
     }
 
     /**
@@ -82,6 +118,32 @@ class Syllabus_Syllabus_SyllabusVersion extends Bss_ActiveRecord_Base
             $this->_sectionExtensions = $this->getSchema('Syllabus_Syllabus_SectionVersion')->getExtensions();
         }
 
-        return $this->_sectionExtensions;
+        return $this->getSchema('Syllabus_Syllabus_SectionVersion')->getExtensions();
+    }
+
+    public function createDerivative ()
+    {
+        $inst = $this->getSchema()->createInstance();
+
+        $inst->_assign('title', $this->title);
+        $inst->_assign('description', $this->description);
+        $inst->_assign('syllabus_id', $this->syllabus_id);
+        $inst->_assign('createdDate', new DateTime);
+
+        $properties = ['sort_order', 'read_only', 'is_anchored', 'log'];
+
+        // Copy sectionVersions fields
+        foreach ($this->sectionVersions as $sectionVersion)
+        {
+            $inst->sectionVersions->add($sectionVersion);
+            foreach ($properties as $property)
+            {
+                $inst->sectionVersions->setProperty($sectionVersion, $property, 
+                    $this->sectionVersions->getProperty($sectionVersion, $property)
+                );
+            }
+        }
+
+        return $inst;
     }
 }

@@ -7,7 +7,7 @@ var sidebarUserItem = $('.nav-user-item');
 var sidebarUser = $('#sidebarUserInfo');
 var main = $('#mainContent');
 var minimized = true;
-var transitionDuration = 0;
+var transitionDuration = 100;
 
 const toggleSidebar = function() {
   if (sidebar.hasClass('col-md-2')) {
@@ -34,12 +34,13 @@ function openSidebar (forceOpen) {
     if (sidebar.hasClass('sidebar-minimized')) {
       sidebar.removeClass('sidebar-minimized');
     }
-    brand.addClass('col-md-2').addClass('col-sm-3');
-    sidebar.addClass('col-md-2');
-    sidebarText.show();
+    brand.addClass('col-md-2',transitionDuration).addClass('col-sm-3');
+    sidebar.addClass('col-md-2',transitionDuration);
+    
     sidebarToggle.removeClass('fa-chevron-right').addClass('fa-chevron-left').show();
     sidebarUserItem.removeClass('min').addClass('max');
     sidebarUser.removeClass('sidebar-user-min').addClass('sidebar-user-max');
+    sidebarText.show().delay(transitionDuration);
   }
   minimized = false;
 }

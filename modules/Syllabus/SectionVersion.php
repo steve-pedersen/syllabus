@@ -59,6 +59,27 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
         return $this->_realSection ?? null;
     }
 
+    public function createDerivative ($version = null)
+    {
+        $properties = ['sortOrder', 'readOnly', 'isAnchored', 'log', 'id'];
+        $deriv = $this->schema->createInstance();
+        foreach ($this->getData() as $key => $val)
+        {
+            if (!in_array($key, $properties))
+            {
+                $deriv->$key = $val;
+            }
+        }
+        $deriv->createdDate = new DateTime;
+        
+        return $deriv;
+    }
+
+    public function getNormalizedVersion ()
+    {
+        return $this->section->getNormalizedVersion($this->id);
+    }
+
     public function getExtensionByName ($record)
     {
         if ($this->_sectionExtension === null)

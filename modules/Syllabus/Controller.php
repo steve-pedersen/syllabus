@@ -48,9 +48,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id', ['allowNew' => true]);
 
         $data = $this->request->getPostParameters();
-        if (isset($data['syllabus']['version']))
+        if (isset($data['syllabusVersion']) && isset($data['syllabusVersion']['id']))
         {
-            $syllabusVersion = $syllabusVersions->get($data['syllabus']['version']['id']);
+            $syllabusVersion = $syllabusVersions->get($data['syllabusVersion']['id']);
         }
         else
         {
@@ -62,47 +62,60 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->setPageTitle($title);
         $this->buildHeader('partial:_header.edit.html.tpl', $title, $syllabusVersion->title, $syllabusVersion->description);
 
-
         if ($this->request->wasPostedByUser())
         {      
             switch ($this->getPostCommand()) {
 
                 case 'addsection':
-                    $realSection = $this->schema($data['addSection'])->createInstance();
-                    $realSectionExtension = $sectionVersions->createInstance()->getExtensionByName($data['addSection']);
+                	if (($sectionClass = $data['addSection']) !== 'false')
+                	{
+	                    $realSection = $this->schema($sectionClass)->createInstance();
+	                    $realSectionExtension = $sectionVersions->createInstance()->getExtensionByName($sectionClass);
 
-                    if ($realSectionExtension::getExtensionName() === 'course')
-                    {
-                        $currentCourses = $viewer->classDataUser->getCurrentEnrollments();
-                        // $this->template->userCourses = $viewer->classDataUser->getCurrentEnrollments();
-                    }
+	                    if ($realSectionExtension::getExtensionName() === 'course')
+	                    {
+	                        $currentCourses = $viewer->classDataUser->getCurrentEnrollments();
+	                    }
 
-                    $this->template->newSection = true;
-                    $this->template->realSection = $realSection;
-                    $this->template->realSectionClass = $data['addSection'];
-                    $this->template->sectionExtension = $realSectionExtension;
+	                    $this->template->realSection = $realSection;
+	                    $this->template->realSectionClass = $sectionClass;
+	                    $this->template->sectionExtension = $realSectionExtension;
+                	}
+                	else
+                	{
+                		$this->flash('You must choose a section type from the dropdown list.', 'danger');
+                	}
+
                     break;
 
                 case 'editsection':
-                    $sectionVersion = $sectionVersions->get($data['section']['version']['id']);
+                    $sectionVersion = $sectionVersions->get(key($this->getPostCommandData()));
                     $genericSection = $sectionVersion->section;
+                    $test = [];
                     foreach ($data['section']['properties'] as $key => $prop)
                     {
-                        $genericSection->$key = $prop;
+                        $genericSection->$key = ($key==='isAnchored' || $key==='readOnly') ? (bool)$prop[$sectionVersion->id] : $prop[$sectionVersion->id];
+                        $test[] = ($key==='isAnchored' || $key==='readOnly') ? (bool)$prop[$sectionVersion->id] : $prop[$sectionVersion->id];
                     }
-
-                    $this->template->newSection = false;
-                    $this->template->realSection = $sectionVersion->resolveSection();
-                    $this->template->realSectionClass = $data['editSection'];
-                    $this->template->sectionExtension = $sectionVersion->getExtensionByName($data['editSection']);
+                    
+                    $genericSection->isAnchored = ($genericSection->isAnchored === null) ? true : $genericSection->isAnchored;
+                    $realSection = $sectionVersion->resolveSection();
+                    
+                    $this->template->realSection = $realSection;
+                    $this->template->realSectionClass = get_class($realSection);
+                    $this->template->sectionExtension = $sectionVersion->getExtensionByName(get_class($realSection));
                     $this->template->genericSection = $genericSection;
-                    $this->template->sectionVersion = $sectionVersion;
+                    $this->template->currentSectionVersion = $sectionVersion;
                     break;
 
                 case 'editsyllabus':
                     $this->template->editMetadata = true;
                     $this->template->syllabusVersion = $syllabusVersion;
                     break;
+
+                case 'saveorder':
+                	// echo "<pre>"; var_dump($this->request->getPostParameters()); die;
+                	// break;
 
                 case 'savesection':
                 case 'savesyllabus':
@@ -115,10 +128,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->title = $title;
         $this->template->syllabus = $syllabus;
         $this->template->syllabusVersion = $syllabusVersion;
-        $this->template->sections = $syllabus->getSections(true);
-        $this->template->sectionMode = 'view';
+        $this->template->sections = $syllabusVersion->getSections(true);
+        // $this->template->sections = $syllabus->getSections(true);
         $this->template->sectionExtensions = $sectionExtensions;
-        $this->template->userCourses = $viewer->classDataUser->getCurrentEnrollments();
+        $this->template->userCourses = $currentCourses ?? $viewer->classDataUser->getCurrentEnrollments(); // TODO: Add only if needed
     }
 
     /**
@@ -136,35 +149,39 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $data = $this->request->getPostParameters();
         $anyChange = false;
         $sectionChange = false;
-        $addSection = isset($data['section']['real']) || isset($data['addSection']) && ($data['addSection'] !== 'false');
-        // echo "<pre>"; var_dump($data, $addSection); die;
-        // save any metadata
-        // TODO: add sort order logic in here to be a modification
-        if (isset($data['syllabus']))
+
+        if ((isset($data['section']) && isset($data['section']['versionId'])))
         {
-            $anyChange = true;
-            if ($syllabus->createdDate)
-            {
-                $syllabus->modifiedDate = new DateTime;
-            }
-            else
-            {
-                $syllabus->createdDate = new DateTime;
-                $syllabus->createdById = $viewer->id;
-            }
-            $syllabus->save();
+        	$sectionVersionId = $data['section']['versionId'];
+        }
+        else
+        {
+        	$postCommandData = $this->getPostCommandData();
+        	$sectionVersionId = ($postCommandData && is_array($postCommandData)) ? key($postCommandData) : null;
         }
 
+        // save syllabus metadata
+        if ($syllabus->inDataSource)
+        {
+            $syllabus->modifiedDate = new DateTime;
+        }
+        else
+        {
+            $syllabus->createdDate = new DateTime;
+            $syllabus->createdById = $viewer->id;
+        }
+        $syllabus->save();
+
         // save section data
-        // TODO: add Subsection logic
-        if (isset($data['section']) && $addSection)
+        $prevSectionVersion = null;
+        if (isset($data['section']) && $sectionVersionId)
         {
             $anyChange = true;
             $sectionChange = true;
-            $realSectionClass = $data['section']['real']['class'];
-            $extKey = $data['section']['extKey'];
+            $realSectionClass = $data['section']['realClass'][$sectionVersionId];
+            $extKey = $data['section']['extKey'][$sectionVersionId];
 
-            if (isset($data['section']['isNew']) && $data['section']['isNew'])
+            if ($sectionVersionId === 'new')
             {
                 $genericSection = $sections->createInstance();
                 $genericSection->createdDate = new DateTime;
@@ -172,96 +189,116 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             }
             else
             {
-                $genericPreviousVer = $sectionVersions->get($data['section']['version']['id']);
-                $genericSection = $genericPreviousVer->section;
+                $prevSectionVersion = $sectionVersions->get($sectionVersionId);
+                $genericSection = $prevSectionVersion->section;
                 $genericSection->modifiedDate = new DateTime;
             }
             $genericSection->save();   
 
             $realSection = $this->schema($realSectionClass)->createInstance();
             $realSection->absorbData($data['section']['real']);
+            if ($extKey === 'course_id')
+            {
+            	$realSection->externalKey = $data['section']['real']['external_key'];
+            }
             $realSection->save();
 
             // TODO: find out if single course section can have multiple associated syllabi
-            if ($extKey === 'course_id')
+            if ($extKey === 'course_id' && $realSection->externalKey)
             {
                 $courses = $this->schema('Syllabus_ClassData_CourseSection');
                 $course = $courses->findOne($courses->id->equals($realSection->externalKey));
-                $course->syllabus_id = $syllabus->id;
+                $course->syllabus_id = $syllabus->id ?? '';
                 $course->save();
             }
 
+            // TODO: add Subsection logic
             // $subsection = $subsections->createInstance(); 
 
-            $genericSectionVer = $sectionVersions->createInstance();
-            $genericSectionVer->createdDate = new DateTime;
-            $genericSectionVer->sectionId = $genericSection->id;
-            $genericSectionVer->$extKey = $realSection->id;
-            if (isset($data['section']['generic']))
+            $newSectionVersion = $sectionVersions->createInstance();
+            $newSectionVersion->createdDate = new DateTime;
+            $newSectionVersion->sectionId = $genericSection->id;
+            $newSectionVersion->$extKey = $realSection->id;
+            if (isset($data['section']['generic'][$sectionVersionId]))
             {
-                $genericSectionVer->absorbData($data['section']['generic']);
+                $newSectionVersion->absorbData($data['section']['generic'][$sectionVersionId]);
             }
-            $genericSectionVer->save();
+            $newSectionVersion->save();
         }
 
         // save title/description & bump syllabus version
         if (isset($data['syllabus']) || isset($data['syllabusVersion']) || isset($data['section']))
         {
             $anyChange = true;
-            $oldSyllabusVersion = $syllabusVersions->get($data['syllabusVersion']['id']) ?? $syllabus->latestVersion;
-            $newSyllabusVersion = $syllabusVersions->createInstance();
-            $newSyllabusVersion->createdDate = new DateTime;
-            $newSyllabusVersion->syllabusId = $syllabus->id ?? $oldSyllabusVersion->syllabus->id;
+            if (isset($data['syllabusVersion']) && isset($data['syllabusVersion']['id']))
+            {
+            	$oldSyllabusVersion = $syllabusVersions->get($data['syllabusVersion']['id']);
+            	if ($oldSyllabusVersion->syllabus->id !== $syllabus->id)
+            	{
+            		$oldSyllabusVersion = null;
+            	}
+            }
+            else
+            {
+            	$oldSyllabusVersion = $syllabus->latestVersion;
+            }
+            
+            if ($oldSyllabusVersion)
+            {
+            	$newSyllabusVersion = $oldSyllabusVersion->createDerivative();
+            }
+            else
+            {
+	            $newSyllabusVersion = $syllabusVersions->createInstance();
+	            $newSyllabusVersion->createdDate = new DateTime;
+	            $newSyllabusVersion->syllabusId = $syllabus->id;            	
+            }
+   
             if (isset($data['syllabus']) && isset($data['syllabus']['title']))
             {
                 $newSyllabusVersion->absorbData($data['syllabus']);
             }
-            else
-            {
-                $newSyllabusVersion->title = $oldSyllabusVersion->title;
-                $newSyllabusVersion->description = $oldSyllabusVersion->description;
-            }
+
             $newSyllabusVersion->save();
         }
 
-        // TODO: fix this because it is broken
         // map any bumped section versions to this new syllabus version
-        $savedSectionVersions = false;
-        if ($sectionChange)
-        // if ($sectionChange && (isset($data['section']) && !$addSection))
+        if ($sectionChange && $sectionVersionId)
         {   
             $anyChange = true;
-            $savedSectionVersions = true;
-            $temp = $oldSyllabusVersion->sectionVersions->asArray();
-            $version = array_pop($temp);
-            $bottomPosition = $version ? $oldSyllabusVersion->sectionVersions->getProperty($version, 'sort_order') : 0;
-            $newPosition = $data['section']['sortOrder'] ?? ($bottomPosition + 1);
-            $newSyllabusVersion->sectionVersions->add($genericSectionVer);
-            $newSyllabusVersion->sectionVersions->setProperty($genericSectionVer, 'sort_order', $newPosition);
-            $newSyllabusVersion->sectionVersions->setProperty($genericSectionVer, 'read_only', (isset($data['section']['readOnly'])&&$data['section']['readOnly'] ? true : false));
-            $newSyllabusVersion->sectionVersions->setProperty($genericSectionVer, 'is_anchored', (isset($data['section']['isAnchored']) ? true : false));
-            $newSyllabusVersion->sectionVersions->setProperty($genericSectionVer, 'log', ($data['section']['log'] ?? ''));
-            // $newSyllabusVersion->save();
+            $oldCount = count($oldSyllabusVersion->sectionVersions);
+            $newCount = count($newSyllabusVersion->sectionVersions);
+
+            // if editing a section, remove it's previous version from the new syllabus version
+            if ($prevSectionVersion && ($oldCount === $newCount))
+            {
+            	$newSyllabusVersion->sectionVersions->remove($prevSectionVersion);
+            }
+
+            // add new section version to this new syllabus version
+            $defaultPosition = $newSyllabusVersion->sectionCount + 1;
+            $newSyllabusVersion->sectionVersions->add($newSectionVersion);
+            $newSyllabusVersion->sectionVersions->setProperty($newSectionVersion, 'sort_order', 
+            	isset($data['section']['properties']['sortOrder']) ? $data['section']['properties']['sortOrder'][$sectionVersionId] : $defaultPosition);
+            $newSyllabusVersion->sectionVersions->setProperty($newSectionVersion, 'read_only', 
+            	isset($data['section']['properties']['readOnly']) ? $data['section']['properties']['readOnly'][$sectionVersionId] : false);
+            $newSyllabusVersion->sectionVersions->setProperty($newSectionVersion, 'is_anchored', 
+            	isset($data['section']['properties']['isAnchored']) ? $data['section']['properties']['isAnchored'][$sectionVersionId] : true);
+            $newSyllabusVersion->sectionVersions->setProperty($newSectionVersion, 'log', 
+            	isset($data['section']['properties']['log']) ? $data['section']['properties']['log'][$sectionVersionId] : '');
+            $newSyllabusVersion->save();
             $newSyllabusVersion->sectionVersions->save();
         }
 
-        // reassign section versions to this new syllabus version when no changes made to any section
-        // if (!$savedSectionVersions && $oldSyllabusVersion && $newSyllabusVersion)
+        // save sort_order posted data
         if ($oldSyllabusVersion && $newSyllabusVersion)
         {
-            foreach ($oldSyllabusVersion->sectionVersions as $sv)
-            {
-                $newSyllabusVersion->sectionVersions->add($sv);
-                foreach ($oldSyllabusVersion->sectionVersions->getProperties($sv) as $key => $val)
+            foreach ($newSyllabusVersion->sectionVersions as $sv)
+            {              	
+                if (isset($data['section']['properties']['sortOrder']) && isset($data['section']['properties']['sortOrder'][$sv->id]))
                 {
-                    if (isset($data['section']['sortOrder']))
-                    {
-                        $newSyllabusVersion->sectionVersions->setProperty($sv, 'sort_order', $data['section']['sortOrder'][$sv->id]);
-                    }
-                    else
-                    {
-                        $newSyllabusVersion->sectionVersions->setProperty($sv, $key, $val);
-                    }
+                	$anyChange = true;
+                    $newSyllabusVersion->sectionVersions->setProperty($sv, 'sort_order', $data['section']['properties']['sortOrder'][$sv->id]);
                 }
             }
             $newSyllabusVersion->save();
@@ -270,12 +307,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         if (!$anyChange) 
         { 
-            $this->flash('No changes were made', 'warning'); 
-        }
-        else
-        {
-            $syllabus->modifiedDate = new DateTime;
-            $syllabus->save();
+            $this->flash('No changes were made', 'warning');
         }
 
         $this->response->redirect('syllabus/' . $syllabus->id);
@@ -296,6 +328,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     'status' => 'success',
                     'data' => $course->getData()
                 ];
+                $results['data']['external_key'] = $results['data']['id'];
             }
             else
             {

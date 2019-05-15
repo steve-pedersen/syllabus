@@ -31,9 +31,17 @@
     \*                   */
 
     $('#sidebarToggle').on('click', toggleSidebar);
+    $('#sidebar').on('click', function (e) {
+      var target = $(e.target);
+      if (target.is('div') || target.is('nav')) {
+        e.stopPropagation();
+        e.preventDefault();
+        toggleSidebar();
+      }
+    });
 
-    // if sidebar minimized and user hovers over icon, open it up
-    $('#sidebar a.nav-link > h6 i').mouseenter( openSidebarIfClosed );
+    // if sidebar minimized and user hovers over icon, open it up. terrible ux.
+    // $('#sidebar a.nav-link > h6 i').mouseenter( openSidebarIfClosed );
 
     var startSize = $(window).width();
     if (startSize < 977) {
@@ -46,13 +54,13 @@
 
     $( window ).resize(function() {
       let currentWidth = $(window).width();
-      if (currentWidth < 980 || currentWidth > 970) {
+      if (970 < currentWidth || currentWidth < 980) {
         if (currentWidth < 977) {
           closeSidebar();
           brandLogo.css({"margin-left": "-0.2em"}, 0);
           $('#sidebarToggle').hide();
         }
-        else {
+        else if (!minimized || !$('#syllabusEditor').length) {
           openSidebar();
           brandLogo.css({"margin-left": "0"}, 0);
         }

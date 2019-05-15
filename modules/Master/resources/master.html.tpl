@@ -125,7 +125,7 @@
 										<i class="fas fa-user-circle fa-4x"></i>
 										<br>
 										<div class="user-info-text-container">
-											<span class="user-info-text">
+											<span class="user-info-text sidebar-text">
 												{$viewer->fullName}<br>
 												<small class="text-dark">Professor of Anthropology, PhD, MD, DDS.</small>
 											</span>
@@ -199,11 +199,11 @@
 				
 				{if $headerPartial}
 				<!-- <main role="main" class="col-md-9 col-lg-10 px-3 mt-0" id="mainContent"> -->
-				<main role="main" class="col px-3 mt-0 min-vh-70" id="mainContent">
+				<main role="main" class="col px-3 mt-0 mb-3 min-vh-70" id="mainContent">
 					{include file=$headerPartial headerVars=$headerVars}
 				{else}
 				<!-- <main role="main" class="col-md-9 col-lg-10 px-3 mt-3" id="mainContent"> -->
-				<main role="main" class="col px-3 mt-3 min-vh-70" id="mainContent">
+				<main role="main" class="col px-3 mt-3 mb-3 min-vh-70" id="mainContent">
 				{/if}
 					<!-- MAIN CONTENT -->
 					{include file=$contentTemplate}

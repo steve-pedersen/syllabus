@@ -1,5 +1,6 @@
 <!-- Course Section -->
-<div class="card card-outline-secondary rounded-0">
+<div class="card card-outline-secondary rounded-0" id="courseForm">
+    <input type="hidden" name="section[real][external_key]" value="{$realSection->externalKey}" id="courseExternalKey">
     <div class="card-body">
         <div class="form-group row">
             <label class="col-lg-3 col-form-label form-control-label">Course Title</label>
@@ -46,10 +47,9 @@
             </div>
         </div>
     </div>
-    {if $syllabus->dateModified || $syllabus->dateCreated}
+    {if $currentSectionVersion->dateCreated}
     <div class="card-footer text-muted">
-        {if $syllabus->dateCreated}<small class="text-muted">Date created - {$syllabus->dateCreated}</small>{/if}
-        {if $syllabus->dateModified}<small class="text-muted">Last edited - {$syllabus->dateModified}</small>{/if}
+        <small class="text-muted">Date modified - {$currentSectionVersion->dateCreated->format('Y m, d')}</small>
     </div>
     {/if}
 </div>
