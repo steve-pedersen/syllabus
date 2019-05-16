@@ -38,14 +38,6 @@
                 <input class="form-control" type="text" name="section[real][year]" value="{$realSection->year}">
             </div>
         </div>
-        <div class="form-group row">
-            <label class="col-lg-3 col-form-label form-control-label"></label>
-            <div class="col-lg-9">
-                <a href="{$smarty.server.REQUEST_URI}" class="btn btn-secondary">Cancel</a>
-                <input class="btn btn-primary" type="submit" name="command[savesection]" value="Save Section" />
-                <!-- <input type="button" class="btn btn-primary" value="Save Section"> -->
-            </div>
-        </div>
     </div>
     {if $currentSectionVersion->dateCreated}
     <div class="card-footer text-muted">

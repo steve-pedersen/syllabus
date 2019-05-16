@@ -60,8 +60,14 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         $title = ($syllabus->inDatasource ? 'Edit' : 'Create') . ' Syllabus';
         $this->setPageTitle($title);
-        $this->buildHeader('partial:_header.edit.html.tpl', $title, $syllabusVersion->title, $syllabusVersion->description);
+        $description = '';
+        if ($syllabusVersion->inDataSource)
+        {
+            $description = 'v' . $syllabusVersion->normalizedVersion;
+        }
+        $this->buildHeader('partial:_header.edit.html.tpl', $title, $syllabusVersion->title, $description);
 
+        
         if ($this->request->wasPostedByUser())
         {      
             switch ($this->getPostCommand()) {

@@ -9,6 +9,7 @@ class Syllabus_Courses_SectionExtension extends Syllabus_Syllabus_SectionExtensi
     public function getHelpText () { return 'Course section type of a syllabus.'; }
     public function getRecordClass () { return 'Syllabus_Courses_Course'; }
     public function getSectionTasks () { return []; }
+    public function canHaveMultiple () { return false; }
     public function getEditFormFragment ()
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_course.edit.html.tpl');

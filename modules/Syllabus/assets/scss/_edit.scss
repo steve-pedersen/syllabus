@@ -26,6 +26,14 @@
 	background-color: $warning;
 	opacity: .4;
 }
-nav.col-md-2.d-none.d-md-block.anchor-links-sidebar {
+nav.anchor-links-sidebar {
     margin-bottom: -1em;
+}
+
+.active-section-editor {
+    // background: $sun_light_5;
+}
+
+.real-section-editor {
+
 }

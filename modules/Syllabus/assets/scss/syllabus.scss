@@ -1,6 +1,8 @@
 @import "_edit";
 @import "_view";
-
+html {
+  scroll-behavior: smooth;
+}
 .editor-main-container {
 	// height: 100%;
 	.syllabus-editor {
@@ -13,5 +15,43 @@
 	}
 	.dragdrop-handle {
 		cursor: all-scroll;
+	}
+
+}
+.anchor-links-sidebar {
+	padding-left: 0;
+	white-space: nowrap;
+	> .sidebar-sticky {
+		position: relative;
+		// width: 100%;
+		> ul {
+			position: sticky;
+			// width: inherit;
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			.nav-item {
+				> a.nav-link {
+					display: block;
+					color: $cyan_light_2;
+					padding: 0.5rem 1rem;
+					text-decoration: none;
+					&.active {
+						// color: #fff;
+						color: $cyan_light_5;
+						border-left: .5em solid $cyan_light_2;
+						-webkit-transition: border-left, color 0.3s;
+						transition: border-left, color 0.3s;
+					}
+					&:hover,
+					&:focus {
+						color: $cyan_light_4;
+						-webkit-transition: color 0.3s;
+						transition: color 0.3s;
+					}
+				}
+			}
+		}
+
 	}
 }
