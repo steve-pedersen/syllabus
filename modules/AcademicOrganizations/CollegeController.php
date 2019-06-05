@@ -10,18 +10,18 @@ class Syllabus_AcademicOrganizations_CollegeController extends Syllabus_Organiza
         	'/organizations'           	=> ['callback' => 'myOrganizations'],
         	'/colleges'             	=> ['callback' => 'listOrganizations'],
         	'/colleges/create'      	=> ['callback' => 'create'],
-        	'/colleges/:oid'		   	=> ['callback' => 'dashboard', ':oid' => '[0-9]'],
-        	'/colleges/:oid/manage'  	=> ['callback' => 'manageOrganization', ':oid' => '[0-9]'],
-        	'/colleges/:oid/users'   	=> ['callback' => 'manageUsers', ':oid' => '[0-9]'],
-            '/colleges/:oid/users/:uid' => ['callback' => 'editUser', ':oid' => '[0-9]'],
+        	'/colleges/:oid'		   	=> ['callback' => 'dashboard', ':oid' => '[0-9]+'],
+        	'/colleges/:oid/manage'  	=> ['callback' => 'manageOrganization', ':oid' => '[0-9]+'],
+        	'/colleges/:oid/users'   	=> ['callback' => 'manageUsers', ':oid' => '[0-9]+'],
+            '/colleges/:oid/users/:uid' => ['callback' => 'editUser', ':oid' => '[0-9]+'],
         ];
     }
 
-    public function beforeCallback($callback)
-    {
-    	parent::beforeCallback($callback);
-    	parent::$callback();
-    }
+    // public function beforeCallback($callback)
+    // {
+    // 	parent::beforeCallback($callback);
+    // 	parent::$callback();
+    // }
 
 	public function getOrganization ($id=null)
 	{

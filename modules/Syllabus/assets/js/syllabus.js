@@ -39,6 +39,12 @@
         }
     });
 
+    if ($('#mySyllabi').length) {
+    	var $modeEm = $('#mySyllabi').find('input[name="mode"]');
+    	// var mode = $modeEm.val();
+    	var selector = '#myTab a#' + $modeEm.val() +'-tab';
+    	$(selector).tab('show');
+    }
 
 	// TODO: https://johnny.github.io/jquery-sortable/
     $('.sort-container').sortable({
@@ -111,6 +117,15 @@
 			}
 		});
     });
+
+	$("#makeReadOnly").on("click", function(){
+		if($(this).is(":not(:checked)")) {
+			$('#readOnlyHelpBlock').show();
+		}
+		else {
+			$('#readOnlyHelpBlock').hide();
+		}
+	});
 
 	// let mainNavLinks = document.querySelectorAll(".anchor-links-sidebar ul li a");
 	// let mainSections = document.querySelectorAll(".syllabus-editor .sort-container .sort-item");

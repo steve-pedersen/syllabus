@@ -3,7 +3,7 @@
 
 		<h4>Roles in this organization ({$organization->name})</h4>	
 	{foreach $roles as $role => $name}
-		<div class="form-check">
+		<div class="form-check py-1">
 			{if $role == 'member'}
 				<input disabled name="roles[{$role}]" class="form-check-input" type="checkbox" id="{$role}" aria-describedby="{$role}HelpText" {if $organization->userHasRole($account, $role)}checked{/if}>
 			{else}
@@ -11,9 +11,9 @@
 			{/if}
 			<label class="form-check-label" for="{$role}">
 				{$name} - 
-				<small id="{$role}HelpText" class="text-muted">
+				<span id="{$role}HelpText" class="text-muted">
 					{$organization->getRoleHelpText($role)}
-				</small>
+				</span>
 			</label>
 		</div>
 	{/foreach}

@@ -4,14 +4,37 @@
  */
 abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Controller
 {
-    public static function getRouteMap ()
-    {
-        return [
-            // 'organizations' => ['callback' => 'myOrganizations'],
-        ];
-    }
+
 
 	abstract public function getOrganization ($id=null);
+
+    public function dashboard ()
+    {
+        
+        $organization = $this->getOrganization($this->getRouteVariable('oid'));
+        $this->template->organization = $organization;
+        $this->buildHeader('partial:_header.html.tpl', 'Dashboard', $organization->name, '');
+        $this->template->clearBreadcrumbs();
+        $this->addBreadcrumb('organizations', 'My Organizations');
+        $this->addBreadcrumb($organization->routeName, ucfirst($organization->routeName));
+    }
+
+    public function listTemplates ()
+    {
+        $organization = $this->getOrganization($this->getRouteVariable('oid'));
+        $this->template->organization = $organization;
+        $this->buildHeader('partial:_header.html.tpl', 'Templates', $organization->name, '');
+        $this->template->clearBreadcrumbs();
+        $this->addBreadcrumb('organizations', 'My Organizations');
+        $this->addBreadcrumb($organization->routeName, ucfirst($organization->routeName));
+
+        $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
+
+        $this->template->templates = $syllabi->find(
+            $syllabi->templateAuthorizationId->equals($organization->templateAuthorizationId),
+            ['orderBy' => '-createdDate']
+        );
+    }
 
     public function myOrganizations ()
     {
@@ -26,9 +49,6 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         {
             $organizations['colleges'] = $collegeSchema->getAll() ?? [];
             $organizations['departments'] = $departmentSchema->getAll() ?? [];
-            // $organizations['groups'] = $groupSchema->getAll();
-
-            $courseSections = $this->schema('Syllabus_ClassData_CourseSection')->getAll();
         }
         elseif ($viewer->classDataUser)
         {
@@ -36,19 +56,17 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
             $azids = $authZ->getObjectsForWhich($viewer, 'view org templates');
             $organizations['colleges'] = $collegeSchema->getByAzids($azids) ?? [];
             $organizations['departments'] = $departmentSchema->getByAzids($azids) ?? [];
-            // $organizations['groups'] = $groupSchema->getByAzids($azids);
-
-            $courseSections = $viewer->classDataUser->enrollments->asArray();
         }
 
         $this->template->allOrganizations = $organizations;
-        $this->template->courseSections = $courseSections;
     }
 
     public function listOrganizations ()
     {
-        $this->buildHeader('partial:_header.edit.html.tpl', $this->organization->organizationType.'s', '', '');
+        // $this->buildHeader('partial:_header.edit.html.tpl', $this->organization->organizationType.'s', '', '');
         $viewer = $this->requireLogin();
+        $this->template->clearBreadcrumbs();
+        $this->addBreadcrumb('organizations', 'My Organizations');
         $organizations = [];
 
         if ($this->hasPermission('admin'))
@@ -65,16 +83,17 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         $this->template->organizations = $organizations;    
     }
 
-    public function dashboard ()
-    {
-        $this->template->organization = $this->getOrganization($this->getRouteVariable('oid'));
-    }
+
 
     public function manageOrganization ()
     {
         $viewer = $this->requireLogin();
         $organization = $this->helper('activeRecord')->fromRoute($this->organizationSchema, 'oid');
         $organization->requireRole('manager', $this);
+        $this->template->clearBreadcrumbs();
+        $this->addBreadcrumb('organizations', 'My Organizations');
+        $this->addBreadcrumb($organization->routeName, ucfirst($organization->routeName));
+        $this->addBreadcrumb($organization->routeName .'/'. $organization->id, $organization->name);
     }
 
     public function manageUsers ()
@@ -83,6 +102,10 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         $organization = $this->getOrganization($this->getRouteVariable('oid'));
         $organization->requireRole('manager', $this);
         $this->buildHeader('partial:_header.html.tpl', 'Manage Users', $organization->name, '');
+        $this->template->clearBreadcrumbs();
+        $this->addBreadcrumb('organizations', 'My Organizations');
+        $this->addBreadcrumb($organization->routeName, ucfirst($organization->routeName));
+        $this->addBreadcrumb($organization->routeName .'/'. $organization->id, $organization->name);
 
         $accounts = $this->schema('Bss_AuthN_Account');
 
@@ -166,6 +189,11 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         $organization = $this->getOrganization($this->getRouteVariable('oid'));
         $organization->requireRole('manager', $this);
         $user = $this->requireExists($this->schema('Bss_AuthN_Account')->get($this->getRouteVariable('uid')));
+        $this->template->clearBreadcrumbs();
+        $this->addBreadcrumb('organizations', 'My Organizations');
+        $this->addBreadcrumb($organization->routeName, ucfirst($organization->routeName));
+        $this->addBreadcrumb($organization->routeName.'/'.$organization->id, $organization->name);
+        $this->addBreadcrumb($organization->routeName.'/'.$organization->id.'/users', 'Users');
 
         $this->buildHeader('partial:_header.html.tpl', 'Manage User', $user->fullName, $user->emailAddress . ' ' . $user->username);
         $returnTo = $this->request->getQueryParameter('returnTo');
@@ -177,7 +205,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                 case 'save':
                     $currentRoles = $organization->getUserRoles($user);
                     $rolesData = $this->request->getPostParameter('roles');
-                    
+
                     foreach ($currentRoles as $role => $userHasRole)
                     {
                         if (isset($rolesData[$role]) && !$userHasRole)
@@ -194,7 +222,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                         }
                     }
 
-                    $this->flash($organization->name . ' user settings have been saved.');
+                    $this->flash('User settings have been saved.');
                     $this->response->redirect($returnTo);
 
                     break;

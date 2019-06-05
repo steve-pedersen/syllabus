@@ -20,6 +20,7 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
             'createdById' => ['int', 'nativeName' => 'created_by_id'],
             'createdDate' => ['datetime', 'nativeName' => 'created_date'],
             'modifiedDate' => ['datetime', 'nativeName' => 'modified_date'],
+            'templateAuthorizationId' => ['string', 'nativeName' => 'template_authorization_id'],
            
             'createdBy' => ['1:1', 'to' => 'Bss_AuthN_Account', 'keyMap' => ['created_by_id' => 'id']],
             'versions' => ['1:N', 'to' => 'Syllabus_Syllabus_SyllabusVersion', 'reverseOf' => 'syllabus', 'orderBy' => ['+createdDate']],
@@ -41,6 +42,32 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
             $sections = $this->getLatestVersion()->getSections($withExt);
         }
         return $sections;
+    }
+
+    public function getOrganization ()
+    {
+        $organization = null;
+        foreach ($this->versions as $syllabusVersion)
+        {
+            if ($syllabusVersion->syllabus->templateAuthorizationId)
+            {
+                list($type, $id) = explode('/', $syllabusVersion->syllabus->templateAuthorizationId);
+                switch ($type)
+                {
+                    case 'departments':
+                        $organization = $this->schema('Syllabus_AcademicOrganizations_Department')->get($id);
+                        break;
+                    case 'colleges':
+                        $organization = $this->schema('Syllabus_AcademicOrganizations_College')->get($id);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            }            
+        }
+
+        return $organization;
     }
 
     /**

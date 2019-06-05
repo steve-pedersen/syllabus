@@ -11,31 +11,203 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     public static function getRouteMap ()
     {
         return [
-            'syllabi'                           => ['callback' => 'mySyllabi'],
-            'syllabus/:id'                      => ['callback' => 'edit',  ':id' => '[0-9]+|new'],
-            'syllabus/courses'                  => ['callback' => 'courseLookup', ':id' => '[0-9]+'],
-            // 'syllabus/:id/:version'             => ['callback' => 'view',  ':id' => '[0-9]+|new'],
-        	// 'syllabus/entity/:eid'              => ['callback' => 'list', 	':eid' => '[0-9]+'],
-        	// 'syllabus/entity/:eid/view/:sid'    => ['callback' => 'view', 	':eid' => '[0-9]+', ':sid' => '[0-9]+'],
-        	// 'syllabus/entity/:eid/edit/:sid'    => ['callback' => 'edit', 	':eid' => '[0-9]+', ':sid' => '[0-9]+|new'],
-            // 'syllabus/entity/:eid/render/:sid'  => ['callback' => 'render',':eid' => '[0-9]+', ':sid' => '[0-9]+'],
+            'syllabi'           => ['callback' => 'mySyllabi'],
+            'syllabus/:id'      => ['callback' => 'edit',  ':id' => '[0-9]+|new'],
+            'syllabus/courses'  => ['callback' => 'courseLookup'],
+            'syllabus/start'    => ['callback' => 'start'],
+            'syllabus/startwith/:id' => ['callback' => 'startWith', ':id' => '[0-9]+'],
         ];
     }
 
-    public function mySyllabi ()
+    private function hasCloningPermission ($syllabus, $user=null)
+    {
+        $user = $user ?? $this->requireLogin();
+        $hasPermission = true;
+
+        if ($syllabus->templateAuthorizationId)
+        {
+            $organization = null;
+            $hasPermission = false;
+            list($type, $id) = explode('/', $syllabus->templateAuthorizationId);
+            
+            switch ($type)
+            {
+                case 'departments':
+                    $organization = $this->schema('Syllabus_AcademicOrganizations_Department')->get($id);
+
+                    break;
+                case 'colleges':
+                    echo "<pre>"; var_dump('need to implement'); die;
+                    break;
+                default:
+                    break;
+            }
+
+            if (!$organization)
+            {
+                $this->sendError(400, 'Bad Request', 'ParameterRequired', "Could not find any '{$type}' with id '{$id}'.");            
+            }
+
+            $hasPermission = $organization->userHasRole($user, 'member');
+        }
+        elseif ($syllabus->createdById !== $user->id)
+        {
+            $hasPermission = false;
+        }
+
+        return $hasPermission;
+    }
+
+    public function startWith ()
+    {
+        $viewer = $this->requireLogin();
+        $fromSyllabus = $this->requireExists($this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id'));
+        
+        if (!$this->hasCloningPermission($fromSyllabus, $viewer))
+        {
+            $this->sendError(403, 'Forbidden', 'Non-Member', 'You must be a member of this organization in order to use this template.');
+        }
+
+        $pathParts = [];
+        $pathParts[] = $this->getRouteVariable('routeBase');
+        $pathParts[] = 'syllabus';
+
+        $toSyllabus = $this->schema('Syllabus_Syllabus_Syllabus')->createInstance();
+        $toSyllabus->createdDate = $toSyllabus->modifiedDate = new DateTime;
+        $toSyllabus->createdById = $viewer->id;
+        if ($tid = $this->getRouteVariable('templateAuthorizationId'))
+        {
+            $toSyllabus->templateAuthorizationId = $tid;
+            $toSyllabus->createdById = null;
+        }
+        $toSyllabus->save();
+        $pathParts[] = $toSyllabus->id;
+        $pathParts = array_filter($pathParts);
+        
+        $toSyllabusVersion = $fromSyllabus->latestVersion->createDerivative(true);
+        $toSyllabusVersion->syllabus_id = $toSyllabus->id;
+        $toSyllabusVersion->save();
+        $toSyllabusVersion->sectionVersions->save();
+
+        $this->response->redirect(implode('/', $pathParts));
+    }
+
+    public function start ()
     {
         $viewer = $this->requireLogin();
         $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
-        $mySyllabi = $syllabi->find($syllabi->createdById->equals($viewer->id), ['orderBy' => '-createdDate']);
+        $courseSections = $this->schema('Syllabus_ClassData_CourseSection');
+        $departmentSchema = $this->schema('Syllabus_AcademicOrganizations_Department');
+        $collegeSchema = $this->schema('Syllabus_AcademicOrganizations_College');
 
-        // TODO: update header vars based on which view mode we are in
-        $title = 'My Syllabi';
-        $subtitle = 'Overview';
-        $description = 'Temporary layout';
-        $this->setPageTitle($title);
-        $this->buildHeader('partial:_header.html.tpl', $title, $subtitle, $description);
+        // if based off of a course
+        if ($courseSectionId = $this->request->getQueryParameter('course'))
+        {
+            $courseSection = $courseSections->get($courseSectionId);
+            $this->template->courseSection = $courseSection;
+            $this->template->pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer);
+        }
 
-        $this->template->syllabi = $mySyllabi;
+        $orgs = [];
+        $templates = [];
+        foreach ($viewer->classDataUser->enrollments as $cs)
+        {
+            if (!isset($orgs[$cs->department->id]))
+            {
+                $templates[$cs->department->id] = $syllabi->find(
+                    $syllabi->templateAuthorizationId->equals($cs->department->templateAuthorizationId),
+                    ['orderBy' => '-createdDate', 'limit' => '4']
+                );
+                $orgs[$cs->department->id] = $cs->department;
+            }
+        }
+        $this->template->organizations = $orgs;
+        $this->template->templates = $templates;
+
+
+        if ($org = $this->getRouteVariable('organization'))
+        {
+            switch ($org->organizationType) 
+            {
+                case 'Department':
+                    $this->template->templateAuthorizationId = $org->templateAuthorizationId;
+                    $this->template->isTemplate = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        $pathParts = [];
+        $pathParts[] = $this->getRouteVariable('routeBase');
+        $pathParts[] = 'syllabus';
+
+        if ($this->request->wasPostedByUser())
+        {
+            if ($this->getPostCommand() === 'start')
+            {
+                $data = $this->request->getPostParameters();
+                // TODO: update for 'clone' option
+                $fromCourse = isset($courseSectionId) ? $courseSections->get($courseSectionId) : null;
+                $templateAuthorizationId = isset($data['template']) ? $data['template'] : null;
+
+                switch ($data['startingTemplate']) {
+
+                    case 'university':
+                        
+                        if ($fromCourse)
+                        {
+                            list($success, $syllabusVersion) = $this->createCourseSyllabus('new', $fromCourse);
+                            if ($success)
+                            {
+                                $pathParts[] = $syllabusVersion->syllabus->id;
+                                $pathParts = array_filter($pathParts);
+                                // TODO: add language string check
+                                $this->flash("
+                                    Your new syllabus draft includes all SF State requirements and course information for 
+                                    $courseSection->fullDisplayName. It is ready for you to edit.", 
+                                    'success'
+                                );
+                                $this->response->redirect(implode('/', $pathParts));
+                            }
+                        }
+                        elseif ($templateAuthorizationId)
+                        {
+                            $pathParts[] = 'new';
+                            $pathParts = array_filter($pathParts);
+                            $this->response->redirect(implode('/', $pathParts));
+                        }
+                        else
+                        {
+                            $pathParts[] = 'new';
+                            $pathParts = array_filter($pathParts);
+                            // TODO: add language string check
+                            $this->flash("
+                                Your new syllabus draft includes all SF State requirements. You are able to choose which 
+                                course it is for by first giving the syllabus a name and saving it, then adding a new 
+                                'Course Information' section. If you want to use this syllabus draft as a starting point 
+                                for any other courses, then visit your 'Courses' dashboard from the main menu.", 
+                                'success'
+                            );
+                            $this->response->redirect(implode('/', $pathParts));
+                        }
+                        break;
+
+                    case 'department':
+
+                        break;
+
+                    case 'clone':
+
+                        break;
+
+                    default:
+                        $this->flash('An unknown error occurred', 'danger');
+                        break;
+                }
+            }            
+        }
+
     }
 
     public function edit ()
@@ -65,53 +237,67 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             $description = 'v' . $syllabusVersion->normalizedVersion;
         }
-        $this->buildHeader('partial:_header.edit.html.tpl', $title, $syllabusVersion->title, $description);
+        // $this->buildHeader('partial:_header.edit.html.tpl', $title, $syllabusVersion->title, $description);
 
-        
+        $routeBase = $this->getRouteVariable('routeBase', '');
+        $organization = $this->getRouteVariable('organization', null);
+
+        $pathParts = [];
+        $pathParts[] = $this->getRouteVariable('routeBase');
+        $pathParts[] = 'syllabus';
+     
         if ($this->request->wasPostedByUser())
         {      
             switch ($this->getPostCommand()) {
 
                 case 'addsection':
-                	if (($sectionClass = $data['addSection']) !== 'false')
-                	{
-	                    $realSection = $this->schema($sectionClass)->createInstance();
-	                    $realSectionExtension = $sectionVersions->createInstance()->getExtensionByName($sectionClass);
 
-	                    if ($realSectionExtension::getExtensionName() === 'course')
-	                    {
-	                        $currentCourses = $viewer->classDataUser->getCurrentEnrollments();
-	                    }
+                    if (isset($data['addSectionTop']) || $data['addSectionBot'])
+                    {
+                        $sectionClass = !empty($data['addSectionTop']) ? $data['addSectionTop'] : $data['addSectionBot'];
+                    }
 
-	                    $this->template->realSection = $realSection;
-	                    $this->template->realSectionClass = $sectionClass;
-	                    $this->template->sectionExtension = $realSectionExtension;
-                	}
-                	else
-                	{
-                		$this->flash('You must choose a section type from the dropdown list.', 'danger');
-                	}
+                    if (($sectionClass !== 'false') || ($sectionClass !== ''))
+                    {
+                        $realSection = $this->schema($sectionClass)->createInstance();
+                        $realSectionExtension = $sectionVersions->createInstance()->getExtensionByName($sectionClass);
+
+                        if ($realSectionExtension::getExtensionName() === 'course')
+                        {
+                            $currentCourses = $viewer->classDataUser->getCurrentEnrollments();
+                        }
+
+                        $this->template->realSection = $realSection;
+                        $this->template->realSectionClass = $sectionClass;
+                        $this->template->sectionExtension = $realSectionExtension;
+                    }
+                    else
+                    {
+                        $this->flash('You must choose a section type from the dropdown list.', 'danger');
+                    }
 
                     break;
 
                 case 'editsection':
                     $sectionVersion = $sectionVersions->get(key($this->getPostCommandData()));
                     $genericSection = $sectionVersion->section;
-                    $test = [];
-                    foreach ($data['section']['properties'] as $key => $prop)
-                    {
-                        $genericSection->$key = ($key==='isAnchored' || $key==='readOnly') ? (bool)$prop[$sectionVersion->id] : $prop[$sectionVersion->id];
-                        $test[] = ($key==='isAnchored' || $key==='readOnly') ? (bool)$prop[$sectionVersion->id] : $prop[$sectionVersion->id];
-                    }
-                    
+                    $genericSection->log = $syllabusVersion->sectionVersions->getProperty($sectionVersion, 'log');
+                    $genericSection->readOnly = (bool)$syllabusVersion->sectionVersions->getProperty($sectionVersion, 'read_only');
+                    $genericSection->isAnchored = (bool)$syllabusVersion->sectionVersions->getProperty($sectionVersion, 'is_anchored');
                     $genericSection->isAnchored = ($genericSection->isAnchored === null) ? true : $genericSection->isAnchored;
+                    $genericSection->sortOrder = (isset($data['section']['properties']['sortOrder']) ?
+                        $data['section']['properties']['sortOrder'][$sectionVersion->id] : 
+                        $syllabusVersion->sectionVersions->getProperty($sectionVersion, 'sort_order')
+                    );
                     $realSection = $sectionVersion->resolveSection();
-                    
+                   
                     $this->template->realSection = $realSection;
                     $this->template->realSectionClass = get_class($realSection);
                     $this->template->sectionExtension = $sectionVersion->getExtensionByName(get_class($realSection));
                     $this->template->genericSection = $genericSection;
                     $this->template->currentSectionVersion = $sectionVersion;
+                    $this->template->isUpstreamSection = $this->isUpstreamSection($sectionVersion, $syllabus, $viewer);
+                    $this->template->hasDownstreamSection = $this->hasDownstreamSection($sectionVersion, $syllabus, $viewer);
                     break;
 
                 case 'editsyllabus':
@@ -119,14 +305,40 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $this->template->syllabusVersion = $syllabusVersion;
                     break;
 
-                case 'saveorder':
-                	// echo "<pre>"; var_dump($this->request->getPostParameters()); die;
-                	// break;
-
                 case 'savesection':
                 case 'savesyllabus':
-                    $this->saveSyllabus($syllabus);
+                    $syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;
+                    list($updated, $syllabusVersion) = $this->saveSyllabus($syllabus);
+                    if (!$updated)
+                    {
+                        $this->flash('No changes were made', 'warning');
+                    }
+                    $pathParts[] = $syllabusVersion->syllabus->id;
+                    $pathParts = array_filter($pathParts);
+                    $this->response->redirect(implode('/', $pathParts));
                     break;
+            }
+        }
+
+        // determine which sections are editable
+        $sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
+        foreach ($sectionVersions as $sv)
+        {
+            $sectionParentOrganization = null;
+            if ($sv->uniqueSyllabiCount > 1)
+            {
+                $sectionParentOrganization = $sv->parentOrganization;
+            }
+
+            // section is read-only and belongs to this organization (not a parent one) 
+            if (($sv->readOnly && $organization) || ($sv->readOnly && $organization && !$sectionParentOrganization))
+            {
+                $sv->canEditReadOnly = $organization->userHasRole($viewer, 'creator') || $organization->userHasRole($viewer, 'manager');
+            }
+            else
+            {
+                // if read only, then you can only edit it if it was created by the one viewing
+                $sv->canEditReadOnly = !$sv->readOnly || ($sv->section->createdById === $viewer->id);
             }
         }
 
@@ -134,16 +346,89 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->title = $title;
         $this->template->syllabus = $syllabus;
         $this->template->syllabusVersion = $syllabusVersion;
-        $this->template->sections = $syllabusVersion->getSections(true);
-        // $this->template->sections = $syllabus->getSections(true);
+        $this->template->sectionVersions = $sectionVersions;
         $this->template->sectionExtensions = $sectionExtensions;
         $this->template->userCourses = $currentCourses ?? $viewer->classDataUser->getCurrentEnrollments(); // TODO: Add only if needed
+        $this->template->organization = $organization;
     }
+
+    public function mySyllabi ()
+    {
+        $viewer = $this->requireLogin();
+        $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
+        $courseSections = $this->schema('Syllabus_ClassData_CourseSection');
+
+        switch ($mode = $this->request->getQueryParameter('mode', 'overview')) {
+            case 'courses':
+                
+                $myCourses = $viewer->classDataUser->getCurrentEnrollments();
+                $courses = [];
+                foreach ($myCourses as $i => $courseSection)
+                {
+                    $i++;
+                    $courseSyllabus = $syllabi->get($courseSection->syllabus_id);
+                    $courseSection->courseSyllabus = $courseSyllabus;
+                    $courseSection->createNew = $courseSyllabus ? false : true;
+                    $courseSection->pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer);
+                    $courseSection->image = "assets/images/testing0$i.jpg";
+                    $courses[$courseSection->term][] = $courseSection;
+                }
+
+                $this->template->allCourses = $courses;
+                break;
+            
+            case 'submissions':            
+                
+                break;
+
+            case 'overview':
+            default:
+                $mySyllabi = $syllabi->find($syllabi->createdById->equals($viewer->id), ['orderBy' => '-createdDate', 'limit' => 20]);
+                $this->template->syllabi = $mySyllabi;
+                break;
+        }
+
+        if ($this->request->wasPostedByUser())
+        {    
+            $courseSection = $courseSections->get(key($this->getPostCommandData()));
+            $data = $this->request->getPostParameters();
+
+            switch ($this->getPostCommand()) {
+                
+                case 'courseNew':
+                    list($success, $syllabusVersion) = $this->createCourseSyllabus('new', $courseSection);
+                    if ($success)
+                    {
+                    	$this->flash('Your new course syllabus is ready for you to edit and add more sections.', 'success');
+                    	$this->response->redirect('syllabus/' . $syllabusVersion->syllabus->id);
+                    }
+                    break;
+
+                case 'courseClone':
+
+                    if (isset($data['options']) && ($data['options'] === 'new'))
+                    {
+                        // TODO: NEED A $fromCourseSection and $toCourseSection
+                        echo "<pre>"; var_dump('here cheese'); die;
+                        list($success, $syllabusVersion) = $this->createCourseSyllabus('new', $courseSection);
+                        $this->forward('syllabus/new?');
+                    }
+
+                    break;
+
+                default:
+
+            }
+        }
+
+        $this->template->mode = $mode;      
+    }
+
 
     /**
      * Bump syllabus and section versions--creating new instances of generic, real, and subsections.
      */  
-    protected function saveSyllabus ($syllabus)
+    protected function saveSyllabus ($syllabus, $paramData=null)
     {
         $viewer = $this->requireLogin();
         $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
@@ -152,10 +437,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $sectionVersions = $this->schema('Syllabus_Syllabus_SectionVersion');
         $subsections = $this->schema('Syllabus_Syllabus_Subsection');
 
-        $data = $this->request->getPostParameters();
+        $data = $paramData ?? $this->request->getPostParameters();
         $anyChange = false;
         $sectionChange = false;
-
+        
         if ((isset($data['section']) && isset($data['section']['versionId'])))
         {
         	$sectionVersionId = $data['section']['versionId'];
@@ -173,8 +458,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
         else
         {
-            $syllabus->createdDate = new DateTime;
-            $syllabus->createdById = $viewer->id;
+            $syllabus->createdDate = $syllabus->modifiedDate = new DateTime;
+            if (!$syllabus->templateAuthorizationId)
+            {
+                $syllabus->createdById = $viewer->id;
+            }
         }
         $syllabus->save();
 
@@ -192,14 +480,27 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 $genericSection = $sections->createInstance();
                 $genericSection->createdDate = new DateTime;
                 $genericSection->createdById = $viewer->id;
+                $genericSection->save();
             }
             else
             {
                 $prevSectionVersion = $sectionVersions->get($sectionVersionId);
-                $genericSection = $prevSectionVersion->section;
-                $genericSection->modifiedDate = new DateTime;
+                if ($this->isInheritedSection($prevSectionVersion, $syllabus->templateAuthorizationId) ||
+                    $this->isUpstreamSection($prevSectionVersion, $syllabus, $viewer))
+                {
+                    $genericSection = $sections->createInstance();
+                    $genericSection->createdDate = new DateTime;
+                    $genericSection->createdById = $viewer->id;
+                    $genericSection->save();
+                }
+                else
+                {
+                    $genericSection = $prevSectionVersion->section;
+                    $genericSection->modifiedDate = new DateTime;
+                    $genericSection->save();              
+                }
             }
-            $genericSection->save();   
+             
 
             $realSection = $this->schema($realSectionClass)->createInstance();
             $realSection->absorbData($data['section']['real']);
@@ -257,14 +558,14 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             {
 	            $newSyllabusVersion = $syllabusVersions->createInstance();
 	            $newSyllabusVersion->createdDate = new DateTime;
-	            $newSyllabusVersion->syllabusId = $syllabus->id;            	
+	            $newSyllabusVersion->syllabus_id = $syllabus->id;            	
             }
    
             if (isset($data['syllabus']) && isset($data['syllabus']['title']))
             {
                 $newSyllabusVersion->absorbData($data['syllabus']);
             }
-
+            
             $newSyllabusVersion->save();
         }
 
@@ -272,26 +573,56 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         if ($sectionChange && $sectionVersionId)
         {   
             $anyChange = true;
-            $oldCount = count($oldSyllabusVersion->sectionVersions);
+            $inherited = false;
+            $oldCount = isset($oldSyllabusVersion->sectionVersions) ? count($oldSyllabusVersion->sectionVersions) : 0;
             $newCount = count($newSyllabusVersion->sectionVersions);
 
             // if editing a section, remove it's previous version from the new syllabus version
-            if ($prevSectionVersion && ($oldCount === $newCount))
+            if ($prevSectionVersion)
             {
-            	$newSyllabusVersion->sectionVersions->remove($prevSectionVersion);
+                $removeSectionVersion = $prevSectionVersion;
+                foreach ($newSyllabusVersion->sectionVersions as $sectionVersion)
+                {
+                    if ($sectionVersion->sectionId === $removeSectionVersion->sectionId)
+                    {
+                        $removeSectionVersion = $sectionVersion;
+                        break;
+                    }
+                }
+            	$newSyllabusVersion->sectionVersions->remove($removeSectionVersion);
+            }
+            $newSyllabusVersion->sectionVersions->save();
+            $newSyllabusVersion->save();
+
+            // TODO: determine if this is an inherited section that is already readOnly??
+            if (!isset($data['section']['properties']['readOnly']) && $inherited)
+            {
+                $data['section']['properties']['readOnly'][$sectionVersionId] = true;
             }
 
+            // TODO: decide if $data is safe to use
             // add new section version to this new syllabus version
             $defaultPosition = $newSyllabusVersion->sectionCount + 1;
             $newSyllabusVersion->sectionVersions->add($newSectionVersion);
             $newSyllabusVersion->sectionVersions->setProperty($newSectionVersion, 'sort_order', 
-            	isset($data['section']['properties']['sortOrder']) ? $data['section']['properties']['sortOrder'][$sectionVersionId] : $defaultPosition);
+                isset($data['section']['properties']['sortOrder']) ? 
+                    $data['section']['properties']['sortOrder'][$sectionVersionId] : 
+                    $defaultPosition
+            );
             $newSyllabusVersion->sectionVersions->setProperty($newSectionVersion, 'read_only', 
-            	isset($data['section']['properties']['readOnly']) ? $data['section']['properties']['readOnly'][$sectionVersionId] : false);
+            	isset($data['section']['properties']['readOnly'][$sectionVersionId])
+            );
             $newSyllabusVersion->sectionVersions->setProperty($newSectionVersion, 'is_anchored', 
-            	isset($data['section']['properties']['isAnchored']) ? $data['section']['properties']['isAnchored'][$sectionVersionId] : true);
+            	isset($data['section']['properties']['isAnchored']) ? 
+                    $data['section']['properties']['isAnchored'][$sectionVersionId] : 
+                    false
+            );
             $newSyllabusVersion->sectionVersions->setProperty($newSectionVersion, 'log', 
-            	isset($data['section']['properties']['log']) ? $data['section']['properties']['log'][$sectionVersionId] : '');
+            	isset($data['section']['properties']['log']) ? 
+                    $data['section']['properties']['log'][$sectionVersionId] : 
+                    ''
+            );
+            $newSyllabusVersion->sectionVersions->setProperty($newSectionVersion, 'inherited', $inherited);
             $newSyllabusVersion->save();
             $newSyllabusVersion->sectionVersions->save();
         }
@@ -304,19 +635,170 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 if (isset($data['section']['properties']['sortOrder']) && isset($data['section']['properties']['sortOrder'][$sv->id]))
                 {
                 	$anyChange = true;
-                    $newSyllabusVersion->sectionVersions->setProperty($sv, 'sort_order', $data['section']['properties']['sortOrder'][$sv->id]);
+                    $newSyllabusVersion->sectionVersions->setProperty($sv, 'sort_order', 
+                        $data['section']['properties']['sortOrder'][$sv->id]
+                    );
                 }
             }
             $newSyllabusVersion->save();
             $newSyllabusVersion->sectionVersions->save();
         }
 
-        if (!$anyChange) 
-        { 
-            $this->flash('No changes were made', 'warning');
+        return [$anyChange, $newSyllabusVersion];
+    }
+
+    private function createCourseSyllabus ($versionId, $fromCourseSection, $inherited=false)
+    {
+        $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
+        $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
+
+        if ($versionId === 'new')
+        {
+            $syllabus = $syllabi->createInstance();
+
+            $data = [
+                'syllabus' => [
+                    'title' => ('Syllabus for ' . $fromCourseSection->title),
+                    'description' => ($fromCourseSection->getShortName() . ' course syllabus'),
+                ],
+                'section' => [
+                    'versionId' => 'new',
+                    'realClass' => ['new' => 'Syllabus_Courses_Course'],
+                    'extKey' => ['new' => 'course_id'],
+                    'properties' => [
+                        'sortOrder' => ['new' => 1],
+                        'isAnchored' => ['new' => true],
+                        'readOnly' => ['new' => false],
+                        'inherited' => ['new' => $inherited],
+                        'log' => ['new' => ''],
+                    ],
+                    'real' => [
+                        'external_key' => $fromCourseSection->id,
+                        'title' => $fromCourseSection->title,
+                        'description' => $fromCourseSection->description,
+                        'sectionNumber' => $fromCourseSection->sectionNumber,
+                        'classNumber' => $fromCourseSection->classNumber,
+                        'semester' => $fromCourseSection->getSemester(true),
+                        'year' => $fromCourseSection->year,
+                    ],
+                    'generic' => [
+                        'new' => [
+                            'title' => 'Course Information',
+                            'description' => '',
+                        ],
+                    ],
+                ],
+            ];
+
+            return $this->saveSyllabus($syllabus, $data);
+        }
+    }
+
+    public function isInheritedSection ($sectionVersion, $templateAuthorizationId)
+    {
+        $result = false;
+        if ($sectionVersion)
+        {
+            // sorry, not sorry
+            $rs = pg_query("
+            select count(distinct s.id) from syllabus_syllabus_versions sv 
+            inner join syllabus_syllabus_version_section_version_map svsv 
+                on (sv.id = svsv.syllabus_version_id)
+            inner join syllabus_section_versions sec
+                on (sec.id = svsv.section_version_id)
+            inner join syllabus_section_versions sec2
+                on (sec2.section_id = sec.section_id)
+            inner join syllabus_syllabus_version_section_version_map svsv2
+                on (sec2.id = svsv2.section_version_id)
+            inner join syllabus_syllabus_versions sv2
+                on (sv2.id = svsv2.syllabus_version_id)
+            inner join syllabus_syllabus s 
+                on ((s.id = sv.syllabus_id) or (s.id = sv2.syllabus_id))
+            where 
+                svsv.section_version_id = {$sectionVersion->id} and 
+                s.template_authorization_id != '{$templateAuthorizationId}' and
+                svsv.inherited = 'f'");
+
+            while (($row = pg_fetch_row($rs)))
+            {
+                $result = $row[0];
+                break;
+            }          
         }
 
-        $this->response->redirect('syllabus/' . $syllabus->id);
+        return $result;
+    }
+
+    public function isUpstreamSection ($sectionVersion, $syllabus, $account)
+    {
+        $result = false;
+        if ($sectionVersion)
+        {
+            $rs = pg_query("
+            select count(distinct s.id) from syllabus_syllabus_versions sv 
+            inner join syllabus_syllabus_version_section_version_map svsv 
+                on (sv.id = svsv.syllabus_version_id)
+            inner join syllabus_section_versions sec
+                on (sec.id = svsv.section_version_id)
+            inner join syllabus_section_versions sec2
+                on (sec2.section_id = sec.section_id)
+            inner join syllabus_syllabus_version_section_version_map svsv2
+                on (sec2.id = svsv2.section_version_id)
+            inner join syllabus_syllabus_versions sv2
+                on (sv2.id = svsv2.syllabus_version_id)
+            inner join syllabus_syllabus s 
+                on ((s.id = sv.syllabus_id) or (s.id = sv2.syllabus_id))
+            where 
+                svsv.section_version_id = {$sectionVersion->id} and 
+                s.id != {$syllabus->id} and
+                s.created_by_id = {$account->id} and
+                s.created_by_id is not null and 
+                svsv.inherited = 'f' and svsv2.inherited = 'f'");
+
+            while (($row = pg_fetch_row($rs)))
+            {
+                $result = $row[0];
+                break;
+            }          
+        }
+
+        return $result;
+    }
+
+    public function hasDownstreamSection ($sectionVersion, $syllabus, $account)
+    {
+        $result = false;
+        if ($sectionVersion)
+        {
+            $rs = pg_query("
+            select count(distinct s.id) from syllabus_syllabus_versions sv 
+            inner join syllabus_syllabus_version_section_version_map svsv 
+                on (sv.id = svsv.syllabus_version_id)
+            inner join syllabus_section_versions sec
+                on (sec.id = svsv.section_version_id)
+            inner join syllabus_section_versions sec2
+                on (sec2.section_id = sec.section_id)
+            inner join syllabus_syllabus_version_section_version_map svsv2
+                on (sec2.id = svsv2.section_version_id)
+            inner join syllabus_syllabus_versions sv2
+                on (sv2.id = svsv2.syllabus_version_id)
+            inner join syllabus_syllabus s 
+                on ((s.id = sv.syllabus_id) or (s.id = sv2.syllabus_id))
+            where 
+                svsv.section_version_id = {$sectionVersion->id} and 
+                s.id != {$syllabus->id} and
+                s.created_by_id = {$account->id} and
+                s.created_by_id is not null and 
+                svsv.inherited = 't' and svsv2.inherited = 't'");
+
+            while (($row = pg_fetch_row($rs)))
+            {
+                $result = $row[0];
+                break;
+            }          
+        }
+
+        return $result;
     }
 
     public function courseLookup ()

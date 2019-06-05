@@ -29,7 +29,8 @@ class Syllabus_Syllabus_Section extends Bss_ActiveRecord_Base implements Syllabu
 
     public function getLatestVersion ()
     {
-        return array_pop($this->versions->asArray());
+        $versions = $this->versions->asArray();
+        return array_pop($versions);
     }
 
     /**

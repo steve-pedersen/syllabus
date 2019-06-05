@@ -34,7 +34,7 @@ class Syllabus_ClassData_User extends Bss_ActiveRecord_Base
                     'created_date' => 'datetime',
                     'modified_date' => 'datetime',
                 ],
-                // 'orderBy' => ['user_id'],
+                'orderBy' => ['-createdDate'],
             ],
         ];
     }
@@ -42,9 +42,11 @@ class Syllabus_ClassData_User extends Bss_ActiveRecord_Base
     public function getCurrentEnrollments ()
     {
         $y = date('Y');
+        $y = '2017';
         $current = [];
         foreach ($this->enrollments as $courseSection)
         {
+
             if ($courseSection->year >= $y)
             {
                 $current[] = $courseSection;

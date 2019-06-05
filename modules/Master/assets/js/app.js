@@ -6,6 +6,8 @@
 #require js/ckeditor.js
 // #require js/materialize.js
 
+#require js/jquery.timepicker.min.js
+
 #require js/sidebar.js
 #require js/syllabus.js
 
@@ -17,9 +19,32 @@
       e.preventDefault();
     });
 
+    // $('.datepicker').each(function () {
+    //   var $self = $(this);
+    //   $self.datepicker({
+    //   });
+    // });
+
+    // DatePicker 
+    $.datepicker.setDefaults(
+      $.extend( $.datepicker.regional[ '' ] )
+    );
     $('.datepicker').each(function () {
       var $self = $(this);
       $self.datepicker({
+        formatDate: 'yy-mm-dd'
+      });
+    });
+    $('.timepicker').each(function () {
+      var $self = $(this);
+      $self.timepicker({
+        timeFormat: 'h:mm p',
+        interval: 15,
+        minTime: '8',
+        maxTime: '6:00pm',
+        dynamic: false,
+        dropdown: true,
+        scrollbar: true
       });
     });
 

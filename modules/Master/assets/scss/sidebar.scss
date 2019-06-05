@@ -1,10 +1,42 @@
+$sidebar_link_color: $smoke_light_5;
+$sidebar_link_color_hover: $smoke_light_3;
+
 #sidebar {
-	background-color: $navbar-bg-color;
-	background-color: $smoke_light_3;
+	background-color: $secondary;
+	background-color: $dark;
 	min-height: 77.25vh;
+	.sidebar-heading {
+		color: $sidebar_link_color;
+		// font-size: 11pt;
+		// letter-spacing: 1.2px;
+		// font-weight:550;
+	}
 	i.my-syllabi {
 	    font-size: 2.2em;
 	}
+	h6 > span > i,
+	h6 > i {
+		color: $sidebar_link_color;
+	}
+	h6 {
+		padding-bottom: 1em;
+	}
+	
+	.sidebar-sticky > ul.nav {
+		// padding-bottom: 1.25em;
+		// border-bottom: 1px solid $sidebar_link_color;
+		&.my-syllabi,
+		&.my-orgs {
+			.sidebar-heading {
+				// padding-top: 0em;
+				// border-top: 1px solid $sidebar_link_color;
+			}
+		}
+	}
+	.nav-item {
+		margin-bottom: 1em;
+	}
+
 	&.sidebar-minimized {
 	    -webkit-transition: all 0.1s ease;
 	    -moz-transition: all 0.1s ease;
@@ -23,48 +55,79 @@
 					> li.nav-item {
 						> a.nav-link {
 							border-bottom: none;
+							color: $sidebar_link_color;
+							// font-size: 11pt;
+							&:hover,
+							&:focus {
+								cursor: default;
+								// background-color: $secondary;
+							}
 						}
 					}
 				}
 				> a.nav-link > h6 > span {
 				    > i.my-syllabi {
-						margin-top: 0.8em;
+						// margin-top: 0.8em;
+						margin-top: 1.5em;
 				    }
 				    > i.fa-school {
-				    	margin-top: 1.9em;
+				    	margin-top: 1.5em;
+				    }
+				    > i {
+				    	color: $sidebar_link_color;
 				    }
 				}
+				// &:hover,
+				// &:focus {
+				// 	background-color: $secondary;
+				// }
 			}
-		}		
+
+		}
 	}
 
 	ul.nav.flex-column {
 		margin-bottom: 0;
 		> li.nav-item {
+			color: $sidebar_link_color;
+			// font-size: 11pt;
 			> a.nav-link {
 				padding: 0.3rem 1rem;
+				color: $sidebar_link_color;
+				// font-size: 11pt;
+				// letter-spacing: 1.2px;
+				// font-weight:550;
 				> h6 {
 					> span > span.sidebar-text {
 						padding-left: 0.5em;
 						font-size: 1.1rem;
 					}
-					> span > i:hover,
-					> span > i:focus {
-						color: #000;
-					}
+					// > span > i:hover,
+					// > span > i:focus {
+					// 	color: #000;
+					// }
 				}
 			}
 			> ul.flex-column {
 				> li.nav-item {
+					color: $sidebar_link_color;
+					// font-size: 11pt;
 					> a.nav-link {
-						border-bottom: 1px solid $smoke_light_4;
+						color: $sidebar_link_color;
+						// font-size: 11pt;
+						// border-bottom: 1px solid $dark;
 						> .sidebar-text {
 							color: #000;
+							color: $sidebar_link_color;
+							// font-size: 11pt;
+							// letter-spacing: 1.2px;
+							// font-weight:550;
 						}
 					}
 					&:hover,
 					&:focus {
-						background-color: $smoke_light_4;
+						// background-color: $dark;
+						border-right: 3px solid $sidebar_link_color_hover;
 					}
 				}
 			}
@@ -90,9 +153,10 @@
 			> h6 {
 				border-bottom: none;
 				> i {
-				
+					margin-top: -0.5em;
 					margin-left: 0;
 					font-size: 2.5em;
+					padding-bottom: 0.5em;
 				}
 				> .user-info-text-container {
 					display: none;
@@ -113,6 +177,19 @@
 					padding-left: 0.3em;
 					padding-right: 0.3em;
 				}
+			}
+		}
+	}
+
+	#sidebarUserInfo,
+	#sidebarMySyllabi,
+	#sidebarMyOrganizations {
+		h6 > span,
+		i, .sidebar-text,
+		.user-info-text-container {
+			&:hover,
+			&:focus {
+				color: $sidebar_link_color_hover;
 			}
 		}
 	}

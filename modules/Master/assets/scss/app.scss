@@ -4,6 +4,7 @@
 @import "at-theme";
 @import "sidebar";
 @import "syllabus";
+@import "jqueryui";
 
 
 
@@ -102,6 +103,23 @@ div.main-content {
 	}
 }
 
+.card-img-top.crop-top {
+	object-fit: cover; 
+	object-position: top;
+	&.crop-top-5 {
+		max-height: 5rem;
+	}
+	&.crop-top-8 {
+		max-height: 8rem;
+	}
+	&.crop-top-10 {
+		max-height: 10rem;
+	}
+	&.crop-top-15 {
+		max-height: 15rem;
+	}
+}
+
 .min-vh-100 {
 	min-height: 100vh;
 }
@@ -137,4 +155,10 @@ div.main-content {
 }
 .vh-25 {
 	height: 25vh;
+}
+.min-vh-5 {
+	min-height: 5vh;
+}
+.font-size-18 {
+	font-size: 18pt;
 }

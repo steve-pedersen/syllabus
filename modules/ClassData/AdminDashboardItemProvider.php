@@ -7,9 +7,9 @@ class Syllabus_ClassData_AdminDashboardItemProvider extends At_Admin_DashboardIt
     public function getSections (Bss_Master_UserContext $userContext)
     {
         return array(
-            'ClassData' => array(
-                'order' => 1,
-            ),
+            // 'ClassData' => array(
+            //     'order' => 1,
+            // ),
         );
     }
     
@@ -17,22 +17,16 @@ class Syllabus_ClassData_AdminDashboardItemProvider extends At_Admin_DashboardIt
     {
         return array(
             'classdata-set-api' => array(
-                'section' => 'ClassData',
+                'section' => 'Services',
                 'order' => 0,
                 'href' => 'admin/classdata',
                 'text' => 'Set ClassData API values',
             ),
-            'classdata-set-semester' => array(
-                'section' => 'ClassData',
-                'order' => 0,
-                'href' => 'admin/classdata/semesters',
-                'text' => 'Set active and visible semesters',
-            ),
             'cs-import' => array(
-                'section' => 'ClassData',
+                'section' => 'Services',
                 'order' => 1,
                 'href' => 'admin/classdata/import',
-                'text' => 'Run Import',
+                'text' => 'Run ClassData Import',
             ),
             
         );

@@ -1,13 +1,12 @@
 .editor-main-controls-top,
 .editor-main-controls-bottom {
     padding: 1.25em;
-    background-color: $footer-text-blue-lte;	
+    background-color: $orange_light_5;	
+    background-color: $indigo_light_4;
 }
 
 .section-metadata {
     padding: 1.25em;
-    // background-color: $footer-text-blue-lte;
-    // color: #fff;
 }
 
 .drop-placeholder {
@@ -25,15 +24,4 @@
 	margin-top: 1em;
 	background-color: $warning;
 	opacity: .4;
-}
-nav.anchor-links-sidebar {
-    margin-bottom: -1em;
-}
-
-.active-section-editor {
-    // background: $sun_light_5;
-}
-
-.real-section-editor {
-
 }

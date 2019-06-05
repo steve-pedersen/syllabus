@@ -62,7 +62,7 @@ abstract class Syllabus_Organizations_AbstractOrganization extends Bss_ActiveRec
         'member'                => 'view org templates',
         'communicator'          => 'create communications',
         'creator'               => 'create org templates',
-        'repository_manager'    => 'manage repository',
+        'repository_manager'    => 'view private repository',
         'moderator'             => 'manage submitted syllabi',
         'manager'               => 'manage org',
     ];
@@ -93,6 +93,11 @@ abstract class Syllabus_Organizations_AbstractOrganization extends Bss_ActiveRec
     public function getAuthorizationId () 
     { 
         return "at:syllabus:organizations/{$this->organizationType}/{$this->id}";
+    }
+
+    public function getTemplateAuthorizationId ()
+    {
+        return $this->routeName . '/' . $this->id;
     }
 
     /**

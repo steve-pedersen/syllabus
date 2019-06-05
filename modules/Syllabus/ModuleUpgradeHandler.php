@@ -19,6 +19,7 @@ class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                 $def->addProperty('created_by_id', 'int');
                 $def->addProperty('created_date', 'datetime');
                 $def->addProperty('modified_date', 'datetime');
+                $def->addProperty('template_authorization_id', 'string');
                 $def->addIndex('created_by_id');
                 $def->save();
 
@@ -78,13 +79,14 @@ class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                 $def->save();
 
 
-                $def = $this->createEntityType('syllabus_syllabus_version_section_map', 'Syllabus_Syllabus_SyllabusVersion');
+                $def = $this->createEntityType('syllabus_syllabus_version_section_version_map', 'Syllabus_Syllabus_SyllabusVersion');
                 $def->addProperty('syllabus_version_id', 'int', ['primaryKey' => true]);
                 $def->addProperty('section_version_id', 'int', ['primaryKey' => true]);
                 $def->addProperty('is_anchored', 'bool');
                 $def->addProperty('sort_order', 'int');
                 $def->addProperty('read_only', 'bool');
                 $def->addProperty('log', 'string');
+                $def->addProperty('inherited', 'bool');
                 $def->save();
          
 

@@ -28,16 +28,18 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
             'section' => ['1:1', 'to' => 'Syllabus_Syllabus_Section', 'keyMap' => ['section_id' => 'id']],
             // 'subsections' => array('1:N', 'to' => '', 'reverseOf' => 'parent', 'orderBy' => array('+sortOrder')),
 
-            'container' => ['1:1', 'to' => 'Syllabus_Syllabus_SectionVersion', 'keyMap' => ['container_group_id' => 'id']],
-            'containerItems' => ['1:N', 'to' => 'Syllabus_Syllabus_SectionVersion', 'reverseOf' => 'container', 'orderBy' => ['+sortOrder']],
+            // 'container' => ['1:1', 'to' => 'Syllabus_Syllabus_SectionVersion', 'keyMap' => ['container_group_id' => 'id']],
+            // 'containerItems' => ['1:N', 'to' => 'Syllabus_Syllabus_SectionVersion', 'reverseOf' => 'container', 'orderBy' => ['+sortOrder']],
 
             // probably don't need this
             'syllabusVersions' => ['N:M',
                 'to' => 'Syllabus_Syllabus_SyllabusVersion',
-                'via' => 'syllabus_syllabus_version_section_map',
+                'via' => 'syllabus_syllabus_version_section_version_map',
                 'fromPrefix' => 'section_version',
                 'toPrefix' => 'syllabus_version',
-                'properties' => ['sort_order' => 'int', 'read_only' => 'bool', 'is_anchored' => 'bool', 'log' => 'string'],
+                'properties' => [
+                    'sort_order' => 'int', 'read_only' => 'bool','inherited' => 'bool', 'is_anchored' => 'bool', 'log' => 'string'
+                ],
                 'orderBy' => ['+_map.sort_order']
             ],
 
@@ -61,7 +63,7 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
 
     public function createDerivative ($version = null)
     {
-        $properties = ['sortOrder', 'readOnly', 'isAnchored', 'log', 'id'];
+        $properties = ['sortOrder', 'readOnly', 'isAnchored', 'inherited', 'log', 'id'];
         $deriv = $this->schema->createInstance();
         foreach ($this->getData() as $key => $val)
         {
@@ -97,4 +99,44 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
 
         return $this->_sectionExtension;
     }
+
+    public function getUniqueSyllabiCount ()
+    {
+        $syllabi = [];
+        foreach ($this->syllabusVersions as $sv)
+        {
+            $syllabi[$sv->syllabus->id] = $sv->syllabus->id;
+        }
+
+        return count($syllabi);
+    }
+
+    public function getParentOrganization ()
+    {
+        $organization = null;
+        foreach ($this->syllabusVersions as $sv)
+        {
+            if ($sv->syllabus->templateAuthorizationId)
+            {
+                list($type, $id) = explode('/', $sv->syllabus->templateAuthorizationId);
+
+                switch ($type)
+                {
+                    case 'departments':
+                        $organization = $this->getSchema('Syllabus_AcademicOrganizations_Department')->get($id);
+                        break;
+                    case 'colleges':
+                        $organization = $this->getSchema('Syllabus_AcademicOrganizations_College')->get($id);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return $organization;
+    }
 }
+
+
+

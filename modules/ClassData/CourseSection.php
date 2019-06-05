@@ -46,6 +46,17 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
         ];
     }
 
+    public function getTerm ($internal=false)
+    {
+        $term = $this->getSemester(true) . ' ' . $this->_fetch('year');
+        if ($internal)
+        {
+            $term = self::ConvertToCode($term);
+        }
+
+        return $term;
+    }
+
     public function getSemester ($display=false)
     {
         $sem = $this->_fetch('semester');
@@ -66,12 +77,87 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
         return $sem;
     }
 
-    public function getShortName ()
+    public function getShortName ($full=false)
     {
         $cn = $this->_fetch('classNumber');
         $section = $this->_fetch('sectionNumber');
-        // return $cn . " - Section $section";
+        if ($full)
+        {
+            return $cn . ".$section-" . $this->getTerm();
+        }
+
         return $cn . ".$section";
+    }
+
+    public function getFullDisplayName ()
+    {
+        return $this->shortName.' - '.$this->_fetch('title');
+    }
+
+    public function getRelevantPastCoursesWithSyllabi ($user, $limit=-1)
+    {
+        $pastCourseSections = [];
+
+        // step-1
+        // find all $this->course->courseSections that also have ->syllabus
+        // limit(step-1) = limit
+
+        foreach ($user->classDataUser->enrollments as $courseSection)
+        {
+            // ensure same course but not same course section as the one that is calling this function.
+            if (($this->course->id === $courseSection->course->id) && ($this->id !== $courseSection->id))
+            {
+                // TODO: Check if this courseSection actually has a syllabus tied to it! *********************
+                // if ($courseSection->syllabus)
+                $pastCourseSections[$courseSection->id] = $courseSection;
+            }
+            if (count($pastCourseSections) === $limit) break;
+        }
+
+        // foreach ($this->course->sections as $courseSection)
+        // {
+        //     if (($this->id !== $courseSection->id) && !array_key_exists($courseSection->id, $pastCourseSections)) // NOTE: This line is for testing purposes only ******
+        //     // if ($courseSection->syllabus && ($this->id !== $courseSection->id))
+        //     {
+        //         $pastCourseSections[$courseSection->id] = $courseSection;
+        //     }
+        //     if (count($pastCourseSections) === $limit) break;
+        // }
+
+        // step-2
+        // search for other courseSections that have same/similar classNumber and title,
+        // as well as have ->syllabus. check that they aren't already added to $pastCourseSections.
+        // if count(step-1) == limit, then check count(step-2) and replace 2nd half of step-1 
+        // elements with at most limit/2 step-2 elements
+
+        return $pastCourseSections;
+    }
+
+    public static function ConvertToCode ($display)
+    {
+        $space = strpos($display, ' ');
+        $term = substr($display, 0, $space);
+        $year = substr($display, $space + 1);
+
+        switch ($term) {
+            case 'Winter':
+                $term = 1;
+                break;
+            
+            case 'Spring':
+                $term = 3;
+                break;
+
+            case 'Summer':
+                $term = 5;
+                break;
+
+            case 'Fall':
+                $term = 7;
+                break;
+        }
+
+        return $year[0] . $year[2] . $year[3] . $term;
     }
 
     // public function getInstructors ($reload = false)

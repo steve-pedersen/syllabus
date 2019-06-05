@@ -4,16 +4,10 @@
 		<h6 class="card-subtitle mb-2 text-muted">{$organization->abbreviation}</h6>
 		<p class="card-text">{$organization->description}</p>
 		<div class="d-flex justify-content-between align-items-center">
-			<div class="btn-group">
-				<a href="{$organization->routeName}/{$organization->id}" class="btn btn-outline-success">View</a>
-<!-- 				<div>
-				{if $pAdmin || $organization->userHasRole($viewer, 'manager')}
-					<a href="{$organization->routeName}/{$organization->id}/users" class="btn btn-outline-info">Users</a>
-					<a href="{$organization->routeName}/{$organization->id}/settings" class="btn btn-outline-warning">Settings</a>
-				{/if}
-				</div> -->
-				<button class="btn btn-outline-secondary" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<i class="fas fa-ellipsis-v"></i>
+			<div class="">
+				<!-- <a href="{$organization->routeName}/{$organization->id}" class="btn btn-outline-primary">View</a> -->
+				<button class="btn btn-outline-info btn-lg" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Options &nbsp;<i class="fas fa-ellipsis-v"></i>
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 				{if $pAdmin || $organization->userHasRole($viewer, 'manager')}
@@ -32,7 +26,7 @@
 				{/if}
 				{if $fullAccess || $organization->userHasRole($viewer, 'creator')}
 					<div class="dropdown-divider"></div>
-					<a href="{$organization->routeName}/{$organization->id}/templates/new" class="dropdown-item">New Template</a>
+					<a href="{$organization->routeName}/{$organization->id}/syllabus/start" class="dropdown-item">New Template</a>
 					<a href="{$organization->routeName}/{$organization->id}/templates" class="dropdown-item">View Templates</a>
 				{/if}
 				{if $fullAccess || $organization->userHasRole($viewer, 'communicator')}

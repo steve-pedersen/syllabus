@@ -362,13 +362,13 @@ class Syllabus_ClassData_Service
                         }
                         else
                         {
-                            $this->getApplication()->log('debug', "Enrollment {$action} in {$courseId} for non-existent user: {$userId}");
+                            $this->application->log('debug', "Enrollment {$action} in {$courseId} for non-existent user: {$userId}");
                         }
                     }
                 }
                 else
                 {
-                    $this->getApplication()->log('debug', "Enrollment for non-existent course: {$courseId}");
+                    $this->application->log('debug', "Enrollment for non-existent course: {$courseId}");
                 }
             }
         }
@@ -381,7 +381,7 @@ class Syllabus_ClassData_Service
         return $now;
     }
 
-    protected function batches ($data, $entries)
+    protected function batches ($data=[], $entries)
     {
         $count = count($data);
         $batches = [];
@@ -458,20 +458,24 @@ class Syllabus_ClassData_Service
         $ref = $courses->enrollments;
         $dataSource = $courses->getDefaultDataSource();
         
-        $deleteQuery = $tx->createDeleteQuery($ref->getVia());
-        $deleteQuery->setCondition($dataSource->andConditions([
-            $dataSource->createCondition(
-                $dataSource->createSymbol('course_section_id'),
-                Bss_DataSource_Condition::OP_EQUALS,
-                $dataSource->createTypedValue($courseId, 'string')
-            ),
-            $dataSource->createCondition(
-                $dataSource->createSymbol('user_id'),
-                Bss_DataSource_Condition::OP_EQUALS,
-                $dataSource->createTypedValue($userId, 'string')
-            ),
-        ]));
-        $deleteQuery->execute();
+        if ($ref)
+        {
+            $deleteQuery = $tx->createDeleteQuery($ref->getVia());
+            $deleteQuery->setCondition($dataSource->andConditions([
+                $dataSource->createCondition(
+                    $dataSource->createSymbol('course_section_id'),
+                    Bss_DataSource_Condition::OP_EQUALS,
+                    $dataSource->createTypedValue($courseId, 'string')
+                ),
+                $dataSource->createCondition(
+                    $dataSource->createSymbol('user_id'),
+                    Bss_DataSource_Condition::OP_EQUALS,
+                    $dataSource->createTypedValue($userId, 'string')
+                ),
+            ]));
+            $deleteQuery->execute();            
+        }
+
     }
 
     /**
@@ -525,7 +529,7 @@ class Syllabus_ClassData_Service
 
         $num = preg_split('[-]', $data['sn']);
         $num = $num[0] . ' ' . $num[1];
-        
+
         if (!isset($this->allCourses[$data['course']]))
         {
             $course = $this->getSchema('Syllabus_ClassData_Course')->createInstance();
@@ -533,7 +537,7 @@ class Syllabus_ClassData_Service
             $course->createdDate = new DateTime;
             $course->modifiedDate = new DateTime;
             $course->deleted = false;
-            $course->department_id = $this->allDepartments[$data['department']] ?? '';
+            $course->department_id = $this->allDepartments[$data['department']] ?? null;
             $course->save($tx);
             $this->allCourses[$data['course']] = $course->id;
         }
@@ -550,7 +554,7 @@ class Syllabus_ClassData_Service
                 'createdDate' => $now,
                 'modifiedDate' => $now,
                 'deleted' => false,
-                'department_id' => $this->allDepartments[$data['department']] ?? '',
+                'department_id' => $this->allDepartments[$data['department']] ?? null,
                 'course_id' => $this->allCourses[$data['course']],
             ],
             ['transaction' => $tx]

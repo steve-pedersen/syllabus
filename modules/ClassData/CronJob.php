@@ -15,7 +15,9 @@ class Syllabus_ClassData_CronJob extends Bss_Cron_Job
             $service = new Syllabus_ClassData_Service($this->application);
             $service->importOrganizations();
 
-            $semesterCodes = $this->application->siteSettings->semester;
+            // $semesterCodes = $this->application->siteSettings->semester;
+            $semesterCodes = Syllabus_Admin_Semester::GetActiveSemesters($this->application);
+
             if (!is_array($semesterCodes))
             {
                 $semesterCodes = explode(',', $semesterCodes);

@@ -1,6 +1,7 @@
 @import "at-mixins";
 @import "at-header";
 @import "at-footer";
+@import "stretched-link";
 
 html {
 	position: relative;
@@ -199,41 +200,107 @@ table.hide-exempt tr.exempt { display: none; }
 
 
 // SemanticUI style buttons
-.btn {
-    // color: #fff;
-    text-shadow: none;
-    background-image: none;
-    font-size: 1rem;
-    cursor: pointer;
-    display: inline-block;
-    min-height: 1em;
-    outline: 0;
-    border: none;
-    vertical-align: baseline;
-    font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
-    margin: 0 .25em 0 0;
-    padding: .7em 1.5em .7em;
-    text-transform: none;
-    text-shadow: none;
-    font-weight: 700;
-    line-height: 1em;
-    font-style: normal;
-    text-align: center;
-    text-decoration: none;
-    border-radius: .28571429rem;
-    -webkit-box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 rgba(34,36,38,.15) inset;
-    box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 rgba(34,36,38,.15) inset;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    -webkit-transition: opacity .1s ease,background-color .1s ease,color .1s ease,background .1s ease,-webkit-box-shadow .1s ease;
-    transition: opacity .1s ease,background-color .1s ease,color .1s ease,background .1s ease,-webkit-box-shadow .1s ease;
-    transition: opacity .1s ease,background-color .1s ease,color .1s ease,box-shadow .1s ease,background .1s ease;
-    transition: opacity .1s ease,background-color .1s ease,color .1s ease,box-shadow .1s ease,background .1s ease,-webkit-box-shadow .1s ease;
-    will-change: '';
-    -webkit-tap-highlight-color: transparent;
+// .btn {
+//     // color: #fff;
+//     text-shadow: none;
+//     background-image: none;
+//     font-size: 1rem;
+//     cursor: pointer;
+//     display: inline-block;
+//     min-height: 1em;
+//     outline: 0;
+//     border: none;
+//     vertical-align: baseline;
+//     font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
+//     margin: 0 .25em 0 0;
+//     padding: .7em 1.5em .7em;
+//     text-transform: none;
+//     text-shadow: none;
+//     font-weight: 700;
+//     line-height: 1em;
+//     font-style: normal;
+//     text-align: center;
+//     text-decoration: none;
+//     border-radius: .28571429rem;
+//     -webkit-box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 rgba(34,36,38,.15) inset;
+//     box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 rgba(34,36,38,.15) inset;
+//     -webkit-user-select: none;
+//     -moz-user-select: none;
+//     -ms-user-select: none;
+//     user-select: none;
+//     -webkit-transition: opacity .1s ease,background-color .1s ease,color .1s ease,background .1s ease,-webkit-box-shadow .1s ease;
+//     transition: opacity .1s ease,background-color .1s ease,color .1s ease,background .1s ease,-webkit-box-shadow .1s ease;
+//     transition: opacity .1s ease,background-color .1s ease,color .1s ease,box-shadow .1s ease,background .1s ease;
+//     transition: opacity .1s ease,background-color .1s ease,color .1s ease,box-shadow .1s ease,background .1s ease,-webkit-box-shadow .1s ease;
+//     will-change: '';
+//     -webkit-tap-highlight-color: transparent;
+// }
+
+
+
+.row-divided {
+  position:relative;
+  height:100%;
+  .vertical-divider {
+    position: absolute;
+    z-index: 10;
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    height: 50%;
+    line-height: 0;
+    text-align:center;
+    text-transform: uppercase;
+    transform: translateX(-50%);
+  }
+
+  .vertical-divider:before, 
+  .vertical-divider:after {
+    position: absolute;
+    left: 50%;
+    content: '';
+    z-index: 9;
+    border-left: 1px solid $dark;
+    border-right: 1px solid $dark;
+    width: 0;
+    height: calc(100% - 1rem);
+  }
+
+  .row-divided > .vertical-divider {
+    height: calc(50% - 1rem);    
+  }
+
+  .vertical-divider:before {
+    top: -100%;
+  }
+
+  .vertical-divider:after {
+    top: auto;
+    bottom: 0;
+  }
+  /* just to set different column heights - not needed to function */          
+  // .column-one {
+  //   height: 300px; 
+  //   background-color: #EBFFF9;
+  // }
+  // .column-two {
+  //   height: 400px;
+  //   background-color: #F7F3FF;
+  // }
 }
+
+.row-divided > [class^="col-"],
+.row-divided > [class*=" col-"] {
+  padding-left: 30px;  /* gutter width (give a little extra room) 2x default */
+  padding-right: 30px; /* gutter width (give a little extra room) 2x default */
+}
+
+
+
+
+
 
 
 // .icon-header {
