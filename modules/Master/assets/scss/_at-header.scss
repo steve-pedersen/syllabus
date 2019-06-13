@@ -190,6 +190,12 @@ $line-height-computed:    	floor(($font-size-base * $line-height-base));
 			color: $breadcrumb-active-color;
 		}
 	}
+	.navbar-text {
+		line-height: 51px;
+		padding: .3em;
+		letter-spacing: 1.1px;
+		color: $primary;
+	}
 }
 
 .editor-header {

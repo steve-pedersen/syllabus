@@ -6,7 +6,7 @@
 #require js/ckeditor.js
 // #require js/materialize.js
 
-#require js/jquery.timepicker.min.js
+// #require js/jquery-sortable.js
 
 #require js/sidebar.js
 #require js/syllabus.js
@@ -19,11 +19,19 @@
       e.preventDefault();
     });
 
-    // $('.datepicker').each(function () {
-    //   var $self = $(this);
-    //   $self.datepicker({
-    //   });
-    // });
+  // TODO: https://johnny.github.io/jquery-sortable/
+    $('.sort-container').sortable({
+        placeholder: "ui-state-highlight",
+        handle: ".dragdrop-handle",
+        opacity: 0.5,
+        cursor: "move",
+        update: function (event, ui) {
+            $('.sort-order-value').each(function (index, value) {
+                $(value).val(index+1);
+            });
+        }
+    });
+    $('.sort-container').disableSelection();
 
     // DatePicker 
     $.datepicker.setDefaults(
@@ -64,6 +72,28 @@
         toggleSidebar();
       }
     });
+
+
+    // $('#sidebar .nav-link').on('click', function (e) {
+    //   $('#sidebar').find('.nav-item > .active').removeClass('active');
+    //   $(this).addClass('active');
+    // });
+
+    // $('#sidebar .nav-item > a').filter(function(){
+    //   return (this.href==location.href && !$(this).hasClass('nav-category'));
+    // }).addClass('active');
+    // $('#sidebar .nav-item > a').filter(function(){
+    //   return (this.href!=location.href && !$(this).hasClass('nav-category'));
+    // }).removeClass('active');
+
+    // $('#sidebar .nav-item > a.child-link').click(function(){
+    //   $(this).addClass('active');
+    //   // $('#sidebar .nav-item > a').filter(function(){
+    //   //   return (this.href==location.href && !$(this).hasClass('nav-category'));
+    //   // }).parent().parent().parent().find('.nav-category > h6 img').addClass('active');
+    // });
+
+
 
     // if sidebar minimized and user hovers over icon, open it up. terrible ux.
     // $('#sidebar a.nav-link > h6 i').mouseenter( openSidebarIfClosed );

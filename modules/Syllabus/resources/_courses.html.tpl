@@ -8,20 +8,18 @@
 		<thead class="thead-light">
 
 			<tr class="">
-				<th scope="col" class="border-left-0">Course Information</th>
+				<th scope="col" class="border-left-0" style="width:35%;">Course Information</th>
 				<th scope="col">Syllabus Details & Options</th>
 			</tr>
 		</thead>
 		<tbody >
-<!-- 			<tr class="bg-info text-primary" colspan="2">
-				<h3 class="text-primary my-4">{$term}</h3>
-			</tr> -->
+
 	{foreach $myCourses as $i => $courseSection}
 			{assign var=syllabus value=$courseSection->courseSyllabus}
 
 			{if $syllabus}<input type="hidden" name="course[{$courseSection->id}][syllabusId]" value="{$syllabus->id}">{/if}
 			<tr class="">
-				<td class="align-middle">
+				<td class="align-middle" style="width:35%;">
 					<div class="p-3">
 					{if $courseSection->classNumber}<h2 class="">{$courseSection->classNumber}</h2>{/if}
 					{if $courseSection->sectionNumber}Section {$courseSection->sectionNumber}<br>{/if}
@@ -93,10 +91,10 @@
 
 							<div class="col-8 form-group mb-3 ">
 								<div class="input-group">
-								<select name="options" class="form-control " id="course{$i}SyllabusOption">
+								<select name="courseSyllabus" class="form-control " id="course{$i}SyllabusOption">
 									<option value="" default>Choose past syllabus to start from...</option>
 								{foreach $courseSection->pastCourseSyllabi as $pastCourse}
-									<option value="{$pastCourse->id}">[{$pastCourse->getShortName(true)}] {$pastCourse->syllabus->title}</option>
+									<option value="{$pastCourse->syllabus->id}">[{$pastCourse->getShortName(true)}] {$pastCourse->syllabus->title}</option>
 								{/foreach}
 								</select>
 								<div class="input-group-append">

@@ -107,9 +107,10 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
             // ensure same course but not same course section as the one that is calling this function.
             if (($this->course->id === $courseSection->course->id) && ($this->id !== $courseSection->id))
             {
-                // TODO: Check if this courseSection actually has a syllabus tied to it! *********************
-                // if ($courseSection->syllabus)
-                $pastCourseSections[$courseSection->id] = $courseSection;
+                if ($courseSection->syllabus)
+                {
+                    $pastCourseSections[$courseSection->id] = $courseSection;
+                }
             }
             if (count($pastCourseSections) === $limit) break;
         }

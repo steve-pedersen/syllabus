@@ -3,6 +3,120 @@
 html {
   scroll-behavior: smooth;
 }
+
+div.my-syllabi-nav {
+	a {
+		font-size: 15pt;
+		font-weight: 700;
+		&.active {
+		  box-shadow: 0 6px 0 $info;
+		}
+		&.disabled {
+			cursor: not-allowed;
+		}
+	}
+}
+.wrap {
+	width: 100%;
+	.left {
+	    width: 70%;
+	    border-bottom: 3px solid $secondary;
+	    -moz-box-sizing: border-box;
+	    -webkit-box-sizing: border-box;
+	    -ms-box-sizing: border-box;
+	    box-sizing: border-box;
+	}
+	.right {
+		width: 30%;
+	}
+}
+div.overview-container {
+	h2 {
+		font-size: 1.75rem;
+	}
+	.my-syllabi {
+
+	}
+	.campus-resources {
+		a#seeMoreToggle1 {
+			font-size: 13pt;
+		}
+		a.collapsed:after  {
+			content: '+ See More';
+		}
+		a#seeMoreToggle1:not(.collapsed):after {
+			content: '- See Less';
+		}
+	}
+
+	.documents-guidelines {
+	
+	}
+}
+.campus-resources {
+	.card {
+		box-shadow: 0 0 5px $grey_light_4;
+	}
+	.card-body {
+		padding: 0.75rem;
+	}
+	.media {
+		> img {
+			border: none;
+			max-height: 10em;
+		}
+		.media-body {
+			.card-title {
+				font-size: 0.9rem;
+			}
+			p {
+				font-size: 10pt;
+				overflow: hidden;
+				display: -webkit-box;
+				-webkit-line-clamp: 3;
+				-webkit-box-orient: vertical;
+				text-overflow: ellipsis;
+			}
+		}
+	}
+}
+
+.card-bordered {
+	border-radius: 10px;
+	border: none;
+	box-shadow: 0 0 5px $grey_light_4;
+	&.card-bordered-top {
+		border-top: 10px solid $primary;
+	}
+	&.card-bordered-right {
+		border-right: 10px solid $primary;
+	}
+	&.card-bordered-bottom {
+		border-bottom: 10px solid $primary;
+	}
+	&.card-bordered-left {
+		border-left: 10px solid $primary;
+	}
+	&.card-bordered-primary {
+		border-color: $primary;
+	}
+	&.card-bordered-secondary {
+		border-color: $secondary;
+	}
+	&.card-bordered-info {
+		border-color: $info;
+	}
+	&.card-bordered-success {
+		border-color: $success;
+	}
+	&.card-bordered-warning {
+		border-color: $warning;
+	}
+	&.card-bordered-danger {
+		border-color: $danger;
+	}
+}
+
 .editor-main-container {
 	// height: 100%;
 	.syllabus-editor {
@@ -52,7 +166,7 @@ html {
 					&:hover,
 					&:focus {
 						// color: $info-alt-1;
-						color: $dark-alt-1;
+						color: $primary;
 						-webkit-transition: color 0.15s;
 						transition: color 0.15s;
 					}

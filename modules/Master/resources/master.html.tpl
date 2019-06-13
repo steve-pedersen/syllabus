@@ -30,7 +30,7 @@
 			<nav class="navbar navbar-expand-lg navbar-light">
 				<div class="navbar-brand d-block-inline col-md-3 col-lg-2 col-xl-2 d-flex justify-content-between">
 					<a class="" href="{$baseUrl}">
-						<img src="assets/icons/logo-5-256.png" width="43" height="43" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
+						<img src="assets/icons/logo-5-256.png" width="41" height="41" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
 					{if $viewer}<i class="fa fa-chevron-left d-block-inline pl-2 mt-2" id="sidebarToggle"></i>{/if}
 				</div>				
 				<button class="navbar-toggler mr-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,24 +40,14 @@
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav ml-auto">
 					{if $viewer}
-						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-								<i class="fas fa-bell"></i> Notifications
-							</a>
-							<div class="dropdown-menu" aria-labelledby="navbarDropdown">
-								<a class="dropdown-item" href="#">Action</a>
-								<a class="dropdown-item" href="#">Another action</a>
-								<div class="dropdown-divider"></div>
-								<a class="dropdown-item" href="#">Something else here</a>
-							</div>
+						<li class="nav-item">
+							<span class="navbar-text mr-3">Hello, {$userContext->account->firstName|escape}</span>
 						</li>
-					
 						{if $pAdmin}
 						<li class="nav-item">
 							<a class="nav-link" href="admin"><i class="fas fa-cog"></i> Administrate</a>
 						</li>
 						{/if}
-
 					{else}
 						<li class="nav-item">
 							<a class="login-button nav-link" href="{$app->baseUrl('login')}">Login</a>
@@ -71,22 +61,22 @@
 				{/if}
 				</div>
 			</nav>
-			        <div class="bc">
-						{if $breadcrumbList}
-						<div class="container">
-							<div class="col">
-							<ol class="at breadcrumb">
-								{foreach name="breadcrumbs" item="crumb" from=$breadcrumbList}
-								<li{if $smarty.foreach.breadcrumbs.last} class="active"{elseif $smarty.foreach.breadcrumbs.first} class="first"{/if}>
-								{l text=$crumb.text href=$crumb.href}
-								{if !$smarty.foreach.breadcrumbs.last}{/if}
-								</li>
-								{/foreach}
-							</ol>
-							</div>
-						</div>
-						{/if}
-			        </div>
+	        <div class="bc">
+				{if $breadcrumbList}
+				<div class="container">
+					<div class="col">
+					<ol class="at breadcrumb">
+						{foreach name="breadcrumbs" item="crumb" from=$breadcrumbList}
+						<li{if $smarty.foreach.breadcrumbs.last} class="active"{elseif $smarty.foreach.breadcrumbs.first} class="first"{/if}>
+						{l text=$crumb.text href=$crumb.href}
+						{if !$smarty.foreach.breadcrumbs.last}{/if}
+						</li>
+						{/foreach}
+					</ol>
+					</div>
+				</div>
+				{/if}
+	        </div>
 		</header>		
 
 		{if $app->siteSettings->siteNotice}
@@ -118,7 +108,7 @@
 				<!-- TODO: put this in a partial template and generate links programmatically -->
 				<nav class="col-md-2 d-none d-md-block sidebar {if $sidebarMinimized}sidebar-minimized{/if}" id="sidebar">
 					<div class="sidebar-sticky">
-						<ul class="nav flex-column">
+<!-- 						<ul class="nav flex-column">
 							<li class="nav-item nav-user-item text-center">
 								<a class="nav-link sidebar-user-max" href="profile" id="sidebarUserInfo">
 									<h6 class="sidebar-heading mt-4 mb-1 ">
@@ -127,38 +117,40 @@
 										<div class="user-info-text-container">
 											<span class="user-info-text sidebar-text">
 												{$viewer->fullName}<br>
-												<!-- <small class="">Professor of Anthropology, PhD, MD, DDS.</small> -->
+												<small class="">Professor of Anthropology, PhD, MD, DDS.</small>
 											</span>
 										</div>
 									</h6>
 								</a>
 							</li>
-						</ul>
-						<ul class="nav flex-column my-syllabi">
+						</ul> -->
+						<ul class="nav flex-column my-syllabi mt-5">
 							<li class="nav-item">
-								<a class="nav-link" href="syllabi" id="sidebarMySyllabi">
+								<a class="nav-link nav-category" href="syllabi" id="sidebarMySyllabi">
 									<h6 class="sidebar-heading ">
-										<span><i class="my-syllabi fas fa-home fa-2x"></i> <span class="sidebar-text">My Syllabi</span></span>
+										<!-- <span><i class="my-syllabi fas fa-home fa-2x"></i> <span class="sidebar-text">My Syllabi</span></span> -->
+										<span><img class="my-syllabi" src="assets/icons/menu-my-syllabi.svg" width="46"> <span class="sidebar-text">My Syllabi</span></span>
 									</h6>
 								</a>
 								<ul class="nav flex-column pl-3">
 									<li class="nav-item">
-										<a class="nav-link" href="syllabus/start">
+										<a class="nav-link child-link {if $page == 'start'}active{/if}" href="syllabus/start">
 											<span class="sidebar-text">Create New Syllabus</span>
 										</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" href="syllabi">
+										<a class="nav-link child-link {if $page == 'overview'}active{/if}" href="syllabi?mode=overview">
 											<span class="sidebar-text">Overview</span>
 										</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" href="syllabi?mode=courses">
+										<a class="nav-link child-link {if $page == 'courses'}active{/if}" href="syllabi?mode=courses">
 											<span class="sidebar-text">Courses</span>
 										</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" href="syllabi?mode=submissions">
+										<a class="nav-link child-link disabled" disabled>
+										<!-- <a class="nav-link child-link {if $page == 'submissions'}active{/if}" href="syllabi?mode=submissions"> -->
 											<span class="sidebar-text">Submissions</span>
 										</a>
 									</li>
@@ -168,19 +160,20 @@
 
 						<ul class="nav flex-column my-orgs">
 							<li class="nav-item">
-								<a class="nav-link" href="organizations" id="sidebarMyOrganizations">
+								<a class="nav-link nav-category" href="organizations" id="sidebarMyOrganizations">
 									<h6 class="sidebar-heading mb-1 ">
-										<span><i class="fas fa-school fa-2x"></i> <span class="sidebar-text">My Organizations</span></span>
+										<!-- <span><i class="fas fa-school fa-2x"></i> <span class="sidebar-text">My Organizations</span></span> -->
+										<span><img class="my-orgs fa-school" src="assets/icons/menu-my-orgs.svg" width="40"> <span class="sidebar-text">My Organizations</span></span>
 									</h6>
 								</a>
 								<ul class="nav flex-column pl-3">
 									<li class="nav-item">
-										<a class="nav-link" href="departments">
+										<a class="nav-link child-link {if $page == 'departments'}active{/if}" href="departments">
 											<span class="sidebar-text">Departments</span>
 										</a>
 									</li>
 									<li class="nav-item">
-										<a class="nav-link" href="colleges">
+										<a class="nav-link child-link {if $page == 'colleges'}active{/if}" href="colleges">
 											<span class="sidebar-text">Colleges</span>
 										</a>
 									</li>

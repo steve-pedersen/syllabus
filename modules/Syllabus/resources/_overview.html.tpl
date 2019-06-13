@@ -1,11 +1,16 @@
 
-<ul class="list-group">
-{foreach $syllabi as $syllabus}
-	<li class="list-group-item"><a href="syllabus/{$syllabus->id}">{$syllabus->title}</a>
-	{if $syllabus->modifiedDate}
-		<small class="d-block"><strong>Last Modified:</strong> {$syllabus->modifiedDate->format('F jS, Y - h:i a')}</small>
-	{/if}
-	<a class="btn btn-secondary" href="syllabus/startwith/{$syllabus->id}">Create a new one with this one, then do other things.</a>
-	</li>
-{/foreach}
-</ul>
+<div class="container-fluid overview-container">
+
+	<div class="my-syllabi border-bottom">
+		{include file="partial:_overview.syllabi.html.tpl"}
+	</div>
+
+	<div class="campus-resources my-5 py-3 border-bottom">
+		{include file="partial:_overview.resources.html.tpl"}
+	</div>
+
+	<div class="documents-guidelines my-5">
+		{include file="partial:_overview.documents.html.tpl"}
+	</div>
+
+</div>

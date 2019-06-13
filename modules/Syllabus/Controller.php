@@ -58,10 +58,13 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         return $hasPermission;
     }
 
-    public function startWith ()
+    public function startWith ($fromSyllabus=null, $return=false)
     {
         $viewer = $this->requireLogin();
-        $fromSyllabus = $this->requireExists($this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id'));
+        if (!$fromSyllabus)
+        {
+            $fromSyllabus = $this->requireExists($this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id'));
+        }
         
         if (!$this->hasCloningPermission($fromSyllabus, $viewer))
         {
@@ -88,6 +91,12 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $toSyllabusVersion->syllabus_id = $toSyllabus->id;
         $toSyllabusVersion->save();
         $toSyllabusVersion->sectionVersions->save();
+        // $toSyllabus->versions->add($toSyllabusVersion);
+
+        if ($return)
+        {
+            return $toSyllabusVersion->syllabus;
+        }
 
         $this->response->redirect(implode('/', $pathParts));
     }
@@ -357,6 +366,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $viewer = $this->requireLogin();
         $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
         $courseSections = $this->schema('Syllabus_ClassData_CourseSection');
+        $offset = 0;
+        $limit = 6;
 
         switch ($mode = $this->request->getQueryParameter('mode', 'overview')) {
             case 'courses':
@@ -365,12 +376,12 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 $courses = [];
                 foreach ($myCourses as $i => $courseSection)
                 {
-                    $i++;
+                    $index = $i % 5;
                     $courseSyllabus = $syllabi->get($courseSection->syllabus_id);
                     $courseSection->courseSyllabus = $courseSyllabus;
                     $courseSection->createNew = $courseSyllabus ? false : true;
                     $courseSection->pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer);
-                    $courseSection->image = "assets/images/testing0$i.jpg";
+                    $courseSection->image = "assets/images/testing0$index.jpg";
                     $courses[$courseSection->term][] = $courseSection;
                 }
 
@@ -383,8 +394,16 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
             case 'overview':
             default:
-                $mySyllabi = $syllabi->find($syllabi->createdById->equals($viewer->id), ['orderBy' => '-createdDate', 'limit' => 20]);
-                $this->template->syllabi = $mySyllabi;
+                $campusResources = $this->schema('Syllabus_Syllabus_CampusResource');
+                $this->template->syllabi = $syllabi->find(
+                    $syllabi->createdById->equals($viewer->id), 
+                    ['orderBy' => '-createdDate', 'limit' => $limit, 'offset' => $offset]
+                );
+                $this->template->campusResources = $campusResources->find(
+                    $campusResources->deleted->isFalse()->orIf($campusResources->deleted->isNull()),
+                    ['orderBy' => ['sortOrder', 'title']]
+                );
+
                 break;
         }
 
@@ -396,22 +415,24 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             switch ($this->getPostCommand()) {
                 
                 case 'courseNew':
-                    list($success, $syllabusVersion) = $this->createCourseSyllabus('new', $courseSection);
+                    list($success, $newSyllabusVersion) = $this->createCourseSyllabus('new', $courseSection);
                     if ($success)
                     {
                     	$this->flash('Your new course syllabus is ready for you to edit and add more sections.', 'success');
-                    	$this->response->redirect('syllabus/' . $syllabusVersion->syllabus->id);
+                    	$this->response->redirect('syllabus/' . $newSyllabusVersion->syllabus->id);
                     }
                     break;
 
                 case 'courseClone':
-
-                    if (isset($data['options']) && ($data['options'] === 'new'))
+                    $pastSyllabus = isset($data['courseSyllabus']) ? $syllabi->get(isset($data['courseSyllabus'])) : null;
+                        
+                    if ($pastSyllabus && $this->hasCloningPermission($pastSyllabus, $viewer))
                     {
-                        // TODO: NEED A $fromCourseSection and $toCourseSection
-                        echo "<pre>"; var_dump('here cheese'); die;
-                        list($success, $syllabusVersion) = $this->createCourseSyllabus('new', $courseSection);
-                        $this->forward('syllabus/new?');
+                        $newSyllabus = $this->startWith($pastSyllabus, true);
+                        $newSyllabusVersion = $this->updateCourseSyllabus($pastSyllabus, $newSyllabus, $courseSection);
+                        
+                        $this->flash('Your new course syllabus is ready for you to edit.', 'success');
+                        $this->response->redirect('syllabus/' . $newSyllabusVersion->syllabus->id);
                     }
 
                     break;
@@ -658,7 +679,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
             $data = [
                 'syllabus' => [
-                    'title' => ('Syllabus for ' . $fromCourseSection->title),
+                    'title' => ('Syllabus for ' . $fromCourseSection->title . ' (' . $fromCourseSection->term . ')'),
                     'description' => ($fromCourseSection->getShortName() . ' course syllabus'),
                 ],
                 'section' => [
@@ -692,6 +713,75 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
             return $this->saveSyllabus($syllabus, $data);
         }
+    }
+
+    // Use this for when cloning one course syllabus to another and need to replace
+    // the previous Course Information section
+    private function updateCourseSyllabus ($fromSyllabus, $toSyllabus, $cdCourseSection)
+    {
+        $syllabusVersion = $toSyllabus->latestVersion;
+        $syllabusVersion->title = ('Syllabus for ' . $cdCourseSection->title . ' (' . $cdCourseSection->term . ')');
+        $syllabusVersion->description = ($cdCourseSection->getShortName() . ' course syllabus');
+
+        $pastSectionVersion = null;
+        foreach ($fromSyllabus->latestVersion->getSectionVersionsWithExt() as $sv)
+        {
+            if (isset($sv->course_id))
+            {
+                $pastSectionVersion = $sv;
+                $syllabusVersion->sectionVersions->remove($pastSectionVersion);
+                break;
+            }
+        }
+
+        $genericSection = $this->schema('Syllabus_Syllabus_Section')->createInstance();
+        $genericSection->createdById = $toSyllabus->createdById;
+        $genericSection->createdDate = new DateTime;
+        $genericSection->save();
+
+        if ($pastSectionVersion)
+        {
+            $pastSvTitle = $pastSectionVersion->extension->getDisplayName();
+            $recordClass = $pastSectionVersion->extension->getRecordClass();
+        }
+        else
+        {
+            $pastSvTitle = '';
+            $recordClass = 'Syllabus_Courses_Course';
+        }
+        $realSection = $this->schema($recordClass)->createInstance();
+        $realSection->externalKey = $cdCourseSection->id;
+        $realSection->title = $cdCourseSection->title;
+        $realSection->description = $cdCourseSection->description;
+        $realSection->sectionNumber = $cdCourseSection->sectionNumber;
+        $realSection->classNumber = $cdCourseSection->classNumber;
+        $realSection->semester = $cdCourseSection->getSemester(true);
+        $realSection->year = $cdCourseSection->year;
+        $realSection->save();
+        
+        $cdCourseSection->syllabus_id = $toSyllabus->id;
+        $cdCourseSection->save();
+
+        $sectionVersion = $this->schema('Syllabus_Syllabus_SectionVersion')->createInstance();
+        $sectionVersion->createdDate = new DateTime;
+        $sectionVersion->sectionId = $genericSection->id;
+        $sectionVersion->course_id = $realSection->id;
+        $sectionVersion->title = $pastSvTitle;
+        $sectionVersion->save();
+
+        $syllabusVersion->sectionVersions->add($sectionVersion);
+        $syllabusVersion->sectionVersions->setProperty($sectionVersion, 'sort_order', 0);
+        $syllabusVersion->sectionVersions->setProperty($sectionVersion, 'inherited', false);
+        $syllabusVersion->sectionVersions->setProperty($sectionVersion, 'read_only', false);
+        $syllabusVersion->sectionVersions->setProperty($sectionVersion, 'is_anchored', true);
+        $syllabusVersion->sectionVersions->setProperty($sectionVersion, 'log', 
+            'Syllabus cloned from previous course syllabus.'
+        );
+
+        $syllabusVersion->sectionVersions->save();
+        $syllabusVersion->save();
+
+        return $syllabusVersion;
     }
 
     public function isInheritedSection ($sectionVersion, $templateAuthorizationId)

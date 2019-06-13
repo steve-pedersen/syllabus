@@ -1,6 +1,7 @@
 (function ($) {
   $(function () {
 
+
     if ($('#syllabusEditor').length) {
       closeSidebar(true);
       // $('#sidebar').on('click', toggleSidebar);
@@ -20,6 +21,35 @@
 		$(this).addClass('active');
 	});
 
+
+	$('#resourcePreviewModal').on('show.bs.modal', function(e) {
+		let cardBody = $(e.relatedTarget).parents('.card-body');
+		let id = cardBody.attr('id');
+		let title = cardBody.find('#title'+id);
+		let img = cardBody.find('#image'+id);
+		let url = cardBody.find('#url'+id);
+		let text = cardBody.find('#text'+id);
+		$('#resourceTitle').html(title.html());
+		$('#resourceImage').attr('src', img.attr('src')).attr('alt', img.attr('alt'));
+		$('#resourceDescription').text(text.text());
+		$('#resourceUrl').attr('href', url.text()).text(url.text());
+	});
+	// $('#resourcePreviewModal').on('hide.bs.modal', function(e) {
+	// 	$('#resourceTitle').html('');
+	// 	$('#resourceImage').attr('src', '').attr('alt', '');
+	// 	$('#resourceDescription').text('');
+	// 	$('#resourceUrl').attr('href', '').text('');
+	// });
+	$('#resourceAddModal').on('show.bs.modal', function(e) {
+		let cardBody = $(e.relatedTarget).parents('.card-body');
+		let id = cardBody.attr('id');
+		let title = cardBody.find('#title'+id);
+		let img = cardBody.find('#image'+id);
+		$('#addTitle').html(title.html());
+		$('#addImage').attr('src', img.attr('src')).attr('alt', img.attr('alt'));
+	});
+
+
     var $sidebar   = $(".anchor-links-sidebar > .sidebar-sticky > ul"), 
         $window    = $(window),
         offset     = $sidebar.offset(),
@@ -27,17 +57,20 @@
         transition = 200;
         transition = 0;
 
-    $window.scroll(function() {
-        if ($window.scrollTop() > offset.top) {
-            $sidebar.stop().animate({
-                marginTop: $window.scrollTop() - offset.top + topPadding
-            }, transition);
-        } else {
-            $sidebar.stop().animate({
-                marginTop: 0
-            }, transition);
-        }
-    });
+    if ($sidebar.length) {
+	    $window.scroll(function() {
+	        if ($window.scrollTop() > offset.top) {
+	            $sidebar.stop().animate({
+	                marginTop: $window.scrollTop() - offset.top + topPadding
+	            }, transition);
+	        } else {
+	            $sidebar.stop().animate({
+	                marginTop: 0
+	            }, transition);
+	        }
+	    });    	
+    }
+
 
     if ($('#mySyllabi').length) {
     	var $modeEm = $('#mySyllabi').find('input[name="mode"]');
@@ -45,20 +78,7 @@
     	var selector = '#myTab a#' + $modeEm.val() +'-tab';
     	$(selector).tab('show');
     }
-
-	// TODO: https://johnny.github.io/jquery-sortable/
-    $('.sort-container').sortable({
-        placeholder: "ui-state-highlight",
-        handle: ".dragdrop-handle",
-        opacity: 0.5,
-        cursor: "move",
-        update: function (event, ui) {
-            $('.sort-order-value').each(function (index, value) {
-                $(value).val(index+1);
-            });
-        }
-    });
-    $('.sort-container').disableSelection();
+    
 
     var getSemesterDisplay = function (text) {
     	switch (text) {
@@ -127,37 +147,6 @@
 		}
 	});
 
-	// let mainNavLinks = document.querySelectorAll(".anchor-links-sidebar ul li a");
-	// let mainSections = document.querySelectorAll(".syllabus-editor .sort-container .sort-item");
-
-	// let lastId;
-	// let cur = [];
-
-	// // This should probably be throttled.
-	// // Especially because it triggers during smooth scrolling.
-	// // https://lodash.com/docs/4.17.10#throttle
-	// // You could do like...
-	// // window.addEventListener("scroll", () => {
-	// //    _.throttle(doThatStuff, 100);
-	// // });
-	// // Only not doing it here to keep this Pen dependency-free.
-
-	// window.addEventListener("scroll", event => {
-	//   let fromTop = window.scrollY;
-
-	//   mainNavLinks.forEach(link => {
-	//     let section = document.querySelector(link.hash);
-
-	//     if (
-	//       section.offsetTop <= fromTop &&
-	//       section.offsetTop + section.offsetHeight > fromTop
-	//     ) {
-	//       link.classList.add("active");
-	//     } else {
-	//       link.classList.remove("active");
-	//     }
-	//   });
-	// });
 
   });
 })(jQuery);

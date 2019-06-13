@@ -231,8 +231,9 @@ class Syllabus_ClassData_Service
         $logs = $this->getSchema('Syllabus_ClassData_SyncLog');
         $lastLog = $logs->findOne($logs->status->equals(200), ['orderBy' => ['-dt', '-id']]);
         $newLog = $logs->createInstance();
-        
-        if ($lastLog === null)
+        $enrollData = $enrollments->findOne($enrollments->yearSemester->equals($semesterCode));
+
+        if (($lastLog === null) || !$enrollData)
         {
             $since = '1970-01-01';
         }
@@ -383,7 +384,7 @@ class Syllabus_ClassData_Service
 
     protected function batches ($data=[], $entries)
     {
-        $count = count($data);
+        $count = isset($data) ? count($data) : 0;
         $batches = [];
         
         for ($i = 0; $i < $count; $i += $entries)

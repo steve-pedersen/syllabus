@@ -15,7 +15,8 @@ $enable-gradients: 			true;
 $navbar-bg-color:			#98C1D9;
 $navbar-bg-color:			#BFBDC1;
 $navbar-bg-color:			#DCDCDC;
-$navbar-bg-color-2:			#BFBDC1;
+$navbar-bg-color:			$smoke_light_5;
+$navbar-bg-color-2:			$grey_light_3;
 
 
 $sfsu-alt-purple-lte-1:		#321c4a;
@@ -68,7 +69,7 @@ $warning:       #FFAA00;//#FFBC42;		// not overridden
 $danger:        $sfsu-secondary-red;			// #a93f3d
 $danger:		#9A3324;
 $dark:          #2D194F;//$sfsu-secondary-gray;
-$muted: 		#2F6060;
+$muted: 		#6c757d;
 
 
 // New Colors:
@@ -76,7 +77,7 @@ $muted: 		#2F6060;
 $primary: #0C6291;
 $primary-alt-1: #806aaf;
 $secondary: #6fa4b2;
-// $secondar: rgb(120,163,178);
+$success:		#009b84;
 $secondary-alt-1: #4B8D9F;
 $info: #EEAB79;
 $info-alt-1: #F9DFBC;

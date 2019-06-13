@@ -1,24 +1,42 @@
+<div class="p-3">
+	<div class="my-syllabi-nav-container border-bottom mb-4">
+	<div class="my-syllabi-nav ">
+		<nav class="nav">
+			<a class="nav-link mr-md-5 mr-sm-3 {if $mode == 'overview'}active{/if}" id="overview-tab" href="syllabi?mode=overview" aria-controls="overview" aria-selected="true">
+				Overview
+			</a>
+			<a class="nav-link mx-md-5 mx-sm-3 {if $mode == 'courses'}active{/if}" id="courses-tab"  href="syllabi?mode=courses" aria-controls="courses" aria-selected="false">
+				Courses
+			</a>
+			<a class="nav-link mx-md-5 mx-sm-3 disabled" id="submissions-tab" tabindex="-1"  aria-disabled="true" disabled>
+	<!-- 		<a class="nav-link mx-md-5 mx-sm-3 disabled {if $mode == 'submissions'}active{/if}" id="submissions-tab"  href="syllabi?mode=submissions" aria-controls="submissions" aria-selected="false" disabled> -->
+				Submissions
+			</a>
+		</nav>
+	</div>
+	</div>
 
-<div class="card" id="mySyllabi">
-	<input type="hidden" name="mode" value="{$mode}">
-	<div class="card-body">
-
-		<ul class="nav nav-pills flex-column flex-sm-row mb-5 p-3 bg-light" id="myTab" role="tablist">
-			<li class="nav-item flex-sm-fill">
-				<a class="lead text-sm-center nav-link {if $mode == 'overview'}active{/if}" id="overview-tab"  href="syllabi?mode=overview" role="tab" aria-controls="overview" aria-selected="true">Overview</a>
-			</li>
-			<li class="nav-item flex-sm-fill">
-				<a class="lead text-sm-center nav-link {if $mode == 'courses'}active{/if}" id="courses-tab"  href="syllabi?mode=courses" role="tab" aria-controls="courses" aria-selected="false">Courses</a>
-			</li>
-			<li class="nav-item flex-sm-fill">
-				<a class="lead text-sm-center nav-link {if $mode == 'submissions'}active{/if}" id="submissions-tab"  href="syllabi?mode=submissions" role="tab" aria-controls="submissions" aria-selected="false">Submissions</a>
-			</li>
-		</ul>
-
-		<div class="tab-content">
-		  <div class="tab-pane {if $mode == 'overview'}active{/if}" id="overview" role="tabpanel" aria-labelledby="overview-tab">{include file="partial:_overview.html.tpl"}</div>
-		  <div class="tab-pane {if $mode == 'courses'}active{/if}" id="courses" role="tabpanel" aria-labelledby="courses-tab">{include file="partial:_courses.html.tpl"}</div>
-		  <div class="tab-pane {if $mode == 'submissions'}active{/if}" id="submissions" role="tabpanel" aria-labelledby="submissions-tab">{include file="partial:_submissions.html.tpl"}</div>
+	<div class="card" id="mySyllabi">
+		<input type="hidden" name="mode" value="{$mode}">
+		<div class="card-body">
+			<div class="tab-content">
+				<div class="tab-pane {if $mode == 'overview'}active{/if}" id="overview" role="tabpanel" aria-labelledby="overview-tab">
+					{if $mode == 'overview' || ($mode != 'courses' && $mode != 'submissions')}
+						{include file="partial:_overview.html.tpl"}
+					{/if}
+				</div>
+				<div class="tab-pane {if $mode == 'courses'}active{/if}" id="courses" role="tabpanel" aria-labelledby="courses-tab">
+					{if $mode == 'courses'}
+						{include file="partial:_courses.html.tpl"}
+					{/if}
+				</div>
+				<div class="tab-pane {if $mode == 'submissions'}active{/if}" id="submissions" role="tabpanel" aria-labelledby="submissions-tab">
+					{if $mode == 'submissions'}
+						{include file="partial:_submissions.html.tpl"}
+					{/if}
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
+

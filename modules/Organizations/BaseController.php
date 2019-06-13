@@ -47,15 +47,15 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
         if ($this->hasPermission('admin'))
         {
-            $organizations['colleges'] = $collegeSchema->getAll() ?? [];
-            $organizations['departments'] = $departmentSchema->getAll() ?? [];
+            $organizations['colleges'] = $collegeSchema->getAll(['orderBy'=>'name']) ?? [];
+            $organizations['departments'] = $departmentSchema->getAll(['orderBy'=>'name']) ?? [];
         }
         elseif ($viewer->classDataUser)
         {
             $authZ = $this->getAuthorizationManager();
             $azids = $authZ->getObjectsForWhich($viewer, 'view org templates');
-            $organizations['colleges'] = $collegeSchema->getByAzids($azids) ?? [];
-            $organizations['departments'] = $departmentSchema->getByAzids($azids) ?? [];
+            $organizations['colleges'] = $collegeSchema->getByAzids($azids, null, ['orderBy'=>'name']) ?? [];
+            $organizations['departments'] = $departmentSchema->getByAzids($azids, null, ['orderBy'=>'name']) ?? [];
         }
 
         $this->template->allOrganizations = $organizations;
@@ -71,13 +71,13 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
         if ($this->hasPermission('admin'))
         {
-            $organizations = $this->organizationSchema->getAll() ?? [];
+            $organizations = $this->organizationSchema->getAll(['orderBy'=>'name']) ?? [];
         }
         else
         {
             $authZ = $this->getAuthorizationManager();
             $azids = $authZ->getObjectsForWhich($viewer, 'view org templates');
-            $organizations = $this->organizationSchema->getByAzids($azids) ?? [];
+            $organizations = $this->organizationSchema->getByAzids($azids, null, ['orderBy'=>'name']) ?? [];
         }
 
         $this->template->organizations = $organizations;    
@@ -168,6 +168,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         
         $this->template->pagesAroundCurrent = $this->getPagesAroundCurrent($page, $pageCount, $organization);
         
+        // DEBUG override of optionMap
         $accountList = $accounts->find($condition, $optionMap);
         
         $this->template->searchQuery = $searchQuery;

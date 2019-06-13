@@ -103,6 +103,24 @@ div.main-content {
 	}
 }
 
+// SORTABLE STYLES - jQuery UI
+.drop-placeholder {
+	background-color: lightgray;
+	height: 3.5em;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	line-height: 1.2em;
+}
+#sortable { 
+	list-style-type: none; margin: 0; padding: 0; width: 60%; 
+}
+.ui-state-highlight { 
+	height: 8em; 
+	margin-top: 1em;
+	background-color: $warning;
+	opacity: .4;
+}
+
 .card-img-top.crop-top {
 	object-fit: cover; 
 	object-position: top;
@@ -115,10 +133,56 @@ div.main-content {
 	&.crop-top-10 {
 		max-height: 10rem;
 	}
+	&.crop-top-13 {
+		max-height: 13rem;
+	}
 	&.crop-top-15 {
 		max-height: 15rem;
 	}
 }
+.card-img-top-overlay {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	> img {
+		width: 100%;
+		height: 100%;
+		vertical-align: top;
+	}
+	&:after {
+	    content: '\A';
+	    position: absolute;
+	    width: 100%; height:100%;
+	    top:0; left:0;
+	    background: rgba(150, 150, 150, .6);
+	    transition: all 1s;
+	    -webkit-transition: all 1s;
+	}
+}
+.overlay-checkbox {
+	z-index: 1;
+}
+
+
+.mh-20 {
+	max-height: 20% !important;
+}
+.mh-15 {
+	max-height: 15% !important;
+}
+.mh-10 {
+	max-height: 10% !important;
+}
+.mw-20 {
+	max-width: 20% !important;
+}
+.mw-15 {
+	max-width: 15% !important;
+}
+.mw-10 {
+	max-width: 10% !important;
+}
+
 
 .min-vh-100 {
 	min-height: 100vh;
