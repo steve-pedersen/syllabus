@@ -31,7 +31,20 @@ div.my-syllabi-nav {
 		width: 30%;
 	}
 }
+a.see-more-toggle {
+	font-size: 13pt;
+	font-weight: 600;
+}
+a.collapsed:after  {
+	content: '+ See More';
+}
+a.see-more-toggle:not(.collapsed):after {
+	content: '- See Less';
+}
 div.overview-container {
+	.overview-section {
+		margin-bottom: 10rem;
+	}
 	h2 {
 		font-size: 1.75rem;
 	}
@@ -39,15 +52,7 @@ div.overview-container {
 
 	}
 	.campus-resources {
-		a#seeMoreToggle1 {
-			font-size: 13pt;
-		}
-		a.collapsed:after  {
-			content: '+ See More';
-		}
-		a#seeMoreToggle1:not(.collapsed):after {
-			content: '- See Less';
-		}
+
 	}
 
 	.documents-guidelines {

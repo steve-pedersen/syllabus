@@ -81,10 +81,16 @@
 						<div class="media-body pl-1">
 							<h5 class="card-title">{$campusResource->title}{if $campusResource->abbreviation} <small>({$campusResource->abbreviation})</small>{/if}</h5>
 							<div class="wrap pb-2"><div class="left"></div><div class="right"></div></div>
-							<p class="card-text text-muted">{$campusResource->description}</p>
+							<p class="card-text text-muted">
+								{$campusResource->description}
+								<small class="align-bottom d-block">
+									<strong class="mr-2">Website: </strong><a target="_blank" href="{$campusResource->url}">{$campusResource->title}</a>
+								</small>
+							</p>
+
 							<div class="">
-								<button class="btn btn-info btn-sm" target="_blank" href="{$campusResource->url}">Preview</button>
-								<input class="btn btn-secondary btn-sm" type="submit" name="command[edit][{$campusResource->id}]" id="editResource" value="Edit" />
+								<!-- <button class="btn btn-info btn-sm" target="_blank" href="{$campusResource->url}">Preview</button> -->
+								<input class="btn btn-info btn-sm" type="submit" name="command[edit][{$campusResource->id}]" id="editResource" value="Edit" />
 								<input class="btn btn-danger btn-sm" type="submit" name="command[delete][{$campusResource->id}]" id="saveResource" value="Delete" />
 							</div>
 						</div>

@@ -1,14 +1,13 @@
+<div class="container-fluid campus-resources-overview mb-5">
 <h2>Campus Resources</h2>
 <p class="text-muted">Add links to various campus resources to your syllabi. Choose "Add to syllabus" to select which syllabi to import each resource into.</p>
-
-<div class="container-fluid campus-resources mb-5">
 	<div class="row mb-4">
 	{assign var=hasSeeMore value=false}
 {foreach $campusResources as $i => $campusResource}	
-	{if ($i % 3) == 0}
+	{if $i > 0 && ($i % 3) == 0}
 		</div>
 		{if $i == 6}
-			<div class="collapse" id="seeMore1">
+			<div class="collapse" id="seeMoreResources">
 			{assign var=hasSeeMore value=true}
 		{/if}
 		<div class="row mb-4">
@@ -27,10 +26,10 @@
 						<span id="url{$i}" class="hidden" hidden>{$campusResource->url}</span>
 						<div class="">
 						<button id="preview{$i}" class="btn btn-info btn-sm" data-toggle="modal" data-target="#resourcePreviewModal">
-							Preview
+							More Info
 						</button>
 						{if $syllabi}
-						<button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#resourceAddModal">
+						<button class="btn btn-secondary btn-sm" data-toggle="modal" data-target="#resourceAddModal">
 							Add to Syllabus
 						</button>
 						{/if}
@@ -41,11 +40,13 @@
 		</div>
 	</div>
 {/foreach}
+	</div> <!-- END row -->
+{if $hasSeeMore}
+</div> <!-- END collapse -->
+<div class="float-right">
+	<a class="collapsed ml-auto see-more-toggle" id="seeMoreToggle1" data-toggle="collapse" href="#seeMoreResources" aria-expanded="false" aria-controls="seeMoreResources"></a>
 </div>
-{if $hasSeeMore}</div>{/if}
-	<div class="float-right">
-		<a class="collapsed ml-auto" id="seeMoreToggle1" data-toggle="collapse" href="#seeMore1" aria-expanded="false" aria-controls="seeMore1"></a>
-	</div>
+{/if}
 </div>
 
 <!-- Add to Syllabus Modal -->
@@ -66,11 +67,12 @@
 	</div>
 	<div class="modal-body">
 		<div class="container-fluid">
-			<h6 class="text-muted">Most recent syllabi:</h6>
+			<p class="text-muted">Check each syllabus that you want to import this resource into.</p>
+			<h6 class="">Most recent syllabi:</h6>
 			<div class="row mb-3">	
 			{foreach $syllabi as $i => $syllabus}
 			{if $i == 6}{break}{/if}
-			{if ($i % 3) == 0}</div><div class="row mb-3">{/if}
+			{if $i > 0 && ($i % 3) == 0}</div><div class="row mb-3">{/if}
 			<div class="col-lg-4 col-md-6 px-2">
 				<div class="card">
 					<label class="form-check-label" for="overlayCheck{$i}">
@@ -83,12 +85,12 @@
 						<div class="card-img-top-overlay p-0">
 							<img src="assets/images/testing0{$i}.jpg" class="card-img-top crop-top crop-top-13" alt="{$syllabus->title}" />
 						</div>
-						<h6 class="mt-3">{$syllabus->title}</h6>
+						<h6 class="mt-3 text-dark">{$syllabus->title}</h6>
 						<small class="d-block">
-						<p class="card-text">{$syllabus->description}
-							<strong class="d-block">Last Modified:</strong> 
-							{$syllabus->modifiedDate->format('F jS, Y - h:i a')}
-						</p>
+							<p class="card-text">{$syllabus->description}
+								<strong class="d-block">Last Modified:</strong> 
+								{$syllabus->modifiedDate->format('F jS, Y - h:i a')}
+							</p>
 						</small>
 					</div>
 					</label>
@@ -140,9 +142,6 @@
 	</div>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		{if $syllabi}
-		<button type="button" class="btn btn-primary">Update this to do something...</button>
-		{/if}
 	</div>
     </div>
   </div>

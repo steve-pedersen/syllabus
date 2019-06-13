@@ -1,5 +1,5 @@
 
-<div class="p-3">
+<div class="p-3 my-syllabi-container">
 	<div class="my-syllabi-nav-container border-bottom mb-4">
 	<div class="my-syllabi-nav ">
 		<nav class="nav">
@@ -17,9 +17,9 @@
 	</div>
 	</div>
 
-	<div class="card" id="mySyllabi">
+	<div class="card border-0" id="mySyllabi">
 		<input type="hidden" name="mode" value="{$mode}">
-		<div class="card-body">
+		<div class="card-body px-0">
 			<div class="tab-content">
 				<div class="tab-pane {if $mode == 'overview'}active{/if}" id="overview" role="tabpanel" aria-labelledby="overview-tab">
 					{if $mode == 'overview' || ($mode != 'courses' && $mode != 'submissions')}

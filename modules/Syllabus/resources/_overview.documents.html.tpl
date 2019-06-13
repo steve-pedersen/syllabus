@@ -1,5 +1,7 @@
+<div class="container-fluid documents-overview mb-5">
 <h2>Guidelines & Documents</h2>
 <p class="text-muted">Learn about the many ways you can improve your syllabus.</p>
+
 <div class="row">
 	<div class="col-sm-4 pr-5">
 		<div class="card card-bordered card-bordered-left card-bordered-secondary h-100">
@@ -30,4 +32,5 @@
 			</div>
 		</div>
 	</div>
+</div>
 </div>
