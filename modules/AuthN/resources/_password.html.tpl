@@ -1,4 +1,4 @@
-<fieldset class="section{if $last} last{/if}">
+<!-- <fieldset class="section{if $last} last{/if}">
     <legend>Change {if $account == $viewer}your{/if} password</legend>
     {if $account == $viewer}
     <p>
@@ -36,3 +36,4 @@
         <input type="password" class="form-control" name="passwordConfirm" id="passwordConfirm" autocomplete="off">
     </div>
 </fieldset>
+ -->

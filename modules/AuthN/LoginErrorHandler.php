@@ -26,20 +26,28 @@
  */
 class Syllabus_AuthN_LoginErrorHandler extends Syllabus_Master_ErrorHandler
 {
-    public static function getErrorClassList () { return array('Bss_AuthN_ExLoginRequired', 'Bss_AuthN_ExAuthenticationFailure'); }
+    public static function getErrorClassList () 
+    { 
+        return ['Bss_AuthN_ExLoginRequired', 'Bss_AuthN_ExAuthenticationFailure', 'Bss_AuthN_ExNoAccount'];
+    }
     
     private $pageTitle;
     private $selectedHandler;
-    private static $Handlers = array(
-        'Bss_AuthN_ExLoginRequired' => array(
+    private static $Handlers = [
+        'Bss_AuthN_ExLoginRequired' => [
             'template' => 'loginRequired.html.tpl',
             'method' => 'handleLoginRequired',
-        ),
-        'Bss_AuthN_ExAuthenticationFailure' => array(
-            'template' => 'failedAuthentication.html.tpl',
+        ],
+        'Bss_AuthN_ExAuthenticationFailure' => [
+            // 'template' => 'failedAuthentication.html.tpl',
+            'template' => 'error-403-authentication-failed.html.tpl',
             'method' => 'handleFailedAuthentication',
-        )
-    );
+        ],
+        'Bss_AuthN_ExNoAccount' => [
+            'template' => 'error-login.html.tpl',
+            'method' => 'handleNoAccount',
+        ],
+    ];
     
     protected function getStatusCode () { return 403; }
     protected function getStatusMessage () { return 'Forbidden'; }
@@ -61,18 +69,23 @@ class Syllabus_AuthN_LoginErrorHandler extends Syllabus_Master_ErrorHandler
         
         $this->template->providerList = $providerList;
         $this->template->selectedProvider = $providerName;
-        
-        call_user_func(array($this, $this->selectedHandler['method']), $error);
+
+        call_user_func([$this, $this->selectedHandler['method']], $error);
         
         parent::handleError($error);
     }
     
     protected function handleLoginRequired ($error)
     {
-        
+
     }
     
     protected function handleFailedAuthentication ($error)
+    {
+        
+    }
+
+    protected function handleNoAccount ($error)
     {
         
     }

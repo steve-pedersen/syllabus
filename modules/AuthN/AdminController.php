@@ -4,23 +4,22 @@
  * Administrate accounts, roles, and access levels.
  * 
  * @author      Daniel A. Koepke (dkoepke@sfsu.edu)
- * @author      Steve Pedersen (pedersen@sfsu.edu)
  * @copyright   Copyright &copy; San Francisco State University.
  */
 class Syllabus_AuthN_AdminController extends Syllabus_Master_Controller
 {
     public static function getRouteMap ()
     {
-        return array(
-            'admin/accounts' => array('callback' => 'listAccounts'),
-            'admin/accounts/:id' => array('callback' => 'editAccount', ':id' => '([0-9]+|new)'),
-            'admin/roles' => array('callback' => 'listRoles'),
-			'admin/roles/all' => array('callback' => 'listRoles', 'showAll' => true),
-            'admin/roles/:id' => array('callback' => 'editRole', ':id' => '([0-9]+|new)'),
-            'admin/roles/:id/delete' => array('callback' => 'deleteRole', ':id' => '[0-9]+'),
-            'admin/levels/:id' => array('callback' => 'editAccessLevel', ':id' => '([0-9]+|new)'),
-			'admin/levels/:id/delete' => array('callback' => 'deleteAccessLevel', ':id' => '[0-9]+'),
-        );
+        return [
+            'admin/accounts' => ['callback' => 'listAccounts'],
+            'admin/accounts/:id' => ['callback' => 'editAccount', ':id' => '([0-9]+|new)'],
+            'admin/roles' => ['callback' => 'listRoles'],
+			'admin/roles/all' => ['callback' => 'listRoles', 'showAll' => true],
+            'admin/roles/:id' => ['callback' => 'editRole', ':id' => '([0-9]+|new)'],
+            'admin/roles/:id/delete' => ['callback' => 'deleteRole', ':id' => '[0-9]+'],
+            'admin/levels/:id' => ['callback' => 'editAccessLevel', ':id' => '([0-9]+|new)'],
+			'admin/levels/:id/delete' => ['callback' => 'deleteAccessLevel', ':id' => '[0-9]+'],
+        ];
     }
 
     public function beforeCallback ($callback)
@@ -58,7 +57,7 @@ class Syllabus_AuthN_AdminController extends Syllabus_Master_Controller
         $page = max(1, $page);
         $offset = ($page-1) * $limit;
         
-        $optionMap = array();
+        $optionMap = [];
         
         if ($limit)
         {
@@ -120,56 +119,56 @@ class Syllabus_AuthN_AdminController extends Syllabus_Master_Controller
         $this->template->limit = $limit;
     }
 
-    // public function editAccount ()
-    // {
-    //     $viewer = $this->requireLogin();
-    //     $id = $this->getRouteVariable('id');
-    //     $accounts = $this->schema('Bss_AuthN_Account');
-    //     $returnTo = $this->request->getQueryParameter('returnTo', 'admin/accounts');
+    public function editAccount ()
+    {
+        $viewer = $this->requireLogin();
+        $id = $this->getRouteVariable('id');
+        $accounts = $this->schema('Bss_AuthN_Account');
+        $returnTo = $this->request->getQueryParameter('returnTo', 'admin/accounts');
         
-    //     if ($id == 'new')
-    //     {
-    //         $this->setPageTitle('New account');
-    //         $account = $accounts->createInstance();
-    //         $newAccount = true;
-    //     }
-    //     else
-    //     {
-    //         if (!($account = $accounts->get($id)))
-    //         {
-    //             $this->notFound();
-    //         }
-    //         $newAccount = false;
-    //         $this->setPageTitle('Edit ' . $account->displayName);
-    //     }
+        if ($id == 'new')
+        {
+            $this->setPageTitle('New account');
+            $account = $accounts->createInstance();
+            $newAccount = true;
+        }
+        else
+        {
+            if (!($account = $accounts->get($id)))
+            {
+                $this->notFound();
+            }
+            $newAccount = false;
+            $this->setPageTitle('Edit ' . $account->displayName);
+        }
 
-    //     $roles = $this->schema('Syllabus_AuthN_Role');
-    //     $roleList = $roles->find($roles->isSystemRole->equals(true), array('orderBy' => '+name'));
+        $roles = $this->schema('Syllabus_AuthN_Role');
+        $roleList = $roles->find($roles->isSystemRole->equals(true), array('orderBy' => '+name'));
         
-    //     if ($this->request->wasPostedByUser())
-    //     {
-    //         if ($account->handleSettings($this->request, true, $roleList))
-    //         {
-    //             if ($id == 'new')
-    //             {
-    //                 $account->source = 'admin';
-    //                 $account->createdDate = new DateTime;
-    //             }
+        if ($this->request->wasPostedByUser())
+        {
+            if ($account->handleSettings($this->request, true, $roleList))
+            {
+                if ($id == 'new')
+                {
+                    $account->source = 'admin';
+                    $account->createdDate = new DateTime;
+                }
                 
-    //             $account->save();
-    //             $this->response->redirect($returnTo);
-    //         }
-    //         else
-    //         {
-    //             $this->template->errorMap = $account->getValidationMessages();
-    //         }
-    //     }
+                $account->save();
+                $this->response->redirect($returnTo);
+            }
+            else
+            {
+                $this->template->errorMap = $account->getValidationMessages();
+            }
+        }
 
-    //     $this->template->newAccount = $newAccount;
-    //     $this->template->account = $account;
-    //     $this->template->roleList = $roleList;
-    //     $this->template->returnTo = $returnTo;
-    // }
+        $this->template->newAccount = $newAccount;
+        $this->template->account = $account;
+        $this->template->roleList = $roleList;
+        $this->template->returnTo = $returnTo;
+    }
 
     private function getQueryString ($merge = null)
     {
@@ -215,7 +214,7 @@ class Syllabus_AuthN_AdminController extends Syllabus_Master_Controller
     
     private function getPagesAroundCurrent ($currentPage, $pageCount)
     {
-		$pageList = array();
+		$pageList = [];
 		
         if ($pageCount > 0)
         {

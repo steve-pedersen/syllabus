@@ -10,19 +10,19 @@ class Syllabus_Welcome_AdminDashboardItemProvider extends At_Admin_DashboardItem
     public function getSections (Bss_Master_UserContext $userContext)
     {
         return array(
-            'Welcome' => array('order' => 3),
+            // 'Welcome' => array('order' => 3),
         );
     }
     
     public function getItems (Bss_Master_UserContext $userContext)
     {
         return array(
-            'welcome-text' => array(
-                'section' => 'Welcome',
-                'order' => 1,
-                'text' => 'Change Welcome page text',
-                'href' => 'admin/welcome',
-            ),
+            // 'welcome-text' => array(
+            //     'section' => 'Welcome',
+            //     'order' => 1,
+            //     'text' => 'Change Welcome page text',
+            //     'href' => 'admin/welcome',
+            // ),
         );
     }
 }

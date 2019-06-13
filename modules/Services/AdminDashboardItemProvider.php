@@ -10,7 +10,7 @@ class Syllabus_Services_AdminDashboardItemProvider extends At_Admin_DashboardIte
     public function getSections (Bss_Master_UserContext $userContext)
     {
         return array(
-            'Services' => array('order' => 1),
+            'Services' => array('order' => 3),
         );
     }
     

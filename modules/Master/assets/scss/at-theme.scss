@@ -1,6 +1,7 @@
 @import "at-mixins";
 @import "at-header";
 @import "at-footer";
+@import "stretched-link";
 
 html {
 	position: relative;
@@ -11,7 +12,7 @@ body {
 	// font-family: 'Julius Sans One', sans-serif;
   font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
   // letter-spacing: .5px;
-	margin-bottom: 260px;
+	margin-bottom: 237px;
 
 	#content {
 		min-height: 260px;
@@ -154,6 +155,33 @@ table.hide-exempt tr.exempt { display: none; }
 .search-box:not(:valid) ~ .close-icon {
   display: none;
 }
+.font-w100 {
+    font-weight: 100!important;
+}
+.font-w200 {
+    font-weight: 200!important;
+}
+.font-w300 {
+    font-weight: 300!important;
+}
+.font-w400 {
+    font-weight: 400!important;
+}
+.font-w500 {
+    font-weight: 500!important;
+}
+.font-w600 {
+    font-weight: 600!important;
+}
+.font-w700 {
+    font-weight: 700!important;
+}
+.font-w800 {
+    font-weight: 800!important;
+}
+.font-w900 {
+    font-weight: 900!important;
+}
 
 
 // ALERTS  ////////////////////////////////////////////////////
@@ -185,7 +213,7 @@ table.hide-exempt tr.exempt { display: none; }
 //     vertical-align: baseline;
 //     font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
 //     margin: 0 .25em 0 0;
-//     padding: .78571429em 1.5em .78571429em;
+//     padding: .7em 1.5em .7em;
 //     text-transform: none;
 //     text-shadow: none;
 //     font-weight: 700;
@@ -207,6 +235,72 @@ table.hide-exempt tr.exempt { display: none; }
 //     will-change: '';
 //     -webkit-tap-highlight-color: transparent;
 // }
+
+
+
+.row-divided {
+  position:relative;
+  height:100%;
+  .vertical-divider {
+    position: absolute;
+    z-index: 10;
+    top: 50%;
+    left: 50%;
+    margin: 0;
+    padding: 0;
+    width: auto;
+    height: 50%;
+    line-height: 0;
+    text-align:center;
+    text-transform: uppercase;
+    transform: translateX(-50%);
+  }
+
+  .vertical-divider:before, 
+  .vertical-divider:after {
+    position: absolute;
+    left: 50%;
+    content: '';
+    z-index: 9;
+    border-left: 1px solid $dark;
+    border-right: 1px solid $dark;
+    width: 0;
+    height: calc(100% - 1rem);
+  }
+
+  .row-divided > .vertical-divider {
+    height: calc(50% - 1rem);    
+  }
+
+  .vertical-divider:before {
+    top: -100%;
+  }
+
+  .vertical-divider:after {
+    top: auto;
+    bottom: 0;
+  }
+  /* just to set different column heights - not needed to function */          
+  // .column-one {
+  //   height: 300px; 
+  //   background-color: #EBFFF9;
+  // }
+  // .column-two {
+  //   height: 400px;
+  //   background-color: #F7F3FF;
+  // }
+}
+
+.row-divided > [class^="col-"],
+.row-divided > [class*=" col-"] {
+  padding-left: 30px;  /* gutter width (give a little extra room) 2x default */
+  padding-right: 30px; /* gutter width (give a little extra room) 2x default */
+}
+
+
+
+
+
 
 
 // .icon-header {

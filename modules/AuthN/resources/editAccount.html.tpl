@@ -1,4 +1,4 @@
-<h1>{if !$account->inDataSource}New account{else}Edit account: {$account->username|escape}{/if}. +=+</h1>
+<h1>{if !$account->inDataSource}New account{else}Edit account: {$account->username|escape}{/if}</h1>
 
 <form method="post" action="{$smarty.server.REQUEST_URI|escape}">
 

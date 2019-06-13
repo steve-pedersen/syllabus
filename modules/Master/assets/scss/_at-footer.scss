@@ -4,11 +4,13 @@
 	position: absolute;
 	bottom:0;
 	width:100%;
-	padding-top:2em;
+	// padding-top:2em;
+	padding-top:0;
 	font-family: Lato, 'Helvetica Neue', Helvetica, Arial, sans-serif;
 	// line-height: 1.4285em;
 	font-size: 14px;
 	// font-family: 'Julius Sans One', sans-serif;
+	z-index: -10;
 	ul { margin-top:10px; }
 	a, strong, h2 {
 		color: $footer-text-white;
@@ -42,6 +44,8 @@
 		}
 	}
 	.footer-row-2 {
+		// background-color: #330333;
+		// background-color: $dark;
 		padding-top: 1rem;
 		font-family: 'Julius Sans One', sans-serif;
 		#contact-university {

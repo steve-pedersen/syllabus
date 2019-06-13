@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * 	TODO: Update this to check for account on shibboleth auth, then check ClassData table if exists
  */
 class Syllabus_AuthN_IdentityProvider extends At_Shibboleth_IdentityProvider
 {
@@ -46,6 +47,7 @@ class Syllabus_AuthN_IdentityProvider extends At_Shibboleth_IdentityProvider
     
 
     /**
+     * 	TODO: Update this to check for account on shibboleth auth, then check ClassData table if exists
      *  Allow faculty, staff, and students who teach courses to create accounts.
      */
     protected function getAllowCreateAccount (Bss_AuthN_Identity $identity)
@@ -68,7 +70,7 @@ class Syllabus_AuthN_IdentityProvider extends At_Shibboleth_IdentityProvider
             }
         }
 
-        $users = $this->schema('At_CS_User');
+        $users = $this->schema('Syllabus_ClassData_User');
         $teacherSym = new Bss_ActiveRecord_RawSymbol('enrollments', 'user_id', 'string');
         $cond = $teacherSym->equals($identity->getUsername());
         $roleSym = new Bss_ActiveRecord_RawSymbol('enrollments', 'role', 'string');
@@ -81,7 +83,7 @@ class Syllabus_AuthN_IdentityProvider extends At_Shibboleth_IdentityProvider
                 'orderBy' => array('+lastName', '+firstName'),
                 'extraJoins' => array(
                     'enrollments' => array(
-                        'to' => 'at_cmsdata_enrollments',
+                        'to' => 'syllabus_classdata_enrollments',
                         'on' => array('id' => 'user_id'),
                         'type' => Bss_DataSource_SelectQuery::INNER_JOIN,
                     ),

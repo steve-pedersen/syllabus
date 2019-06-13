@@ -33,6 +33,12 @@ class Syllabus_Files_File extends Bss_ActiveRecord_Base
         return file_exists($this->localName);
     }
 
+    public function isCampusResourceImage ()
+    {
+        $resources = $this->getSchema('Syllabus_Syllabus_CampusResource');
+        $result = $resources->findOne($resources->imageId->equals($this->id));
+        return  (($result !== null) && !empty($result));
+    }
 
     public function createFromRequest ($request, $inputName)
     {
@@ -218,6 +224,15 @@ class Syllabus_Files_File extends Bss_ActiveRecord_Base
         }
         
         return $base . 'files/' . $this->id . '/download';
+    }
+
+    public function getImageSrc ()
+    {
+        if ($this->isCampusResourceImage())
+        {
+            return 'files/' . $this->id . '/imagesrc';
+        }
+        return $this->getDownloadUrl();
     }
 
     public function beforeDelete ()

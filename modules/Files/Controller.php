@@ -6,6 +6,7 @@ class Syllabus_Files_Controller extends Syllabus_Master_Controller
     {
         return array(
             '/files/:fid/download' => array( 'callback' => 'download', 'fid' => '[0-9]+'),
+            '/files/:fid/imagesrc' => array( 'callback' => 'imageSrc', 'fid' => '[0-9]+'),
             '/files/check'         => array( 'callback' => 'check'),
         );
     }
@@ -26,7 +27,15 @@ class Syllabus_Files_Controller extends Syllabus_Master_Controller
 
 		$this->template->missing = $missing;
 	}
-    
+
+    public function imageSrc ()
+    {
+        $this->requireLogin();
+        $fid = $this->getRouteVariable('fid');
+        $file = $this->requireExists($this->schema('Syllabus_Files_File')->get($fid));
+        $file->sendFile($this->response);
+    }
+  
     public function download ()
     {
         $account = $this->requireLogin();

@@ -1,13 +1,9 @@
-{assign var=realSection value=$section->version->resolveSection()}
+{assign var=realSection value=$sectionVersion->resolveSection()}
 <!-- Objectives Section - View --> 
-<div class="form-group row">
-    <div class="col">
-        <h4>{$realSection->title}</h4>
-    </div>
+<div class="col">
+    <h4>{$realSection->title}</h4>
 </div>
-<div class="form-group row">
-    <div class="col">
-        {$realSection->description}
-    </div>
+<div class="col">
+    {$realSection->description}
 </div>
 <!-- End Objectives Section - View -->

@@ -23,7 +23,7 @@ $theme7: #2e4865;
 }
 @mixin navbar-link($link-color: $navbar-default-link-color, $hover-color: $navbar-default-link-hover-color, $hover-bg: $navbar-default-link-hover-bg) {
 	color: $link-color;
-	text-transform: uppercase;
+	// text-transform: uppercase;
 	transition: background-color 0.1s;
 	@include navbar-link-active-disabled($hover-color, $hover-bg);
 }

@@ -10,13 +10,13 @@ class Syllabus_Objectives_Objective extends Bss_ActiveRecord_Base
 {
     public static function SchemaInfo ()
     {
-        return array(
+        return [
             '__type' => 'syllabus_objectives',
-            '__pk' => array('id'),
+            '__pk' => ['id'],
             
             'id' => 'int',      
             'title' => 'string',
             'description' => 'string',
-        );
+        ];
     }
 }
