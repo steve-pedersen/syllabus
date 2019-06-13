@@ -18,6 +18,8 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
 
     protected function getTemplateClass () { return 'Syllabus_Master_Template'; }
 
+    protected function getThis () { return $this; }
+
     protected function initController ()
     {
         parent::initController();
@@ -76,6 +78,35 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
             $this->template->flashClass = $session->flashClass;
             unset($session->flashClass);
         }
+
+        $page = '';
+        if ($callback === 'mySyllabi' || $callback === 'start')
+        {
+            if (($mode = $this->request->getQueryParameter('mode')) && $this->request->getQueryParameter('mode') !== '')
+            {
+                $page = $mode;
+            }
+            elseif ($callback === 'start')
+            {
+                $page = 'start';
+            }
+            else 
+            {
+                $page = 'overview';
+            }
+        }
+        elseif ($callback === 'listOrganizations')
+        {
+            $uri = $this->request->getFullRequestedUri();
+            if (strpos($uri, '/syllabus/') !== false)
+            {
+                $uri = substr($uri, strpos($uri, '/', 1)+1, strlen($uri));
+            }
+            $page = $uri;
+
+        }
+
+        $this->template->page = $page;
 
         parent::afterCallback($callback);
     }

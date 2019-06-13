@@ -19,6 +19,7 @@ class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                 $def->addProperty('created_by_id', 'int');
                 $def->addProperty('created_date', 'datetime');
                 $def->addProperty('modified_date', 'datetime');
+                $def->addProperty('template_authorization_id', 'string');
                 $def->addIndex('created_by_id');
                 $def->save();
 
@@ -48,8 +49,8 @@ class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                 $def->addProperty('description', 'string');
                 $def->addProperty('section_id', 'int');
                 $def->addProperty('created_date', 'datetime');
-                $def->addProperty('course_info_id', 'int');
-                $def->addProperty('instructor_info_id', 'int');
+                $def->addProperty('course_id', 'int');
+                $def->addProperty('instructor_id', 'int');
                 $def->addProperty('teaching_assistants_id', 'int');
                 $def->addProperty('objectives_id', 'int');
                 $def->addProperty('materials_id', 'int');
@@ -59,12 +60,14 @@ class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                 $def->addProperty('learning_outcomes_id', 'int');
                 $def->addProperty('resources_id', 'int');
                 $def->addProperty('policies_id', 'int');
+                $def->addProperty('containers_id', 'int');
+                $def->addProperty('container_group_id', 'int');
                 $def->addIndex('section_id');
                 $def->save();
 
 
                 $def = $this->createEntityType('syllabus_subsections', $this->getDataSource('Syllabus_Syllabus_Subsection'));
-                $def->addProperty('id', 'int', array('sequence' => true, 'primaryKey' => true));
+                $def->addProperty('id', 'int', ['sequence' => true, 'primaryKey' => true]);
                 $def->addProperty('title', 'string');
                 $def->addProperty('description', 'string');
                 $def->addProperty('section_version_id', 'id');
@@ -76,18 +79,19 @@ class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                 $def->save();
 
 
-                $def = $this->createEntityType('syllabus_syllabus_version_section_map', 'Syllabus_Syllabus_SyllabusVersion');
-                $def->addProperty('syllabus_version_id', 'int', array('primaryKey' => true));
-                $def->addProperty('section_version_id', 'int', array('primaryKey' => true));
+                $def = $this->createEntityType('syllabus_syllabus_version_section_version_map', 'Syllabus_Syllabus_SyllabusVersion');
+                $def->addProperty('syllabus_version_id', 'int', ['primaryKey' => true]);
+                $def->addProperty('section_version_id', 'int', ['primaryKey' => true]);
                 $def->addProperty('is_anchored', 'bool');
                 $def->addProperty('sort_order', 'int');
                 $def->addProperty('read_only', 'bool');
                 $def->addProperty('log', 'string');
+                $def->addProperty('inherited', 'bool');
                 $def->save();
          
 
                 $def = $this->createEntityType('syllabus_published_syllabus', $this->getDataSource('Syllabus_Syllabus_PublishedSyllabus'));
-                $def->addProperty('id', 'int', array('primaryKey' => true, 'sequence' => true));
+                $def->addProperty('id', 'int', ['primaryKey' => true, 'sequence' => true]);
                 $def->addProperty('syllabus_id', 'int');
                 $def->addProperty('published_date', 'datetime');
                 $def->addIndex('syllabus_id');
@@ -97,6 +101,19 @@ class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                 $def = $this->createEntityType('syllabus_published_syllabus_section_map', 'Syllabus_Syllabus_PublishedSyllabus');
                 $def->addProperty('published_id', 'int');
                 $def->addProperty('section_id', 'int');
+                $def->save();
+
+
+                $def = $this->createEntityType('syllabus_campus_resources', $this->getDataSource('Syllabus_Syllabus_CampusResource'));
+                $def->addProperty('id', 'int', ['sequence' => true, 'primaryKey' => true]);
+                $def->addProperty('title', 'string');
+                $def->addProperty('description', 'string');
+                $def->addProperty('abbreviation', 'string');
+                $def->addProperty('url', 'string');
+                $def->addProperty('image_id', 'int');
+                $def->addProperty('sort_order', 'int');
+                $def->addProperty('created_date', 'datetime');
+                $def->addProperty('deleted', 'bool');
                 $def->save();
 
                 break;

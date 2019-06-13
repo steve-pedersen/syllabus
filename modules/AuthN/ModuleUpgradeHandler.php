@@ -13,10 +13,9 @@ class Syllabus_AuthN_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModuleUpg
         switch ($fromVersion)
         {
             case 0:
-                $this->requireModule('bss:core:authZ', 1);
-                
+                $this->requireModule('bss:core:authZ', 1);             
                 $this->useDataSource('Bss_AuthN_Account');
-                
+
                 // Entity for roles.
                 $def = $this->createEntityType('syllabus_authn_roles', 'Syllabus_AuthN_Role');
                 $def->addProperty('id', 'int', array('sequence' => true, 'primaryKey' => true));
@@ -47,7 +46,7 @@ class Syllabus_AuthN_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModuleUpg
                     array(
                         array('name' => 'Administrator', 'description' => 'Has every possible permission.', 'is_system_role' => true),
                         array('name' => 'Faculty', 'description' => 'Faculty member', 'is_system_role' => true),
-                        array('name' => 'Lecturer', 'description' => 'Lecturer member', 'is_system_role' => true),
+                        array('name' => 'Staff', 'description' => 'Staff member', 'is_system_role' => true),
                     ),
                     array(
                         'idList' => array('id')

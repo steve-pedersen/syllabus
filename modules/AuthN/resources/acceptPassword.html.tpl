@@ -3,7 +3,7 @@
     <div class="card mx-auto">
         <div class="card-header">Login</div>
         <div class="card-body">
-            <form method="post" action="login/complete/sfsu-pw" class="prominent data">
+            <form method="post" action="{$postAction}" class="prominent data">
                 <div class="form-group">
                     <input type="text" class="form-control" id="password-username" name="username" placeholder="Username/Email" alt="Username/Email" autofocus>
                 </div>

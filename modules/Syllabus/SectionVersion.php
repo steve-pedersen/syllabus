@@ -13,32 +13,37 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
 
     public static function SchemaInfo ()
     {
-        return array(
+        return [
             '__type' => 'syllabus_section_versions',
-            '__pk' => array('id'),
+            '__pk' => ['id'],
             '__azidPrefix' => 'at:syllabus:syllabus/Section/',
             '__extensionPoint' => 'at:syllabus:syllabus/sectionExtensions',
             
             'id' => 'int',
             'title' => 'string',
             'description' => 'string', 
-            'sectionId' => array('int', 'nativeName' => 'section_id'),
-            'createdDate' => array('datetime', 'nativeName' => 'created_date'),
+            'sectionId' => ['int', 'nativeName' => 'section_id'],
+            'createdDate' => ['datetime', 'nativeName' => 'created_date'],
            
-            'section' => array('1:1', 'to' => 'Syllabus_Syllabus_Section', 'keyMap' => array('section_id' => 'id')),
-            'subsections' => array('1:N', 'to' => '', 'reverseOf' => 'parent', 'orderBy' => array('+sortOrder')),
+            'section' => ['1:1', 'to' => 'Syllabus_Syllabus_Section', 'keyMap' => ['section_id' => 'id']],
+            // 'subsections' => array('1:N', 'to' => '', 'reverseOf' => 'parent', 'orderBy' => array('+sortOrder')),
+
+            // 'container' => ['1:1', 'to' => 'Syllabus_Syllabus_SectionVersion', 'keyMap' => ['container_group_id' => 'id']],
+            // 'containerItems' => ['1:N', 'to' => 'Syllabus_Syllabus_SectionVersion', 'reverseOf' => 'container', 'orderBy' => ['+sortOrder']],
 
             // probably don't need this
-            'syllabusVersions' => array('N:M',
+            'syllabusVersions' => ['N:M',
                 'to' => 'Syllabus_Syllabus_SyllabusVersion',
-                'via' => 'syllabus_syllabus_version_section_map',
+                'via' => 'syllabus_syllabus_version_section_version_map',
                 'fromPrefix' => 'section_version',
                 'toPrefix' => 'syllabus_version',
-                'properties' => array('sort_order' => 'int', 'read_only' => 'bool', 'is_anchored' => 'bool', 'log' => 'string'),
-                'orderBy' => array('+_map.sort_order')
-            ),
+                'properties' => [
+                    'sort_order' => 'int', 'read_only' => 'bool','inherited' => 'bool', 'is_anchored' => 'bool', 'log' => 'string'
+                ],
+                'orderBy' => ['+_map.sort_order']
+            ],
 
-        );
+        ];
     }
 
     public function resolveSection ()
@@ -54,6 +59,27 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
         }
 
         return $this->_realSection ?? null;
+    }
+
+    public function createDerivative ($version = null)
+    {
+        $properties = ['sortOrder', 'readOnly', 'isAnchored', 'inherited', 'log', 'id'];
+        $deriv = $this->schema->createInstance();
+        foreach ($this->getData() as $key => $val)
+        {
+            if (!in_array($key, $properties))
+            {
+                $deriv->$key = $val;
+            }
+        }
+        $deriv->createdDate = new DateTime;
+        
+        return $deriv;
+    }
+
+    public function getNormalizedVersion ()
+    {
+        return $this->section->getNormalizedVersion($this->id);
     }
 
     public function getExtensionByName ($record)
@@ -73,4 +99,42 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
 
         return $this->_sectionExtension;
     }
+
+    public function getUniqueSyllabiCount ()
+    {
+        $syllabi = [];
+        foreach ($this->syllabusVersions as $sv)
+        {
+            $syllabi[$sv->syllabus->id] = $sv->syllabus->id;
+        }
+
+        return count($syllabi);
+    }
+
+    public function getParentOrganization ()
+    {
+        $organization = null;
+        foreach ($this->syllabusVersions as $sv)
+        {
+            if ($sv->syllabus->templateAuthorizationId)
+            {
+                list($type, $id) = explode('/', $sv->syllabus->templateAuthorizationId);
+
+                switch ($type)
+                {
+                    case 'departments':
+                        $organization = $this->getSchema('Syllabus_AcademicOrganizations_Department')->get($id);
+                        break;
+                    case 'colleges':
+                        $organization = $this->getSchema('Syllabus_AcademicOrganizations_College')->get($id);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        return $organization;
+    }
 }
+

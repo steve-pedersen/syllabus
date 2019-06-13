@@ -4,6 +4,7 @@
 @import "at-theme";
 @import "sidebar";
 @import "syllabus";
+@import "jqueryui";
 
 
 
@@ -27,7 +28,7 @@ div.main-content {
 }
 #mainContent {
 	// background-color: $gold_light_5;
-	min-height: 60em;
+	// min-height: 60em;
 }
 
 .at-jumbotron {
@@ -100,4 +101,128 @@ div.main-content {
 		bottom:0;
 		width:100%;
 	}
+}
+
+// SORTABLE STYLES - jQuery UI
+.drop-placeholder {
+	background-color: lightgray;
+	height: 3.5em;
+	padding-top: 12px;
+	padding-bottom: 12px;
+	line-height: 1.2em;
+}
+#sortable { 
+	list-style-type: none; margin: 0; padding: 0; width: 60%; 
+}
+.ui-state-highlight { 
+	height: 8em; 
+	margin-top: 1em;
+	background-color: $warning;
+	opacity: .4;
+}
+
+.card-img-top.crop-top {
+	object-fit: cover; 
+	object-position: top;
+	&.crop-top-5 {
+		max-height: 5rem;
+	}
+	&.crop-top-8 {
+		max-height: 8rem;
+	}
+	&.crop-top-10 {
+		max-height: 10rem;
+	}
+	&.crop-top-13 {
+		max-height: 13rem;
+	}
+	&.crop-top-15 {
+		max-height: 15rem;
+	}
+}
+.card-img-top-overlay {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	> img {
+		width: 100%;
+		height: 100%;
+		vertical-align: top;
+	}
+	&:after {
+	    content: '\A';
+	    position: absolute;
+	    width: 100%; height:100%;
+	    top:0; left:0;
+	    background: rgba(150, 150, 150, .6);
+	    transition: all 1s;
+	    -webkit-transition: all 1s;
+	}
+}
+.overlay-checkbox {
+	z-index: 1;
+}
+
+
+.mh-20 {
+	max-height: 20% !important;
+}
+.mh-15 {
+	max-height: 15% !important;
+}
+.mh-10 {
+	max-height: 10% !important;
+}
+.mw-20 {
+	max-width: 20% !important;
+}
+.mw-15 {
+	max-width: 15% !important;
+}
+.mw-10 {
+	max-width: 10% !important;
+}
+
+
+.min-vh-100 {
+	min-height: 100vh;
+}
+.vh-100 {
+	height: 100vh;
+}
+.min-vh-70 {
+	min-height: 70vh;
+}
+.vh-70 {
+	height: 70vh;
+}
+.min-vh-75 {
+	min-height: 75vh;
+}
+.vh-75 {
+	height: 75vh;
+}
+.min-vh-65 {
+	min-height: 65vh;
+}
+.vh-65 {
+	height: 65vh;
+}
+.min-vh-50 {
+	min-height: 50vh;
+}
+.vh-50 {
+	height: 50vh;
+}
+.min-vh-25 {
+	min-height: 25vh;
+}
+.vh-25 {
+	height: 25vh;
+}
+.min-vh-5 {
+	min-height: 5vh;
+}
+.font-size-18 {
+	font-size: 18pt;
 }

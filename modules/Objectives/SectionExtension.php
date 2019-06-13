@@ -8,7 +8,7 @@ class Syllabus_Objectives_SectionExtension extends Syllabus_Syllabus_SectionExte
     public function getDisplayName ($plural = false) { return 'Objectives'; }
     public function getHelpText () { return 'Objectives section type of a syllabus.'; }
     public function getRecordClass () { return 'Syllabus_Objectives_Objective'; }
-    public function getSectionTasks () { return array(); }
+    public function getSectionTasks () { return []; }
     public function getEditFormFragment ()
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_objectives.edit.html.tpl');
@@ -19,11 +19,11 @@ class Syllabus_Objectives_SectionExtension extends Syllabus_Syllabus_SectionExte
     }
     public function getExtensionProperties ()
     {
-        return array(
-            'objectives' => array('1:1', 'to' => 'Syllabus_Objectives_Objective', 'keyMap' => array('objectives_id' => 'id')),
-        );
+        return [
+            'objectives' => ['1:1', 'to' => 'Syllabus_Objectives_Objective', 'keyMap' => ['objectives_id' => 'id']],
+        ];
     }
     
-    public function getExtensionMethods() { return array(); }
+    public function getExtensionMethods() { return []; }
 
 }

@@ -12,23 +12,25 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
 {
     public static function SchemaInfo ()
     {
-        return array(
+        return [
             '__type' => 'syllabus_syllabus',
-            '__pk' => array('id'),
+            '__pk' => ['id'],
             
             'id' => 'int',       
-            'createdById' => array('int', 'nativeName' => 'created_by_id'),      
-            'createdDate' => array('datetime', 'nativeName' => 'created_date'),
-            'modifiedDate' => array('datetime', 'nativeName' => 'modified_date'),
+            'createdById' => ['int', 'nativeName' => 'created_by_id'],
+            'createdDate' => ['datetime', 'nativeName' => 'created_date'],
+            'modifiedDate' => ['datetime', 'nativeName' => 'modified_date'],
+            'templateAuthorizationId' => ['string', 'nativeName' => 'template_authorization_id'],
            
-            'createdBy' => array('1:1', 'to' => 'Bss_AuthN_Account', 'keyMap' => array('created_by_id' => 'id')),
-            'versions' => array('1:N', 'to' => 'Syllabus_Syllabus_SyllabusVersion', 'reverseOf' => 'syllabus', 'orderBy' => array('+createdDate')),
-        );
+            'createdBy' => ['1:1', 'to' => 'Bss_AuthN_Account', 'keyMap' => ['created_by_id' => 'id']],
+            'versions' => ['1:N', 'to' => 'Syllabus_Syllabus_SyllabusVersion', 'reverseOf' => 'syllabus', 'orderBy' => ['+createdDate']],
+        ];
     }
 
     public function getLatestVersion ()
     {
-        return array_pop($this->versions->asArray());
+        $versions = $this->versions->asArray();
+        return array_pop($versions);
     }
 
     // $withExt - adds a 'section' property to the section object containing it's extension
@@ -40,6 +42,51 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
             $sections = $this->getLatestVersion()->getSections($withExt);
         }
         return $sections;
+    }
+
+    public function getOrganization ()
+    {
+        $organization = null;
+        foreach ($this->versions as $syllabusVersion)
+        {
+            if ($syllabusVersion->syllabus->templateAuthorizationId)
+            {
+                list($type, $id) = explode('/', $syllabusVersion->syllabus->templateAuthorizationId);
+                switch ($type)
+                {
+                    case 'departments':
+                        $organization = $this->schema('Syllabus_AcademicOrganizations_Department')->get($id);
+                        break;
+                    case 'colleges':
+                        $organization = $this->schema('Syllabus_AcademicOrganizations_College')->get($id);
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            }            
+        }
+
+        return $organization;
+    }
+
+    /**
+     * Returns the relative version number for a particular SyllabusVersion
+     * belonging to this Syllabus.
+     */   
+    public function getNormalizedVersion ($trueId=null)
+    {
+        $trueId = $trueId ?? $this->latestVersion->id;
+        $counter = 1;
+        foreach ($this->versions as $version)
+        {
+            if ($trueId === $version->id)
+            {
+                return $counter;
+            }
+            $counter++;
+        }
+        return $trueId;
     }
 
     // TODO: add param for specific versions
