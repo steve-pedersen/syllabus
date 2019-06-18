@@ -3,7 +3,7 @@
 <p class="text-muted">Learn about the many ways you can improve your syllabus.</p>
 
 <div class="row">
-	<div class="col-sm-4 pr-5">
+	<div class="col-lg-4 col-md-6 pr-lg-5">
 		<div class="card card-bordered card-bordered-left card-bordered-secondary h-100">
 			<div class="ml-auto text-right text-info">
 				<a  href="#" target="_blank" class="text-info">
@@ -17,7 +17,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-sm-4 pl-5">
+	<div class="col-lg-4 col-md-6 pl-lg-5">
 		<div class="card card-bordered card-bordered-left card-bordered-secondary h-100">
 			<div class="ml-auto text-right ">
 				<a href="#" target="_blank" class="text-info">

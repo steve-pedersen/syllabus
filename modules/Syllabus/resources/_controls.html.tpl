@@ -23,7 +23,7 @@
 {/if}
 	<div class="editor-controls-right ml-auto">
 		<input class="btn btn-success" type="submit" name="command[savesyllabus]" value="Save Syllabus" id="globalSave" />
-		<input class="btn btn-dark" type="submit" name="command[previewsyllabus]" value="Preview" />
+		<a class="btn btn-dark" href="syllabus/{$syllabus->id}/view" target="_blank">View</a>
 		<a href="{$smarty.server.REQUEST_URI}" class="btn btn-outline-danger">Cancel</a>
 	</div>
 </div>

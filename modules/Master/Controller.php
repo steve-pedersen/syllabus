@@ -149,6 +149,16 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
         );
     }
     
+    public function sendError ($statusCode, $statusMessage, $errorType, $errorMessage)
+    {
+        $this->response->setStatus($statusCode, $statusMessage);
+        $this->response->writeJson(array(
+            'error' => $errorType,
+            'message' => $errorMessage,
+        ));
+        exit;
+    }
+
     public function includeScript ($js)
     {
         $this->includeScriptList[] = $js;
@@ -294,6 +304,11 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
         return $template;
     }
     
+    public function setSyllabusTemplate ()
+    {
+        $this->template->setMasterTemplate(Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', 'syllabus.html.tpl'));
+    }
+
     public function createEmailMessage ($contentTemplate = null)
     {
         $message = new Bss_Mailer_Message($this->getApplication());

@@ -18,12 +18,12 @@
 		Choose your starting point:
 	</h1>
 
-<div class="accordion" id="accordionExample">
+<div class="accordion" id="startAccordion">
 
 	<ul class="list-unstyled px-xl-5 mx-xl-5 mx-lg-2 mx-lg-2 form-inline">
 		<li class="media my-lg-4 p-3" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 			<div class="form-check d-block-inline">
-				<input class="form-check-input mr-5" type="radio" name="startingTemplate" id="startingTemplate1" value="university" checked>
+				<input class="form-check-input mr-5" type="radio" name="startingTemplate" id="startingTemplate1" value="university">
 				<label class="form-check-label" for="startingTemplate1">
 					<i class="start-icon fas fa-file fa-7x align-self-start mr-3 d-md-inline d-sm-none"></i>
 					<div class="media-body">
@@ -36,7 +36,14 @@
 				</label>
 			</div>
 		</li>
-        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample"></div> 
+        <div id="collapseOne" class="collapse col-12 mt-0" aria-labelledby="headingOne" data-parent="#startAccordion">
+		  	<div class="col mb-3 w-75 text-center">
+				<input class="btn btn-success btn-lg" type="submit" name="command[start]" value="Begin">
+				{generate_form_post_key}
+				<hr class="fancy-line-1">
+			</div>
+			
+        </div> 
 
 		<li class="media my-lg-4 p-3" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 			<div class="form-check d-block-inline">
@@ -66,29 +73,28 @@
 				</label>
 			</div>
 		</li>
-		<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+		<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#startAccordion">
 			{if $organizations}
+				{assign var=btnStart value=true}
+				{assign var=isTemplate value=true}
 			{foreach $organizations as $organization}
 			<div class="col px-5">
 				<div class="row px-4">
 					{foreach $templates[$organization->id] as $template}
+						{assign var=syllabus value=$template}
 					<div class="col-3 p-3 mh-50">
-						<div class="card" style="">
-							<img src="assets/images/testing0{($template@index % 5)+1}.jpg" class="card-img-top img-fluid crop-top crop-top-8" alt="...">
-							<div class="card-body">
-								<h5 class="card-title">{$template->title}</h5>
-								<p class="card-text">{$template->description}</p>
-							</div>
-							<div class="card-body">
-								<a href="syllabus/startwith/{$template->id}" class="btn btn-success btn-sm">Start From Template</a>
-							</div>
-						</div>
+						{include file="partial:_syllabusCard.html.tpl"}
 					</div>
+					{foreachelse}
+						<p>Your department hasn't created any templates!</p>
 					{/foreach}
 				</div>
 			</div>
 			{if $organization@iteration == 4}{break}{/if}
+				
 			{/foreach}
+			{else}
+				<p>You're not part of a department!</p>
 			{/if}
 		</div>
 
@@ -113,20 +119,29 @@
 			<input type="hidden" name="template" value="{$templateAuthorizationId}">
 		{/if}
 
-		<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
-			<div class="card-body">
-		Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+		<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#startAccordion">
+		<div class="row mb-3">
+{if $pastCourseSyllabi}
+	{assign var=relevantSyllabi value=$pastCourseSyllabi}
+{else}
+	{assign var=relevantSyllabi value=$syllabi}
+{/if}
+
+	{assign var=btnStart value=true}
+	{foreach $relevantSyllabi as $i => $syllabus}
+		{if $i == 4}{break}{/if}
+			<div class="col-lg-3 col-md-4 p-3">
+				{include file="partial:_syllabusCard.html.tpl"}
 			</div>
+	{foreachelse}
+		<p>You have no syllabi yet!</p>
+	{/foreach}
+		</div> <!-- END row -->
 		</div>
 
 	</ul>
-
 </div>
 
-	<div class="col px-lg-5">
-		<hr>
-		<input class="btn btn-primary btn-lg" type="submit" name="command[start]" value="Submit">
-		{generate_form_post_key}
-	</div>
+
 </div>
 </form>

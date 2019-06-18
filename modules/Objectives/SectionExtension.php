@@ -17,6 +17,10 @@ class Syllabus_Objectives_SectionExtension extends Syllabus_Syllabus_SectionExte
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_objectives.view.html.tpl');
     }
+    public function getOutputFragment ()
+    {
+        return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_objectives.output.html.tpl');
+    }
     public function getExtensionProperties ()
     {
         return [

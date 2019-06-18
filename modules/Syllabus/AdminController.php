@@ -5,6 +5,7 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_AdminController
     public static function getRouteMap ()
     {
         return [
+            'admin/templates/university' => ['callback' => 'universityTemplates'],
             'admin/syllabus/resources' => ['callback' => 'campusResources'],
         ];
     }
@@ -14,7 +15,54 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_AdminController
 		parent::beforeCallback($callback);
 		$this->requirePermission('admin');
 	}
-    
+
+    public function universityTemplates ()
+    {
+        $viewer = $this->requireLogin();
+        if (!$this->hasPermission('admin'))
+        {
+            $this->sendError(403, 'Forbidden', 'Non-Admin', 'You must be a site Administrator to manage university templates.');
+        }
+        $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
+        $siteSettings = $this->getApplication()->siteSettings;
+        
+        $userId = $siteSettings->getProperty('university-template-user-id');
+        $templateId = $siteSettings->getProperty('university-template-id');
+
+        if ($newUserId = $this->request->getQueryParameter('userId'))
+        {
+            $siteSettings->setProperty('university-template-user-id', $newUserId);
+            $userId = $newUserId;
+        }
+
+        if ($userId)
+        {
+            $this->template->universityTemplates = $syllabi->find(
+                $syllabi->createdById->equals($userId),
+                ['orderBy' => ['-modifiedDate', '-createdDate']]
+            );
+        }
+
+        if ($this->request->wasPostedByUser())
+        {
+            switch ($this->getPostCommand())
+            {
+                case 'select':
+                    $templateId = $this->request->getPostParameter('template');
+                    if ($syllabi->get($templateId))
+                    {
+                        $siteSettings->setProperty('university-template-id', $templateId);
+                        $this->flash('The University Template has been set.');
+                    }
+                    break;    
+            }
+            $this->response->redirect('admin/templates/university');
+        }
+
+        $this->template->templateId = $templateId;
+        $this->template->userId = $userId;
+    }
+
     public function campusResources ()
     {
         $files = $this->schema('Syllabus_Files_File');

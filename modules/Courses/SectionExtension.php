@@ -18,6 +18,10 @@ class Syllabus_Courses_SectionExtension extends Syllabus_Syllabus_SectionExtensi
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_course.view.html.tpl');
     }
+    public function getOutputFragment ()
+    {
+        return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_course.output.html.tpl');
+    }
     public function getAddonFormFragment () 
     { 
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_lookup.html.tpl');

@@ -68,32 +68,16 @@
 					<ol class="at breadcrumb">
 						{foreach name="breadcrumbs" item="crumb" from=$breadcrumbList}
 						<li{if $smarty.foreach.breadcrumbs.last} class="active"{elseif $smarty.foreach.breadcrumbs.first} class="first"{/if}>
-						{l text=$crumb.text href=$crumb.href}
-						{if !$smarty.foreach.breadcrumbs.last}{/if}
+							{if $crumb@last}
+								{$crumb.text}
+							{else}
+								{l text=$crumb.text href=$crumb.href}
+							{/if}
 						</li>
 						{/foreach}
 					</ol>
 					</div>
 				</div>
-		      	<!-- <input class="form-control form-control-dark w-25 " type="text" placeholder="Search" aria-label="Search"> -->
-		      	<ul class="navbar-nav p-2 ml-auto">
-				{if $viewer}
-					{if $pAdmin}
-					<li class="nav-item">
-						<a class="nav-link" href="admin"><i class="fas fa-cog"></i> Administrate</a>
-					</li>
-					{/if}
-			
-				{else}
-					<li class="nav-item">
-						<a class="login-button nav-link" href="{$app->baseUrl('login')}">Login</a>
-					</li>
-				{/if} 
-				</ul>
-				{if $viewer}
-					<form method="post" action="logout" class="form logout-form p-2">
-						<button class="btn btn-outline-secondary logout " type="submit" name="command[logout]" id="logout-button" value="Logout">Logout</button>
-					</form>
 				{/if}
 	        </div>
 		</header>		

@@ -5,6 +5,31 @@ html {
   scroll-behavior: smooth;
 }
 
+.viewer-main-container {
+	h1 {
+		font-size: 16pt;
+		font-weight: bold;
+		text-decoration: underline;
+	}
+	h2 {
+		font-size: 14pt;
+		font-weight: bold;
+	}
+	h3 {
+		font-size: 12pt;
+		font-weight: bold;
+	}
+	p {
+		font-size: 12pt;
+	}
+	.sidebar-sticky {
+		border-right: 5px solid $light;
+	}
+	.syllabus-viewer {
+		box-shadow: 0 0 10px $grey_light_4;
+	}
+}
+
 div.my-syllabi-nav {
 	a {
 		font-size: 15pt;
@@ -31,16 +56,7 @@ div.my-syllabi-nav {
 		width: 30%;
 	}
 }
-a.see-more-toggle {
-	font-size: 13pt;
-	font-weight: 600;
-}
-a.collapsed:after  {
-	content: '+ See More';
-}
-a.see-more-toggle:not(.collapsed):after {
-	content: '- See Less';
-}
+
 div.overview-container {
 	.overview-section {
 		margin-bottom: 10rem;
@@ -48,15 +64,15 @@ div.overview-container {
 	h2 {
 		font-size: 1.75rem;
 	}
-	.my-syllabi {
-
+	a.see-more-toggle {
+		font-size: 13pt;
+		font-weight: 600;
 	}
-	.campus-resources {
-
+	a.collapsed:after  {
+		content: '+ See More';
 	}
-
-	.documents-guidelines {
-	
+	a.see-more-toggle:not(.collapsed):after {
+		content: '- See Less';
 	}
 }
 .campus-resources {
@@ -181,7 +197,43 @@ div.overview-container {
 		}
 
 	}
+
 }
+
+#viewSyllabus {
+	.syllabus-view-breadcrumbs {
+		
+		.breadcrumb {
+			background-color: transparent;
+		
+		}
+	}
+	.anchor-links-sidebar-left {
+		.nav-item > a.nav-link {
+			&.active {
+				border-left: none;
+				border-right: 0.5em solid $info;
+			}
+		}
+	}
+	@media (max-width: 991px) {
+		.anchor-links-sidebar-left {
+			max-width: 5% !important;
+			.sidebar-sticky {
+				border: none;
+			}
+		}
+		.syllabus-viewer {
+			padding: 1.5rem !important;
+		}
+	}
+	@media (max-width: 1199.98px) {
+		.spacer {
+			display: none;
+		}
+	}
+}
+
 form#chooseStartingPoint {
 	@media (max-width: 767.98px) {
 		h2 {

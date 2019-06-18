@@ -67,7 +67,7 @@
 	</div>
 	<div class="modal-body">
 		<div class="container-fluid">
-			<p class="text-muted">Check each syllabus that you want to import this resource into.</p>
+			<p class="text-muted">Click on each syllabus that you want to import this resource into.</p>
 			<h6 class="">Most recent syllabi:</h6>
 			<div class="row mb-3">	
 			{foreach $syllabi as $i => $syllabus}
@@ -79,10 +79,13 @@
 					<div class="card-body h-100">
 						<div class="ml-auto text-right">
 							<div class="form-check">
-								<input type="checkbox" class="form-check-input overlay-checkbox" id="overlayCheck{$i}">
+								<input data-index="{$i}" type="checkbox" class="form-check-input overlay-checkbox" id="overlayCheck{$i}" value="{$syllabus->id}">
 							</div>
 						</div>
 						<div class="card-img-top-overlay p-0">
+							<div class="text-center vertical-align overlay-icon" id="checkIcon{$i}">
+								<i class="fas fa-check fa-7x text-success"></i>
+							</div>
 							<img src="assets/images/testing0{$i}.jpg" class="card-img-top crop-top crop-top-13" alt="{$syllabus->title}" />
 						</div>
 						<h6 class="mt-3 text-dark">{$syllabus->title}</h6>
@@ -130,7 +133,7 @@
 				<div class="col-6 d-block">
 					<span id="resourceDescription"></span>
 					<span class="d-block mt-2 align-bottom">
-						<strong class="d-block">Resource Website: </strong><a target="_blank" href="" id="resourceUrl"></a>
+						<strong class="d-block">Resource Website: </strong><a target="_blank" href="" id="resourceUrl" style="letter-spacing:0.8px;"></a>
 					</span>
 				</div>
 			</div>

@@ -9,10 +9,15 @@
 class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModuleUpgradeHandler
 {
     public function onModuleUpgrade ($fromVersion)
-    {      
+    {   
+        $siteSettings = $this->getApplication()->siteSettings;   
         switch ($fromVersion)
         {
             case 0:
+
+                $siteSettings->defineProperty('university-template-user-id', 'Id of user authoring the university base template.', 'int');
+                $siteSettings->defineProperty('university-template-id', 'Id of Syllabus ActiveRecord that is the university base template.', 'int');
+
 
                 $def = $this->createEntityType('syllabus_syllabus', $this->getDataSource('Syllabus_Syllabus_Syllabus'));
                 $def->addProperty('id', 'int', array('primaryKey' => true, 'sequence' => true));

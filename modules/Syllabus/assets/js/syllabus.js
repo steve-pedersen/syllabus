@@ -34,12 +34,6 @@
 		$('#resourceDescription').text(text.text());
 		$('#resourceUrl').attr('href', url.text()).text(url.text());
 	});
-	// $('#resourcePreviewModal').on('hide.bs.modal', function(e) {
-	// 	$('#resourceTitle').html('');
-	// 	$('#resourceImage').attr('src', '').attr('alt', '');
-	// 	$('#resourceDescription').text('');
-	// 	$('#resourceUrl').attr('href', '').text('');
-	// });
 	$('#resourceAddModal').on('show.bs.modal', function(e) {
 		let cardBody = $(e.relatedTarget).parents('.card-body');
 		let id = cardBody.attr('id');
@@ -48,6 +42,28 @@
 		$('#addTitle').html(title.html());
 		$('#addImage').attr('src', img.attr('src')).attr('alt', img.attr('alt'));
 	});
+	$('#resourceAddModal').on('hide.bs.modal', function(e) {
+		$(this).find('[id^=overlayCheck]:checked').each(function(i, em) {
+			$(em).click();
+		});
+	});
+    $('[id^=overlayCheck]').on('change', function (e) {
+		var id = $(this).attr('data-index');
+		if (this.checked == true) {
+			$('#checkIcon'+id).show();
+		} else {
+			$('#checkIcon'+id).hide();
+		}
+    });
+    var templateId = $('#templateId input[name="template"]');
+    if (templateId.length)
+    {
+    	if (templateId.val() == 1)
+    	{
+    		var id = templateId.attr('data-index');
+    		$('#checkIcon'+id).show();
+    	}
+    }
 
 
     var $sidebar   = $(".anchor-links-sidebar > .sidebar-sticky > ul"), 
@@ -78,7 +94,7 @@
     	var selector = '#myTab a#' + $modeEm.val() +'-tab';
     	$(selector).tab('show');
     }
-    
+
 
     var getSemesterDisplay = function (text) {
     	switch (text) {
@@ -150,4 +166,5 @@
 
   });
 })(jQuery);
+
 

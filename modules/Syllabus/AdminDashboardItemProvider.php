@@ -6,22 +6,28 @@ class Syllabus_Syllabus_AdminDashboardItemProvider extends At_Admin_DashboardIte
 {
     public function getSections (Bss_Master_UserContext $userContext)
     {
-        return array(
-            'Site Settings' => array(
+        return [
+            'Site Settings' => [
                 'order' => 2,
-            ),
-        );
+            ],
+        ];
     }
     
     public function getItems (Bss_Master_UserContext $userContext)
     {
-        return array(
-            'language-strings' => array(
+        return [
+            'university-templates' => [
                 'section' => 'Site Settings',
-                'order' => 1,
+                'order' => 0,
+                'href' => 'admin/templates/university',
+                'text' => 'Manage University Templates',
+            ],
+            'campus-resources' => [
+                'section' => 'Site Settings',
+                'order' => 2,
                 'href' => 'admin/syllabus/resources',
-                'text' => 'Configure campus resources',
-            ),
-        );
+                'text' => 'Manage Campus Resources',
+            ],
+        ];
     }
 }

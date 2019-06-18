@@ -155,12 +155,49 @@ div.main-content {
 	    width: 100%; height:100%;
 	    top:0; left:0;
 	    background: rgba(150, 150, 150, .6);
-	    transition: all 1s;
-	    -webkit-transition: all 1s;
+	    z-index: 0;
 	}
 }
 .overlay-checkbox {
 	z-index: 1;
+}
+.overlay-icon {
+    position: absolute;
+    top: 20%;
+    left: 25%;
+    z-index: 1;
+    display: none;
+}
+hr {
+	&.fancy-line-1 {
+		border: 0;
+		height: 1px;
+		background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+	}
+	&.fancy-line-2 {
+		border: 0;
+		height: 1px;
+		background: #333;
+		background-image: linear-gradient(to right, #ccc, #333, #ccc);
+	}
+	&.fancy-line-3 {
+	    overflow: visible; /* For IE */
+	    height: 30px;
+	    border-style: solid;
+	    border-color: black;
+	    border-width: 1px 0 0 0;
+	    border-radius: 20px;
+	    &:before {
+			display: block;
+			content: "";
+			height: 30px;
+			margin-top: -31px;
+			border-style: solid;
+			border-color: black;
+			border-width: 0 0 1px 0;
+			border-radius: 20px;
+	    }
+	}
 }
 
 

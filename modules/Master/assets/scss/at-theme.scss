@@ -184,57 +184,69 @@ table.hide-exempt tr.exempt { display: none; }
 }
 
 
-// ALERTS  ////////////////////////////////////////////////////
-// Custom AT color overrides. Requires the numbers passed rather than the level variables
-// @each $color, $value in $theme-colors {
-// 	.alert-#{$color} {
-// 		@include alert-variant(theme-color-level($color, -10), theme-color-level($color, -9), theme-color-level($color, 6));
-// 	}
-// }
+
 // Bootstrap 4.1 original Alert color loop
 @each $color, $value in $theme-colors {
   .alert-#{$color} {
     @include alert-variant(theme-color-level($color, $alert-bg-level), theme-color-level($color, $alert-border-level), theme-color-level($color, $alert-color-level));
   }
 }
+// AT Theme Alert customizations
+$alert-success-bg-color: #EDFFFC;
+$alert-success-font-color: #065B4D;
+$alert-danger-bg-color: #FFF0F0;
+$alert-danger-font-color: #C11C1C;
+$alert-info-bg-color: #FFF0E5;
+$alert-info-font-color: #B34D00;
+$alert-warning-bg-color: #FFEECC;
+$alert-warning-font-color: #9F7013;
+$alert-dark-bg-color: #EAF2FF;
+$alert-dark-font-color: #1A335A;
+$alert-primary-bg-color: #CEEEFF;
+$alert-primary-font-color: #1A4962;
+$alert-secondary-bg-color: #D3EAF0;
+$alert-secondary-font-color: #2A4A50;
+$alert-light-bg-color: #E8E8E8;
+$alert-light-font-color: #474747;
+$alert-white-bg-color: #FFFFFF;
+$alert-white-font-color: #545454;
 
 
-// SemanticUI style buttons
-// .btn {
-//     // color: #fff;
-//     text-shadow: none;
-//     background-image: none;
-//     font-size: 1rem;
-//     cursor: pointer;
-//     display: inline-block;
-//     min-height: 1em;
-//     outline: 0;
-//     border: none;
-//     vertical-align: baseline;
-//     font-family: Lato,'Helvetica Neue',Arial,Helvetica,sans-serif;
-//     margin: 0 .25em 0 0;
-//     padding: .7em 1.5em .7em;
-//     text-transform: none;
-//     text-shadow: none;
-//     font-weight: 700;
-//     line-height: 1em;
-//     font-style: normal;
-//     text-align: center;
-//     text-decoration: none;
-//     border-radius: .28571429rem;
-//     -webkit-box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 rgba(34,36,38,.15) inset;
-//     box-shadow: 0 0 0 1px transparent inset, 0 0 0 0 rgba(34,36,38,.15) inset;
-//     -webkit-user-select: none;
-//     -moz-user-select: none;
-//     -ms-user-select: none;
-//     user-select: none;
-//     -webkit-transition: opacity .1s ease,background-color .1s ease,color .1s ease,background .1s ease,-webkit-box-shadow .1s ease;
-//     transition: opacity .1s ease,background-color .1s ease,color .1s ease,background .1s ease,-webkit-box-shadow .1s ease;
-//     transition: opacity .1s ease,background-color .1s ease,color .1s ease,box-shadow .1s ease,background .1s ease;
-//     transition: opacity .1s ease,background-color .1s ease,color .1s ease,box-shadow .1s ease,background .1s ease,-webkit-box-shadow .1s ease;
-//     will-change: '';
-//     -webkit-tap-highlight-color: transparent;
-// }
+$alert-bg-colors: (
+  "primary": $alert-primary-bg-color,
+  "secondary": $alert-secondary-bg-color,
+  "success": $alert-success-bg-color,
+  "danger": $alert-danger-bg-color,
+  "warning": $alert-warning-bg-color,
+  "info": $alert-info-bg-color,
+  "light": $alert-light-bg-color,
+  "dark": $alert-dark-bg-color,
+  "muted": $alert-white-bg-color
+);
+$alert-font-colors: (
+  "primary": $alert-primary-font-color,
+  "secondary": $alert-secondary-font-color,
+  "success": $alert-success-font-color,
+  "danger": $alert-danger-font-color,
+  "warning": $alert-warning-font-color,
+  "info": $alert-info-font-color,
+  "light": $alert-light-font-color,
+  "dark": $alert-dark-font-color,
+  "muted": $alert-white-font-color
+);
+
+@each $color, $value in $theme-colors {
+  .alert-#{$color} {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 0 5px $grey_light_4;
+    border-left: 10px solid;
+    background: map-get($alert-bg-colors, $color) !important;
+    background-color: map-get($alert-bg-colors, $color) !important;
+    border-color: map-get($alert-font-colors, $color) !important;
+    color: map-get($alert-font-colors, $color) !important;
+  }
+}
 
 
 
