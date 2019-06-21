@@ -88,13 +88,6 @@
 		</div> 
 		{/if}
 
-		{if $flashContent}
-		<div id="user-message" class="alert alert-{$flashClass} alert-dismissable my-3 rounded-0 fade show" role="alert">
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-			<div class="primary">{$flashContent}</div>
-		</div> 
-		{/if}
-
 		{if $userMessageList}
 		<div id="user-message" class="alert alert-success alert-dismissable">
 			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -129,8 +122,8 @@
 						</ul> -->
 						<ul class="nav flex-column my-syllabi mt-5">
 							<li class="nav-item">
-								<a class="nav-link nav-category" href="syllabi" id="sidebarMySyllabi">
-									<h6 class="sidebar-heading ">
+								<a class="nav-link nav-category pb-1" href="syllabi" id="sidebarMySyllabi">
+									<h6 class="sidebar-heading mb-0">
 										<!-- <span><i class="my-syllabi fas fa-home fa-2x"></i> <span class="sidebar-text">My Syllabi</span></span> -->
 										<span><img class="my-syllabi" src="assets/icons/menu-my-syllabi.svg" width="46"> <span class="sidebar-text">My Syllabi</span></span>
 									</h6>
@@ -201,6 +194,12 @@
 				<!-- <main role="main" class="col-md-9 col-lg-10 px-3 mt-3" id="mainContent"> -->
 				<main role="main" class="col pr-3 mt-3 mb-3 min-vh-70" id="mainContent">
 				{/if}
+					{if $flashContent}
+					<div id="user-message" class="alert alert-{$flashClass} alert-dismissable my-3 rounded-0 fade show" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+						<div class="primary">{$flashContent}</div>
+					</div> 
+					{/if}
 					<!-- MAIN CONTENT -->
 					{include file=$contentTemplate}
 				</main>

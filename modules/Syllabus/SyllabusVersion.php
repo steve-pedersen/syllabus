@@ -75,6 +75,7 @@ class Syllabus_Syllabus_SyllabusVersion extends Bss_ActiveRecord_Base
                 $a                 = $this->sectionVersions->getProperty($oldSv, 'is_anchored');
                 $sv->isAnchored    = ($a===null || $a===true || $a==='true') ? true : false;
                 $sv->normalizedVersion = $sv->section->getNormalizedVersion($sv->id);
+                // $sv->normalizedVersion = 1;
                 $sectionVersions[] = $sv;
             }
         }

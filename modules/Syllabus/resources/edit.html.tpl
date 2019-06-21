@@ -1,5 +1,23 @@
 <div class="row editor-main-container">
-	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 mt-0"> 	
+	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 mt-0">
+		{if $isUniversityTemplate}
+		<div class="text-center alert alert-danger alert-dismissible fade show" role="alert">
+			<strong>Attention!</strong> 
+			You are editing the <a href="admin/templates/university" class="alert-link">University Base Template</a>. 
+			Proceed with caution.
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		{elseif $isDetachedSyllabus}
+		<div class="text-center alert alert-info alert-dismissible fade show" role="alert">
+			<strong>Attention!</strong> 
+			You are editing a syllabus that isn't based on the University Base Template.
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			</button>
+		</div>
+		{/if}
 		<div class="syllabus-editor " id="syllabusEditor">		
 			<form action="{$smarty.server.REQUEST_URI}" method="post" class="form" role="form" id="viewSections">
 				{if $syllabusVersion->inDataSource}

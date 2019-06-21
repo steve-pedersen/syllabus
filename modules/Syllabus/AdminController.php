@@ -18,6 +18,7 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_AdminController
 
     public function universityTemplates ()
     {
+        $this->template->addBreadcrumb('admin/templates/university', 'University Templates');
         $viewer = $this->requireLogin();
         if (!$this->hasPermission('admin'))
         {
@@ -65,6 +66,7 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_AdminController
 
     public function campusResources ()
     {
+        $this->template->addBreadcrumb('admin/syllabus/resources', 'Campus Resources');
         $files = $this->schema('Syllabus_Files_File');
         $campusResources = $this->schema('Syllabus_Syllabus_CampusResource');
         $allResources = $campusResources->find(

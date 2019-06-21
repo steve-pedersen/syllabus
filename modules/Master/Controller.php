@@ -1,5 +1,7 @@
 <?php
 
+require_once Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', 'traits', 'IsNotWhiteSpaceOnly.php');
+
 /**
  * The master controller for Syllabus application. Put basic functionality that you want
  * the other controllers in your application to have available to them here.

@@ -26,4 +26,14 @@ class Syllabus_Courses_Course extends Bss_ActiveRecord_Base
             'classDataCourseSection' => ['1:1', 'to' => 'Syllabus_ClassData_CourseSection', 'keyMap' => ['external_key' => 'id']],
         ];
     }
+
+    public function processEdit ($request) 
+    {
+        $data = $request->getPostParameters();
+        if (isset($data['section']) && isset($data['section']['real']))
+        {
+            $this->absorbData($data['section']['real']);
+            $this->externalKey = $data['section']['real']['external_key'];
+        }
+    }
 }

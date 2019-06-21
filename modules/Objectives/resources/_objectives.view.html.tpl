@@ -1,9 +1,12 @@
 {assign var=realSection value=$sectionVersion->resolveSection()}
 <!-- Objectives Section - View --> 
+{foreach $realSection->objectives as $objective}
 <div class="col">
-    <h4>{$realSection->title}</h4>
+    <h4>{$objective->title}</h4>
 </div>
 <div class="col">
-    {$realSection->description}
+    {$objective->description}
 </div>
+	
+{/foreach}
 <!-- End Objectives Section - View -->

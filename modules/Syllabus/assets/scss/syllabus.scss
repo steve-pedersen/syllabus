@@ -5,6 +5,12 @@ html {
   scroll-behavior: smooth;
 }
 
+.toggle-edit {
+	a.active {
+		display: none;
+	}
+}
+
 .viewer-main-container {
 	h1 {
 		font-size: 16pt;

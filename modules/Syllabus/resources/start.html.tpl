@@ -27,7 +27,13 @@
 				<label class="form-check-label" for="startingTemplate1">
 					<i class="start-icon fas fa-file fa-7x align-self-start mr-3 d-md-inline d-sm-none"></i>
 					<div class="media-body">
-						<h2 class="mt-0 mb-1 display-4">University Base Template</h2>
+						<h2 class="mt-0 mb-1 display-4">
+						{if $pStartFromNothing}
+							Create New Syllabus or University Template
+						{else}
+							University Base Template
+						{/if}
+						</h2>
 						<p class="lead w-75 ml-1">
 							Start fresh with a new syllabus draft, 
 							which includes all SF State requirements.
@@ -38,8 +44,12 @@
 		</li>
         <div id="collapseOne" class="collapse col-12 mt-0" aria-labelledby="headingOne" data-parent="#startAccordion">
 		  	<div class="col mb-3 w-75 text-center">
+		  		{if $pStartFromNothing}
+				<a href="syllabus/new" class="btn btn-success btn-large">Begin</a>
+		  		{else}
 				<input class="btn btn-success btn-lg" type="submit" name="command[start]" value="Begin">
 				{generate_form_post_key}
+				{/if}
 				<hr class="fancy-line-1">
 			</div>
 			

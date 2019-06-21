@@ -67,9 +67,12 @@
 	            </div>
 	        </div>
 	        <div class="form-group row">
-	            <label class="col-lg-3 col-form-label form-control-label">Section Description</label>
+	            <label class="col-lg-3 col-form-label form-control-label">{$displayName} Intro Text</label>
 	            <div class="col-lg-9">
 	                <input class="form-control" type="text" name="section[generic][{$sectionVersionId}][description]" value="{if $currentSectionVersion->description}{$currentSectionVersion->description}{/if}">
+					<small id="{$extName}HelpBlock2" class="form-text text-muted ml-1">
+						This intro text will be displayed immediately after the section title.
+					</small>
 	            </div>
 	        </div>
 	    </div>
@@ -106,7 +109,7 @@
 	        <div class="col-lg-9">
 				<div class="d-flex">
 	                <input class="btn btn-success" type="submit" name="command[savesection]" value="Save Section" />
-	                <a href="{$smarty.server.REQUEST_URI}" class="btn btn-outline-warning mx-1">Cancel</a>
+	                <a href="{$smarty.server.REQUEST_URI}" class="btn btn-outline-default mx-1">Cancel</a>
 	                <input class="btn btn-danger ml-auto" type="submit" name="command[deletesection]" value="Delete Section" />				
 				</div>
 	        </div>

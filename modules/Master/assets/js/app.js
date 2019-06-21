@@ -4,15 +4,12 @@
 #require js/bootstrap/4.2.1/dist/tooltip.min.js
 #require js/bootstrap/4.2.1/dist/bootstrap.min.js
 #require js/ckeditor.js
-// #require js/materialize.js
-
-// #require js/jquery-sortable.js
-
 #require js/sidebar.js
-#require js/syllabus.js
 
-#require js/sidebar.js
 #require js/syllabus.js
+#require js/courses.js
+#require js/objectives.js
+#require js/policies.js
 
 
 (function ($) {

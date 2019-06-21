@@ -24,6 +24,6 @@
 	<div class="editor-controls-right ml-auto">
 		<input class="btn btn-success" type="submit" name="command[savesyllabus]" value="Save Syllabus" id="globalSave" />
 		<a class="btn btn-dark" href="syllabus/{$syllabus->id}/view" target="_blank">View</a>
-		<a href="{$smarty.server.REQUEST_URI}" class="btn btn-outline-danger">Cancel</a>
+		<a href="{if $syllabus->inDataSource}syllabus/{$syllabus->id}{else}{$smarty.server.REQUEST_URI}{/if}" class="btn btn-default">Cancel</a>
 	</div>
 </div>
