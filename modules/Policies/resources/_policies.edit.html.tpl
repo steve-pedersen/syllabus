@@ -1,6 +1,6 @@
 <!-- Policies Section -->
 <div class="card card-outline-secondary rounded-0">
-<div class="card-body sort-container" id="realSectionSortContainer">
+<div class="card-body sort-container" id="policiesSection">
 
     {if $realSection->policies}
 

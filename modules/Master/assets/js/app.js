@@ -10,6 +10,7 @@
 #require js/courses.js
 #require js/objectives.js
 #require js/policies.js
+#require js/materials.js
 
 
 (function ($) {

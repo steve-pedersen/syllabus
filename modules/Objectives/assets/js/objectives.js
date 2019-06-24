@@ -1,11 +1,11 @@
 (function ($) {
   $(function () {
 
-  	$('.real-section-editor #addSectionItemBtn').on('click', function (e) {
+  	$('#objectivesSection #addSectionItemBtn').on('click', function (e) {
   		e.stopPropagation();
   		e.preventDefault();
 
-  		var $itemToClone = $(this).parents('#realSectionSortContainer').find('.sort-item').last();
+  		var $itemToClone = $(this).parents('#objectivesSection').find('.sort-item').last();
   		var i = parseInt($itemToClone.attr('id').substring(11)) + 1;
       var $clone = $itemToClone.clone();
   		
@@ -25,7 +25,7 @@
   	});
 
 
-    $('#realSectionSortContainer', '[id^="toggleEditViewTab"] a').on('click', function (e) {
+    $('#objectivesSection', '[id^="toggleEditViewTab"] a').on('click', function (e) {
       e.preventDefault();
       $(this).tab('show');
     });

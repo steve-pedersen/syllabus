@@ -1,6 +1,6 @@
 <!-- Objectives Section -->
 <div class="card card-outline-secondary rounded-0">
-<div class="card-body sort-container" id="realSectionSortContainer">
+<div class="card-body sort-container" id="objectivesSection">
 
     {if $realSection->objectives}
 
