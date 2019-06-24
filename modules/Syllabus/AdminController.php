@@ -55,7 +55,10 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_AdminController
                         $siteSettings->setProperty('university-template-id', $templateId);
                         $this->flash('The University Template has been set.');
                     }
-                    break;    
+                    break;
+                case 'unset':
+                    $siteSettings->setProperty('university-template-id', null);
+                    $this->flash('Template has been unset');
             }
             $this->response->redirect('admin/templates/university');
         }
@@ -98,8 +101,9 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_AdminController
                     $this->template->errors = $file->getValidationMessages();
                     break;
                 
-                case 'save':    
-                    $resource = $campusResources->createInstance();
+                case 'save': 
+                    $resource = (isset($data['resourceId'])&&$data['resourceId']!=='') ? 
+                        $campusResources->get($data['resourceId']) : $campusResources->createInstance();
                     $resource->sortOrder = (isset($data['resource']) && isset($data['resource']['sortOrder']) ? 
                         $data['resource']['sortOrder'] : ($bottommostPosition+1));
                     $resource->imageId = $data['resource']['imageId'];
@@ -110,11 +114,6 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_AdminController
                     $resource->save();
                     
                     $this->flash('Resource saved.');
-                    break;
-
-                case 'edit':
-                    $resource = $this->requireExists($campusResources->get(key($this->getPostCommandData())));
-                    $this->template->resource = $resource;
                     break;
 
                 case 'delete':
@@ -152,8 +151,28 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_AdminController
             $this->response->redirect('admin/syllabus/resources');
         }
 
+        if (!$this->request->wasPostedByUser() && ($resourceId = $this->request->getQueryParameter('edit')))
+        {
+            $this->template->resource = $campusResources->get($resourceId);
+        }
+
         $this->template->bottommostPosition = $bottommostPosition;
         $this->template->campusResources = $allResources;
         $this->template->files = $files->getAll();
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

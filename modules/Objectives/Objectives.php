@@ -35,6 +35,7 @@ class Syllabus_Objectives_Objectives extends Bss_ActiveRecord_Base
     public function processEdit ($request) 
     {
         $data = $request->getPostParameters();
+        $errorMsg = '';
         if (isset($data['section']) && isset($data['section']['real']))
         {
             $this->save();
@@ -56,10 +57,16 @@ class Syllabus_Objectives_Objectives extends Bss_ActiveRecord_Base
                     {
                         $obj->absorbData($objective);
                         $obj->objectives_id = $this->id;
-                        $obj->save();                                          
-                    }
+                        $obj->save();
+                    }   
+                }
+                else
+                {
+                    $errorMsg = 'Any objectives with empty descriptions were not saved.';
                 }
             }
         }
+
+        return $errorMsg;
     }
 }

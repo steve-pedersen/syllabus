@@ -21,7 +21,7 @@
 <div class="accordion" id="startAccordion">
 
 	<ul class="list-unstyled px-xl-5 mx-xl-5 mx-lg-2 mx-lg-2 form-inline">
-		<li class="media my-lg-4 p-3" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+		<li class="media my-lg-4 p-3 collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 			<div class="form-check d-block-inline">
 				<input class="form-check-input mr-5" type="radio" name="startingTemplate" id="startingTemplate1" value="university">
 				<label class="form-check-label" for="startingTemplate1">
@@ -50,12 +50,12 @@
 				<input class="btn btn-success btn-lg" type="submit" name="command[start]" value="Begin">
 				{generate_form_post_key}
 				{/if}
-				<hr class="fancy-line-1">
+				<hr class="fancy-line-2">
 			</div>
 			
         </div> 
 
-		<li class="media my-lg-4 p-3" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+		<li class="media my-lg-4 p-3 collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
 			<div class="form-check d-block-inline">
 				<input class="form-check-input mr-5" type="radio" name="startingTemplate" id="startingTemplate2" value="department">
 				<label class="form-check-label" for="startingTemplate2">
@@ -83,14 +83,14 @@
 				</label>
 			</div>
 		</li>
-		<div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#startAccordion">
+		<div id="collapseTwo" class="collapse col-12 mt-0" aria-labelledby="headingTwo" data-parent="#startAccordion">
 			{if $organizations}
-				{assign var=btnStart value=true}
+				{assign var=btnStartTemplateForCourse value=true}
 				{assign var=isTemplate value=true}
 			{foreach $organizations as $organization}
-			<div class="col px-5">
+			<div class="col px-2">
 				<div class="row px-4">
-					{foreach $templates[$organization->id] as $template}
+					{foreach $templates[$organization->id] as $i => $template}
 						{assign var=syllabus value=$template}
 					<div class="col-3 p-3 mh-50">
 						{include file="partial:_syllabusCard.html.tpl"}
@@ -104,7 +104,10 @@
 				
 			{/foreach}
 			{else}
-				<p>You're not part of a department!</p>
+				<div class="d-block-inline w-75 text-center">
+					<span>You're not part of a department!</span>
+					<hr class="fancy-line-2">
+				</div>
 			{/if}
 		</div>
 
@@ -129,7 +132,7 @@
 			<input type="hidden" name="template" value="{$templateAuthorizationId}">
 		{/if}
 
-		<div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#startAccordion">
+		<div id="collapseThree" class="collapse col-12 mt-0" aria-labelledby="headingThree" data-parent="#startAccordion">
 		<div class="row mb-3">
 {if $pastCourseSyllabi}
 	{assign var=relevantSyllabi value=$pastCourseSyllabi}

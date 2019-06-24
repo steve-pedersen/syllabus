@@ -41,16 +41,7 @@ class Syllabus_Syllabus_SyllabusVersion extends Bss_ActiveRecord_Base
     }
 
     /**
-     * Returns an array of SectionVersion objects with the following additional useful properties.
-     *
-     *  - SectionExtension ($sectionVersion->extension) for resolved, real section can be accessed:
-     *      if ($withExt == true)
-     *
-     *  - N:M property access from $this->sectionVersions, via the $section object directly
-     *      $sectionVersion->sortOrder
-     *      $sectionVersion->readOnly
-     *      $sectionVersion->isAnchored
-     *      $sectionVersion->log
+     * Returns an array of SectionVersion objects with properties used by the editor.
      */   
     public function getSectionVersionsWithExt ($withExt=true, $normalizeVersions=true)
     {
@@ -75,7 +66,6 @@ class Syllabus_Syllabus_SyllabusVersion extends Bss_ActiveRecord_Base
                 $a                 = $this->sectionVersions->getProperty($oldSv, 'is_anchored');
                 $sv->isAnchored    = ($a===null || $a===true || $a==='true') ? true : false;
                 $sv->normalizedVersion = $sv->section->getNormalizedVersion($sv->id);
-                // $sv->normalizedVersion = 1;
                 $sectionVersions[] = $sv;
             }
         }

@@ -144,5 +144,51 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
             $realSection->processEdit($request);
         }
     }
+
+    public function canEdit ($viewer, $syllabusVersion, $organization=null)
+    {
+        $siteSettings = $this->getApplication()->siteSettings;
+        $userId = $siteSettings->getProperty('university-template-user-id');
+        $sectionParentOrganization = null;
+        if ($this->uniqueSyllabiCount > 1)
+        {
+            $sectionParentOrganization = $this->parentOrganization;
+        }
+
+        if ($this->section->createdById == $userId && $this->section->createdById !== $viewer->id)
+        {
+            $this->canEditReadOnly = !$this->readOnly;
+        }
+        else
+        {
+            // section is read-only and belongs to this organization (not a parent one) 
+            if (($this->readOnly && $organization) || ($this->readOnly && $organization && !$sectionParentOrganization))
+            {
+                $this->canEditReadOnly = $organization->userHasRole($viewer, 'creator') || $organization->userHasRole($viewer, 'manager');
+            }
+            else
+            {
+                // if read only, then you can only edit it if it was created by the one viewing
+                if ($syllabusVersion->templateAuthorizationId)
+                {
+                    $this->canEditReadOnly = $organization->userHasRole($viewer, 'creator') || 
+                        $organization->userHasRole($viewer, 'manager');
+                }
+                else
+                {
+                    if ($this->parentOrganization)
+                    {
+                        $this->canEditReadOnly = !$this->readOnly;
+                    }
+                    else
+                    {
+                        $this->canEditReadOnly = !$this->readOnly || ($this->section->createdById === $viewer->id);
+                    }
+                }
+            }
+        }
+
+        return $this->canEditReadOnly;
+    }
 }
 

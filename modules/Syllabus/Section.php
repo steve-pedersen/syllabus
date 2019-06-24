@@ -6,7 +6,7 @@
  * @author      Steve Pedersen (pedersen@sfsu.edu)
  * @copyright   Copyright &copy; San Francisco State University.
  */
-class Syllabus_Syllabus_Section extends Bss_ActiveRecord_Base implements Syllabus_Syllabus_ISection
+class Syllabus_Syllabus_Section extends Bss_ActiveRecord_Base
 {
     private $_sectionTypes;
     private $_latestVersion;

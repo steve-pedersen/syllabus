@@ -9,8 +9,9 @@
   		var i = parseInt($itemToClone.attr('id').substring(11)) + 1;
       var $clone = $itemToClone.clone();
   		
+      var sortOrder = parseInt($itemToClone.find(`input[name='section[real][new-${i-1}][sortOrder]']`).val());
       $clone.attr('id', 'newSortItem'+i);
-      $clone.find('.sort-order-value').attr('name',`section[real][new-${i}][sortOrder]`).val(i);
+      $clone.find('.sort-order-value').attr('name',`section[real][new-${i}][sortOrder]`).val(sortOrder+1);
       $clone.find('.form-group').first().find('label').text(`Objective #${i+1} Title`);
       $clone.find('.form-group').first().find('input').attr('name',`section[real][new-${i}][title]`).val('').text('');
       $clone.find('.form-group').last().find('label').text(`Objective #${i+1} Title`);

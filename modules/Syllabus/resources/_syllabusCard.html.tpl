@@ -19,6 +19,9 @@
 			{if $btnClone}
 			<a class="btn btn-secondary" href="syllabus/startwith/{$syllabus->id}">Clone</a>
 			{/if}
+			{if $btnStartTemplateForCourse}
+				<input class="btn btn-success" type="submit" name="command[start][{$syllabus->id}]" value="Start From Template">
+			{/if}
 		</div>
 	</div>
 </div>

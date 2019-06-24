@@ -53,7 +53,9 @@
 						<img src="assets/images/testing0{$i}.jpg" class="card-img-top crop-top crop-top-13" alt="{$syllabus->title}" />
 					</div>
 					<div class="card-text p-3">
-					<h6 class="mt-3 text-dark">{$syllabus->title} {$templateId}</h6>
+					<h6 class="mt-3 text-dark">
+						<a href="syllabus/{$syllabus->id}" target="_blank">{$syllabus->title}</a>
+					</h6>
 					<small class="d-block">
 						<p class="card-text">{$syllabus->description}
 							<strong class="d-block">Last Modified:</strong> 
@@ -71,6 +73,9 @@
 	<div class="col my-5 py-5 border-top">
 		<a href="{$smarty.server.REQUEST_URI}" class="btn btn-outline-default mx-1">Cancel</a>
 		<input type="submit" name="command[select]" class="btn btn-primary">
+		{if $templateId}
+		<input type="submit" name="command[unset]" class="btn btn-danger" value="Unset">
+		{/if}
 	</div>
 	{generate_form_post_key}
 </form>

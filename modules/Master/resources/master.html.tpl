@@ -88,15 +88,6 @@
 		</div> 
 		{/if}
 
-		{if $userMessageList}
-		<div id="user-message" class="alert alert-success alert-dismissable">
-			<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-			{foreach item="msg" from=$userMessageList}
-			<div class="primary">{$msg.primary}</div>
-			{foreach item="detail" from=$msg.details}<div class="detail">{$detail}</div>{/foreach}
-			{/foreach}
-		</div> 
-		{/if}
 
 		<div class="container-fluid">
 			<div class="row">
@@ -113,7 +104,7 @@
 										<div class="user-info-text-container">
 											<span class="user-info-text sidebar-text">
 												{$viewer->fullName}<br>
-												<small class="">Professor of Anthropology, PhD, MD, DDS.</small>
+												<small class="">.</small>
 											</span>
 										</div>
 									</h6>
@@ -194,11 +185,12 @@
 				<!-- <main role="main" class="col-md-9 col-lg-10 px-3 mt-3" id="mainContent"> -->
 				<main role="main" class="col pr-3 mt-3 mb-3 min-vh-70" id="mainContent">
 				{/if}
+
 					{if $flashContent}
-					<div id="user-message" class="alert alert-{$flashClass} alert-dismissable my-3 rounded-0 fade show" role="alert">
+					<div id="user-message" class="alert alert-{$flashClass} alert-dismissable mb-3 fade show" role="alert">
 						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
 						<div class="primary">{$flashContent}</div>
-					</div> 
+					</div>
 					{/if}
 					<!-- MAIN CONTENT -->
 					{include file=$contentTemplate}

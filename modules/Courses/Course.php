@@ -29,11 +29,11 @@ class Syllabus_Courses_Course extends Bss_ActiveRecord_Base
 
     public function processEdit ($request) 
     {
-        $data = $request->getPostParameters();
-        if (isset($data['section']) && isset($data['section']['real']))
-        {
-            $this->absorbData($data['section']['real']);
-            $this->externalKey = $data['section']['real']['external_key'];
-        }
+        // $data = $request->getPostParameters();
+        // if (isset($data['section']) && isset($data['section']['real']))
+        // {
+        //     $this->absorbData($data['section']['real']);
+        //     $this->externalKey = $data['section']['real']['external_key'];
+        // }
     }
 }

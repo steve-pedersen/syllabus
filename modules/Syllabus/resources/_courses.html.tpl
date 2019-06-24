@@ -41,7 +41,7 @@
 									<tbody>
 										<tr>
 											<td class="align-top">
-											<a href="syllabus/{$syllabus->id}" class="btn btn-primary d-block">
+											<a class="btn btn-dark d-block" target="_blank" href="syllabus/{$syllabus->id}/view">
 												<span class="">
 													<span class="float-left"><i class="fas fa-eye"></i></span>
 													View
@@ -72,10 +72,10 @@
 					<div class="col">
 						<div class="row py-3">
 							<div class="col-3">
-								<button class="btn btn-success" type="submit" name="command[courseNew][{$courseSection->id}]" value="Submit">
+								<a class="btn btn-success" href="syllabus/start?course={$courseSection->id}">
 									<span class="mr-3"><i class="fas fa-plus"></i></span> 
 									Create New
-								</button>
+								</a>
 							</div>
 
 							{if $courseSection->pastCourseSyllabi}

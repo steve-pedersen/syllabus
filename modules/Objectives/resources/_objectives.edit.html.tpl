@@ -48,15 +48,22 @@
         {/foreach}
 
     {/if}
-        {if $realSection->objectives}{assign var=i value="{count($realSection->objectives)}"}{/if}
+        {if $realSection->objectives}
+            {assign var=i value="{count($realSection->objectives)}"}
+            {assign var=sortOrder value="{count($realSection->objectives)}"}
+        {else}
+            {assign var=i value="0"}
+            {assign var=sortOrder value="1"}
+        {/if}
         {assign var=objectiveId value="new-{$i}"}
+
             
 <div class="sort-item mt-3 border p-2" id="newSortItem{$i}">
     <div class="mb-2 d-flex flex-row bg-white p-2 dragdrop-handle">
          <i class="fas fa-bars text-dark" data-toggle="tooltip" data-placement="top" title="Click and drag to change the order."></i>
     </div>
    
-    <input type="hidden" name="section[real][{$objectiveId}][sortOrder]" value="{$i}" class="sort-order-value" id="form-field-{$i}-sort-order">
+    <input type="hidden" name="section[real][{$objectiveId}][sortOrder]" value="{$sortOrder}" class="sort-order-value" id="form-field-{$sortOrder}-sort-order">
     <div class="form-group row">
         <label class="col-lg-3 col-form-label form-control-label">Objective #{$i+1} Title</label>
         <div class="col-lg-9">

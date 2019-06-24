@@ -53,6 +53,7 @@
 			{/foreach}
 			</select>
 		</div>
+		<input type="hidden" name="resourceId" value="{$resource->id}">
 	    <div class="form-group mt-5">
 	        <div class="col-xs-12">
 	            <input type="submit" name="command[save]" id="saveResource" value="Save Resource" class="btn btn-primary" />
@@ -90,7 +91,7 @@
 
 							<div class="">
 								<!-- <button class="btn btn-info btn-sm" target="_blank" href="{$campusResource->url}">Preview</button> -->
-								<input class="btn btn-info btn-sm" type="submit" name="command[edit][{$campusResource->id}]" id="editResource" value="Edit" />
+								<a class="btn btn-info btn-sm" href="admin/syllabus/resources?edit={$campusResource->id}" id="editResource">Edit</a>
 								<input class="btn btn-danger btn-sm" type="submit" name="command[delete][{$campusResource->id}]" id="saveResource" value="Delete" />
 							</div>
 						</div>

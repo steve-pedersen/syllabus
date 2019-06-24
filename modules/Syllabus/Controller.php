@@ -20,39 +20,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         ];
     }
 
-    public function view ()
-    {
-        $viewer = $this->requireLogin();
-        
-        $this->setSyllabusTemplate();
-
-        $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
-        $sections = $this->schema('Syllabus_Syllabus_Section');
-        $sectionVersions = $this->schema('Syllabus_Syllabus_SectionVersion');
-        
-        $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id', ['allowNew' => true]);
-        $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
-
-        $title = ($syllabus->inDatasource ? 'Edit' : 'Create') . ' Syllabus';
-        $this->setPageTitle($title);
-
-        $routeBase = $this->getRouteVariable('routeBase', '');
-        $organization = $this->getRouteVariable('organization', null);
-
-        $pathParts = [];
-        $pathParts[] = $this->getRouteVariable('routeBase');
-        $pathParts[] = 'syllabus';
-
-        $this->template->addBreadcrumb('syllabi', 'My Syllabi');
-        $this->template->addBreadcrumb('syllabus/2195', 'Summer 2019');
-        $this->template->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);
-        $this->template->title = $title;
-        $this->template->syllabus = $syllabus;
-        $this->template->syllabusVersion = $syllabusVersion;
-        $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
-        $this->template->organization = $organization;
-    }
-
     public function mySyllabi ()
     {
         $viewer = $this->requireLogin();
@@ -96,7 +63,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             default:
                 $campusResources = $this->schema('Syllabus_Syllabus_CampusResource');
                 $this->template->syllabi = $syllabi->find(
-                    $syllabi->createdById->equals($viewer->id), 
+                    $syllabi->createdById->equals($viewer->id)->andIf($syllabi->templateAuthorizationId->isNull()), 
                     ['orderBy' => '-createdDate', 'limit' => $limit, 'offset' => $offset]
                 );
                 $this->template->campusResources = $campusResources->find(
@@ -163,7 +130,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         if (($viewer->id != $userId) && !$this->hasPermission('admin'))
         {
             $this->requireExists($templateId);
-            // $this->sendError(403, 'Forbidden', 'Not-Configured', 'This site must be configured before using.');
         }
         elseif (!$templateId && $this->hasPermission('admin'))
         {
@@ -227,75 +193,72 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 // TODO: update for 'clone' option
                 $fromCourse = isset($courseSectionId) ? $courseSections->get($courseSectionId) : null;
                 $templateAuthorizationId = isset($data['template']) ? $data['template'] : null;
-
+                
                 switch ($data['startingTemplate']) {
-
-                    case 'university':
-                        
-                        $universityTemplate = $this->requireExists($syllabi->get($templateId));
-                        $syllabus = $this->startWith($universityTemplate, true, true);
-                        if (!$fromCourse)
-                        {
-                            $version = $syllabus->latestVersion;
-                        }
-
-                        if ($fromCourse)
-                        {
-                            list($success, $syllabusVersion) = $this->createCourseSyllabus($syllabus->id, $fromCourse);
-                            if ($success)
-                            {
-                                $pathParts[] = $syllabusVersion->syllabus->id;
-                                $pathParts = array_filter($pathParts);
-                                // TODO: add language string check
-                                $this->flash("
-                                    Your new syllabus draft includes all SF State requirements and course information for 
-                                    $courseSection->fullDisplayName. It is ready for you to edit.", 
-                                    'success'
-                                );
-                                $this->response->redirect(implode('/', $pathParts));
-                            }
-                        }
-                        elseif ($templateAuthorizationId)
-                        {
-                            $version = $syllabus->latestVersion;
-                            $version->title = 'New syllabus template based on: ' . $version->title;
-                            $version->description = 'You may change this metadata to describe your template better.';
-                            $version->save();
-                            $pathParts[] = $syllabus->id;
-                            $pathParts = array_filter($pathParts);
-                            $this->response->redirect(implode('/', $pathParts));
-                        }
-                        else
-                        {
-                            $version = $syllabus->latestVersion;
-                            $version->title = 'New syllabus based on: ' . $version->title;
-                            $version->description = 'You may change this metadata to describe your syllabus better.';
-                            $version->save();
-                            $pathParts[] = $syllabus->id;
-                            $pathParts = array_filter($pathParts);
-                            // TODO: add language string check
-                            $this->flash("
-                                Your new syllabus draft includes all SF State requirements. You are able to choose which 
-                                course it is for by first giving the syllabus a name and saving it, then adding a new 
-                                'Course Information' section. If you want to use this syllabus draft as a starting point 
-                                for any other courses, then visit your 'Courses' dashboard from the main menu.", 
-                                'success'
-                            );
-                            $this->response->redirect(implode('/', $pathParts));
-                        }
+                    case 'university':                 
+                        $startingTemplate = $syllabi->get($templateId);
                         break;
-
                     case 'department':
-
-                        break;
-
-                    case 'clone':
-
+                    case 'college':
+                    	$startingTemplate = $syllabi->get((key($this->getPostCommandData())));
                         break;
 
                     default:
-                        $this->flash('An unknown error occurred', 'danger');
+                        $this->flash('You must select a valid starting point.', 'danger');
+                        $this->accessDenied('You must select a valid starting point.');
                         break;
+                }
+                $this->requireExists($startingTemplate);
+
+                $syllabus = $this->startWith($startingTemplate, true, true);
+                if (!$fromCourse)
+                {
+                    $version = $syllabus->latestVersion;
+                }
+
+                if ($fromCourse)
+                {
+                    list($success, $syllabusVersion) = $this->createCourseSyllabus($syllabus->id, $fromCourse);
+                    if ($success)
+                    {
+                        $pathParts[] = $syllabusVersion->syllabus->id;
+                        $pathParts = array_filter($pathParts);
+                        // TODO: add language string check
+                        $this->flash("
+                            Your new syllabus draft includes all SF State requirements and course information for 
+                            $courseSection->fullDisplayName. It is ready for you to edit.", 
+                            'success'
+                        );
+                        $this->response->redirect(implode('/', $pathParts));
+                    }
+                }
+                elseif ($templateAuthorizationId)
+                {
+                    $version = $syllabus->latestVersion;
+                    $version->title = 'New syllabus template based on: ' . $version->title;
+                    $version->description = 'You may change this metadata to describe your template better.';
+                    $version->save();
+                    $pathParts[] = $syllabus->id;
+                    $pathParts = array_filter($pathParts);
+                    $this->response->redirect(implode('/', $pathParts));
+                }
+                else
+                {
+                    $version = $syllabus->latestVersion;
+                    $version->title = 'New syllabus based on: ' . $version->title;
+                    $version->description = 'You may change this metadata to describe your syllabus better.';
+                    $version->save();
+                    $pathParts[] = $syllabus->id;
+                    $pathParts = array_filter($pathParts);
+                    // TODO: add language string check
+                    $this->flash("
+                        Your new syllabus draft includes all SF State requirements. You are able to choose which 
+                        course it is for by first giving the syllabus a name and saving it, then adding a new 
+                        'Course Information' section. If you want to use this syllabus draft as a starting point 
+                        for any other courses, then visit your 'Courses' dashboard from the main menu.", 
+                        'success'
+                    );
+                    $this->response->redirect(implode('/', $pathParts));
                 }
             }            
         }
@@ -475,9 +438,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 case 'savesyllabus':
                     $syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;
                     list($updated, $syllabusVersion) = $this->saveSyllabus($syllabus);
-                    if (!$updated)
+                    if ($updated)
                     {
-                        $this->flash('No changes were made', 'warning');
+                        $this->flash('Syllabus saved.', 'success');
                     }
                     $pathParts[] = $syllabusVersion->syllabus->id;
                     $pathParts = array_filter($pathParts);
@@ -519,35 +482,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $this->requireExists($templateId);
         }
 
-        // determine which sections are editable
         $syllabusSectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
         foreach ($syllabusSectionVersions as $sv)
         {
-            $sectionParentOrganization = null;
-            if ($sv->uniqueSyllabiCount > 1)
-            {
-                $sectionParentOrganization = $sv->parentOrganization;
-            }
-
-            if ($sv->section->createdById == $userId && $sv->section->createdById !== $viewer->id)
-            {
-                $sv->canEditReadOnly = !$sv->readOnly;
-            }
-            else
-            {
-                // section is read-only and belongs to this organization (not a parent one) 
-                if (($sv->readOnly && $organization) || ($sv->readOnly && $organization && !$sectionParentOrganization))
-                {
-                    $sv->canEditReadOnly = $organization->userHasRole($viewer, 'creator') || $organization->userHasRole($viewer, 'manager');
-                }
-                else
-                {
-                    // if read only, then you can only edit it if it was created by the one viewing
-                    $sv->canEditReadOnly = !$sv->readOnly || ($sv->section->createdById === $viewer->id);
-                }
-            }
+            $sv->canEditReadOnly = $sv->canEdit($viewer, $syllabusVersion, $organization);
         }
-
 
 
         $this->template->sidebarMinimized = true;
@@ -557,6 +496,41 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->sectionVersions = $syllabusSectionVersions;
         $this->template->sectionExtensions = $sectionExtensions;
         $this->template->userCourses = $currentCourses ?? $viewer->classDataUser->getCurrentEnrollments(); // TODO: Add only if needed
+        $this->template->organization = $organization;
+    }
+
+    public function view ()
+    {
+        $viewer = $this->requireLogin();
+        
+        $this->setSyllabusTemplate();
+
+        $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
+        $sections = $this->schema('Syllabus_Syllabus_Section');
+        $sectionVersions = $this->schema('Syllabus_Syllabus_SectionVersion');
+        
+        $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id', ['allowNew' => true]);
+        $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
+
+        // TODO: make sure this viewer has permission to view
+
+        $title = ($syllabus->inDatasource ? 'Edit' : 'Create') . ' Syllabus';
+        $this->setPageTitle($title);
+
+        $routeBase = $this->getRouteVariable('routeBase', '');
+        $organization = $this->getRouteVariable('organization', null);
+
+        $pathParts = [];
+        $pathParts[] = $this->getRouteVariable('routeBase');
+        $pathParts[] = 'syllabus';
+
+        $this->template->addBreadcrumb('syllabi', 'My Syllabi');
+        $this->template->addBreadcrumb('syllabus/semesters/2195', 'Summer 2019');
+        $this->template->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);
+        $this->template->title = $title;
+        $this->template->syllabus = $syllabus;
+        $this->template->syllabusVersion = $syllabusVersion;
+        $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
         $this->template->organization = $organization;
     }
 
@@ -648,16 +622,21 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $genericSection->modifiedDate = new DateTime;
                     $genericSection->save();              
                 }
-
-                // Make sure this
             }
              
-
             $realSection = $this->schema($realSectionClass)->createInstance();
-            $realSection->processEdit($this->request);
+            $errorMsg = $realSection->processEdit($this->request);
+            if ($errorMsg && $errorMsg !== '')
+            {
+            	$this->template->addUserMessage($errorMsg, '');
+            }
+            if (isset($data['section']) && isset($data['section']['real']) && isset($data['section']['real']['external_key']))
+            {	// TODO: figure out why this isn't working in the Courses procesEdit()
+                $realSection->absorbData($data['section']['real']);
+                $realSection->externalKey = $data['section']['real']['external_key'];
+            }
             $realSection->save();
 
-            // TODO: find out if single course section can have multiple associated syllabi
             if ($extKey === 'course_id' && $realSection->externalKey)
             {
                 $courses = $this->schema('Syllabus_ClassData_CourseSection');
@@ -797,9 +776,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     private function createCourseSyllabus ($versionId, $fromCourseSection, $inherited=false)
     {
         $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
-        // $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
         $syllabus = ($versionId === 'new') ? $syllabi->createInstance() : $syllabi->get($versionId);
-        // $syllabusVersion = $syllabus->latestVersion;
 
         if ($syllabus)
         {
@@ -942,7 +919,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
             if (!$organization)
             {
-                $this->sendError(400, 'Bad Request', 'ParameterRequired', "Could not find any '{$type}' with id '{$id}'.");            
+                $this->accessDenied("Could not find any '{$type}' with id '{$id}'.");            
             }
 
             $hasPermission = $organization->userHasRole($user, 'member');
