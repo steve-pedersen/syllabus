@@ -1,30 +1,20 @@
 <div class="editor-main-controls-{$position|lcfirst} {if $position == 'Top'}mb-3{else}mt-3{/if} form-inline bg-light" id="editorMainControls{$position}">
 	{if $syllabus->inDataSource}
 	<div class="editor-controls-left mr-auto">
-
+		<select name="addSection{$position}" class="form-control">
+			<option value="">Choose Section to Add...</option>
 		{foreach $sectionExtensions as $ext}
 			{assign var=canHaveMultiple value=true}
 			{foreach $sectionVersions as $sv}
 				{if $sv->extension->getExtensionKey() == $ext->getExtensionKey() && !$ext->canHaveMultiple()}{assign var=canHaveMultiple value=false}{/if}
 			{/foreach}
-
-		{strip}
-			{if !$canHaveMultiple}
-			<span class="d-inline-block pl-2 border border-muted  text-muted">
-				<img src="{$ext->getLightIcon()}" class="img-fluid mr-1" style="width:15%;">
+			<option value="{$ext->getRecordClass()}" {if !$canHaveMultiple}disabled{/if}>
 				{$ext->getDisplayName()}
-			</span>
-			{else}
-			<span class="d-inline-block pl-2 border border-dark ">
-				<img src="{$ext->getIcon()}" class="img-fluid mr-1" style="width:15%;">
-				{$ext->getDisplayName()}
-			</span>
-			{/if}
-		{/strip}
+			</option>
 
 		{/foreach}
-
-		<!-- <input class="btn btn-primary" type="submit" name="command[addsection]" value="Add Section" /> -->
+		</select>
+		<input class="btn btn-primary" type="submit" name="command[addsection]" value="Add Section" />
 	</div>
 {if $position == 'Top'}
 	<div class="editor-controls-header mx-auto text-center">
@@ -39,9 +29,6 @@
 	</div>
 {/if}
 	<div class="editor-controls-right ml-auto">
-		{if $syllabus->inDataSource}
-
-		{/if}
 		<input class="btn btn-success" type="submit" name="command[savesyllabus]" value="Save Syllabus" id="globalSave" />
 		<a class="btn btn-dark" href="syllabus/{$syllabus->id}/view" target="_blank">View</a>
 		<a href="{if $syllabus->inDataSource}syllabus/{$syllabus->id}{else}{$smarty.server.REQUEST_URI}{/if}" class="btn btn-default">Cancel</a>

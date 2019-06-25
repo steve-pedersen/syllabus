@@ -109,7 +109,7 @@
 	        <div class="col-lg-9">
 				<div class="d-flex">
 	                <input class="btn btn-success" type="submit" name="command[savesection]" value="Save Section" />
-	                <a href="{$smarty.server.REQUEST_URI}" class="btn btn-outline-default mx-1">Cancel</a>
+	                <a href="syllabus/{$syllabus->id}" class="btn btn-outline-default mx-1">Cancel</a>
 	                <input class="btn btn-danger ml-auto" type="submit" name="command[deletesection]" value="Delete Section" />				
 				</div>
 	        </div>

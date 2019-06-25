@@ -11,6 +11,7 @@
 #require js/objectives.js
 #require js/policies.js
 #require js/materials.js
+#require js/instructors.js
 
 
 (function ($) {

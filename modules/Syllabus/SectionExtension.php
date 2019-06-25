@@ -29,7 +29,16 @@ abstract class Syllabus_Syllabus_SectionExtension extends Bss_Core_NamedExtensio
             return $this->getApplication()->schemaManager->getSchema($recordClass);
         }
     }
-    
+
+    public function getIcon ()
+    {
+        return 'assets/icons/sections/' . $this->getExtensionName() . '.png';
+    }
+    public function getIconLight ()
+    {
+        return 'assets/icons/sections/' . $this->getExtensionName() . '_light.png';
+    }
+
     public function initializeRecord (Bss_ActiveRecord_Base $record) {}
 
 }

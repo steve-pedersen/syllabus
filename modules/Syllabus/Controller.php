@@ -358,12 +358,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
 
 
-
         if ($this->request->wasPostedByUser())
         {      
             switch ($this->getPostCommand()) {
 
-                case 'addsection':
+                case 'addsection': // TODO: update this to a GET request
 
                     if (isset($data['addSectionTop']) || $data['addSectionBot'])
                     {
@@ -378,6 +377,18 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                         if ($realSectionExtension::getExtensionName() === 'course')
                         {
                             $currentCourses = $viewer->classDataUser->getCurrentEnrollments();
+                        }
+
+                        if ($sectionClass === 'Syllabus_Instructors_Instructors')
+                        {
+                            foreach ($syllabusVersion->sectionVersions as $sv)
+                            {
+                                if (isset($sv->course_id))
+                                {
+                                    $this->template->defaultInstructor = $viewer;
+                                    break;
+                                }
+                            }
                         }
 
                         $this->template->realSection = $realSection;

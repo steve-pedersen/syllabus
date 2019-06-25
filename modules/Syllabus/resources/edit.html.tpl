@@ -25,7 +25,7 @@
 				{/if}
 			
 				{assign var=position value='Top'}
-				{include file="partial:_controls.html.tpl"}
+				{include file="partial:_controls.select.html.tpl"}
 				
 				<div class="editor-metadata">
 					<a class="d-block bg-white border p-2 section-collapse-link {if !$editMetadata && $syllabus->inDataSource}collapsed{/if}" 
@@ -84,7 +84,7 @@
 	
 				{if $sectionVersions && (count($sectionVersions) > 1)}
 					{assign var=position value='Bottom'}
-					{include file="partial:_controls.html.tpl"}
+					{include file="partial:_controls.select.html.tpl"}
 				{/if}
 
 				{generate_form_post_key}

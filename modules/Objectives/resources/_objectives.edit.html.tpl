@@ -24,7 +24,7 @@
                 <div class="form-group row px-3">
                     <label class="col-lg-3 col-form-label form-control-label">Objective #{$i+1} Description</label>
                     <div class="col-lg-9">
-                        <textarea class="form-control wysiwyg wysiwyg-basic" type="text" name="section[real][{$objectiveId}][description]" rows="5">{$objective->description}</textarea>
+                        <textarea class="form-control wysiwyg wysiwyg-basic" name="section[real][{$objectiveId}][description]" rows="5">{$objective->description}</textarea>
                     </div>
                 </div>
             </div>
@@ -73,14 +73,14 @@
     <div class="form-group row">
         <label class="col-lg-3 col-form-label form-control-label">Objective #{$i+1} Description</label>
         <div class="col-lg-9">
-            <textarea class="form-control wysiwyg wysiwyg-basic" type="text" name="section[real][{$objectiveId}][description]" rows="5"></textarea>
+            <textarea class="form-control wysiwyg wysiwyg-basic" name="section[real][{$objectiveId}][description]" rows="5"></textarea>
         </div>
     </div>
 </div>  
 
             
     <div class="form-group d-flex flex-row-reverse mt-4">
-        <input class="btn btn-primary" id="addSectionItemBtn" type="submit" name="command[addsectionitem][{$realSectionClass}]" value="Add Another Objective" />
+        <input class="btn btn-light" id="addSectionItemBtn" type="submit" name="command[addsectionitem][{$realSectionClass}]" value="+ Add Another Objective" />
     </div>
 </div>
 </div>

@@ -110,7 +110,7 @@
 </div>  
             
     <div class="form-group d-flex flex-row-reverse mt-4">
-        <input class="btn btn-primary" id="addMaterialsSectionItemBtn" type="submit" name="command[addsectionitem][{$realSectionClass}]" value="Add Another Material" />
+        <input class="btn btn-light" id="addMaterialsSectionItemBtn" type="submit" name="command[addsectionitem][{$realSectionClass}]" value="+ Add Another Material" />
     </div>
 
     <div class="form-group row px-3 mt-5">

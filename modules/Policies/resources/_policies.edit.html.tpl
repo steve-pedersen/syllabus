@@ -80,7 +80,7 @@
 
             
     <div class="form-group d-flex flex-row-reverse mt-4">
-        <input class="btn btn-primary" id="addSectionItemBtn" type="submit" name="command[addsectionitem][{$realSectionClass}]" value="Add Another Policy" />
+        <input class="btn btn-light" id="addSectionItemBtn" type="submit" name="command[addsectionitem][{$realSectionClass}]" value="+ Add Another Policy" />
     </div>
 </div>
 </div>
