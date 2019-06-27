@@ -43,11 +43,11 @@
 			</div>
 		</li>
         <div id="collapseOne" class="collapse col-12 mt-0" aria-labelledby="headingOne" data-parent="#startAccordion">
-		  	<div class="col mb-3 w-75 text-center">
+		  	<div class="mb-3 pb-4 w-75 text-center">
 		  		{if $pStartFromNothing}
-				<a href="syllabus/new" class="btn btn-success btn-large">Begin</a>
+				<a href="syllabus/new" class="btn btn-success btn-large">Start Fresh</a>
 		  		{else}
-				<input class="btn btn-success btn-lg" type="submit" name="command[start]" value="Begin">
+				<input class="btn btn-success btn-lg" type="submit" name="command[start]" value="Start From Base Template">
 				{generate_form_post_key}
 				{/if}
 				<hr class="fancy-line-2">

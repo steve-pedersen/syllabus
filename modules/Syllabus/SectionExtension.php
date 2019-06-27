@@ -30,11 +30,11 @@ abstract class Syllabus_Syllabus_SectionExtension extends Bss_Core_NamedExtensio
         }
     }
 
-    public function getIcon ()
+    public function getDarkIcon ()
     {
-        return 'assets/icons/sections/' . $this->getExtensionName() . '.png';
+        return 'assets/icons/sections/' . $this->getExtensionName() . '_dark.png';
     }
-    public function getIconLight ()
+    public function getLightIcon ()
     {
         return 'assets/icons/sections/' . $this->getExtensionName() . '_light.png';
     }

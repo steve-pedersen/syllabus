@@ -58,7 +58,7 @@ class Syllabus_Syllabus_SyllabusVersion extends Bss_ActiveRecord_Base
                 }
                 if ($withExt)
                 {
-                    $sv->extension = $oldSv->getExtensionByName(get_class($oldSv->resolveSection()));
+                    $sv->extension = $oldSv->getExtensionByRecord(get_class($oldSv->resolveSection()));
                 }
                 $sv->sortOrder     = $this->sectionVersions->getProperty($oldSv, 'sort_order');
                 $sv->readOnly      = $this->sectionVersions->getProperty($oldSv, 'read_only');

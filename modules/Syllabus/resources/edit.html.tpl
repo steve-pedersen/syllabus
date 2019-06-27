@@ -18,79 +18,94 @@
 			</button>
 		</div>
 		{/if}
-		<div class="syllabus-editor " id="syllabusEditor">		
-			<form action="{$smarty.server.REQUEST_URI}" method="post" class="form" role="form" id="viewSections">
-				{if $syllabusVersion->inDataSource}
-				<input type="hidden" name="syllabusVersion[id]" value="{$syllabusVersion->id}">
-				{/if}
-			
-				{assign var=position value='Top'}
-				{include file="partial:_controls.select.html.tpl"}
-				
-				<div class="editor-metadata">
-					<a class="d-block bg-white border p-2 section-collapse-link {if !$editMetadata && $syllabus->inDataSource}collapsed{/if}" 
-						data-toggle="collapse" href="#metadataCollapse" role="button" aria-expanded="false" aria-controls="metadataCollapse">			
-						<div class="text-left d-inline-block" id="metadataHeading"> 
-							<span class="mb-0 section-title text-dark">
-								<strong>Syllabus Metadata</strong><small><i class="fas fa-chevron-right text-dark pl-2"></i></small>
-							</span>
-							 - <small class="text-dark">Information about this syllabus that is not displayed inside the syllabus itself.</small>
-						</div>
-					</a>
-					<div class="collapse multi-collapse {if $editMetadata || !$syllabus->inDataSource}show{/if} section-collapsible" id="metadataCollapse">
-						{if $editMetadata || !$syllabus->inDataSource}
-							{include file="partial:_metadata.edit.html.tpl"}
-						{else}
-							{include file="partial:_metadata.view.html.tpl"}
-						{/if}
-					</div>
-				</div>
+
+		<div class="syllabus-editor " id="syllabusEditor">	
 		
-				<div class="sort-container">				
-				{if $sectionVersions}
-					{assign var=counter value=0}
-					{foreach $sectionVersions as $i => $sectionVersion}
-						
-						<!-- Render view template for existing section -->
-						{if !$currentSectionVersion || ($currentSectionVersion->id != $sectionVersion->id)}
+		<!-- ADD SECTION FORM -->
+		<form action="{$smarty.server.REQUEST_URI}" method="get" class="form" role="form" id="addSection">
+		</form>
+		
+		<!-- MAIN FORM -->
+		<form action="{$smarty.server.REQUEST_URI}" method="post" class="form" role="form" id="viewSections">		
+			
+			<!-- MAIN CONTROLS - TOP -->			
+			{assign var=position value='Top'}
+			{include file="partial:_controls.html.tpl"}
 
-							{include file="partial:_section.view.html.tpl"}
-							{assign var=counter value="{$counter + 1}"}
+			{if $syllabusVersion->inDataSource}
+			<input type="hidden" name="syllabusVersion[id]" value="{$syllabusVersion->id}">
+			{/if}
 
-						<!-- Editing an existing section -->
-						{elseif ($currentSectionVersion && ($currentSectionVersion->id == $sectionVersion->id)) || ($syllabus->inDataSource && $realSection)}
-							
-							{include file="partial:_section.edit.html.tpl"}
-						{/if}
-					{/foreach}
+			<div class="editor-metadata">
+				<a class="d-block bg-white border p-2 section-collapse-link {if !$editMetadata && $syllabus->inDataSource}collapsed{/if}" 
+					data-toggle="collapse" href="#metadataCollapse" role="button" aria-expanded="false" aria-controls="metadataCollapse">			
+					<div class="text-left d-inline-block" id="metadataHeading"> 
+						<span class="mb-0 section-title text-dark">
+							<strong>Syllabus Metadata</strong><small><i class="fas fa-chevron-right text-dark pl-2"></i></small>
+						</span>
+						 - <small class="text-dark">Information about this syllabus that is not displayed inside the syllabus itself.</small>
+					</div>
+				</a>
+				<div class="collapse multi-collapse {if $editMetadata || !$syllabus->inDataSource}show{/if} section-collapsible" id="metadataCollapse">
+					{if $editMetadata || !$syllabus->inDataSource}
+						{include file="partial:_metadata.edit.html.tpl"}
+					{else}
+						{include file="partial:_metadata.view.html.tpl"}
+					{/if}
+				</div>
+			</div>
+	
+			<div class="sort-container">				
+			{if $sectionVersions}
+				{assign var=counter value=0}
+				{foreach $sectionVersions as $i => $sectionVersion}
 					
-					<!-- At least 1 section exists already, plus 1 brand new is being created -->
-					{if (!$currentSectionVersion || ($syllabus->inDataSource && $realSection)) && ($realSection && count($sectionVersions) == $counter)}	
+					<!-- Render view template for existing section -->
+					{if !$currentSectionVersion || ($currentSectionVersion->id != $sectionVersion->id)}
+
+						{include file="partial:_section.view.html.tpl"}
+						{assign var=counter value="{$counter + 1}"}
+
+					<!-- Editing an existing section -->
+					{elseif ($currentSectionVersion && ($currentSectionVersion->id == $sectionVersion->id)) || ($syllabus->inDataSource && $realSection)}
 						
 						{include file="partial:_section.edit.html.tpl"}
 					{/if}
-	
-				<!-- No sections exist yet, but 1 brand new is being edited -->
-				{elseif $syllabus->inDataSource && $realSection}
+				{/foreach}
+				
+				<!-- At least 1 section exists already, plus 1 brand new is being created -->
+				{if (!$currentSectionVersion || ($syllabus->inDataSource && $realSection)) && ($realSection && count($sectionVersions) == $counter)}	
 					
 					{include file="partial:_section.edit.html.tpl"}
-
-				{elseif !$syllabus->inDataSource && $realSection}
-					<div class="alert alert-danger mt-3" role="alert">
-						You need to save the syllabus metadata before adding a section. See above.
-					</div>
-				{/if}				
-				</div>
-	
-				{if $sectionVersions && (count($sectionVersions) > 1)}
-					{assign var=position value='Bottom'}
-					{include file="partial:_controls.select.html.tpl"}
 				{/if}
 
-				{generate_form_post_key}
-			</form>
+			<!-- No sections exist yet, but 1 brand new is being edited -->
+			{elseif $syllabus->inDataSource && $realSection}
+				
+				{include file="partial:_section.edit.html.tpl"}
+
+			{elseif !$syllabus->inDataSource && $realSection}
+				<div class="alert alert-danger mt-3" role="alert">
+					You need to save the syllabus metadata before adding a section. See above.
+				</div>
+			{/if}				
+			</div>
+
+			{if $sectionVersions && (count($sectionVersions) > 1)}
+				<!-- MAIN CONTROLS - TOP -->
+				{assign var=position value='Bottom'}
+				{include file="partial:_controls.html.tpl"}
+			{/if}
+
+			{generate_form_post_key}
+		</form>
 		</div>
 	</main>
+
+	{if $editUri}
+	<!-- <h1>{$editUri}</h1> -->
+	<input type="hidden" value="{$editUri}" id="editUri">
+	{/if}
 	
 	<nav class="col-md-2 d-none d-md-block anchor-links-sidebar bg-light text-dark" >
 		<div class="sidebar-sticky mt-3">

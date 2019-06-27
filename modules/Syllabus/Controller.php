@@ -362,47 +362,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {      
             switch ($this->getPostCommand()) {
 
-                case 'addsection': // TODO: update this to a GET request
-
-                    if (isset($data['addSectionTop']) || $data['addSectionBot'])
-                    {
-                        $sectionClass = !empty($data['addSectionTop']) ? $data['addSectionTop'] : $data['addSectionBot'];
-                    }
-
-                    if (($sectionClass !== 'false') || ($sectionClass !== ''))
-                    {
-                        $realSection = $this->schema($sectionClass)->createInstance();
-                        $realSectionExtension = $sectionVersions->createInstance()->getExtensionByName($sectionClass);
-
-                        if ($realSectionExtension::getExtensionName() === 'course')
-                        {
-                            $currentCourses = $viewer->classDataUser->getCurrentEnrollments();
-                        }
-
-                        if ($sectionClass === 'Syllabus_Instructors_Instructors')
-                        {
-                            foreach ($syllabusVersion->sectionVersions as $sv)
-                            {
-                                if (isset($sv->course_id))
-                                {
-                                    $this->template->defaultInstructor = $viewer;
-                                    break;
-                                }
-                            }
-                        }
-
-                        $this->template->realSection = $realSection;
-                        $this->template->realSectionClass = $sectionClass;
-                        $this->template->sectionExtension = $realSectionExtension;
-                    }
-                    else
-                    {
-                        $this->flash('You must choose a section type from the dropdown list.', 'danger');
-                    }
-
-                    break;
-
-
                 case 'editsyllabus':
                     $this->template->editMetadata = true;
                     $this->template->syllabusVersion = $syllabusVersion;
@@ -413,7 +372,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     // TODO: Update for multiple open section items at once
                     $realSectionClass = key($this->getPostCommandData());
                     $realSection = $this->schema($realSectionClass)->createInstance();
-                    $realSectionExtension = $sectionVersions->createInstance()->getExtensionByName($realSectionClass);
+                    $realSectionExtension = $sectionVersions->createInstance()->getExtensionByRecord($realSectionClass);
                     $extKey = $realSectionExtension->getExtensionKey();
        
                     $existingSectionVersionIds = [];
@@ -460,7 +419,45 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             }
         }
 
-        // EDIT mode
+        // ADD SECTION
+        if (!$this->request->wasPostedByUser() && ($realSectionName = $this->request->getQueryParameter('add')))
+        {
+            $realSectionExtension = $sectionVersions->createInstance()->getExtensionByName($realSectionName);
+            if ($realSectionClass = $realSectionExtension->getRecordClass())
+            {
+                $realSection = $this->schema($realSectionClass)->createInstance();
+                if ($realSectionExtension::getExtensionName() === 'course')
+                {
+                    $currentCourses = $viewer->classDataUser->getCurrentEnrollments();
+                }
+
+                if ($realSectionClass === 'Syllabus_Instructors_Instructors')
+                {
+                    foreach ($syllabusVersion->sectionVersions as $sv)
+                    {
+                        if (isset($sv->course_id))
+                        {
+                            $this->template->defaultInstructor = $viewer;
+                            break;
+                        }
+                    }
+                }
+
+                $this->flash('Your section is ready to edit.', 'info');
+
+                $this->template->realSection = $realSection;
+                $this->template->realSectionClass = $realSectionClass;
+                $this->template->sectionExtension = $realSectionExtension;
+                $this->template->editUri = '#section' . $realSectionName . 'Edit';
+            }
+            else
+            {
+                $this->flash('Invalid section type.', 'danger');
+                $this->response->redirect('syllabus/' . $syllabus->id);
+            }
+        }
+
+        // EDIT SECTION
         if (!$this->request->wasPostedByUser() && ($sectionVersionId = $this->request->getQueryParameter('edit')))
         {
             $sectionVersion = $sectionVersions->get($sectionVersionId);
@@ -475,13 +472,19 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             );
             $realSection = $sectionVersion->resolveSection();
            
+            if ($realSection->getExtensionName() === 'course')
+            {
+                $currentCourses = $viewer->classDataUser->getCurrentEnrollments();
+            }
+
             $this->template->realSection = $realSection;
             $this->template->realSectionClass = get_class($realSection);
-            $this->template->sectionExtension = $sectionVersion->getExtensionByName(get_class($realSection));
+            $this->template->sectionExtension = $sectionVersion->getExtensionByRecord(get_class($realSection));
             $this->template->genericSection = $genericSection;
             $this->template->currentSectionVersion = $sectionVersion;
             $this->template->isUpstreamSection = $this->isUpstreamSection($sectionVersion, $syllabus, $viewer);
             $this->template->hasDownstreamSection = $this->hasDownstreamSection($sectionVersion, $syllabus, $viewer);
+            $this->template->editUri = 'syllabus/' . $syllabus->id . '#section' . $realSectionName . 'Edit';
         }
 
 
@@ -506,7 +509,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->syllabusVersion = $syllabusVersion;
         $this->template->sectionVersions = $syllabusSectionVersions;
         $this->template->sectionExtensions = $sectionExtensions;
-        $this->template->userCourses = $currentCourses ?? $viewer->classDataUser->getCurrentEnrollments(); // TODO: Add only if needed
+        $this->template->userCourses = $currentCourses ?? null;
         $this->template->organization = $organization;
     }
 

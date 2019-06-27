@@ -82,7 +82,7 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
         return $this->section->getNormalizedVersion($this->id);
     }
 
-    public function getExtensionByName ($record)
+    public function getExtensionByRecord ($record)
     {
         if ($this->_sectionExtension === null)
         {
@@ -98,6 +98,22 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
         }
 
         return $this->_sectionExtension;
+    }
+
+    public function getExtensionByName ($name)
+    {
+        $ext = null;
+        $moduleManager = $this->getApplication()->moduleManager;
+        $extensions = $this->_schema->getExtensions();
+        foreach ($extensions as $ext)
+        {
+            if ($ext->getExtensionName() === $name)
+            {
+                $ext = $moduleManager->getExtensionByName($ext::getExtensionPointName(), $ext::getExtensionName());
+                break;
+            }
+        }
+        return $ext;
     }
 
     public function getUniqueSyllabiCount ()

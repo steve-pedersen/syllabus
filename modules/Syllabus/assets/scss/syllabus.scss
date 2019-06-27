@@ -11,6 +11,34 @@ html {
 	}
 }
 
+.editor-main-controls {
+	.editor-controls-left {
+		button {
+			border-radius: 2em;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			border-width: 2px;
+			color: $dark;
+			// padding-top: 1px;
+			// padding-bottom: 1px;
+			&:hover,
+			&:focus {
+				color: #fff !important;
+				&.disabled {
+					color: initial;
+				}
+			}
+			> span {
+				font-size: 0.85rem;
+			}
+		}
+	}
+	.editor-controls-right {
+	    
+	}
+}
+
 .viewer-main-container {
 	h1 {
 		font-size: 16pt;
