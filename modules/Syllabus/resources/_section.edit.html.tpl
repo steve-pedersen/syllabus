@@ -18,7 +18,7 @@
 </div>
 {/if}
 
-	<div class="d-block-inline bg-light p-2 section-collapse-link dragdrop-handle" data-toggle="collapse" href="#{$extName}CollapseEdit" aria-expanded="false" aria-controls="{$extName}CollapseEdit">
+	<div class="d-block-inline bg-light p-2 section-collapse-link dragdrop-handle border" data-toggle="collapse" href="#{$extName}CollapseEdit" aria-expanded="false" aria-controls="{$extName}CollapseEdit">
 		<i class="fas fa-bars fa-2x dragdrop-handle mr-2" data-toggle="tooltip" data-placement="top" title="Click and drag to change the order."></i>
 		<a class="d-block-inline p-3" data-toggle="collapse" href="#{$extName}CollapseEdit"><div class="text-left d-inline-block" id="{$extName}Heading">
 			<span class="mb-0 section-title">

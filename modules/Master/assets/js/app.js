@@ -12,6 +12,7 @@
 #require js/policies.js
 #require js/materials.js
 #require js/instructors.js
+#require js/teachingAssistants.js
 
 
 (function ($) {
