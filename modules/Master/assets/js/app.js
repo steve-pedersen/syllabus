@@ -13,6 +13,7 @@
 #require js/materials.js
 #require js/instructors.js
 #require js/teachingAssistants.js
+#require js/activities.js
 
 
 (function ($) {
