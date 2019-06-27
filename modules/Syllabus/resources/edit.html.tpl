@@ -103,7 +103,6 @@
 	</main>
 
 	{if $editUri}
-	<!-- <h1>{$editUri}</h1> -->
 	<input type="hidden" value="{$editUri}" id="editUri">
 	{/if}
 	
