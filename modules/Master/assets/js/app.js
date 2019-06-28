@@ -14,6 +14,7 @@
 #require js/instructors.js
 #require js/teachingAssistants.js
 #require js/activities.js
+#require js/grades.js
 
 
 (function ($) {

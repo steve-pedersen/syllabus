@@ -8,18 +8,19 @@
 	{foreach $sectionVersions as $sv}
 		{if $sv->extension->getExtensionKey() == $ext->getExtensionKey() && !$ext->canHaveMultiple()}{assign var=canHaveMultiple value=false}{/if}
 	{/foreach}
-	{assign var=courseSection value=false}
-	{if $ext->getExtensionName() == 'course'}{assign var=courseSection value=true}{/if}
+	{assign var=activeSection value=false}
+	{if $sectionExtension && $sectionExtension->getExtensionName() == $ext->getExtensionName()}{assign var=activeSection value=true}{/if}
+
 
 <!-- <div class=""> -->
 	{strip}
 	{if !$canHaveMultiple}
-	<button class="px-2 py-0 btn btn-outline-muted disabled" disabled type="submit" name="add" value="{$ext->getExtensionName()}" form="addSection" data-toggle="tooltip" data-placement="bottom" title="You can only have one instance of this section type.">
+	<button class="px-2 py-0 btn {if !$activeSection}btn-outline-muted{else}btn-secondary text-white{/if} disabled" disabled type="submit" name="add" value="{$ext->getExtensionName()}" form="addSection" data-toggle="tooltip" data-placement="bottom" title="You can only have one instance of this section type.">
 	<img src="{$ext->getLightIcon()}" class="img-fluid mr-1" style="max-height:1.5em;margin-bottom:1px;">
 		<span class="text-muted pr-1">{$ext->getDisplayName()}</span>
 	</button>
 	{else}
-	<button class="px-2 py-0 btn btn-outline-secondary" type="submit" name="add" value="{$ext->getExtensionName()}" form="addSection">
+	<button class="px-2 py-0 btn {if !$activeSection}btn-outline-secondary{else}btn-secondary text-white{/if}" type="submit" name="add" value="{$ext->getExtensionName()}" form="addSection">
 	<img src="{$ext->getDarkIcon()}" class="img-fluid mr-1" style="max-height:1.5em;margin-bottom:1px;">
 		<span class="available pr-1">{$ext->getDisplayName()}</span>
 	</button>

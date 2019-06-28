@@ -471,20 +471,20 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 $syllabusVersion->sectionVersions->getProperty($sectionVersion, 'sort_order')
             );
             $realSection = $sectionVersion->resolveSection();
-           
-            if ($realSection->getExtensionName() === 'course')
+            $realSectionExtension = $sectionVersion->getExtensionByRecord(get_class($realSection));
+            if ($realSectionExtension->getExtensionName() === 'course')
             {
                 $currentCourses = $viewer->classDataUser->getCurrentEnrollments();
             }
 
             $this->template->realSection = $realSection;
             $this->template->realSectionClass = get_class($realSection);
-            $this->template->sectionExtension = $sectionVersion->getExtensionByRecord(get_class($realSection));
+            $this->template->sectionExtension = $realSectionExtension;
             $this->template->genericSection = $genericSection;
             $this->template->currentSectionVersion = $sectionVersion;
             $this->template->isUpstreamSection = $this->isUpstreamSection($sectionVersion, $syllabus, $viewer);
             $this->template->hasDownstreamSection = $this->hasDownstreamSection($sectionVersion, $syllabus, $viewer);
-            $this->template->editUri = 'syllabus/' . $syllabus->id . '#section' . $realSectionName . 'Edit';
+            $this->template->editUri = '#section' . $realSectionExtension->getExtensionName() . 'Edit';
         }
 
 

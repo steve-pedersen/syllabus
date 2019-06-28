@@ -49,6 +49,7 @@
 		<div class="section-metadata bg-light">
 	        <div class="text-center mb-3">
 	            <h4 class="">{if $genericSection->title}{$genericSection->title}{else}{$displayName}{/if} Title & Description Text</h4>
+	            {if $sectionExtension->getHelpText()}<p class="text-lefty">{$sectionExtension->getHelpText()}</p>{/if}
 	        </div>
 	        <div class="form-group row">
 	            <label class="col-lg-3 col-form-label form-control-label">Section Title & Sidebar Link Name</label>

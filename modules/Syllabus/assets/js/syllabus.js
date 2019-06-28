@@ -1,17 +1,15 @@
 (function ($) {
   $(function () {
 
+  	// auto-scroll down to section being edited
 	if ($('#editUri').length) {
 		var uri = $('#editUri').val();
-
 		var target = $(`div${uri}`);
-
 		$('html,body').animate({scrollTop: target.offset().top}, 200);		
 	}
 
     if ($('#syllabusEditor').length) {
       // closeSidebar(true);
-      // $('#sidebar').on('click', toggleSidebar);
     }
 
 	$('.section-collapsible').on('hide.bs.collapse', function () {
