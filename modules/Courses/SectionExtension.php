@@ -6,7 +6,7 @@ class Syllabus_Courses_SectionExtension extends Syllabus_Syllabus_SectionExtensi
     
     public function getExtensionKey () { return 'course_id'; }
     public function getDisplayName ($plural = false) { return 'Course Information'; }
-    public function getHelpText () { return 'Course section type of a syllabus.'; }
+    public function getHelpText () { return ''; }
     public function getRecordClass () { return 'Syllabus_Courses_Course'; }
     public function getSectionTasks () { return []; }
     public function canHaveMultiple () { return false; }

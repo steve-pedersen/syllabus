@@ -50,6 +50,13 @@
       $(this).tab('show');
     });
 
+    $('#gradesSection [name^="command[deletesectionitem]"]').on('click', function (e) {
+      e.preventDefault();
+      var container = $('#gradesSection').find('#gradeContainer' + $(this).attr('id'));
+      container.css({"background-color": "#f8d7da"}).fadeTo(250, 0.1).slideUp(250, function () {
+        container.detach();
+      });
+    });
 
   });
 })(jQuery);

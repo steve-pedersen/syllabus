@@ -20,6 +20,7 @@ abstract class Syllabus_Syllabus_SectionExtension extends Bss_Core_NamedExtensio
 
     // Does it make sense for a syllabus to have multiple instances of this section type?
     public function canHaveMultiple () { return true; }
+    public function hasDefaults () { return false; }
     public function getAddonFormFragment () { return false; }
 
     public function getSchema ()

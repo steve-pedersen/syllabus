@@ -6,7 +6,7 @@
 
         {foreach $realSection->materials as $i => $material}
             {assign var=materialId value="{$material->id}"}
-<div class="container-fluid mb-2">
+<div class="container-fluid mb-2" id="materialContainer{$materialId}">
     <div class="row sort-item">
         <div class="tab-content col-11 px-0" id="toggleEditViewTab{$i}">
             <div class="tab-pane fade border" id="nav-edit-{$i}" role="tabpanel" aria-labelledby="nav-edit-{$i}-tab">
@@ -15,6 +15,11 @@
                 </div>
                
                 <input type="hidden" name="section[real][{$materialId}][sortOrder]" value="{$i+1}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
+                <div class="d-flex justify-content-end">
+                    <button type="submit" aria-label="Delete" class="btn btn-link text-danger my-0 mx-2" name="command[deletesectionitem][Syllabus_Materials_Material][{$materialId}]" id="{$materialId}">
+                        <i class="fas fa-trash-alt mr-1"></i>Delete
+                    </button>
+                </div>
                 <div class="form-group title row px-3">
                     <label class="col-lg-3 col-form-label form-control-label">Material #{$i+1} Title</label>
                     <div class="col-lg-9">

@@ -40,16 +40,23 @@
 
         {foreach $realSection->grades as $i => $grade}
             {assign var=gradeId value="{$grade->id}"}
-<div class="container-fluid mb-2">
+<div class="container-fluid mb-2 pr-0" id="gradeContainer{$gradeId}">
     <div class="row sort-item">
         <div class="tab-content col-11 px-0" id="toggleEditViewTab{$i}">
             <div class="tab-pane fade border" id="nav-edit-{$i}" role="tabpanel" aria-labelledby="nav-edit-{$i}-tab">
                 <div class="mb-2 mx-0 d-flex flex-row bg-light p-3 dragdrop-handle">
                     <i class="fas fa-bars text-dark" data-toggle="tooltip" data-placement="top" title="Click and drag to change the order."></i>
                 </div>
-               
+                
                 <input type="hidden" name="section[real][{$gradeId}][sortOrder]" value="{$i+1}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
-                <label class="form-control-label px-2 row-label">Row #{$i + 1}</label>
+                
+                <div class="d-flex justify-content-between">
+                    <label class="form-control-label px-2 row-label">Row #{$i + 1}</label>
+                    <button type="submit" aria-label="Delete" class="btn btn-link text-danger my-0 mx-2" name="command[deletesectionitem][Syllabus_Grades_Grade][{$gradeId}]" id="{$gradeId}">
+                        <i class="fas fa-trash-alt mr-1"></i>Delete
+                    </button>
+                </div>
+                
                 <div class="form-group grade-row row px-2">
                     <div class="col-lg-4 column1">
                         <textarea rows="2" class="form-control wysiwyg wysiwyg-basic" name="section[real][{$gradeId}][column1]" placeholder="Column 1">{$grade->column1}</textarea>
@@ -69,7 +76,7 @@
                     </div>
                     <div class="col-4 text-truncate">{$grade->column1|strip_tags:true|truncate:50}</div>
                     <div class="col-4 text-truncate">{$grade->column2|strip_tags:true|truncate:50}</div>
-                    <div class="col-4 text-truncate">{$grade->column3|strip_tags:true|truncate:50}</div>
+                    <div class="col-3 text-truncate">{$grade->column3|strip_tags:true|truncate:50}</div>
                 </div>   
             </div>
         </div>
@@ -77,6 +84,7 @@
             <a class="btn btn-info py-2" id="nav-edit-{$i}-tab" data-toggle="tab" href="#nav-edit-{$i}" role="tab" aria-controls="nav-edit-{$i}" aria-selected="false">Edit #{$i+1}</a>
             <a class="btn btn-secondary py-2 active" id="nav-view-{$i}-tab" data-toggle="tab" href="#nav-view-{$i}" role="tab" aria-controls="nav-view-{$i}" aria-selected="true">Minimize #{$i+1}</a>
         </div>
+
     </div>
 </div>
         {/foreach}

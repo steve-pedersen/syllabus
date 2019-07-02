@@ -20,7 +20,7 @@ class Syllabus_Grades_Grade extends Bss_ActiveRecord_Base
             'column3' => 'string',
             'sortOrder' => ['int', 'nativeName' => 'sort_order'],
 
-            'gradesSection' => ['1:1', 'to' => 'Syllabus_Grades_Grades', 'keyMap' => ['grades_id' => 'id']],
+            'parent' => ['1:1', 'to' => 'Syllabus_Grades_Grades', 'keyMap' => ['grades_id' => 'id']],
         ];
     }
 }

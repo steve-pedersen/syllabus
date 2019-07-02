@@ -2,7 +2,7 @@
 <div class="real-section-content grades">
 
 	<div class="col">
-	<table class="table table-responsive">
+	<table class="table table-responsive table-sm">
 		<thead>
 			<tr>
 				<th scope="col">{$realSection->header1}</th>

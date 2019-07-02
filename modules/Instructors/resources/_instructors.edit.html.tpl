@@ -6,16 +6,23 @@
     {foreach $realSection->instructors as $i => $instructor}
         {assign var=instructorId value="{$instructor->id}"}
 
-<div class="container-fluid mb-2">
+<div class="container-fluid mb-2" id="instructorContainer{$instructorId}">
 <div class="row sort-item">
     <div class="tab-content col-11 px-0" id="toggleEditViewTab{$i}">
 
-<div class="tab-pane fade border px-2 {if $instructor@last}show active{/if}" id="nav-edit-{$i}" role="tabpanel" aria-labelledby="nav-edit-{$i}-tab">
+<div class="tab-pane fade border {if $instructor@last}show active{/if}" id="nav-edit-{$i}" role="tabpanel" aria-labelledby="nav-edit-{$i}-tab">
     <div class="mb-2 mx-0 d-flex flex-row bg-light p-3 dragdrop-handle">
         <i class="fas fa-bars text-dark" data-toggle="tooltip" data-placement="top" title="Click and drag to change the order."></i>
     </div>  
     <input type="hidden" name="section[real][{$instructorId}][sortOrder]" value="{$i+1}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
-    <div class="form-row px-1 row-1">
+
+    <div class="d-flex justify-content-end">
+        <button type="submit" aria-label="Delete" class="btn btn-link text-danger my-0 mx-2" name="command[deletesectionitem][Syllabus_Instructor_Instructor][{$instructorId}]" id="{$instructorId}">
+            <i class="fas fa-trash-alt mr-1"></i>Delete
+        </button>
+    </div>
+
+    <div class="form-row px-3 row-1">
         <div class="col-md-3 mb-3 name">
             <label for="name">Name</label>
             <input type="text" class="form-control required" name="section[real][{$instructorId}][name]" placeholder="Full name" value="{$instructor->name}" required>
@@ -33,7 +40,7 @@
             <input type="text" class="form-control" name="section[real][{$instructorId}][credentials]" placeholder="e.g. Ph.D., MBA" value="{$instructor->credentials}">
         </div>
     </div>
-    <div class="form-row px-1 row-2">
+    <div class="form-row px-3 row-2">
         <div class="col-md-4 mb-3 office">
             <label for="office">Office</label>
             <input type="text" class="form-control" name="section[real][{$instructorId}][office]" placeholder="e.g. LIB 220" value="{$instructor->office}">
@@ -47,7 +54,7 @@
             <input type="text" class="form-control" name="section[real][{$instructorId}][phone]" value="{$instructor->phone}">
         </div>
     </div>
-    <div class="form-row px-1 row-3">
+    <div class="form-row px-3 row-3">
         <div class="col-md-6 mb-3 office-hours">
             <label for="officeHours">Office Hours</label>
             <textarea class="form-control wysiwyg wysiwyg-basic" name="section[real][{$instructorId}][officeHours]" rows="3">{$instructor->officeHours}</textarea>
@@ -102,7 +109,7 @@
      <i class="fas fa-bars text-dark" data-toggle="tooltip" data-placement="top" title="Click and drag to change the order."></i>
 </div>
 <input type="hidden" name="section[real][{$instructorId}][sortOrder]" value="{$sortOrder}" class="sort-order-value" id="form-field-{$sortOrder}-sort-order">
-<div class="form-row px-1 row-1">
+<div class="form-row px-3 row-1">
     <div class="col-md-3 mb-3 name">
         <label for="name">Name</label>
         <input type="text" class="form-control" name="section[real][{$instructorId}][name]" value="{if $defaultName}{$defaultName}{/if}">
@@ -120,7 +127,7 @@
         <input type="text" class="form-control" name="section[real][{$instructorId}][credentials]" placeholder="e.g. Ph.D., MBA" value="">
     </div>
 </div>
-<div class="form-row px-1 row-2">
+<div class="form-row px-3 row-2">
     <div class="col-md-4 mb-3 office">
         <label for="office">Office</label>
         <input type="text" class="form-control" name="section[real][{$instructorId}][office]" placeholder="e.g. LIB 220" value="">
@@ -134,7 +141,7 @@
         <input type="text" class="form-control" name="section[real][{$instructorId}][phone]" value="">
     </div>
 </div>
-<div class="form-row px-1 row-3">
+<div class="form-row px-3 row-3">
     <div class="col-md-6 mb-3 office-hours">
         <label for="officeHours">Office Hours</label>
         <textarea class="form-control wysiwyg wysiwyg-basic" name="section[real][{$instructorId}][officeHours]" rows="3"></textarea>

@@ -17,7 +17,7 @@
 {if $universityTemplates}
 <form action="{$smarty.server.REQUEST_URI}" method="post" class="form-inline" role="form" id="templateId">
 	<div class="row mb-3">
-		<div class="col-lg-3 col-md-4 px-2">
+		<div class="col-lg-4 col-md-4 px-2">
 			<div class="card h-100">
 				<a href="syllabus/start" class="text-center align-text-middle text-success h-100">
 				<div class="card-body">
@@ -36,18 +36,18 @@
 	<!-- <div class="row mb-3">	 -->
 	{foreach $universityTemplates as $i => $syllabus}
 		{if $i == 9}{break}{/if}
-		<div class="col-lg-3 col-md-4 px-2">
+		<div class="col-lg-2 col-md-4 px-2">
 			<div class="card">
 				<label class="form-check-label" for="overlayCheck{$i}">
 				<div class="card-body h-100 p-0">
 					<div class="ml-auto text-right">
-					<div class="form-check">
-						<input name="template" data-index="{$i}" type="radio" class="form-check-input overlay-radio" 
-						id="overlayCheck{$i}" value="{$syllabus->id}" {if $templateId && $templateId == $syllabus->id}checked{/if}>
+					<div class="form-check d-flex justify-content-end">
+						<input name="template" data-index="{$i}" type="radio" class="mr-2 form-check-input overlay-radio" 
+						id="overlayCheck{$i}" value="{$syllabus->id}" {if $templateId && $templateId == $syllabus->id}checked{/if} style="margin-bottom:-2em;z-index:1;">
 					</div>
 					</div>
 					<div class="card-img-top-overlay p-0">
-						<div class="text-center vertical-align overlay-icon" id="checkIcon{$i}">
+						<div class="text-center vertical-align overlay-icon" id="checkIcon{$i}" >
 							<i class="fas fa-check fa-7x text-success"></i>
 						</div>
 						<img src="assets/images/testing0{$i}.jpg" class="card-img-top crop-top crop-top-13" alt="{$syllabus->title}" />

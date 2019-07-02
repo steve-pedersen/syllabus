@@ -48,8 +48,8 @@
 	<div class="collapse multi-collapse show section-collapsible" id="{$extName}CollapseEdit">
 		<div class="section-metadata bg-light">
 	        <div class="text-center mb-3">
-	            <h4 class="">{if $genericSection->title}{$genericSection->title}{else}{$displayName}{/if} Title & Description Text</h4>
-	            {if $sectionExtension->getHelpText()}<p class="text-lefty">{$sectionExtension->getHelpText()}</p>{/if}
+	            <h4 class="">{if $genericSection->title}{$genericSection->title}{else}{$displayName}{/if} - <small>Title & Introduction Text</small></h4>
+	            {if $sectionExtension->getHelpText()}<p class="alert alert-light text-left">{$sectionExtension->getHelpText()}</p>{/if}
 	        </div>
 	        <div class="form-group row">
 	            <label class="col-lg-3 col-form-label form-control-label">Section Title & Sidebar Link Name</label>
@@ -68,7 +68,7 @@
 	            </div>
 	        </div>
 	        <div class="form-group row">
-	            <label class="col-lg-3 col-form-label form-control-label">{$displayName} Intro Text</label>
+	            <label class="col-lg-3 col-form-label form-control-label">Intro Text</label>
 	            <div class="col-lg-9">
 	                <input class="form-control" type="text" name="section[generic][{$sectionVersionId}][description]" value="{if $currentSectionVersion->description}{$currentSectionVersion->description}{/if}">
 					<small id="{$extName}HelpBlock2" class="form-text text-muted ml-1">

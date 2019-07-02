@@ -6,7 +6,7 @@
 
         {foreach $realSection->policies as $i => $policy}
             {assign var=policyId value="{$policy->id}"}
-<div class="container-fluid mb-2">
+<div class="container-fluid mb-2" id="policyContainer{$policyId}">
     <div class="row sort-item">
         <div class="tab-content col-11 px-0" id="toggleEditViewTab{$i}">
             <div class="tab-pane fade border" id="nav-edit-{$i}" role="tabpanel" aria-labelledby="nav-edit-{$i}-tab">
@@ -15,6 +15,12 @@
                 </div>
                
                 <input type="hidden" name="section[real][{$policyId}][sortOrder]" value="{$i+1}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
+                <div class="d-flex justify-content-end">
+                    <button type="submit" aria-label="Delete" class="btn btn-link text-danger my-0 mx-2" name="command[deletesectionitem][Syllabus_Policies_Policy][{$policyId}]" id="{$policyId}">
+                        <i class="fas fa-trash-alt mr-1"></i>Delete
+                    </button>
+                </div>
+
                 <div class="form-group row px-3">
                     <label class="col-lg-3 col-form-label form-control-label">Policy #{$i+1} Title</label>
                     <div class="col-lg-9">
@@ -24,7 +30,7 @@
                 <div class="form-group row px-3">
                     <label class="col-lg-3 col-form-label form-control-label">Policy #{$i+1} Description</label>
                     <div class="col-lg-9">
-                        <textarea class="form-control wysiwyg wysiwyg-basic" type="text" name="section[real][{$policyId}][description]" rows="5">{$policy->description}</textarea>
+                        <textarea class="form-control wysiwyg wysiwyg-full" type="text" name="section[real][{$policyId}][description]" rows="5">{$policy->description}</textarea>
                     </div>
                 </div>
             </div>
@@ -34,8 +40,8 @@
                         <i class="fas fa-bars text-dark" data-toggle="tooltip" data-placement="top" title="Click and drag to change the order."></i>
                     </div>
                     <div class="col-1 text-truncate"><strong>#{$i+1}</strong></div>
-                    <div class="col-3 text-truncate"><strong>Title: </strong>{$policy->title|truncate:30}</div>
-                    <div class="col text-truncate "><strong>Description: </strong>{$policy->description|strip_tags:true|truncate:50}</div>
+                    <div class="col-3 text-truncate"><strong>{$policy->title|truncate:40}</strong></div>
+                    <div class="col text-truncate ">{$policy->description|strip_tags:true|truncate:80}</div>
                 </div>   
             </div>
         </div>
@@ -73,7 +79,7 @@
     <div class="form-group row">
         <label class="col-lg-3 col-form-label form-control-label">Policy #{$i+1} Description</label>
         <div class="col-lg-9">
-            <textarea class="form-control wysiwyg wysiwyg-basic" type="text" name="section[real][{$policyId}][description]" rows="5"></textarea>
+            <textarea class="form-control wysiwyg wysiwyg-full" type="text" name="section[real][{$policyId}][description]" rows="5"></textarea>
         </div>
     </div>
 </div>  

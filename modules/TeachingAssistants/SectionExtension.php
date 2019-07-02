@@ -6,7 +6,7 @@ class Syllabus_TeachingAssistants_SectionExtension extends Syllabus_Syllabus_Sec
     
     public function getExtensionKey () { return 'teaching_assistants_id'; }
     public function getDisplayName ($plural = false) { return 'Teaching Assistants'; }
-    public function getHelpText () { return 'Teaching Assistants section type of a syllabus.'; }
+    public function getHelpText () { return 'Add multiple Teaching Assistants as needed in this section.'; }
     public function getRecordClass () { return 'Syllabus_TeachingAssistants_TeachingAssistants'; }
     public function getSectionTasks () { return []; }
     public function canHaveMultiple () { return false; }

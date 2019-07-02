@@ -35,9 +35,14 @@
           var rows = parseInt($textarea.attr('rows'));
           rowSize = (rows * 2) + 'em';
         }
+        var config = {
+          customConfig: '../ckeditor_custom/ckeditor_config_basic.js',
+          height:rowSize,
+          autoGrow_minHeight: rowSize
+        };
         $textarea.attr('name',`section[real][new-${i}][officeHours]`).val('').text('').attr('id', 'ckeditor-'+i);
         $textarea.next('.cke').remove();
-        $textarea.ckeditor({customConfig: '../ckeditor_custom/ckeditor_config_basic.js',height:rowSize});
+        $textarea.ckeditor(config);
 
         $textarea = $clone.find('.about').find('textarea');
         if ($textarea.attr('rows'))
@@ -47,7 +52,7 @@
         }
         $textarea.attr('name',`section[real][new-${i}][about]`).val('').text('').attr('id', 'ckeditor-'+i);
         $textarea.next('.cke').remove();
-        $textarea.ckeditor({customConfig: '../ckeditor_custom/ckeditor_config_basic.js',height:rowSize});
+        $textarea.ckeditor(config);
 
         $itemToClone.after($clone);
       }
@@ -60,6 +65,13 @@
       $(this).tab('show');
     });
 
+    $('#instructorsSection [name^="command[deletesectionitem]"]').on('click', function (e) {
+      e.preventDefault();
+      var container = $('#instructorsSection').find('#instructorContainer' + $(this).attr('id'));
+      container.css({"background-color": "#f8d7da"}).fadeTo(250, 0.1).slideUp(250, function () {
+        container.detach();
+      });
+    });
 
   });
 })(jQuery);

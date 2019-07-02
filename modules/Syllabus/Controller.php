@@ -404,6 +404,44 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $this->response->redirect(implode('/', $pathParts));
                     break;
 
+                case 'deletesectionitem':
+                	
+                	$realSectionItemClass = key($this->getPostCommandData());
+                	$deleteId = key($this->getPostCommandData()[$realSectionItemClass]);
+                	$realSectionClass = $data['section']['realClass'];
+                	$realSectionExtension = $sectionVersions->createInstance()->getExtensionByName($realSectionName);
+                	$extKey = $realSectionExtension->getExtensionKey();
+
+                	unset($_POST['section']['real'][$deleteId]);
+
+                    $existingSectionVersionIds = [];
+                    foreach ($syllabusVersion->sectionVersions as $sv)
+                    {
+                        if (isset($sv->$extKey))
+                        {
+                            $existingSectionVersionIds[] = $sv->id;
+                        }
+                    }
+
+                	$syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;
+                	list($updated, $syllabusVersion) = $this->saveSyllabus($syllabus);
+
+                	$newSectionVersionId = null;
+                	foreach ($syllabusVersion->sectionVersions as $sv)
+                	{
+                		if (isset($sv->$extKey) && !in_array($sv->id, $existingSectionVersionIds))
+                		{
+                			$newSectionVersionId = $sv->id;
+                			break;
+                		}
+                	}
+
+                	$this->flash('Item deleted from section.', 'info');
+                    $pathParts[] = $syllabusVersion->syllabus->id  . '?edit=' . $newSectionVersionId;
+                    $pathParts = array_filter($pathParts);
+                    $this->response->redirect(implode('/', $pathParts));
+                	break;
+
                 case 'savesection':
                 case 'savesyllabus':
                     $syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;
@@ -441,6 +479,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                             break;
                         }
                     }
+                }
+                if ($realSectionExtension->hasDefaults() && ($defaults = $realSection->getDefaults()))
+                {
+                	$realSection = $defaults;
                 }
 
                 $this->flash('Your section is ready to edit.', 'info');
@@ -827,12 +869,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     ],
                 ],
             ];
-            // if ($syllabusVersion)
-            // {
-            //     $data['syllabusVersion'] = [
-            //         'id' => $syllabusVersion->id
-            //     ];
-            // }
 
             return $this->saveSyllabus($syllabus, $data);
         }

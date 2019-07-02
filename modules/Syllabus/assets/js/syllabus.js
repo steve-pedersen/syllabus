@@ -66,7 +66,9 @@
     	if (templateId.val() == 1)
     	{
     		var id = templateId.attr('data-index');
-    		$('#checkIcon'+id).show();
+    		if ($('[id^=overlayCheck]').checked == true) {
+    			$('#checkIcon'+id).show();	
+    		}
     	}
     }
 
