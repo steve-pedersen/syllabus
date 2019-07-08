@@ -41,7 +41,7 @@
         </div>
         <div class="row mt-5 mb-2">
             <div class="col-lg-12 text-center alert alert-warning">
-                <strong>The official course information fields above can't be edited.</strong> However, you can still change the syllabus section title & description.
+                <strong>The official course information fields above can't be edited.</strong> However, you can still change the syllabus section title & introduction.
             </div>
         </div>
     </div>

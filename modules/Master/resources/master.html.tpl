@@ -17,7 +17,12 @@
 		<link rel="stylesheet" type="text/css" media="print" href="assets/css/app-print.css">
 		<link href='//fonts.googleapis.com/css?family=Montserrat:400,700|Lato:400,700,900' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" id="Lato-css" href="https://fonts.googleapis.com/css?family=Lato%3A1%2C100%2C300%2C400%2C400italic%2C700&amp;ver=4.9.9" type="text/css" media="all">
-		<link rel="shortcut icon" type="image/x-icon" href="assets/icons/logo-3-128.png" />
+		<link href="https://fonts.googleapis.com/css?family=Vollkorn+SC&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Vollkorn&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Old+Standard+TT&display=swap" rel="stylesheet">
+
+		<!-- <link rel="shortcut icon" type="image/x-icon" href="assets/icons/logo-3-128.png" /> -->
+		<link rel="shortcut icon" type="image/x-icon" href="assets/icons/logo_square_128-01.png"  />
 		<script>document.write('<link rel="stylesheet" type="text/css" href="assets/css/app-js.css" media="screen">');</script>
 	</head>
 
@@ -29,8 +34,9 @@
 			<span id="goToTop" class="hidden" aria-hidden="true"></span>
 			<nav class="navbar navbar-expand-lg navbar-light">
 				<div class="navbar-brand d-block-inline col-md-3 col-lg-2 col-xl-2 d-flex justify-content-between">
+
 					<a class="" href="{$baseUrl}">
-						<img src="assets/icons/logo-5-256.png" width="41" height="41" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
+						<img src="assets/icons/logo_square_512-01.png" width="45" height="45" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
 					{if $viewer}<i class="fa fa-chevron-left d-block-inline pl-2 mt-2" id="sidebarToggle"></i>{/if}
 				</div>				
 				<button class="navbar-toggler mr-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

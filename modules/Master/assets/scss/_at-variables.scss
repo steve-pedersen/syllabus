@@ -2,6 +2,8 @@
 
 $icon-font-path:          	"../fonts/";
 $font-family-sans-serif:  	"Lato", Arial, Tahoma, sans-serif;//"Muli",Helvetica, sans-serif;
+// $brand-font-family:			'Alegreya Sans SC', sans-serif;
+// $brand-font-family:			'Vollkorn SC', serif;
 $brand-font-family:			'Alegreya Sans SC', sans-serif;
 // $headings-font-family:    	'Alegreya Sans SC', sans-serif;
 $headings-font-family:    	'Lato', sans-serif;
@@ -74,19 +76,21 @@ $danger:		#9A3324;
 $dark:          #2D194F;//$sfsu-secondary-gray;
 $muted: 		#6c757d;
 
-
-// New Colors:
-// $primary: #4B8D9F;
-$primary: #0C6291;
 $primary-alt-1: #806aaf;
-$secondary: #6fa4b2;
-$success:		#009b84;
-$secondary-alt-1: #4B8D9F;
-$info: #EEAB79;
 $info-alt-1: #F9DFBC;
 $info-alt-2: #fba871;
+// New Colors:
+// $primary: #4B8D9F;
+
+$primary: #0C6291;
+$secondary: #6fa4b2;
+$success:		#009b84;
+$info: #EEAB79;
 $dark: #1B335A;
-$dark-alt-1: #2D194F;
+$muted: 		#6c757d;
+$warning:       #FFAA00;
+$danger:		#9A3324;
+
 $salmon: #f47f72;
 // $warning: $salmon;
 
