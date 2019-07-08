@@ -10,7 +10,7 @@
 						<h5 class="card-title pb-1">Educational Opportunity Program</h5>
 						<div class="wrap pb-2"><div class="left"></div><div class="right"></div></div>
 						<p class="card-text text-muted">EOP is a comprehensive program designed to provide students with outreach, admissions, academic, and financial support.</p>
-						<div class="">
+						<div class="">https://eop.sfsu.edu/
 							<a class="btn btn-info btn-sm">Preview</a>
 							<button class="btn btn-success btn-sm">Add to syllabus</button>
 						</div>
@@ -28,7 +28,7 @@
 						<h5 class="card-title">Tutoring Services & Academic Support</h5>
 						<div class="wrap pb-2"><div class="left"></div><div class="right"></div></div>
 						<p class="card-text text-muted">SF State offers students support in their coursework through tutoring, academic support programs, and individual conferences.</p>
-						<div class="">
+						<div class="">http://www.sfsu.edu/~bulletin/previous_bulletins/1213/lrnasst.htm
 							<a class="btn btn-info btn-sm">Preview</a>
 							<button class="btn btn-success btn-sm">Add to syllabus</button>
 						</div>
@@ -46,7 +46,7 @@
 						<h5 class="card-title">Counseling and Psych. Services</h5>
 						<div class="wrap pb-2"><div class="left"></div><div class="right"></div></div>
 						<p class="card-text text-muted">The Counseling and Psychological Service provides psychological counseling to students and consultation services to the University community.</p>
-						<div class="">
+						<div class="">https://psyservs.sfsu.edu/
 							<a class="btn btn-info btn-sm">Preview</a>
 							<button class="btn btn-success btn-sm">Add to syllabus</button>
 						</div>

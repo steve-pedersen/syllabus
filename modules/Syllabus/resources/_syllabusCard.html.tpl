@@ -14,10 +14,10 @@
 			<a class="btn btn-dark" target="_blank" href="syllabus/{$syllabus->id}/view">View</a>
 			{/if}
 			{if $btnEdit}
-			<a class="btn btn-info" href="syllabus/{$syllabus->id}">Edit</a>
+			<a class="btn btn-light" href="syllabus/{$syllabus->id}">Edit</a>
 			{/if}
 			{if $btnClone}
-			<a class="btn btn-secondary" href="syllabus/startwith/{$syllabus->id}">Clone</a>
+			<a class="btn btn-light" href="syllabus/startwith/{$syllabus->id}">Clone</a>
 			{/if}
 			{if $btnStartTemplateForCourse}
 				<input class="btn btn-success" type="submit" name="command[start][{$syllabus->id}]" value="Start From Template">

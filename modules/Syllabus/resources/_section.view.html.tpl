@@ -1,5 +1,6 @@
 {assign var=ext value=$sectionVersion->extension}
 {assign var=extName value=$ext::getExtensionName()}
+{assign var=realSectionClass value=$ext->getRecordClass()}
 {assign var=sectionVersionId value=$sectionVersion->id}
 {assign var=editable value=(!$sectionVersion->readOnly || ($sectionVersion->readOnly && $sectionVersion->canEditReadOnly))}
 

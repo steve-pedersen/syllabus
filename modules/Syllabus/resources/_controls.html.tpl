@@ -4,63 +4,58 @@
 	{if $syllabus->inDataSource}
 	<div class="editor-controls-left col-xl-9">
 		<div class="row">
-		<div class="col-md-3 d-block">
-			<h3 class="mt-0 mb-4 pt-0 mr-3" style="text-decoration:underline;">Add Section:</h3>
-		</div>
-		<div class="col-md-9">
-		{foreach $sectionExtensions as $ext}
-			{assign var=canHaveMultiple value=true}
-			{foreach $sectionVersions as $sv}
-				{if $sv->extension->getExtensionKey() == $ext->getExtensionKey() && !$ext->canHaveMultiple()}{assign var=canHaveMultiple value=false}{/if}
-			{/foreach}
-			{assign var=activeSection value=false}
-			{if $sectionExtension && $sectionExtension->getExtensionName() == $ext->getExtensionName()}{assign var=activeSection value=true}{/if}
-
-
-			{strip}
-			{if !$canHaveMultiple && !$activeSection}
-				<button class="px-2 mb-2 py-0 btn btn-outline-muted disabled" disabled type="submit" name="add" value="{$ext->getExtensionName()}" form="addSection" data-toggle="tooltip" data-placement="bottom" title="You can only have one instance of this section type.">
-				<img src="{$ext->getLightIcon()}" class="img-fluid mr-1" style="max-height:1.5em;margin-bottom:1px;">
-					<span class="text-muted pr-1">{$ext->getDisplayName()}</span>
-				</button>
-			{else}
-				<button class="px-2 mb-2 py-0 btn {if !$activeSection}btn-outline-secondary{else}btn-secondary text-white{/if}" type="submit" name="add" value="{$ext->getExtensionName()}" form="addSection">
-				<img src="{$ext->getDarkIcon()}" class="img-fluid mr-1" style="max-height:1.5em;margin-bottom:1px;">
-					<span class="available pr-1">{$ext->getDisplayName()}</span>
-				</button>
-			{/if}
-			{/strip}
-
-		{/foreach}
-		</div>
-
-
-		{if $position == 'Top'}
-		<div class="editor-controls-header mx-auto text-center">
-		{else}
-		<div class="editor-controls-left">
-		{/if}
-			<span class="text-primary">
-				{if $organization}
-					<strong>[{$organization->name} Template]</strong>
+			<div class="col-md-3 d-block">
+				<h3 class="mt-0 mb-4 pt-0 mr-3" style="text-decoration:underline;">Add Section:</h3>
+				{if $position == 'Top'}
+				<div class="editor-controls-header">
+				{else}
+				<div class="editor-controls-left">
 				{/if}
-			</span>
-		</div>
-	{/if}
-	</div>
-	</div>
+				{if $organization}
+					<span class="bg-secondary p-2 rounded text-white">
+						<strong>[{$organization->name} Template]</strong>
+					</span>
+				{/if}
+				</div>
+			</div>
+			<div class="col-md-9">
+			{foreach $sectionExtensions as $ext}
+				{assign var=canHaveMultiple value=true}
+				{foreach $sectionVersions as $sv}
+					{if $sv->extension->getExtensionKey() == $ext->getExtensionKey() && !$ext->canHaveMultiple()}{assign var=canHaveMultiple value=false}{/if}
+				{/foreach}
+				{assign var=activeSection value=false}
+				{if $sectionExtension && $sectionExtension->getExtensionName() == $ext->getExtensionName()}{assign var=activeSection value=true}{/if}
 
-	<div class="col-xl-3 text-right">
+
+				{strip}
+				{if !$canHaveMultiple && !$activeSection}
+					<button class="px-2 mb-2 py-0 btn btn-outline-muted disabled" disabled type="submit" name="add" value="{$ext->getExtensionName()}" form="addSection" data-toggle="tooltip" data-placement="bottom" title="You can only have one instance of this section type.">
+					<img src="{$ext->getLightIcon()}" class="img-fluid mr-1" style="max-height:1.5em;margin-bottom:1px;">
+						<span class="text-muted pr-1">{$ext->getDisplayName()}</span>
+					</button>
+				{else}
+					<button class="px-2 mb-2 py-0 btn {if !$activeSection}btn-outline-secondary{else}btn-secondary text-white{/if}" type="submit" name="add" value="{$ext->getExtensionName()}" form="addSection">
+					<img src="{$ext->getDarkIcon()}" class="img-fluid mr-1" style="max-height:1.5em;margin-bottom:1px;">
+						<span class="available pr-1">{$ext->getDisplayName()}</span>
+					</button>
+				{/if}
+				{/strip}
+
+			{/foreach}
+			</div>
+
+
+		</div>
+	</div>
+	{/if}
+	
+	<div class="{if $syllabus->inDataSource}col-xl-3{else}col-xl-12{/if} text-right d-block">
 		<div class="editor-controls-right d-inline-block py-3 text-center">
-			{if $syllabus->inDataSource}
-				
-			{/if}
 			<button class="btn btn-success  my-1" type="submit" name="command[savesyllabus]" id="globalSave">
-				<!-- <i class="far fa-save mr-1"></i>  -->
 				Save
 			</button>
 			<a class="btn btn-dark  my-1" href="syllabus/{$syllabus->id}/view" target="_blank">
-				<!-- <i class="far fa-eye mr-1"></i>  -->
 				View
 			</a>
 			<a href="{if $syllabus->inDataSource}syllabus/{$syllabus->id}{else}{$smarty.server.REQUEST_URI}{/if}" class="btn btn-default my-1">Cancel</a>

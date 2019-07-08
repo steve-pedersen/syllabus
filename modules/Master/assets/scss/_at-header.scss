@@ -22,18 +22,17 @@
 			color: #000;
 			text-transform: none;
 			font-family: $brand-font-family;
-			font-weight: 800 !important;
+			font-weight: 500 !important;
 			font-size: 25pt;
 			// background-color: #fff;
 			background-color: $navbar-bg-color;
 			line-height: 50px;
-			letter-spacing: 2px;
+			letter-spacing: 5px;
 			padding-left: .5em;
 			// padding-right: 6.5em;
 			// border-right: 7px solid #fff;
-			> img {
-				margin-right: -2px;
-				margin-top: -6px;
+			a > img {
+				margin-top: -.1em;
 			}
 			.brand-text {
 				color: #000;

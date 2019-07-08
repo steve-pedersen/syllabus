@@ -28,7 +28,6 @@
         height:rowSize,
         autoGrow_minHeight: rowSize
       };
-
       $textarea.attr('name',`section[real][new-${i}][description]`).val('').text('').attr('id', 'ckeditor-'+i);
       $textarea.next('.cke').remove();
       $textarea.ckeditor(config);

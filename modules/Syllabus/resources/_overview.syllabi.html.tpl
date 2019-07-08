@@ -1,6 +1,9 @@
 <div class="container-fluid my-syllabi-overview mb-5">
 <h2>My Syllabi: <small class="text-muted">Recently Modified</small></h2>
-<p class="text-muted">Create a new syllabus or access your most recently modified syllabi. Click "see more" to show more results.</p>
+<p class="text-muted">
+	Create a new syllabus or access your most recently modified syllabi.
+	{if count($syllabi) > 3} Click "see more" to show more results.{/if}
+</p>
 	<div class="row mb-3">
 		<div class="col-lg-3 col-md-4 px-2">
 			<div class="card h-100">
