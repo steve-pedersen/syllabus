@@ -65,10 +65,7 @@ $success:		#009b84;
 $info:          #04968E;//#17A2B8; //#0C6291;
 $info:			$sky_dark_2;
 $info:			#0293c9;
-// $info-lte:      $navbar-default-link-color; 	// #365285
-// $light:			#EBFCFC;
-$warning:       #FFAA00;//#FFBC42;		// not overridden
-// $warning:		#E1CE7A;
+
 $warning-1:		#F2F3AE;
 $warning-2:    	#792359;
 $danger:        $sfsu-secondary-red;			// #a93f3d
@@ -79,16 +76,17 @@ $muted: 		#6c757d;
 $primary-alt-1: #806aaf;
 $info-alt-1: #F9DFBC;
 $info-alt-2: #fba871;
-// New Colors:
-// $primary: #4B8D9F;
 
-$primary: #0C6291;
-$secondary: #6fa4b2;
+
+$primary: 		#0C6291;
+$secondary: 	#6fa4b2;
+$ternary:		#aebee1;
 $success:		#009b84;
-$info: #EEAB79;
-$dark: #1B335A;
+$info: 			#EEAB79;
+$dark: 			#1B335A;
 $muted: 		#6c757d;
-$warning:       #FFAA00;
+// $warning:       #FFAA00;
+$warning:       #FFC13D;
 $danger:		#9A3324;
 
 $salmon: #f47f72;
@@ -99,6 +97,7 @@ $salmon: #f47f72;
 $theme-colors: (
   "primary": $primary,
   "secondary": $secondary,
+  "ternary": $ternary,
   "success": $success,
   "danger": $danger,
   "warning": $warning,

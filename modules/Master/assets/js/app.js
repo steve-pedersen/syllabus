@@ -16,6 +16,7 @@
 #require js/activities.js
 #require js/grades.js
 #require js/resources.js
+#require js/schedules.js
 
 
 (function ($) {
@@ -108,9 +109,9 @@
     if (startSize < 977) {
       closeSidebar(true);
       $('#sidebarToggle').hide();
-      brandLogo.css({"margin-left": "-0.2em"}, 0);
+      // brandLogo.css({"margin-left": "-0.2em"}, 0);
     } else {
-      brandLogo.css({"margin-left": "0"}, 0);
+      // brandLogo.css({"margin-left": "0"}, 0);
     }
 
     $( window ).resize(function() {
@@ -118,12 +119,12 @@
       if (970 < currentWidth || currentWidth < 980) {
         if (currentWidth < 977) {
           closeSidebar();
-          brandLogo.css({"margin-left": "-0.2em"}, 0);
+          // brandLogo.css({"margin-left": "-0.2em"}, 0);
           $('#sidebarToggle').hide();
         }
         else if (!minimized || !$('#syllabusEditor').length) {
           openSidebar();
-          brandLogo.css({"margin-left": "0"}, 0);
+          // brandLogo.css({"margin-left": "0"}, 0);
         }
       }
     });

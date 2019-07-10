@@ -11,6 +11,7 @@ html {
 	}
 }
 
+
 .editor-main-controls {
 	.editor-controls-left {
 		button {
@@ -174,7 +175,6 @@ div.overview-container {
 }
 
 .editor-main-container {
-	// height: 100%;
 	.syllabus-editor {
 		.form-control-label {
 			font-weight: bold;
@@ -193,26 +193,19 @@ div.overview-container {
 	white-space: nowrap;
 	> .sidebar-sticky {
 		position: relative;
-		// width: 100%;
 		> ul {
 			position: sticky;
-			// width: inherit;
 			list-style: none;
 			margin: 0;
 			padding: 0;
 			.nav-item {
 				> a.nav-link {
 					display: block;
-					// color: $info;
 					color: $dark;
 					padding: 0.5rem 1rem;
 					text-decoration: none;
 					font-size: 13pt;
 					&.active {
-						// color: #fff;
-						// color: $cyan_light_5;
-						// color: $light;
-						// color: $secondary-alt-1;
 						color: $primary;
 						font-weight: 700;
 						border-left: .5em solid $info;
@@ -221,7 +214,6 @@ div.overview-container {
 					}
 					&:hover,
 					&:focus {
-						// color: $info-alt-1;
 						color: $primary;
 						-webkit-transition: color 0.15s;
 						transition: color 0.15s;
@@ -229,9 +221,32 @@ div.overview-container {
 				}
 			}
 		}
-
+		.collapse-all {
+			color: $dark;
+			text-decoration: none;
+			&:hover,
+			&:focus {
+				text-decoration: none;
+				color: $primary;
+			}
+			&.collapsed {
+				i.collapsed, .collapse-text {
+					display: none;
+				}
+				i.expanded, .expand-text {
+					display: inline;
+				}
+			}
+			&.expanded {
+				i.collapsed, .collapse-text {
+					display: inline;
+				}
+				i.expanded, .expand-text {
+					display: none;
+				}
+			}
+		}
 	}
-
 }
 
 #viewSyllabus {

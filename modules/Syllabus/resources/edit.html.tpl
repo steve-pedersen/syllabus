@@ -37,7 +37,7 @@
 			{/if}
 
 			<div class="editor-metadata">
-				<a class="d-block bg-white border p-2 section-collapse-link {if !$editMetadata && $syllabus->inDataSource}collapsed{/if}" 
+				<a class="d-block bg-white border p-2 section-collapse-link- {if !$editMetadata && $syllabus->inDataSource}collapsed{/if}" 
 					data-toggle="collapse" href="#metadataCollapse" role="button" aria-expanded="false" aria-controls="metadataCollapse">			
 					<div class="text-left d-inline-block" id="metadataHeading"> 
 						<span class="mb-0 section-title text-dark">
@@ -46,7 +46,7 @@
 						 - <small class="text-dark">Information about this syllabus that is not displayed inside the syllabus itself.</small>
 					</div>
 				</a>
-				<div class="collapse multi-collapse {if $editMetadata || !$syllabus->inDataSource}show{/if} section-collapsible" id="metadataCollapse">
+				<div class="collapse {if $editMetadata || !$syllabus->inDataSource}show{/if} section-collapsible" id="metadataCollapse">
 					{if $editMetadata || !$syllabus->inDataSource}
 						{include file="partial:_metadata.edit.html.tpl"}
 					{else}
@@ -106,11 +106,20 @@
 	<input type="hidden" value="{$editUri}" id="editUri">
 	{/if}
 	
-	<nav class="col-md-2 d-none d-md-block anchor-links-sidebar bg-light text-dark" >
-		<div class="sidebar-sticky mt-3">
+	<nav class="col-md-2 d-none d-md-block anchor-links-sidebar bg-light text-dark px-0">
+		<div class="sidebar-sticky">
+			<div class="mb-3 border-bottom text-right">
+				<a class="collapse-all p-2 expanded d-inline-block mt-1 mr-1 text-primary" href="#">
+					<i class="fas fa-compress collapsed"></i>
+					<i class="fas fa-expand expanded"></i>
+					<span class="ml-2">Hide/Show Sections</span>
+					<!-- <span class="collapse-text ml-2">Collapse Sections</span> -->
+					<!-- <span class="expand-text ml-2">Expand Sections</span> -->
+				</a>
+			</div>
 			<ul class="nav flex-column ">
 				<li class="nav-item sidebar-anchor-item">
-					<a class="nav-link" href="{$smarty.server.REQUEST_URI}#goToTop">
+					<a class="nav-link my-3" href="{$smarty.server.REQUEST_URI}#goToTop">
 					<strong><i class="fas fa-arrow-up pr-2"></i> Go To Top</strong>
 					</a>
 				</li>
@@ -134,6 +143,7 @@
 					</a>
 				</li>
 			{/if}
+
 			</ul>
 		</div>
 	</nav>

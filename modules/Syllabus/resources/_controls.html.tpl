@@ -60,6 +60,9 @@
 			</a>
 			<a href="{if $syllabus->inDataSource}syllabus/{$syllabus->id}{else}{$smarty.server.REQUEST_URI}{/if}" class="btn btn-default my-1">Cancel</a>
 		</div>
+<!-- 		<div class="">
+			<button class="btn btn-link accordion-collapse-all align-bottom">Collapse all sections</button>
+		</div> -->
 	</div>
 
 </div> <!-- End row -->

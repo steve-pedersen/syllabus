@@ -33,10 +33,9 @@
 		<header class="at">
 			<span id="goToTop" class="hidden" aria-hidden="true"></span>
 			<nav class="navbar navbar-expand-lg navbar-light">
-				<div class="navbar-brand d-block-inline col-md-3 col-lg-2 col-xl-2 d-flex justify-content-between">
-
+					<div class="navbar-brand d-block-inline col-md-3 col-lg-2 col-xl-2 d-flex justify-content-between">
 					<a class="" href="{$baseUrl}">
-						<img src="assets/icons/logo_square_512-01.png" width="45" height="45" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
+						<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
 					{if $viewer}<i class="fa fa-chevron-left d-block-inline pl-2 mt-2" id="sidebarToggle"></i>{/if}
 				</div>				
 				<button class="navbar-toggler mr-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -198,6 +197,7 @@
 						<div class="primary">{$flashContent}</div>
 					</div>
 					{/if}
+
 					<!-- MAIN CONTENT -->
 					{include file=$contentTemplate}
 				</main>

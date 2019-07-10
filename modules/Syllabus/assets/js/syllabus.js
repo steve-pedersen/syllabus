@@ -27,6 +27,20 @@
 	});
 
 
+	$('.collapse-all').on('click', function (e) {
+		e.preventDefault();
+		if ($(this).hasClass('collapsed')) {
+			$(this).removeClass('collapsed').addClass('expanded');
+		} else {
+			$(this).removeClass('expanded').addClass('collapsed');
+		}
+		$('.section-collapse-link').click();
+		// $('.multi-collapse').toggle({
+		// 	duration: 300
+		// });
+	});
+
+
 	$('#resourcePreviewModal').on('show.bs.modal', function(e) {
 		let cardBody = $(e.relatedTarget).parents('.card-body');
 		let id = cardBody.attr('id');
