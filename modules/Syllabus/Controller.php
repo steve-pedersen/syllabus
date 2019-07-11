@@ -443,7 +443,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
                 case 'savesection':
                 case 'savesyllabus':
-                    // echo "<pre>"; var_dump($this->request->getPostParameters()['section'], 'here'); die;
+
                     $syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;
                     list($updated, $syllabusVersion) = $this->saveSyllabus($syllabus);
                     if ($updated)

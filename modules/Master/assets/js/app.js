@@ -1,11 +1,10 @@
 #require js/3.3.1/jquery-3.3.1.min.js
 #require js/jquery-ui.min.js
-#require js/bootstrap/4.2.1/dist/popper.min.js
-#require js/bootstrap/4.2.1/dist/tooltip.min.js
+#require js/bootstrap/4.2.1/dist/bootstrap.bundle.min.js
 #require js/bootstrap/4.2.1/dist/bootstrap.min.js
 #require js/ckeditor.js
-#require js/sidebar.js
 
+#require js/sidebar.js
 #require js/syllabus.js
 #require js/courses.js
 #require js/objectives.js
@@ -17,6 +16,7 @@
 #require js/grades.js
 #require js/resources.js
 #require js/schedules.js
+#require js/learningOutcomes.js
 
 
 (function ($) {

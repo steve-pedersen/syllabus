@@ -40,9 +40,9 @@ class Syllabus_TeachingAssistants_TeachingAssistants extends Bss_ActiveRecord_Ba
         {
             $this->save();
             $schema = $this->getSchema('Syllabus_TeachingAssistants_TeachingAssistant');
-            foreach ($data['section']['real'] as $id => $objective)
+            foreach ($data['section']['real'] as $id => $teachingAssistant)
             {
-                if ($this->isNotWhiteSpaceOnly($objective, 'name'))
+                if ($this->isNotWhiteSpaceOnly($teachingAssistant, 'name'))
                 {
                     $obj = (!is_numeric($id)) ? $schema->createInstance() : $schema->get($id);
                     $save = true;
@@ -55,7 +55,7 @@ class Syllabus_TeachingAssistants_TeachingAssistants extends Bss_ActiveRecord_Ba
                     }
                     if ($save)
                     {
-                        $obj->absorbData($objective);
+                        $obj->absorbData($teachingAssistant);
                         $obj->teaching_assistants_id = $this->id;
                         $obj->save();
                     }   
