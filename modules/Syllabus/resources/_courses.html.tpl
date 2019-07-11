@@ -34,7 +34,7 @@
 					</p>
 					<div class="col">
 						<div class="media">
-							<img src="{$courseSection->image}" class="img-fluid" alt="Syllabus thumbnail" style="max-height: 10rem;">
+							<img src="{$courseSection->imageUrl}" class="img-fluid" alt="Syllabus thumbnail" style="max-height: 10rem;">
 							<div class="media-body">
 								<div class="col-md-5 col-sm-4 col-xs-3" >
 									<table class="table table-borderless" style="height: 10rem;">

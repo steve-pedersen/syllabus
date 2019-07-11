@@ -311,6 +311,11 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
         $this->template->setMasterTemplate(Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', 'syllabus.html.tpl'));
     }
 
+    public function setScreenshotTemplate ()
+    {
+        $this->template->setMasterTemplate(Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', 'screenshot.html.tpl'));
+    }
+
     public function createEmailMessage ($contentTemplate = null)
     {
         $message = new Bss_Mailer_Message($this->getApplication());

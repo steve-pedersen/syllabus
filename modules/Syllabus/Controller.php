@@ -144,6 +144,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $departmentSchema = $this->schema('Syllabus_AcademicOrganizations_Department');
         $collegeSchema = $this->schema('Syllabus_AcademicOrganizations_College');
         
+        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
         $siteSettings = $this->getApplication()->siteSettings;
         $userId = $siteSettings->getProperty('university-template-user-id');
         $templateId = $siteSettings->getProperty('university-template-id');
@@ -161,14 +162,28 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             $courseSection = $courseSections->get($courseSectionId);
             $this->template->courseSection = $courseSection;
-            $this->template->pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer);
+            $pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer);
+            foreach ($pastCourseSyllabi as $courseSyllabus)
+            {
+                $sid = $courseSyllabus->id;
+                $results = $this->getScreenshotUrl($sid, $screenshotter);
+                $courseSyllabus->imageUrl = $results->imageUrls->$sid;
+            }
+            $this->template->pastCourseSyllabi = $pastCourseSyllabi;
         }
         else
         {
-            $this->template->syllabi = $syllabi->find(
+            $userSyllabi = $syllabi->find(
                 $syllabi->createdById->equals($viewer->id), 
                 ['orderBy' => '-createdDate', 'limit' => 4]
-            );
+            );        
+            foreach ($userSyllabi as $userSyllabus)
+            {
+                $sid = $userSyllabus->id;
+                $results = $this->getScreenshotUrl($sid, $screenshotter);
+                $userSyllabus->imageUrl = $results->imageUrls->$sid;
+            }
+            $this->template->syllabi = $userSyllabi;
         }
 
         $orgs = [];
@@ -181,6 +196,12 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $syllabi->templateAuthorizationId->equals($cs->department->templateAuthorizationId),
                     ['orderBy' => '-createdDate', 'limit' => '4']
                 );
+                foreach ($templates[$cs->department->id] as $template)
+                {
+                    $sid = $template->id;
+                    $results = $this->getScreenshotUrl($sid, $screenshotter);
+                    $template->imageUrl = $results->imageUrls->$sid;
+                }
                 $orgs[$cs->department->id] = $cs->department;
             }
         }
@@ -273,9 +294,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     // TODO: add language string check
                     $this->flash("
                         Your new syllabus draft includes all SF State requirements. You are able to choose which 
-                        course it is for by first giving the syllabus a name and saving it, then adding a new 
-                        'Course Information' section. If you want to use this syllabus draft as a starting point 
-                        for any other courses, then visit your 'Courses' dashboard from the main menu.", 
+                        course it is for by adding a new 'Course Information' section.", 
                         'success'
                     );
                     $this->response->redirect(implode('/', $pathParts));
