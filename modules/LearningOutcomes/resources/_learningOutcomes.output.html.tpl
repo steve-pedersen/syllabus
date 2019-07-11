@@ -11,11 +11,11 @@
 			</tr>
 		</thead>
 		<tbody>
-		{foreach $realSection->learningOutcomes as $i => learningOutcome}
+		{foreach $realSection->learningOutcomes as $i => $learningOutcome}
 			<tr>
-				<td>{learningOutcome->column1}</td>
-				<td>{learningOutcome->column2}</td>
-				{if $realSection->columns == 3}<td>{learningOutcome->column3}</td>{/if}
+				<td>{$learningOutcome->column1}</td>
+				<td>{$learningOutcome->column2}</td>
+				{if $realSection->columns == 3}<td>{$learningOutcome->column3}</td>{/if}
 			</tr>
 		{/foreach}
 		</tbody>

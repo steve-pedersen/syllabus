@@ -11,12 +11,13 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     public static function getRouteMap ()
     {
         return [
-            'syllabi'           => ['callback' => 'mySyllabi'],
-            'syllabus/:id'      => ['callback' => 'edit', ':id' => '[0-9]+|new'],
-            'syllabus/:id/view' => ['callback' => 'view', ':id' => '[0-9]+'],
-            'syllabus/courses'  => ['callback' => 'courseLookup'],
-            'syllabus/start'    => ['callback' => 'start'],
-            'syllabus/startwith/:id' => ['callback' => 'startWith', ':id' => '[0-9]+'],
+            'syllabi'                   => ['callback' => 'mySyllabi'],
+            'syllabus/:id'              => ['callback' => 'edit', ':id' => '[0-9]+|new'],
+            'syllabus/:id/view'         => ['callback' => 'view', ':id' => '[0-9]+'],
+            'syllabus/:id/screenshot'   => ['callback' => 'screenshot', ':id' => '[0-9]+'],
+            'syllabus/courses'          => ['callback' => 'courseLookup'],
+            'syllabus/start'            => ['callback' => 'start'],
+            'syllabus/startwith/:id'    => ['callback' => 'startWith', ':id' => '[0-9]+'],
         ];
     }
 
@@ -35,8 +36,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             $this->requireExists($templateId);
         }
+        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
 
         switch ($mode = $this->request->getQueryParameter('mode', 'overview')) {
+
             case 'courses':
                 
                 $myCourses = $viewer->classDataUser->getCurrentEnrollments();
@@ -48,8 +51,16 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $courseSection->courseSyllabus = $courseSyllabus;
                     $courseSection->createNew = $courseSyllabus ? false : true;
                     $courseSection->pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer);
-                    $courseSection->image = "assets/images/testing0$index.jpg";
                     $courses[$courseSection->term][] = $courseSection;
+                    
+                    $imageUrl = "assets/images/testing0$index.jpg";
+                    if ($courseSyllabus)
+                    {
+                        $sid = $courseSyllabus->id;
+                        $results = $this->getScreenshotUrl($sid, $screenshotter);
+                        $imageUrl = $results->imageUrls->$sid;
+                    }
+                    $courseSection->imageUrl = $imageUrl;
                 }
 
                 $this->template->allCourses = $courses;
@@ -62,10 +73,19 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             case 'overview':
             default:
                 $campusResources = $this->schema('Syllabus_Syllabus_CampusResource');
-                $this->template->syllabi = $syllabi->find(
+                
+                $userSyllabi = $syllabi->find(
                     $syllabi->createdById->equals($viewer->id)->andIf($syllabi->templateAuthorizationId->isNull()), 
                     ['orderBy' => '-createdDate', 'limit' => $limit, 'offset' => $offset]
                 );
+                
+                foreach ($userSyllabi as $userSyllabus)
+                {
+                    $sid = $userSyllabus->id;
+                    $results = $this->getScreenshotUrl($sid, $screenshotter);
+                    $userSyllabus->imageUrl = $results->imageUrls->$sid;
+                }
+                $this->template->syllabi = $userSyllabi;
                 $this->template->campusResources = $campusResources->find(
                     $campusResources->deleted->isFalse()->orIf($campusResources->deleted->isNull()),
                     ['orderBy' => ['sortOrder', 'title']]
@@ -443,7 +463,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
                 case 'savesection':
                 case 'savesyllabus':
-
+                    // echo "<pre>"; var_dump($data['section']); die;
                     $syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;
                     list($updated, $syllabusVersion) = $this->saveSyllabus($syllabus);
                     if ($updated)
@@ -635,7 +655,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $pathParts[] = 'syllabus';
 
         $this->template->addBreadcrumb('syllabi', 'My Syllabi');
-        $this->template->addBreadcrumb('syllabus/semesters/2195', 'Summer 2019');
+        $this->template->addBreadcrumb('syllabus/'.$syllabus->id, 'Edit');
         $this->template->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);
         $this->template->title = $title;
         $this->template->syllabus = $syllabus;
@@ -754,6 +774,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 $course = $courses->findOne($courses->id->equals($realSection->externalKey));
                 $course->syllabus_id = $syllabus->id ?? '';
                 $course->save();
+                $courseData = $course->getData();
+                unset($courseData['id']);
+                $realSection->absorbData($courseData);
+                $realSection->save();
             }
 
             // TODO: add Subsection logic
@@ -1175,6 +1199,45 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
     }
 
+    // TODO: put this in ActiveRecord?
+    // TODO: update for multiple syllabusIds requests at a time
+    private function getScreenshotUrl ($syllabusId, $screenshotter=null, $cacheImages=true)
+    {
+        $viewer = $this->requireLogin();
+        $syllabus = $this->requireExists($this->schema('Syllabus_Syllabus_Syllabus')->get($syllabusId));
+        $urls = [];
+        $messages = [];
+        $uid = $viewer->id;
+
+        $keyPrefix = "{$uid}-";
+        $screenshotter = $screenshotter ?? new Syllabus_Services_Screenshotter($this->getApplication());
+        $screenshotter->saveUids($uid, $syllabus->id);
+
+        $urls[$syllabus->id] = $this->baseUrl("syllabus/{$syllabus->id}/screenshot");
+        $results = $screenshotter->concurrentRequests($urls, $cacheImages, $keyPrefix);
+        $results = json_decode($results);
+
+        return $results;
+    }
+
+    public function screenshot ()
+    {
+        // $viewer = $this->requireLogin();
+
+        $this->setScreenshotTemplate();
+
+        $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
+        $sections = $this->schema('Syllabus_Syllabus_Section');
+        
+        $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
+        $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
+
+
+        $this->template->syllabus = $syllabus;
+        $this->template->syllabusVersion = $syllabusVersion;
+        $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
+    }
+
     /**
      * Viewing in thumbnail mode will make requests to Screenshotter service
      * to fetch images of all syllabi associated with this entity.
@@ -1219,7 +1282,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         // $entities = $this->schema('Syllabus_Academia_Entity');
         // $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
         $tokenHeader = $this->requireExists($this->request->getHeader('Access-Token'));
-        $eid = $this->getRouteVariable('eid');
+
         $sid = $this->getRouteVariable('sid');
         $key = "{$eid}-{$sid}";
         $uid = Syllabus_Services_Screenshotter::CutUid($key);
