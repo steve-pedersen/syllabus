@@ -39,6 +39,8 @@
 
 	{if $genericSection->sortOrder}
 		{assign var=editingSectionSortOrder value="{$genericSection->sortOrder}"}
+		<!-- temporary override of sort order -->
+		{assign var=editingSectionSortOrder value="{$i+1}"} 
 	{else}
 		{assign var=editingSectionSortOrder value="{$syllabusVersion->sectionCount + 1}"}
 	{/if}
