@@ -66,7 +66,12 @@ html {
 // 		}
 // 	}
 // }
-
+#chooseStartingPoint {
+	// h1 {
+	// 	font-family: $brand-font-family;
+	// 	font-weight: 500;
+	// }
+}
 #startAccordion {
 	li.media > div > label {
 		&:hover {
@@ -80,10 +85,10 @@ html {
 			&:after {
 				position:absolute;
 				content:'';
-				bottom: -40px;
+				bottom: -35px;
 				left: 0;
 				width: 100%;
-				border-bottom: 10px solid $info;
+				border-bottom: 15px solid $info;
 				height: 0;
 				z-index: 2;
 			}
@@ -103,11 +108,11 @@ html {
 				&:after {
 					position:absolute;
 					content:'';
-					bottom: -40px;
+					bottom: -35px;
 					left: 0;
 					width: 100%;
 					z-index: 2;
-					border-bottom: 10px solid $info;
+					border-bottom: 15px solid $info;
 					-webkit-transition: all 0.2s ease-in-out 0s;
 					transition: all 0.2s ease-in-out 0s;
 				}

@@ -9,10 +9,6 @@
 			<a class="nav-link mx-md-5 mx-sm-3 {if $mode == 'courses'}active{/if}" id="courses-tab"  href="syllabi?mode=courses" aria-controls="courses" aria-selected="false">
 				Courses
 			</a>
-			<!-- <a class="nav-link mx-md-5 mx-sm-3 disabled" id="submissions-tab" tabindex="-1"  aria-disabled="true" disabled> -->
-			<a class="nav-link mx-md-5 mx-sm-3 disabled {if $mode == 'submissions'}active{/if}" id="submissions-tab"  href="syllabi?mode=submissions" aria-controls="submissions" aria-selected="false" disabled>
-				Submissions
-			</a>
 		</nav>
 	</div>
 	</div>
@@ -29,11 +25,6 @@
 				<div class="tab-pane {if $mode == 'courses'}active{/if}" id="courses" role="tabpanel" aria-labelledby="courses-tab">
 					{if $mode == 'courses'}
 						{include file="partial:_courses.html.tpl"}
-					{/if}
-				</div>
-				<div class="tab-pane {if $mode == 'submissions'}active{/if}" id="submissions" role="tabpanel" aria-labelledby="submissions-tab">
-					{if $mode == 'submissions'}
-						{include file="partial:_submissions.html.tpl"}
 					{/if}
 				</div>
 			</div>

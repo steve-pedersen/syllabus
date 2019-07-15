@@ -26,6 +26,7 @@ class Syllabus_AuthN_AdminController extends Syllabus_Master_Controller
     {
         parent::beforeCallback($callback);
         $this->requirePermission('admin');
+        $this->template->privilegedOrganizations = $this->getPrivelegedUserOrganizations();
     }
 
     /**

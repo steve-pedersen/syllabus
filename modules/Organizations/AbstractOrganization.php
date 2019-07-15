@@ -190,6 +190,19 @@ abstract class Syllabus_Organizations_AbstractOrganization extends Bss_ActiveRec
         return $this->getUserRoles($user)[$role];
     }
 
+    public function userIsMoreThanMember ($user=null)
+    {
+        $user = $user ?? $this->application->userContext->account;
+        foreach ($this->getUserRoles($user) as $role => $hasRole)
+        {
+            if ($role !== 'member' && $hasRole)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Fetch all users of a particular role in an organization.
      *

@@ -105,12 +105,35 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
                 $uri = substr($uri, strpos($uri, '/', 1)+1, strlen($uri));
             }
             $page = $uri;
-
         }
-
+        
         $this->template->page = $page;
 
+        $this->template->privilegedOrganizations = $this->getPrivelegedUserOrganizations();
+
         parent::afterCallback($callback);
+    }
+
+    public function getPrivelegedUserOrganizations ()
+    {
+        $viewer = $this->requireLogin();
+        $orgs = [];
+        $orgs['departments'] = [];
+        $orgs['colleges'] = [];
+
+        foreach ($viewer->classDataUser->enrollments as $cs)
+        {
+            if (!isset($orgs['departments'][$cs->department->id]) && $cs->department->userIsMoreThanMember($viewer))
+            {
+                $orgs['departments'][$cs->department->id] = $cs->department;
+            }
+            if (!isset($orgs['colleges'][$cs->department->college->id]) && $cs->department->college->userIsMoreThanMember($viewer))
+            {
+                $orgs['colleges'][$cs->department->college->id] = $cs->department->college;
+            }
+        }
+        // echo "<pre>"; var_dump(count($orgs['colleges'])); die;
+        return $orgs;
     }
 
     protected function beforeCallback ($callback)

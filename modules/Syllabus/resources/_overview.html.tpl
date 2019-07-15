@@ -9,8 +9,4 @@
 		{include file="partial:_overview.resources.html.tpl"}
 	</div>
 
-	<div class="overview-section documents-guidelines">
-		{include file="partial:_overview.documents.html.tpl"}
-	</div>
-
 </div>

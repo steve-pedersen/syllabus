@@ -21,7 +21,15 @@ body {
 	// font-family: "Lato", Arial, Tahoma, sans-serif;
 	// background: url("../images/color-tiles03-1000x120px.svg") #fff;
 }
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
+p {
+    font-family: 'Poppins', sans-serif;
+    // font-size: 1.1em;
+    // font-weight: 300;
+    // line-height: 1.7em;
+    color: #222;
+}
 div.main-content {
 	background-color: #ffffff;
 	padding: 1em;
@@ -29,6 +37,16 @@ div.main-content {
 #mainContent {
 	// background-color: $gold_light_5;
 	// min-height: 60em;
+}
+
+.wrapper {
+	#content {
+		margin-top: 0;
+	    width: 100%;
+	    // padding: 20px;
+	    min-height: 100vh;
+	    transition: all 0.3s;
+	}
 }
 
 @media (min-width: 992px) {

@@ -13,6 +13,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     public static function getRouteMap ()
     {
         return [
+            '/'                         => ['callback' => 'mySyllabi'],
             'syllabi'                   => ['callback' => 'mySyllabi'],
             'syllabus/:id'              => ['callback' => 'edit', ':id' => '[0-9]+|new'],
             'syllabus/:id/view'         => ['callback' => 'view', ':id' => '[0-9]+'],
@@ -667,6 +668,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
 
         // TODO: make sure this viewer has permission to view
+        $editable = false;
+        if (($syllabus->createdById === $viewer->id) || $this->hasPermission('admin'))
+        {
+            $editable = true;
+        }
 
         $title = ($syllabus->inDatasource ? 'Edit' : 'Create') . ' Syllabus';
         $this->setPageTitle($title);
@@ -679,8 +685,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $pathParts[] = 'syllabus';
 
         $this->template->addBreadcrumb('syllabi', 'My Syllabi');
-        $this->template->addBreadcrumb('syllabus/'.$syllabus->id, 'Edit');
         $this->template->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);
+        $this->template->editable = $editable;
         $this->template->title = $title;
         $this->template->syllabus = $syllabus;
         $this->template->syllabusVersion = $syllabusVersion;

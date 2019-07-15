@@ -1,6 +1,6 @@
 <div class="row viewer-main-container">
 
-	<nav class="col-md-2 d-none d-sm-block anchor-links-sidebar-left bg-white text-dark">
+	<nav class="col-md-2 col-sm-12 col-xs-12 d-sm-block ml-auto anchor-links-sidebar-left bg-white text-dark">
 		<div class="sidebar-sticky mt-5 py-3">
 			<ul class="nav flex-column mt-5 text-right text-primary">
 				<li class="nav-item sidebar-anchor-item">
@@ -23,10 +23,10 @@
 		</div>
 	</nav>
 
-	<main role="main" class="col-lg-10 col-sm-11 col-xs-12 ml-sm-auto mt-1 px-3"> 	
+	<main role="main" class="col-lg-10 col-sm-12 col-xs-12 ml-sm-auto mt-0 px-3"> 	
 
 		<div class="row m-3">
-			<div class="left col-lg-8">
+			<div class="left col-lg-6 mt-3">
 				{foreach $breadcrumbList as $crumb}
 				<span class="breadcrumb-item {if $crumb@last}active{elseif $crumb@first}first{/if}">
 					{if $crumb@last}
@@ -37,9 +37,10 @@
 				</span>
 				{/foreach}
 			</div>
-			<div class="text-right col-lg-4">
+			<div class="text-right col-lg-6 px-2 mt-3">
+				{if $editable}<span class=""><a class="btn btn-secondary btn-sm" href="syllabus/{$syllabus->id}">Back to Edit</a></span>{/if}
+				<span class="text-muted mx-2"><small>Last updated: {$syllabus->modifiedDate->format('F jS, Y - h:i a')}</small></span>
 				<span class=""><a href="#">Print <i class="fas fa-print"></i></a></span>
-				<span class="text-muted ml-2"><small>Last updated: {$syllabus->modifiedDate->format('F jS, Y - h:i a')}</small></span>
 			</div>	
 		</div>
 

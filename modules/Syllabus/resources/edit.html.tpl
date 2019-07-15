@@ -1,5 +1,5 @@
 <div class="row editor-main-container">
-	<main role="main" class="col-md-9 ml-sm-auto col-lg-10 mt-0">
+	<main role="main" class="col-md-10 ml-sm-auto col-lg-10 mt-0">
 		{if $isUniversityTemplate}
 		<div class="text-center alert alert-danger alert-dismissible fade show" role="alert">
 			<strong>Attention!</strong> 

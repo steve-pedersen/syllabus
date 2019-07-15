@@ -28,199 +28,266 @@
 
 	<body>
 		<a href="#mainContent" class="sr-only sr-only-focusable">Skip Navigation</a>
-		<!-- <header class="at {if !$viewer || $homePage}pb-3{/if}"> -->
 
-		<header class="at">
-			<span id="goToTop" class="hidden" aria-hidden="true"></span>
-			<nav class="navbar navbar-expand-lg navbar-light">
-					<div class="navbar-brand d-block-inline col-md-3 col-lg-2 col-xl-2 d-flex justify-content-between">
-					<a class="" href="{$baseUrl}">
-						<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
-					{if $viewer}<i class="fa fa-chevron-left d-block-inline pl-2 mt-2" id="sidebarToggle"></i>{/if}
-				</div>				
-				<button class="navbar-toggler mr-3" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-
-				<div class="collapse navbar-collapse" id="navbarSupportedContent">
-					<ul class="navbar-nav ml-auto">
-					{if $viewer}
-						<li class="nav-item">
-							<span class="navbar-text mr-3">Hello, {$userContext->account->firstName|escape}</span>
-						</li>
-						{if $pAdmin}
-						<li class="nav-item">
-							<a class="nav-link" href="admin"><i class="fas fa-cog"></i> Administrate</a>
-						</li>
-						{/if}
-					{else}
-						<li class="nav-item">
-							<a class="login-button nav-link" href="{$app->baseUrl('login')}">Login</a>
-						</li>
-					{/if} 
-					</ul>
-				{if $viewer}
-					<form method="post" action="logout" class="form logout-form p-2">
-						<button class="btn btn-outline-primary logout " type="submit" name="command[logout]" id="logout-button" value="Logout">Logout</button>
-					</form>
-				{/if}
+    <div class="wrapper" id="mainTemplate">
+        <!-- Sidebar  -->
+        <nav id="sidebar" class="bg-dark">
+            <div class="sidebar-header bg-light navbar">
+            	<div class="navbar-brand d-block-inline  d-flex justify-content-between">
+                <a class="" href="{$baseUrl}">
+					<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
 				</div>
-			</nav>
-	        <div class="bc">
-				{if $breadcrumbList}
-				<div class="container">
-					<div class="col">
-					<ol class="at breadcrumb">
-						{foreach name="breadcrumbs" item="crumb" from=$breadcrumbList}
-						<li{if $smarty.foreach.breadcrumbs.last} class="active"{elseif $smarty.foreach.breadcrumbs.first} class="first"{/if}>
-							{if $crumb@last}
-								{$crumb.text}
-							{else}
-								{l text=$crumb.text href=$crumb.href}
-							{/if}
+            </div>
+
+			<ul class="list-unstyled components">
+				<li class="mt-4">
+					<a class="nav-category" href="syllabi" id="sidebarMySyllabi">
+						<img class="my-syllabi" src="assets/icons/menu-my-syllabi.svg" width="44"> <span class="pl-2 sidebar-text">My Syllabi</span>
+					</a>
+					<ul class="list-unstyled">
+						<li class="{if $page == 'start'}active{/if}">
+							<a class="" href="syllabus/start">
+								<span class="sidebar-text">Create New Syllabus</span>
+							</a>
+						</li>
+						<li class="{if $page == 'overview'}active{/if}">
+							<a class="" href="syllabi?mode=overview">
+								<span class="sidebar-text">Overview</span>
+							</a>
+						</li>
+						<li class="{if $page == 'courses'}active{/if}">
+							<a class="" href="syllabi?mode=courses">
+								<span class="sidebar-text">Courses</span>
+							</a>
+						</li>
+					</ul>
+				</li>
+			</ul>
+
+		{if $privilegedOrganizations || $pAdmin}
+			<ul class="list-unstyled components my-orgs">
+				<li class="">
+					<a class="nav-category" href="organizations" id="sidebarMyOrganizations">
+						<img class="my-orgs fa-school" src="assets/icons/menu-my-orgs.svg" width="38"> <span class="pl-2 sidebar-text">My Organizations</span>
+					</a>
+					{assign var=departments value=$privilegedOrganizations['departments']}
+					<ul class="list-unstyled">
+					{if (!empty($departments) && count($departments) > 1) || $pAdmin}
+						<li class="{if $page == 'departments'}active{/if}">
+							<a class="" href="departments">
+								<span class="sidebar-text">Departments</span>
+							</a>
+						</li>
+					{elseif !empty($departments) && count($departments) == 1}
+						{foreach $departments as $dept}
+						<li class="{if $page == 'departments'}active{/if}">
+							<a class="" href="departments/{$dept->id}">
+								<span class="sidebar-text">
+									{$dept->name}
+								</span>
+							</a>
 						</li>
 						{/foreach}
-					</ol>
-					</div>
-				</div>
-				{/if}
-	        </div>
-		</header>		
-
-		{if $app->siteSettings->siteNotice}
-		<div class="site-notice action notice">
-			{$app->siteSettings->siteNotice}
-		</div> 
-		{/if}
-
-
-		<div class="container-fluid">
-			<div class="row">
-				{if $viewer}
-				<!-- TODO: put this in a partial template and generate links programmatically -->
-				<nav class="col-md-2 d-none d-md-block sidebar {if $sidebarMinimized}sidebar-minimized{/if}" id="sidebar">
-					<div class="sidebar-sticky">
-<!-- 						<ul class="nav flex-column">
-							<li class="nav-item nav-user-item text-center">
-								<a class="nav-link sidebar-user-max" href="profile" id="sidebarUserInfo">
-									<h6 class="sidebar-heading mt-4 mb-1 ">
-										<i class="my-profile fas fa-user-circle fa-4x"></i>
-										<br>
-										<div class="user-info-text-container">
-											<span class="user-info-text sidebar-text">
-												{$viewer->fullName}<br>
-												<small class="">.</small>
-											</span>
-										</div>
-									</h6>
-								</a>
-							</li>
-						</ul> -->
-						<ul class="nav flex-column my-syllabi mt-5">
-							<li class="nav-item">
-								<a class="nav-link nav-category pb-1" href="syllabi" id="sidebarMySyllabi">
-									<h6 class="sidebar-heading mb-0">
-										<!-- <span><i class="my-syllabi fas fa-home fa-2x"></i> <span class="sidebar-text">My Syllabi</span></span> -->
-										<span><img class="my-syllabi" src="assets/icons/menu-my-syllabi.svg" width="46"> <span class="sidebar-text">My Syllabi</span></span>
-									</h6>
-								</a>
-								<ul class="nav flex-column pl-3">
-									<li class="nav-item">
-										<a class="nav-link child-link {if $page == 'start'}active{/if}" href="syllabus/start">
-											<span class="sidebar-text">Create New Syllabus</span>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link child-link {if $page == 'overview'}active{/if}" href="syllabi?mode=overview">
-											<span class="sidebar-text">Overview</span>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link child-link {if $page == 'courses'}active{/if}" href="syllabi?mode=courses">
-											<span class="sidebar-text">Courses</span>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link child-link disabled" disabled>
-										<!-- <a class="nav-link child-link {if $page == 'submissions'}active{/if}" href="syllabi?mode=submissions"> -->
-											<span class="sidebar-text">Submissions</span>
-										</a>
-									</li>
-								</ul>
-							</li>
-						</ul>
-
-						<ul class="nav flex-column my-orgs">
-							<li class="nav-item">
-								<a class="nav-link nav-category" href="organizations" id="sidebarMyOrganizations">
-									<h6 class="sidebar-heading mb-1 ">
-										<!-- <span><i class="fas fa-school fa-2x"></i> <span class="sidebar-text">My Organizations</span></span> -->
-										<span><img class="my-orgs fa-school" src="assets/icons/menu-my-orgs.svg" width="40"> <span class="sidebar-text">My Organizations</span></span>
-									</h6>
-								</a>
-								<ul class="nav flex-column pl-3">
-									<li class="nav-item">
-										<a class="nav-link child-link {if $page == 'departments'}active{/if}" href="departments">
-											<span class="sidebar-text">Departments</span>
-										</a>
-									</li>
-									<li class="nav-item">
-										<a class="nav-link child-link {if $page == 'colleges'}active{/if}" href="colleges">
-											<span class="sidebar-text">Colleges</span>
-										</a>
-									</li>
-<!-- 									<li class="nav-item">
-										<a class="nav-link" href="groups">
-											<span class="sidebar-text">Groups</span>
-										</a>
-									</li> -->
-								</ul>
-							</li>
-						</ul>
-					</div>
-				</nav>
-				{/if}
-				
-				
-				{if $headerPartial}
-				<!-- <main role="main" class="col-md-9 col-lg-10 px-3 mt-0" id="mainContent"> -->
-				<main role="main" class="col pr-3 mt-0 mb-3 min-vh-70" id="mainContent">
-					{include file=$headerPartial headerVars=$headerVars}
-				{else}
-				<!-- <main role="main" class="col-md-9 col-lg-10 px-3 mt-3" id="mainContent"> -->
-				<main role="main" class="col pr-3 mt-3 mb-3 min-vh-70" id="mainContent">
-				{/if}
-
-					{if $flashContent}
-					<div id="user-message" class="alert alert-{$flashClass} alert-dismissable mb-3 fade show" role="alert">
-						<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-						<div class="primary">{$flashContent}</div>
-					</div>
 					{/if}
 
-					<!-- MAIN CONTENT -->
-					{include file=$contentTemplate}
-				</main>
+					{assign var=colleges value=$privilegedOrganizations['colleges']}
 
-			</div>
-		</div>       
+					{if (!empty($colleges) && count($colleges) > 1) || $pAdmin}
+						<li class="{if $page == 'colleges'}active{/if}">
+							<a class="" href="colleges">
+								<span class="sidebar-text">Colleges</span>
+							</a>
+						</li>
+					{elseif !empty($colleges) && count($colleges) == 1}
+						{foreach $colleges as $college}
+						<li class="{if $page == 'colleges'}active{/if}">
+							<a class="" href="colleges/{$college->id}">
+								<span class="sidebar-text">
+									{$college->name}
+								</span>
+							</a>
+						</li>
+						{/foreach}
+					{/if}
 
+					</ul>
+				</li>
+			</ul>
+		{/if}
+        </nav>
 
-		{if !$viewer}
-		<div id="login-box" class="modal fade">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						<h3>Choose Login Method</h3>
+        <!-- Page Content  -->
+        <div id="content">
+
+			<header class="at">
+				<span id="goToTop" class="hidden" aria-hidden="true"></span>
+				<!-- <div class="container-fluid"> -->
+				<nav class="navbar navbar-expand-lg navbar-light">
+					<div class="navbar-brand d-block-inline mr-auto mobile-brand">
+	                	<a class="" href="{$baseUrl}">
+						<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"></a>
 					</div>
-					<div class="modal-body">
-						<p>Loading login options&hellip;</p>
+                    <button type="button" id="mainSidebarCollapse" class="btn btn-secondary ml-2">
+                        <i class="fas fa-align-left"></i>
+                        <span>Toggle Sidebar</span>
+                    </button>
+					<button class="navbar-toggler mr-3 ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+						<span class="navbar-toggler-icon"></span>
+					</button>
+					<div class="collapse navbar-collapse" id="navbarSupportedContent">
+						<ul class="navbar-nav ml-auto">
+						{if $viewer}
+							<li class="nav-item">
+								<span class="navbar-text mr-3">Hello, {$userContext->account->firstName|escape}</span>
+							</li>
+							{if $pAdmin}
+							<li class="nav-item">
+								<a class="nav-link" href="admin"><i class="fas fa-cog"></i> Administrate</a>
+							</li>
+							{/if}
+
+							<li class="nav-item mobile-link border-top">
+								<a class="nav-link" href="syllabi">
+									My Syllabi
+								</a>
+							</li>
+							<li class="nav-item mobile-link {if $page == 'start'}active{/if}">
+								<a class="nav-link" href="syllabus/start">
+									Create New Syllabus
+								</a>
+							</li>
+							<li class="nav-item mobile-link {if $page == 'overview'}active{/if}">
+								<a class="nav-link" href="syllabi?mode=overview">
+									Overview
+								</a>
+							</li>
+							<li class="nav-item mobile-link {if $page == 'courses'}active{/if}">
+								<a class="nav-link" href="syllabi?mode=courses">
+									Courses
+								</a>
+							</li>
+							{if $privilegedOrganizations || $pAdmin}
+								<li class="nav-item mobile-link border-top">
+									<a class="nav-link" href="organizations" id="sidebarMyOrganizations">
+										My Organizations
+									</a>
+								</li>
+								{assign var=departments value=$privilegedOrganizations['departments']}
+								{if (!empty($departments) && count($departments) > 1) || $pAdmin}
+									<li class="nav-item mobile-link {if $page == 'departments'}active{/if}">
+										<a class="nav-link" href="departments">
+											Departments
+										</a>
+									</li>
+								{elseif !empty($departments) && count($departments) == 1}
+									{foreach $departments as $dept}
+									<li class="nav-item mobile-link {if $page == 'departments'}active{/if}">
+										<a class="nav-link" href="departments/{$dept->id}">
+											{$dept->name}
+										</a>
+									</li>
+									{/foreach}
+								{/if}
+
+								{assign var=colleges value=$privilegedOrganizations['colleges']}
+								{if (!empty($colleges) && count($colleges) > 1) || $pAdmin}
+									<li class="nav-item mobile-link {if $page == 'colleges'}active{/if}">
+										<a class="nav-link" href="colleges">
+											Colleges
+										</a>
+									</li>
+								{elseif !empty($colleges) && count($colleges) == 1}
+									{foreach $colleges as $college}
+									<li class="nav-item mobile-link {if $page == 'colleges'}active{/if}">
+										<a class="nav-link" href="colleges/{$college->id}">
+											<span class="sidebar-text">
+												{$college->name}
+											</span>
+										</a>
+									</li>
+									{/foreach}
+								
+								{/if}
+							{/if}
+						{else}
+							<li class="nav-item">
+								<a class="login-button nav-link" href="{$app->baseUrl('login')}">Login</a>
+							</li>
+						{/if} 
+						</ul>
+					{if $viewer}
+						<form method="post" action="logout" class="form logout-form p-2">
+							<button class="btn btn-outline-primary logout " type="submit" name="command[logout]" id="logout-button" value="Logout">Logout</button>
+						</form>
+					{/if}
+					</div>
+				</nav>
+		        <div class="bc">
+					{if $breadcrumbList}
+					<div class="container">
+						<div class="col">
+						<ol class="at breadcrumb">
+							{foreach name="breadcrumbs" item="crumb" from=$breadcrumbList}
+							<li{if $smarty.foreach.breadcrumbs.last} class="active"{elseif $smarty.foreach.breadcrumbs.first} class="first"{/if}>
+								{if $crumb@last}
+									{$crumb.text}
+								{else}
+									{l text=$crumb.text href=$crumb.href}
+								{/if}
+							</li>
+							{/foreach}
+						</ol>
+						</div>
+					</div>
+					{/if}
+		        </div>
+		    	<!-- </div> -->
+			</header>	
+
+			{if !$viewer}
+			<div id="login-box" class="modal fade">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							<h3>Choose Login Method</h3>
+						</div>
+						<div class="modal-body">
+							<p>Loading login options&hellip;</p>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-		{/if}
+			{/if}
+
+			{if $headerPartial}
+
+			<main role="main" class="col pr-3 mt-0 mb-3" id="mainContent">
+				{include file=$headerPartial headerVars=$headerVars}
+			{else}
+
+			<main role="main" class="col pr-3 mt-3 mb-3" id="mainContent">
+			{/if}
+
+				{if $flashContent}
+				<div id="user-message" class="alert alert-{$flashClass} alert-dismissable mb-3 fade show" role="alert">
+					<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+					<div class="primary">{$flashContent}</div>
+				</div>
+				{/if}
+				{if $app->siteSettings->siteNotice}
+				<div class="site-notice action notice">
+					{$app->siteSettings->siteNotice}
+				</div> 
+				{/if}   
+
+				<!-- MAIN CONTENT -->
+				{include file=$contentTemplate}
+			</main>
+        </div>
+    </div>
+
+  
 
 		<footer class="sticky-footer fixed-bottom">
 			<nav class="navbar at-footer">

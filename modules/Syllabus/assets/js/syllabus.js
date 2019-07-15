@@ -9,7 +9,11 @@
 	}
 
     if ($('#syllabusEditor').length) {
-      // closeSidebar(true);
+        if ($('#sidebar').hasClass('active')) {
+            // $('#sidebar').removeClass('active');
+        } else {
+            $('#sidebar').addClass('active');
+        }
     }
 
 	$('.section-collapsible').on('hide.bs.collapse', function () {

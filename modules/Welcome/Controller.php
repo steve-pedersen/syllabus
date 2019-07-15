@@ -11,8 +11,8 @@ class Syllabus_Welcome_Controller extends Syllabus_Master_Controller
     public static function getRouteMap ()
     {
         return array(
-            '/' => array('callback' => 'welcome'),
-            '/home' => array('callback' => 'welcome'),
+            // '/' => array('callback' => 'welcome'),
+            // '/home' => array('callback' => 'welcome'),
         );
     }
     
