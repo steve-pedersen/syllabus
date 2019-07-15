@@ -30,6 +30,7 @@
 		<a href="#mainContent" class="sr-only sr-only-focusable">Skip Navigation</a>
 
     <div class="wrapper" id="mainTemplate">
+	{if $viewer}
         <!-- Sidebar  -->
         <nav id="sidebar" class="bg-dark">
             <div class="sidebar-header bg-light navbar">
@@ -115,6 +116,7 @@
 			</ul>
 		{/if}
         </nav>
+    {/if}
 
         <!-- Page Content  -->
         <div id="content">
@@ -123,6 +125,7 @@
 				<span id="goToTop" class="hidden" aria-hidden="true"></span>
 				<!-- <div class="container-fluid"> -->
 				<nav class="navbar navbar-expand-lg navbar-light">
+				{if $viewer}
 					<div class="navbar-brand d-block-inline mr-auto mobile-brand">
 	                	<a class="" href="{$baseUrl}">
 						<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"></a>
@@ -134,6 +137,12 @@
 					<button class="navbar-toggler mr-3 ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
 					</button>
+				{else}
+					<div class="navbar-brand d-block-inline mr-auto">
+	                	<a class="" href="{$baseUrl}">
+						<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"> <span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
+					</div>
+				{/if}
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav ml-auto">
 						{if $viewer}
