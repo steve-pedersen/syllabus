@@ -8,8 +8,8 @@
 		<thead class="thead-light">
 
 			<tr class="">
-				<th scope="col" class="border-left-0" style="width:35%;">Course Information</th>
-				<th scope="col">Syllabus Details & Options</th>
+				<th scope="col" class="text-dark border-left-0" style="width:35%;">Course Information</th>
+				<th scope="col" class="text-dark ">Syllabus Details & Options</th>
 			</tr>
 		</thead>
 		<tbody >
@@ -34,33 +34,23 @@
 					</p>
 					<div class="col">
 						<div class="media">
-							<img src="{$courseSection->imageUrl}" class="img-fluid" alt="Syllabus thumbnail" style="max-height: 10rem;">
-							<div class="media-body">
-								<div class="col-md-5 col-sm-4 col-xs-3" >
-									<table class="table table-borderless" style="height: 10rem;">
-									<tbody>
-										<tr>
-											<td class="align-top">
-											<a class="btn btn-dark d-block" target="_blank" href="syllabus/{$syllabus->id}/view">
-												<span class="">
-													<span class="float-left"><i class="fas fa-eye"></i></span>
-													View
-												</span>
-											</a>
-											</td>
-										</tr>
-										<tr>
-											<td class="align-bottom">
-											<a href="syllabus/{$syllabus->id}" class="btn btn-info d-block">
-												<span class="">
-													<span class="float-left"><i class="fas fa-edit"></i></span>
-													Edit
-												</span>
-											</a>
-											</td>
-										</tr>
-									</tbody>
-									</table>
+							<div class="media-body row">
+								<div class="col-xl-3 col-lg-5 col-md-6 col-sm-7 col-xs-8" >
+								<img src="{$courseSection->imageUrl}" class="img-thumbnail" alt="Syllabus thumbnail" style="max-height: 12rem; min-height: 10rem;border:5px solid #efefef;">
+								</div>
+								<div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 col-xs-10 d-block">
+									<a style="max-width:200px;" class="btn btn-dark d-block align-top mt-3" href="syllabus/{$syllabus->id}/view">
+										<span class="float-left"><i class="fas fa-eye"></i></span>
+										View
+									</a>
+									<a disabled style="max-width:200px;" href="syllabus/{$syllabus->id}/share" class="my-3 btn btn-outline-primary d-block disabled">
+										<span class="float-left"><i class="fas fa-share"></i></span>
+										Share
+									</a>
+									<a style="max-width:200px;" href="syllabus/{$syllabus->id}" class="my-3 btn btn-info d-block align-bottom">
+										<span class="float-left"><i class="fas fa-edit"></i></span>
+										Edit
+									</a>
 								</div>
 							</div>
 						</div>
@@ -69,42 +59,45 @@
 					<p class="border-bottom pb-2">
 						<em>This class currently does not have a syllabus associated with it.</em>
 					</p>
-					<div class="col">
-						<div class="row py-3">
-							<div class="col-3">
-								<a class="btn btn-success" href="syllabus/start?course={$courseSection->id}">
-									<span class="mr-3"><i class="fas fa-plus"></i></span> 
-									Create New
-								</a>
-							</div>
+					{if $courseSection->pastCourseSyllabi}
+					<!-- <p class="">Duplicate a previous syllabus or start from scratch.</p> -->
+					{/if}
 
-							{if $courseSection->pastCourseSyllabi}
-							<div class="col-1">
-								<div class="row row-divided">
-									<div class="col-xs-6 column-one ">
-									</div>
-									<div class="vertical-divider">OR</div>
-									<div class="col-xs-6 column-two ">
-									</div>
-								</div>
-							</div>
-
-							<div class="col-8 form-group mb-3 ">
-								<div class="input-group">
-								<select name="courseSyllabus" class="form-control " id="course{$i}SyllabusOption">
-									<option value="" default>Choose past syllabus to start from...</option>
-								{foreach $courseSection->pastCourseSyllabi as $pastCourse}
-									<option value="{$pastCourse->syllabus->id}">[{$pastCourse->getShortName(true)}] {$pastCourse->syllabus->title}</option>
-								{/foreach}
-								</select>
-								<div class="input-group-append">
-									<input class="btn btn-primary btn-sm" type="submit" name="command[courseClone][{$courseSection->id}]" value="Submit" />
-								</div>
-								</div>
-							</div>
-							{/if}
+					<div class="row py-3">
+						<div class="col-md-3 d-block-inline">
+							<a class="btn btn-success" href="syllabus/start?course={$courseSection->id}">
+								<span class="mr-3"><i class="fas fa-plus"></i></span> 
+								Create New
+							</a>
 						</div>
+
+						{if $courseSection->pastCourseSyllabi}
+						<div class="col-md-1 divider-div">
+							<div class="row row-divided">
+								<div class="col-xs-6 column-one ">
+								</div>
+								<div class="vertical-divider text-center">OR</div>
+								<div class="col-xs-6 column-two ">
+								</div>
+							</div>
+						</div>
+
+						<div class="col-md-8 form-group mb-3 d-block-inline">
+							<div class="input-group">
+							<select name="courseSyllabus" class="form-control " id="course{$i}SyllabusOption">
+								<option value="" default>Choose past syllabus to start from...</option>
+							{foreach $courseSection->pastCourseSyllabi as $pastCourse}
+								<option value="{$pastCourse->syllabus->id}">[{$pastCourse->getShortName(true)}] {$pastCourse->syllabus->title}</option>
+							{/foreach}
+							</select>
+							<div class="input-group-append">
+								<input class="btn btn-primary btn-sm" type="submit" name="command[courseClone][{$courseSection->id}]" value="Submit" />
+							</div>
+							</div>
+						</div>
+						{/if}
 					</div>
+
 				{/if}
 				</td>
 			</tr>

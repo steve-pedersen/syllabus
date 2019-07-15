@@ -20,7 +20,7 @@
                     <input type="hidden" name="syllabusVersion[id]" value="{$syllabusVersion->id}">
                 {/if}
                 <input class="btn btn-primary" type="submit" name="command[savesyllabus]" value="Save Metadata" />
-                <a href="{$smarty.server.REQUEST_URI}" class="btn btn-outline-warning">Cancel</a>
+                <a href="{$smarty.server.REQUEST_URI}" class="btn btn-outline-dark">Cancel</a>
             </div>
         </div>
     </div>

@@ -12,71 +12,54 @@ class Syllabus_Master_UserContext extends Bss_Master_UserContext
     protected function setAccount ($account)
     {
         parent::setAccount($account);
-        
-        // if ($account)
-        // {
-        //     if ($this->getAuthorizationManager()->hasPermission($account, 'admin'))
-        //     {
-        //         $this->response->redirect('admin');
-        //     }
-        //     else // if not admin, go to 
-        //     {
-                 
-        //         if ($return = $this->request->getQueryParameter('returnTo'))
-        //         {         
-        //             $this->response->redirect($return);
-        //         }
-        //         elseif (false) // has some other special permission
-        //         {
-        //             // $this->response->redirect('special/homepage');
-        //         }
-        //         else
-        //         {
-
-        //             $this->response->redirect('/');
-        //         }
-        //     }
-        // }
     }
 
-    /**
-     * Login as the specified account.
-     * 
-     * This method sets the account's last and (if it's unset) first login
-     * timestamps, and saves any changes that have been made to the account
-     * and the active records it references.
-     * 
-     * @param Bss_AuthN_Account $account
-     */
-    // public function login (Bss_AuthN_Account $account)
-    // {
-    //     $account->lastLoginDate = new DateTime;
-        
-    //     $firstLogin = false;
-    //     if ($account->firstLoginDate === null)
-    //     {
-    //         $firstLogin = true;
-    //         $account->firstLoginDate = $account->lastLoginDate;
-    //     }
-        
-    //     $account->save();
-    //     $this->setAccount($account);
+    public function login (Bss_AuthN_Account $account)
+    {
+        $firstLogin = ($account->firstLoginDate === null);
+        parent::login($account);
+        $this->sendRedirect($account, $firstLogin);
+    }
 
-    //     $schemaManager = $this->request->getApplication()->schemaManager;
-    //     $roles = $schemaManager->getSchema('Bss_AuthN_Account');
-    //     $authZ = $this->getAuthorizationManager();
-    //     if ($authZ->hasPermission($account, 'admin'))
-    //     {
-    //         $this->response->redirect('admin');
-    //     }
-    //     elseif ($account->roles->has($roles->findOne($roles->name->equals('Faculty'))))
-    //     {
-    //         $this->response->redirect('arc');
-    //     }
-    //     elseif ($authZ->hasPermission($account, 'grad advisor'))
-    //     {
-    //         $this->response->redirect('grad');
-    //     }
-    //     $this->response->redirect('arc');
-    // }
+    public function sendRedirect ($account, $firstLogin)
+    {
+        $schemaManager = $this->request->getApplication()->schemaManager;
+        $roles = $schemaManager->getSchema('Syllabus_AuthN_Role');
+        $authZ = $this->getAuthorizationManager();
+        if ($authZ->hasPermission($account, 'admin'))
+        {
+            $this->response->redirect('admin');
+        }
+        elseif ($account->roles->has($roles->findOne($roles->name->equals('Faculty'))))
+        {
+            if ($firstLogin)
+            {
+                $this->response->redirect('syllabi?mode=courses');
+            }
+            $this->response->redirect('syllabi?mode=overview');
+        }
+        $this->response->redirect('syllabi');        
+    }
+
+    public function becomeAccount ($account, $returnTo)
+    {
+        if ($account)
+        {
+            $session = $this->request->getSession();
+            
+            // Switch back to their real user account before becoming another user.
+            $this->unbecome();
+            
+            // Remember their real account and where they used 'become' from.
+            $session->wasAccountId = $session->accountId;
+            $session->logoutReturnTo = $returnTo;
+            
+            // And set their account to the new user.
+            $this->setAccount($account);
+            $this->sendRedirect($account, ($account->firstLoginDate===null));
+            return true;
+        }
+        
+        return false;
+    }
 }

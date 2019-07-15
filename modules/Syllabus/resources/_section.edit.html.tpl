@@ -25,7 +25,12 @@
 				<strong>{if $currentSectionVersion->title}{$currentSectionVersion->title}{else}{$displayName}{/if}</strong><small><i class="fas fa-chevron-down text-dark pl-2"></i></small>
 			</span></div></a>
 		{if $currentSectionVersion->description}<small class="text-dark">{$currentSectionVersion->description}</small>{/if}
-		{if $currentSectionVersion}<span class="float-right"><small class="badge badge-default">Section Version #{$currentSectionVersion->normalizedVersion}</small></span>{/if}
+		{if $currentSectionVersion}
+<!-- 		<span class="float-right">
+			<small class="badge badge-default">Section Version #{$currentSectionVersion->normalizedVersion}
+			</small>
+		</span> -->
+		{/if}
 	</div>
 
 	{if $sectionExtension->getAddonFormFragment()}
@@ -81,7 +86,9 @@
 	</div>
 
 	<div class="card-footer">
-		<div class="form-group row pt-3">
+	{if $organization}
+		<!-- Only need to show Read-Only when editing a template -->
+		<div class="form-group row pt-3 border-bottom">
 		{if $genericSection->readOnly == 'true' || $genericSection->readOnly == true || $genericSection->inherited || $organization}
 			{assign var=isReadOnly value=true}
 		{else}
@@ -105,7 +112,8 @@
 				</div>
 	        </div>
 		</div>
-	    <div class="form-group row pt-3 mt-5 border-top">
+	{/if}
+	    <div class="form-group row pt-3 mt-5">
 	        <label class="col-lg-3 col-form-label form-control-label"></label>
 	        <div class="col-lg-9">
 				<div class="d-flex">

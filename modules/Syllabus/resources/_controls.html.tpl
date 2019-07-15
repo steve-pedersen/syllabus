@@ -55,7 +55,7 @@
 			<button class="btn btn-success  my-1" type="submit" name="command[savesyllabus]" id="globalSave">
 				Save
 			</button>
-			<a class="btn btn-dark  my-1" href="syllabus/{$syllabus->id}/view" target="_blank">
+			<a class="btn btn-dark my-1" id="viewFromEditor" href="syllabus/{$syllabus->id}/view">
 				View
 			</a>
 			<a href="{if $syllabus->inDataSource}syllabus/{$syllabus->id}{else}{$smarty.server.REQUEST_URI}{/if}" class="btn btn-default my-1">Cancel</a>

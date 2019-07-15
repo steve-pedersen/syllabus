@@ -7,7 +7,9 @@
 	{/if}
 		<h5 class="mt-3">{$syllabus->title}</h5>
 		<p class="card-text">{$syllabus->description}</p>
+		{if !$hideDate}
 		<small class="d-block"><strong>Last Modified:</strong> {$syllabus->modifiedDate->format('F jS, Y - h:i a')}</small>
+		{/if}
 	</div>
 	<div class="card-footer">
 		<div class="align-bottom mt-auto">
@@ -15,7 +17,7 @@
 			<a class="btn btn-success" href="syllabus/startwith/{$syllabus->id}">Start From {if $isTemplate}Template{else}Syllabus{/if}</a>
 			{/if}
 			{if $btnView}
-			<a class="btn btn-dark" target="__blank" href="syllabus/{$syllabus->id}/view">View</a>
+			<a class="btn btn-dark" href="syllabus/{$syllabus->id}/view">View</a>
 			{/if}
 			{if $btnEdit}
 			<a class="btn btn-outline-primary" href="syllabus/{$syllabus->id}">Edit</a>
@@ -24,7 +26,7 @@
 			<a class="btn btn-outline-primary" href="syllabus/startwith/{$syllabus->id}">Clone</a>
 			{/if}
 			{if $btnStartTemplateForCourse}
-				<input class="btn btn-success" type="submit" name="command[start][{$syllabus->id}]" value="Start From Template">
+				<input class="btn btn-success" type="submit" name="command[start][department][{$syllabus->id}]" value="Start From Template">
 			{/if}
 		</div>
 	</div>

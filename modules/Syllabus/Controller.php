@@ -1,5 +1,7 @@
 <?php
 
+// BUG: app.js:4 Uncaught CKEditor is not initialized yet, use ckeditor() with a callback.
+
 /**
  * Handles main business logic for entity/user syllabi.
  * 
@@ -76,7 +78,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 
                 $userSyllabi = $syllabi->find(
                     $syllabi->createdById->equals($viewer->id)->andIf($syllabi->templateAuthorizationId->isNull()), 
-                    ['orderBy' => '-createdDate', 'limit' => $limit, 'offset' => $offset]
+                    ['orderBy' => ['-modifiedDate', '-createdDate'], 'limit' => $limit, 'offset' => $offset]
                 );
                 
                 foreach ($userSyllabi as $userSyllabus)
@@ -175,7 +177,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             $userSyllabi = $syllabi->find(
                 $syllabi->createdById->equals($viewer->id), 
-                ['orderBy' => '-createdDate', 'limit' => 4]
+                ['orderBy' => ['-modifiedDate', '-createdDate'], 'limit' => 4]
             );        
             foreach ($userSyllabi as $userSyllabus)
             {
@@ -194,7 +196,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             {
                 $templates[$cs->department->id] = $syllabi->find(
                     $syllabi->templateAuthorizationId->equals($cs->department->templateAuthorizationId),
-                    ['orderBy' => '-createdDate', 'limit' => '4']
+                    ['orderBy' => ['-modifiedDate', '-createdDate'], 'limit' => '4']
                 );
                 foreach ($templates[$cs->department->id] as $template)
                 {
@@ -231,17 +233,20 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             if ($this->getPostCommand() === 'start')
             {
                 $data = $this->request->getPostParameters();
+                $startingPoint = key($this->getPostCommandData());
+
                 // TODO: update for 'clone' option
                 $fromCourse = isset($courseSectionId) ? $courseSections->get($courseSectionId) : null;
                 $templateAuthorizationId = isset($data['template']) ? $data['template'] : null;
                 
-                switch ($data['startingTemplate']) {
+                switch ($startingPoint) {
                     case 'university':                 
                         $startingTemplate = $syllabi->get($templateId);
                         break;
                     case 'department':
                     case 'college':
-                    	$startingTemplate = $syllabi->get((key($this->getPostCommandData())));
+                    	$id = key($this->getPostCommandData()[$startingPoint]);
+                    	$startingTemplate = $syllabi->get($id);
                         break;
 
                     default:
@@ -482,7 +487,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
                 case 'savesection':
                 case 'savesyllabus':
-                    // echo "<pre>"; var_dump($data['section']); die;
+                    // echo "<pre>"; var_dump($data['section'], $data); die;
                     $syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;
                     list($updated, $syllabusVersion) = $this->saveSyllabus($syllabus);
                     if ($updated)
@@ -854,8 +859,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {   
             $anyChange = true;
             $inherited = false;
-            $oldCount = isset($oldSyllabusVersion->sectionVersions) ? count($oldSyllabusVersion->sectionVersions) : 0;
-            $newCount = count($newSyllabusVersion->sectionVersions);
+            // $oldCount = isset($oldSyllabusVersion->sectionVersions) ? count($oldSyllabusVersion->sectionVersions) : 0;
+            // $newCount = count($newSyllabusVersion->sectionVersions);
 
             // if editing a section, remove it's previous version from the new syllabus version
             if ($prevSectionVersion)
@@ -880,15 +885,17 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 $data['section']['properties']['readOnly'][$sectionVersionId] = true;
             }
 
-            // TODO: decide if $data is safe to use
             // add new section version to this new syllabus version
+            // pad sort order with a leading zero so always has two digits
             $defaultPosition = $newSyllabusVersion->sectionCount + 1;
+            $sortOrder = $defaultPosition;
+            if (isset($data['section']['properties']['sortOrder']))
+            {
+            	$sortOrder = $data['section']['properties']['sortOrder'][$sectionVersionId];
+            	$sortOrder = strlen($sortOrder) === 2 ? $sortOrder : '0'.$sortOrder;
+            }
             $newSyllabusVersion->sectionVersions->add($newSectionVersion);
-            $newSyllabusVersion->sectionVersions->setProperty($newSectionVersion, 'sort_order', 
-                isset($data['section']['properties']['sortOrder']) ? 
-                    $data['section']['properties']['sortOrder'][$sectionVersionId] : 
-                    $defaultPosition
-            );
+            $newSyllabusVersion->sectionVersions->setProperty($newSectionVersion, 'sort_order', $sortOrder);
             $newSyllabusVersion->sectionVersions->setProperty($newSectionVersion, 'read_only', 
             	isset($data['section']['properties']['readOnly'][$sectionVersionId])
             );
@@ -915,9 +922,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 if (isset($data['section']['properties']['sortOrder']) && isset($data['section']['properties']['sortOrder'][$sv->id]))
                 {
                 	$anyChange = true;
-                    $newSyllabusVersion->sectionVersions->setProperty($sv, 'sort_order', 
-                        $data['section']['properties']['sortOrder'][$sv->id]
-                    );
+	            	$sortOrder = $data['section']['properties']['sortOrder'][$sv->id];
+	            	$sortOrder = strlen($sortOrder) === 2 ? $sortOrder : '0'.$sortOrder;
+                    $newSyllabusVersion->sectionVersions->setProperty($sv, 'sort_order', $sortOrder);
                 }
             }
             $newSyllabusVersion->save();
@@ -944,7 +951,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     'realClass' => ['new' => 'Syllabus_Courses_Course'],
                     'extKey' => ['new' => 'course_id'],
                     'properties' => [
-                        'sortOrder' => ['new' => 1],
+                        'sortOrder' => ['new' => '01'],
                         'isAnchored' => ['new' => true],
                         'readOnly' => ['new' => false],
                         'inherited' => ['new' => $inherited],
@@ -1027,7 +1034,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $sectionVersion->save();
 
         $syllabusVersion->sectionVersions->add($sectionVersion);
-        $syllabusVersion->sectionVersions->setProperty($sectionVersion, 'sort_order', 0);
+        $syllabusVersion->sectionVersions->setProperty($sectionVersion, 'sort_order', '01');
         $syllabusVersion->sectionVersions->setProperty($sectionVersion, 'inherited', false);
         $syllabusVersion->sectionVersions->setProperty($sectionVersion, 'read_only', false);
         $syllabusVersion->sectionVersions->setProperty($sectionVersion, 'is_anchored', true);

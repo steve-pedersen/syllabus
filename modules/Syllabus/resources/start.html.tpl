@@ -3,29 +3,28 @@
 	<div class="">
 		{if $courseSection}
 			<input type="hidden" name="course" value="{$courseSection->id}">
-			<p class="lead">
+			<p class="alert alert-dark mb-5">
 				You are creating a new syllabus for <strong>{$courseSection->fullDisplayName}</strong>, 
 				for the <strong>{$courseSection->term}</strong> semester.
 				<!-- <br><a href="syllabus/start" class="float-right text-danger">Unselect this course</a> -->
 			</p>
 		{else}
-			<p class="lead">
-				You are creating a new syllabus and will be able to choose which course(s) it is for at a later point.
+			<p class="alert alert-dark mb-5 ">
+				You are creating a new syllabus and will be able to choose which course it is for at a later point.
 			</p>
 		{/if}
 	</div>
 	<h1 class="text-dark">
-		Choose your starting point:
+		Choose your starting point<small class="text-muted"></small>:
 	</h1>
-
+	<p class="">Click an option to expand it.</p>
 <div class="accordion" id="startAccordion">
 
 	<ul class="list-unstyled px-xl-5 mx-xl-5 mx-lg-2 mx-lg-2 form-inline">
-		<li class="media my-lg-4 p-3 collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+		<li class="media my-lg-5 my-md-2 p-3 px-xs-1 collapsed" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
 			<div class="form-check d-block-inline">
-				<input class="form-check-input mr-5" type="radio" name="startingTemplate" id="startingTemplate1" value="university">
 				<label class="form-check-label" for="startingTemplate1">
-					<i class="start-icon fas fa-file fa-7x align-self-start mr-3 d-md-inline d-sm-none"></i>
+					<i class="start-icon base-template-start fas fa-file fa-7x align-self-start mr-3 d-md-inline d-sm-none"></i>
 					<div class="media-body">
 						<h2 class="mt-0 mb-1 display-4">
 						{if $pStartFromNothing}
@@ -34,30 +33,29 @@
 							University Base Template
 						{/if}
 						</h2>
-						<p class="lead w-75 ml-1">
-							Start fresh with a new syllabus draft, 
-							which includes all SF State requirements.
+						<p class="lead min-vw-75 ml-1">
+							Start fresh with a new syllabus draft, which includes all SF State requirements.
 						</p>
 					</div>
 				</label>
 			</div>
 		</li>
-        <div id="collapseOne" class="collapse col-12 mt-0" aria-labelledby="headingOne" data-parent="#startAccordion">
+        <div id="collapseOne" class="collapse col-12 mt-0 " aria-labelledby="headingOne" data-parent="#startAccordion">
 		  	<div class="mb-3 pb-4 w-75 text-center">
 		  		{if $pStartFromNothing}
 				<a href="syllabus/new" class="btn btn-success btn-large">Start Fresh</a>
 		  		{else}
-				<input class="btn btn-success btn-lg" type="submit" name="command[start]" value="Start From Base Template">
+				<input class="btn btn-success btn-lg" type="submit" name="command[start][university]" value="Start From Base Template">
 				{generate_form_post_key}
 				{/if}
-				<hr class="fancy-line-2">
+				<!-- <hr class="fancy-line-2"> -->
 			</div>
 			
         </div> 
-
-		<li class="media my-lg-4 p-3 collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-			<div class="form-check d-block-inline">
-				<input class="form-check-input mr-5" type="radio" name="startingTemplate" id="startingTemplate2" value="department">
+	
+	{if $organizations}
+		<li class="media my-lg-5 my-md-2 p-3 px-xs-1 collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+			<div class="form-check d-block-inline ">
 				<label class="form-check-label" for="startingTemplate2">
 					<i class="start-icon fas fa-file-alt fa-7x align-self-start mr-3 d-md-inline d-sm-none"></i>
 					<div class="media-body">
@@ -87,12 +85,14 @@
 			{if $organizations}
 				{assign var=btnStartTemplateForCourse value=true}
 				{assign var=isTemplate value=true}
+				{assign var=commandDataKey value='department'}
+				{assign var=hideDate value=true}
 			{foreach $organizations as $organization}
 			<div class="col px-2">
 				<div class="row px-4">
 					{foreach $templates[$organization->id] as $i => $template}
 						{assign var=syllabus value=$template}
-					<div class="col-3 p-3 mh-50">
+					<div class="col-xl-3 p-xl-1 col-lg-4 col-md-6 col-sm-8 col-xs-12 text-center p-2 mh-50">
 						{include file="partial:_syllabusCard.html.tpl"}
 					</div>
 					{foreachelse}
@@ -106,16 +106,15 @@
 			{else}
 				<div class="d-block-inline w-75 text-center">
 					<span>You're not part of a department!</span>
-					<hr class="fancy-line-2">
+					<!-- <hr class="fancy-line-2"> -->
 				</div>
 			{/if}
 		</div>
+	{/if}
 
-
-		{if !$isTemplate}
-		<li class="media my-lg-4 p-3 collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+	{if !$isTemplate}
+		<li class="media my-lg-5 my-md-2 p-3 px-xs-1 collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
 			<div class="form-check d-block-inline">
-				<input class="form-check-input mr-5" type="radio" name="startingTemplate" id="startingTemplate3" value="clone">
 				<label class="form-check-label" for="startingTemplate3">
 					<i class="start-icon fas fa-file-invoice fa-7x align-self-start mr-3 d-md-inline d-sm-none"></i>
 					<div class="media-body">
@@ -124,6 +123,7 @@
 							Create a duplicate from any one of your other syllabi, 
 							such as one from a previous semester or a personal template.
 						</p>
+						<!-- <p class="text-warning">TODO: add some logic to fetch relevant, non-course syllabi here</p> -->
 					</div>
 				</label>
 			</div>
@@ -143,7 +143,7 @@
 	{assign var=btnStart value=true}
 	{foreach $relevantSyllabi as $i => $syllabus}
 		{if $i == 4}{break}{/if}
-			<div class="col-lg-3 col-md-4 p-3">
+			<div class="col-xl-3 p-xl-1 col-lg-4 col-md-6 col-sm-8 col-xs-12 text-center p-2">
 				{include file="partial:_syllabusCard.html.tpl"}
 			</div>
 	{foreachelse}

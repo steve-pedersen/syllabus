@@ -11,7 +11,7 @@
 		<span class="mb-0 section-title">
 			<strong>{$sectionVersion->title}</strong><small><i class="fas fa-chevron-down text-dark pl-2"></i></small>
 		</span></div></a>
-		{if $sectionVersion->description}<small class="text-dark">{$sectionVersion->description}</small>{/if}
+		{if $sectionVersion->description}<span class="text-dark">{$sectionVersion->description}</span>{/if}
 		{if !$editable}<span class=""><i class="fas fa-lock ml-3 mr-2"></i> (Read Only)</span>{/if}
 	</div>
 

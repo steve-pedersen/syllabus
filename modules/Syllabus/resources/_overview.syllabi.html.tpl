@@ -7,17 +7,17 @@
 	<div class="row mb-3">
 		<div class="col-lg-3 col-md-4 px-2">
 			<div class="card h-100">
-				<a href="syllabus/start" class="text-center align-text-middle text-success h-100">
-				<div class="card-body">
+				<!-- <div  class="text-center align-text-middle text-success h-100"> -->
+				<div class="card-body text-center align-text-middle text-dark">
 					<i class="h-50 mt-5 mb-5 fas fa-plus-circle fa-7x"></i>
-					<p class="h-50 text-center align-bottom text-success mt-3"><strong>Start a new syllabus</strong></p>
+					<p class="h-50 text-center align-bottom text-dark mt-3"><strong>Start a new syllabus</strong></p>
 				</div>
 				<div class="card-footer">
 					<div class="align-bottom mt-auto">
-						<a class="btn btn-success" href="syllabus/start">Create New</a>
+						<a class="btn btn-success" href="syllabus/start">Choose Starting Point</a>
 					</div>
 				</div>
-				</a>
+				<!-- </div> -->
 			</div>
 		</div>
 
@@ -42,7 +42,7 @@
 			{include file="partial:_syllabusCard.html.tpl"}
 		</div>
 {foreachelse}
-	<p>You have no syllabi yet!</p>
+	<!-- <p>You have no syllabi yet!</p> -->
 {/foreach}
 	</div> <!-- END row3 -->
 {if $hasSeeMore}

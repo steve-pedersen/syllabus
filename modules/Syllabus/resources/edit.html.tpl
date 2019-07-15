@@ -108,16 +108,14 @@
 	
 	<nav class="col-md-2 d-none d-md-block anchor-links-sidebar bg-light text-dark px-0">
 		<div class="sidebar-sticky">
-			<div class="mb-3 border-bottom text-right">
-				<a class="collapse-all p-2 expanded d-inline-block mt-1 mr-1 text-primary" href="#">
-					<i class="fas fa-compress collapsed"></i>
-					<i class="fas fa-expand expanded"></i>
-					<span class="ml-2">Hide/Show Sections</span>
-					<!-- <span class="collapse-text ml-2">Collapse Sections</span> -->
-					<!-- <span class="expand-text ml-2">Expand Sections</span> -->
-				</a>
-			</div>
-			<ul class="nav flex-column ">
+			<ul class="nav flex-column">
+				<div class="mb-3 border-bottom text-right">
+					<a class="collapse-all p-2 expanded d-inline-block mt-1 mr-1 text-primary" href="#">
+						<i class="fas fa-compress collapsed"></i>
+						<i class="fas fa-expand expanded"></i>
+						<span class="ml-2">Hide/Show Sections</span>
+					</a>
+				</div>
 				<li class="nav-item sidebar-anchor-item">
 					<a class="nav-link my-3" href="{$smarty.server.REQUEST_URI}#goToTop">
 					<strong><i class="fas fa-arrow-up pr-2"></i> Go To Top</strong>
