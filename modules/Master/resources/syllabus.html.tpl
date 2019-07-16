@@ -17,6 +17,9 @@
 		<link rel="stylesheet" type="text/css" media="print" href="assets/css/app-print.css">
 		<link href='//fonts.googleapis.com/css?family=Montserrat:400,700|Lato:400,700,900' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" id="Lato-css" href="https://fonts.googleapis.com/css?family=Lato%3A1%2C100%2C300%2C400%2C400italic%2C700&amp;ver=4.9.9" type="text/css" media="all">
+		<link href="https://fonts.googleapis.com/css?family=Vollkorn+SC&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Vollkorn&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Old+Standard+TT&display=swap" rel="stylesheet">
 		<link rel="shortcut icon" type="image/x-icon" href="assets/icons/logo_square_512-01.png" />
 		<script>document.write('<link rel="stylesheet" type="text/css" href="assets/css/app-js.css" media="screen">');</script>
 	</head>
@@ -174,7 +177,10 @@
         </div>
     </div>      
 
-
+		<script> 
+			var CKEDITOR_BASEPATH = "{$baseUrl|escape}/assets/js/ckeditor/"; 
+			window.CKEDITOR_BASEPATH = CKEDITOR_BASEPATH;
+		</script>
 		<script src="assets/js/app.js"></script>
 
 

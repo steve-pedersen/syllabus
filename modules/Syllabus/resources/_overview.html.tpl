@@ -9,4 +9,8 @@
 		{include file="partial:_overview.resources.html.tpl"}
 	</div>
 
+	<div class="overview-section campus-documents">
+		{include file="partial:_overview.documents.html.tpl"}
+	</div>
+
 </div>

@@ -219,14 +219,14 @@
 								{/if}
 							{/if}
 						{else}
-							<li class="nav-item">
+							<li class="nav-item border-top">
 								<a class="login-button nav-link" href="{$app->baseUrl('login')}">Login</a>
 							</li>
 						{/if} 
 						</ul>
 					{if $viewer}
-						<form method="post" action="logout" class="form logout-form p-2">
-							<button class="btn btn-outline-primary logout " type="submit" name="command[logout]" id="logout-button" value="Logout">Logout</button>
+						<form method="post" action="logout" class="form logout-form p-2 border-top">
+							<button class="btn btn-outline-secondary logout " type="submit" name="command[logout]" id="logout-button" value="Logout">Logout</button>
 						</form>
 					{/if}
 					</div>

@@ -10,68 +10,13 @@ html {
 		display: none;
 	}
 }
-
-// #startAccordion {
-// 	li.media > div > label {
-// 		&:hover {
-// 			color: #000;
-// 			cursor: pointer;
-// 			-webkit-transition: all 0.1s ease-in-out 0s;
-// 			transition: all 0.1s ease-in-out 0s;
-// 		}
-// 		> i {
-// 			position: relative;
-// 			&:after {
-// 				position:absolute;
-// 				content:'';
-// 				bottom: -60px;
-// 				left: 22px;
-// 				width: 0;
-// 				height: 0;
-
-// 				border-left: 20px solid transparent;
-// 				border-right: 20px solid transparent;
-// 				border-top: 40px solid $info;
-
-// 				-webkit-transition: all 0.15s ease-in-out 0s;
-// 				transition: all 0.15s ease-in-out 0s;
-// 			}
-// 		}	
-// 	}
-// 	li.media.collapsed > div > label {
-// 		> i {
-// 			&:after {
-// 				border:none;
-// 			}
-// 		}	
-// 		&:hover {
-// 			> i {
-// 				position: relative;
-// 				// padding-bottom: 10px;
-// 				-webkit-transition: all 0.2s ease-in-out 0s;
-// 				transition: all 0.2s ease-in-out 0s;
-// 				&:after {
-// 					position:absolute;
-// 					content:'';
-// 					bottom: -60px;
-// 					left: 22px;
-// 					width: 0;
-// 					height: 0;
-
-// 					border-top: 20px solid transparent;
-// 					border-left: 40px solid $info;
-// 					border-bottom: 20px solid transparent;
-// 				}
-// 			}	
-// 		}
-// 	}
-// }
-#chooseStartingPoint {
-	// h1 {
-	// 	font-family: $brand-font-family;
-	// 	font-weight: 500;
-	// }
+.start-syllabus {
+	&:focus,
+	&:hover {
+		background-color: #EDFFFC;
+	}
 }
+
 #startAccordion {
 	li.media > div > label {
 		&:hover {
@@ -391,7 +336,63 @@ div.overview-container {
 		}
 	}
 }
+.viewer-main-container {
+	@media (min-width: 992px) {
+		.mobile-anchor-links {
+			display: none;
+		}
+		.anchor-links-sidebar-left {
+			display: block;
+		}
+	}
+	@media (max-width: 991px) {
+		.mobile-anchor-links {
+			display: block;
+		}
+		.anchor-links-sidebar-left {
+			display: none;
+		}
+		& {
+			position: relative;
+		}
+	}
+	/* Style the navbar */
+	#stickyNavbar {
+		// overflow: hidden;
+		background-color: $dark;
+		width: 100%;
+		ul {
+			padding-bottom: 1rem;
+			li {
+				&:hover,
+				&:focus {
+					background-color: $dark-2;
+				}
+				a {
+					font-size: 1.1em;
+					color: #fff;
+					padding-left: 1.5rem;
+				}
+			}
+		}
+		&.minimize {
+			top: -72px;
+			-webkit-transition: all 0.2s ease-in-out 0.2s;
+			transition: all 0.2s ease-in-out 0.2s;
+		}
+	}
 
+	/* The sticky class is added to the navbar with JS when it reaches its scroll position */
+	.sticky {
+		position: sticky;
+		top: 0;
+		z-index: 1;
+	    -webkit-transition: all 0.2s ease-in-out 0.2s;
+	    -moz-transition: all 0.2s ease-in-out 0.2s;
+	    -o-transition: all 0.2s ease-in-out 0.2s;
+	    transition: all 0.2s ease-in-out 0.2s;
+	}
+}
 form#chooseStartingPoint {
 	.collapsed {
 		color: $muted;

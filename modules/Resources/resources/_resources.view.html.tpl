@@ -3,7 +3,7 @@
 <div class="col">
 <ul class="">
 {foreach $realSection->resources as $resource}
-<li>{$resource->title} - {l text=$resource->url href=$resource->url}</li>
+<li>{$resource->title} - <span class="dont-break-out">{l text=$resource->url href=$resource->url}</span></li>
 {/foreach}
 </ul>
 </div>

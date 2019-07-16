@@ -91,16 +91,52 @@
     }
 
 
-    var $sidebar   = $(".anchor-links-sidebar > .sidebar-sticky > ul"), 
-        $window    = $(window),
+    var $sidebar   = $(".anchor-links-sidebar > .sidebar-sticky > ul");
+    if (!$sidebar.length) {
+    	$sidebar = $(".anchor-links-sidebar-left > .sidebar-sticky > ul");
+    }
+    var $window    = $(window),
         offset     = $sidebar.offset(),
-        topPadding = 30;
+        topPadding = 20;
         transition = 200;
-        transition = 0;
+        transition = 0,
+        minimize   = false;
 
-    if ($sidebar.length) {
+    var windowWidth = $(window).width();
+    $window.resize(function() {
+        windowWidth = $(window).width();
+	    if ($sidebar.length && (windowWidth > 991)) {
+		    $window.scroll(function() {
+		        if ($window.scrollTop() > offset.top && (windowWidth > 991)) {
+		            $sidebar.stop().animate({
+		                marginTop: $window.scrollTop() - offset.top + topPadding
+		            }, transition);
+		        } else {
+		            $sidebar.stop().animate({
+		                marginTop: 0
+		            }, transition);
+		        }
+		    });    	
+	    } else if (windowWidth < 992) {
+			var $stickyNavbar = $('#stickyNavbar');
+  
+		    $window.scroll(function() {
+		    	if ($window.scrollTop() > offset.top) {
+		    		if (!$stickyNavbar.hasClass('sticky')) {
+		    			$stickyNavbar.addClass('sticky');
+		    		}
+		    	} else {
+		    		if ($stickyNavbar.hasClass('sticky')) {
+		    			$stickyNavbar.removeClass('sticky');
+		    		}
+		        }
+		    });    	
+	    }
+    });
+
+    if ($sidebar.length && (windowWidth > 991)) {
 	    $window.scroll(function() {
-	        if ($window.scrollTop() > offset.top) {
+	        if ($window.scrollTop() > offset.top && (windowWidth > 991)) {
 	            $sidebar.stop().animate({
 	                marginTop: $window.scrollTop() - offset.top + topPadding
 	            }, transition);
@@ -110,7 +146,46 @@
 	            }, transition);
 	        }
 	    });    	
+    } else if (windowWidth < 992) {
+		var $stickyNavbar = $('#stickyNavbar');
+    	// var offset     = $stickyNavbar.offset();
+
+	    $window.scroll(function() {
+	    	if ($window.scrollTop() > offset.top) {
+	    		if (!$stickyNavbar.hasClass('sticky')) {
+	    			$stickyNavbar.addClass('sticky');
+	    		}		
+	    	} else {
+	    		if ($stickyNavbar.hasClass('sticky')) {
+	    			$stickyNavbar.removeClass('sticky');
+	    		}
+	        }
+	    });    	
     }
+
+    $('#anchorLinksCollapse a').on('click', function (e) {
+    	$('#stickyNavbar .navbar-toggler').click();
+    	if (!$('#stickyNavbar').hasClass('minimize')) {
+    		$('#stickyNavbar').addClass('minimize');
+    	}
+    });
+
+
+	var iScrollPos = 0;
+	$window.scroll(function () {
+	    var iCurScrollPos = $(this).scrollTop();
+	    if ((iScrollPos > 375) && (iCurScrollPos > iScrollPos)) {
+	    	if (!$('#stickyNavbar').hasClass('minimize')) {
+	    		$('#stickyNavbar').addClass('minimize');
+	    	}
+	    } else {
+	    	if ($('#stickyNavbar').hasClass('minimize')) {
+	    		$('#stickyNavbar').removeClass('minimize');
+	    	}
+	    }
+	    iScrollPos = iCurScrollPos;
+	});
+
 
 
     if ($('#mySyllabi').length) {

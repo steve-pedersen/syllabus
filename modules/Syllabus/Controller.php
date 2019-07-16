@@ -805,6 +805,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 $course->syllabus_id = $syllabus->id ?? '';
                 $course->save();
                 $courseData = $course->getData();
+                $courseData['semester'] = Syllabus_Admin_Semester::ConvertToTerm($courseData['semester'], true);
                 unset($courseData['id']);
                 $realSection->absorbData($courseData);
                 $realSection->save();

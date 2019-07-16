@@ -15,7 +15,7 @@
 	    </h5>
 	    {if $instructor->email}{$instructor->email}<br>{/if}
 	    {if $instructor->phone}{$instructor->phone}<br>{/if}
-	    {if $instructor->website}{l href=$instructor->website text=$instructor->website}<br>{/if}
+	    {if $instructor->website}<span class="dont-break-out">{l href=$instructor->website text=$instructor->website}</span><br>{/if}
 	</div>
 	<div class="col-4">
 		<h6 class="">Office Information</h6>

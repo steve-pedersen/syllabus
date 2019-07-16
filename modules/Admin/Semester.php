@@ -83,6 +83,31 @@ class Syllabus_Admin_Semester extends Bss_ActiveRecord_BaseWithAuthorization
         return $term . ' ' . $year;
     }
 
+    public static function ConvertToTerm ($term, $onlyTerm=false)
+    {
+        $term = (int) $term;
+
+        switch ($term) {
+            case 1:
+                $term = 'Winter';
+                break;
+            
+            case 3:
+                $term = 'Spring';
+                break;
+
+            case 5:
+                $term = 'Summer';
+                break;
+
+            case 7:
+                $term = 'Fall';
+                break;
+        }
+        
+        return $term;
+    }
+
     public static function ConvertToCode ($display)
     {
         $space = strpos($display, ' ');

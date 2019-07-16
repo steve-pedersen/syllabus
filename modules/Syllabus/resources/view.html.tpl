@@ -1,8 +1,39 @@
 <div class="row viewer-main-container">
 
-	<nav class="col-md-2 col-sm-12 col-xs-12 d-sm-block ml-auto anchor-links-sidebar-left bg-white text-dark">
+	<nav class="navbar navbar-expand-lg navbar-dark mobile-anchor-links" id="stickyNavbar">
+
+		<button class="navbar-toggler mr-3 d-block mx-auto text-light p-3" type="button" data-toggle="collapse" data-target="#anchorLinksCollapse" aria-controls="anchorLinksCollapse" aria-expanded="false" aria-label="Toggle navigation">
+			<i class="fas fa-anchor mr-2"></i> Jump to section...
+		</button>
+
+		<div class="collapse navbar-collapse" id="anchorLinksCollapse">
+			<!-- <span class="navbar-text mr-3 text-light"><strong>{$syllabus->title}</strong></span> -->
+			<ul class="navbar-nav ml-auto">
+				<li class="nav-item sidebar-anchor-item">
+					<a class="nav-link my-3" href="{$smarty.server.REQUEST_URI}#goToTop">
+					<strong class="text-info"><i class="fas fa-arrow-up pr-2"></i> Go To Top</strong>
+					</a>
+				</li>
+			{foreach $sectionVersions as $i => $sectionVersion}
+				{if ($sectionVersion->resolveSection()->id != $realSection->id) && $sectionVersion->isAnchored}
+					{assign var=ext value=$sectionVersion->extension}
+					{assign var=extName value=$ext::getExtensionName()}
+				<li class="nav-item sidebar-anchor-item">
+					<a class="nav-link" href="{$smarty.server.REQUEST_URI}#section{$extName}{$i}">
+					{if $sectionVersion->title}{$sectionVersion->title}{else}{$ext->getDisplayName()}{/if}
+					</a>
+				</li>
+				{/if}				
+			{/foreach}
+
+			</ul>
+		</div>
+	</nav>
+
+	<!-- <nav class="col-md-2 col-sm-12 col-xs-12 d-sm-block ml-auto anchor-links-sidebar-left bg-white text-dark"> -->
+	<nav class="col-2 ml-auto anchor-links-sidebar-left bg-white text-dark">
 		<div class="sidebar-sticky mt-5 py-3">
-			<ul class="nav flex-column mt-5 text-right text-primary">
+			<ul class="nav flex-column pt-5 text-right text-primary">
 				<li class="nav-item sidebar-anchor-item">
 					<a class="nav-link" href="{$smarty.server.REQUEST_URI}#goToTop">
 					<strong>Go To Top</strong> <i class="fas fa-arrow-up pl-2"></i> 
@@ -23,8 +54,8 @@
 		</div>
 	</nav>
 
-	<main role="main" class="col-lg-10 col-sm-12 col-xs-12 ml-sm-auto mt-0 px-3"> 	
-
+	<!-- <main role="main" class="col-lg-10 col-sm-12 col-xs-12 ml-sm-auto mt-0 px-3"> -->
+	<main role="main" class="col-lg-10 col-md-12 col-sm-12 ml-sm-auto mt-0 px-3">
 		<div class="row m-3">
 			<div class="left col-lg-6 mt-3">
 				{foreach $breadcrumbList as $crumb}

@@ -94,11 +94,8 @@
 					font-family: $brand-font-family;
 					font-weight: 500 !important;
 					font-size: 25pt;
-					// background-color: #fff;
-					// background-color: $navbar-bg-color;
 					line-height: 50px;
 					letter-spacing: 5px;
-					// padding-left: .5em;
 					padding-left: 0.5em;
 		    	}
 		    }
@@ -141,7 +138,7 @@
 
 		ul li a:hover {
 		    text-decoration: none;
-		    background-color: #13274D;
+		    background-color: $dark-2;
 		}
 
 		ul li a i {

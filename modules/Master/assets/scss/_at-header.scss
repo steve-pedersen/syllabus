@@ -86,11 +86,11 @@
 					transform: scaleX(1);
 				}
 				color: $navbar-default-link-color;
-				@media (max-width: 769px) {
+				@media (max-width: 991px) {
 					font-weight: 600;
 					&:hover,
 					&:focus {
-						background-color: $navbar-bg-color-2 !important;
+						// background-color: $navbar-bg-color-2 !important;
 						cursor: pointer;
 						transition: background-color 0.2s;
 					}
@@ -117,18 +117,29 @@
 		}
 		> .collapse {
 			> .logout-form {
-				@media (max-width: 768px) {
+				@media (max-width: 991px) {
 					text-align: center;
+					padding: 0.75rem !important;
+				}
+				button.logout {
+					color: $primary;
+					&:hover {
+						color: #fff;
+					}
 				}
 			}
 		}
+
 	}
+}
+.navbar-collapse {
+	max-height: calc(100vh - 50px);
+	overflow-y: auto;
 }
 
 @media (max-width: 768px) {
 	.at {
 		.navbar {
-
 			.nav-item {
 				.nav-link {
 					&.login-button {
@@ -152,11 +163,29 @@
 				margin-top: 0.65rem !important;
 				margin-bottom: 0.65rem !important;
 			}
-			.nav-item {
-				.nav-link {
-					// &:before {
-					// 	width: 35%;	
-					// }
+			.navbar-collapse {
+				background-color: $dark;
+				border-right: 1px solid $secondary;
+				border-left: 1px solid $secondary;
+				.nav-item {
+					.navbar-text {
+						font-size: 1.2em;
+						color: $light;
+					}
+					.nav-link {
+						color: #fff !important;
+						&:hover,
+						&:focus {
+							background-color: $dark-2 !important;
+						}						
+					}
+				}
+			}
+			.logout#logout-button {
+				color: $light;
+				border-color: $secondary;
+				&:hover {
+					color: #fff;
 				}
 			}
 		}
