@@ -66,21 +66,21 @@
     });
 
 
-    var message = 'You have unsaved changes. Are you sure you want to leave the page?';
-    $('#viewSections a#viewFromEditor').on('click', function(e) {
-      if ($('#viewSections').hasClass('dirty')) {
-        if (!window.confirm(message)) { 
-          e.preventDefault();
-        }
-      }
-    });
-    $('#viewSections').areYouSure( {
-      'message': message
-    } );
-    $('#viewSections #addSectionItemBtn').on('click', function (e) {
-      $('#viewSections').trigger('rescan.areYouSure');
-      $('#viewSections').trigger('checkform.areYouSure');
-    });
+    // var message = 'You have unsaved changes. Are you sure you want to leave the page?';
+    // $('#viewSections a#viewFromEditor').on('click', function(e) {
+    //   if ($('#viewSections').hasClass('dirty')) {
+    //     if (!window.confirm(message)) { 
+    //       e.preventDefault();
+    //     }
+    //   }
+    // });
+    // $('#viewSections').areYouSure( {
+    //   'message': message
+    // } );
+    // $('#viewSections #addSectionItemBtn').on('click', function (e) {
+    //   $('#viewSections').trigger('rescan.areYouSure');
+    //   $('#viewSections').trigger('checkform.areYouSure');
+    // });
     // $('#viewSections').on('submit')
 
     // TODO: ADD SOMETHING LIKE THIS IN. WONT CATCH FORMAT ONLY CHANGE (NO KEY EVENT)
