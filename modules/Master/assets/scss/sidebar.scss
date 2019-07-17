@@ -39,6 +39,15 @@
 		    padding: 20px 10px;
 		    text-align: center;
 		    font-size: 0.85em;
+		    // disable links from minimized sidebar
+		    &.sub-link {
+				cursor: default;
+				pointer-events: none;
+				&:hover,
+				&:focus {
+					background-color: $dark;
+				}
+		    }
 		}
 
 		&.active ul li a i {

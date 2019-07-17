@@ -141,9 +141,9 @@
 			<h1 class="display-4">{if $addSuccess}Success!{else}That didn't quite work...{/if}</h1>
 			<p class="lead text-center">
 				{if $addSuccess}
-					<i class="far fa-thumbs-up fa-5x text-success"></i>
+					<i class="far fa-thumbs-up fa-5x text-success mb-4"></i>
 				{else}
-					<i class="fas fa-exclamation-triangle fa-5x text-danger"></i>
+					<i class="fas fa-exclamation-triangle fa-5x text-danger mb-4"></i>
 				{/if}
 				<br>
 				{$addMessage}

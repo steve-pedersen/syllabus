@@ -18,7 +18,7 @@
 						<br><small>{$instructor->title}</small>
 					{/if}
 			    </h5>
-			    {if $instructor->email}{$instructor->email}<br>{/if}
+			    {if $instructor->email}{l href="mailto:{$instructor->email}" text=$instructor->email}<br>{/if}
 			    {if $instructor->phone}{$instructor->phone}<br>{/if}
 			    {if $instructor->website}<span class="dont-break-out">{l href=$instructor->website text=$instructor->website}</span><br>{/if}
 			</div>

@@ -73,7 +73,7 @@
         </div>
         <div class="col-1 text-truncate"><strong>#{$i+1}</strong></div>
         <div class="col-5 text-truncate"><strong>{$instructor->name|truncate:50}</strong></div>
-        <div class="col-5 text-truncate ">{$instructor->email|strip_tags:true|truncate:50}</div>
+        <div class="col-5 text-truncate ">{l href="mailto:{$instructor->email}" text=$instructor->email}</div>
     </div>   
 </div>
 

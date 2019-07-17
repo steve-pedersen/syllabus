@@ -3,7 +3,7 @@
 {foreach $realSection->teachingAssistants as $ta}
 <div class="col">
     <strong>{$ta->name}{if $ta->email} - {/if}</strong>
-    {l href=$ta->email text=$ta->email}
+   {if $ta->email}{l href="mailto:{$ta->email}"" text=$ta->email}{/if}
 </div>
 <div class="col">
     {$ta->additionalInformation}

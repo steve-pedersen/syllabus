@@ -47,17 +47,17 @@
 					</a>
 					<ul class="list-unstyled">
 						<li class="{if $page == 'start'}active{/if}">
-							<a class="" href="syllabus/start">
+							<a class="sub-link" href="syllabus/start">
 								<span class="sidebar-text">Create New Syllabus</span>
 							</a>
 						</li>
 						<li class="{if $page == 'overview'}active{/if}">
-							<a class="" href="syllabi?mode=overview">
+							<a class="sub-link" href="syllabi?mode=overview">
 								<span class="sidebar-text">Overview</span>
 							</a>
 						</li>
 						<li class="{if $page == 'courses'}active{/if}">
-							<a class="" href="syllabi?mode=courses">
+							<a class="sub-link" href="syllabi?mode=courses">
 								<span class="sidebar-text">Courses</span>
 							</a>
 						</li>
@@ -75,14 +75,14 @@
 					<ul class="list-unstyled">
 					{if (!empty($departments) && count($departments) > 1) || $pAdmin}
 						<li class="{if $page == 'departments'}active{/if}">
-							<a class="" href="departments">
+							<a class="sub-link" href="departments">
 								<span class="sidebar-text">Departments</span>
 							</a>
 						</li>
 					{elseif !empty($departments) && count($departments) == 1}
 						{foreach $departments as $dept}
 						<li class="{if $page == 'departments'}active{/if}">
-							<a class="" href="departments/{$dept->id}">
+							<a class="sub-link" href="departments/{$dept->id}">
 								<span class="sidebar-text">
 									{$dept->name}
 								</span>
@@ -95,14 +95,14 @@
 
 					{if (!empty($colleges) && count($colleges) > 1) || $pAdmin}
 						<li class="{if $page == 'colleges'}active{/if}">
-							<a class="" href="colleges">
+							<a class="sub-link" href="colleges">
 								<span class="sidebar-text">Colleges</span>
 							</a>
 						</li>
 					{elseif !empty($colleges) && count($colleges) == 1}
 						{foreach $colleges as $college}
 						<li class="{if $page == 'colleges'}active{/if}">
-							<a class="" href="colleges/{$college->id}">
+							<a class="sub-link" href="colleges/{$college->id}">
 								<span class="sidebar-text">
 									{$college->name}
 								</span>
