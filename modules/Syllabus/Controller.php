@@ -1409,30 +1409,41 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
     public function screenshot ()
     {
-        $tokenHeader = $this->requireExists($this->request->getHeader('X-Custom-Header'));
+        $this->setScreenshotTemplate();
 
-        $sid = $this->getRouteVariable('id');
-        $keyPrefix = sha1($sid) . '-';
-        $key = "{$keyPrefix}{$sid}";
-        $uid = Syllabus_Services_Screenshotter::CutUid($key);
+        $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
+        $sections = $this->schema('Syllabus_Syllabus_Section');
+        
+        $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
+        $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
 
-        if ($tokenHeader && $uid && ($tokenHeader == $uid))
-        {
-            $this->setScreenshotTemplate();
+        $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);   
 
-            $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
-            $sections = $this->schema('Syllabus_Syllabus_Section');
+
+        // $tokenHeader = $this->requireExists($this->request->getHeader('X-Custom-Header'));
+
+        // $sid = $this->getRouteVariable('id');
+        // $keyPrefix = sha1($sid) . '-';
+        // $key = "{$keyPrefix}{$sid}";
+        // $uid = Syllabus_Services_Screenshotter::CutUid($key);
+
+        // if ($tokenHeader && $uid && ($tokenHeader == $uid))
+        // {
+        //     $this->setScreenshotTemplate();
+
+        //     $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
+        //     $sections = $this->schema('Syllabus_Syllabus_Section');
             
-            $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
-            $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
+        //     $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
+        //     $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
 
-            $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
-        }
-        else
-        {
-            http_response_code (401);
-            die;        
-        }
+        //     $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
+        // }
+        // else
+        // {
+        //     http_response_code (401);
+        //     die;        
+        // }
     }
 
     /**

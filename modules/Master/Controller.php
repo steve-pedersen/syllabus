@@ -109,7 +109,7 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
         
         $this->template->page = $page;
 
-        if ($this->getUserContext())
+        if ($callback !== 'screenshot')
         {
             $this->template->privilegedOrganizations = $this->getPrivelegedUserOrganizations();
         }
