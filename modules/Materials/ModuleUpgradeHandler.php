@@ -29,6 +29,17 @@ class Syllabus_Materials_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModul
                 $def->save();
 
                 break;
+
+            case 1:
+
+                $def = $this->alterEntityType(
+                    'syllabus_materials_materials', $this->getDataSource('Syllabus_Materials_Material')
+                );
+                $def->addProperty('publisher', 'string');
+                $def->addProperty('isbn', 'string');
+                $def->save();
+                
+                break;
         }
     }
 }
