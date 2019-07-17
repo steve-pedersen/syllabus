@@ -40,7 +40,7 @@
             });
         }
     });
-    $('.sort-container').disableSelection();
+    // $('.sort-container').disableSelection();
 
     // DatePicker 
     $.datepicker.setDefaults(
