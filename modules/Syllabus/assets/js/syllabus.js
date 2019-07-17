@@ -62,8 +62,10 @@
 		let id = cardBody.attr('id');
 		let title = cardBody.find('#title'+id);
 		let img = cardBody.find('#image'+id);
+		let resourceId = cardBody.find('#campusResourceId'+id).val();
 		$('#addTitle').html(title.html());
 		$('#addImage').attr('src', img.attr('src')).attr('alt', img.attr('alt'));
+		$('#resourceToSyllabiBtn').attr('name','command[resourceToSyllabi]['+resourceId+']');
 	});
 	$('#resourceAddModal').on('hide.bs.modal', function(e) {
 		$(this).find('[id^=overlayCheck]:checked').each(function(i, em) {
@@ -90,6 +92,12 @@
     	}
     }
 
+    if ($('#toggleSummaryModal').length) {
+    	$('#toggleSummaryModal').click();
+    }
+	$('#resourceAddSummaryModal').on('hidden.bs.modal', function (e) {
+		window.location.replace(window.location.href);
+	});
 
     var $sidebar   = $(".anchor-links-sidebar > .sidebar-sticky > ul");
     if (!$sidebar.length) {

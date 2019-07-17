@@ -20,7 +20,7 @@
 		<link href="https://fonts.googleapis.com/css?family=Vollkorn+SC&display=swap" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Vollkorn&display=swap" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Old+Standard+TT&display=swap" rel="stylesheet">
-
+		<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
 		<!-- <link rel="shortcut icon" type="image/x-icon" href="assets/icons/logo-3-128.png" /> -->
 		<link rel="shortcut icon" type="image/x-icon" href="assets/icons/logo_square_128-01.png"  />
 		<script>document.write('<link rel="stylesheet" type="text/css" href="assets/css/app-js.css" media="screen">');</script>

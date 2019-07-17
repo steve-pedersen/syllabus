@@ -1,7 +1,5 @@
 <?php
 
-// BUG: app.js:4 Uncaught CKEditor is not initialized yet, use ckeditor() with a callback.
-
 /**
  * Handles main business logic for entity/user syllabi.
  * 
@@ -9,6 +7,8 @@
  * @copyright   Copyright &copy; San Francisco State University
  */
 class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
+
+    private $_keyPrefix;
 
     public static function getRouteMap ()
     {
@@ -106,7 +106,23 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $syllabus = $this->startWith($universityTemplate, true, true);
 
             switch ($this->getPostCommand()) {
-                
+                case 'resourceToSyllabi':
+                    $resourceId = key($this->getPostCommandData());
+                    $data = $this->request->getPostParameters();
+                    $this->template->showSaveResourceModal = true;
+                    
+                    $addMessage = 'No syllabi were selected';
+                    if (isset($data['syllabi']))
+                    {
+                        $results = $this->saveResourceToSyllabi($resourceId, $data['syllabi']);
+                        $addSuccess = isset($results['status']) && ($results['status'] === 'success');
+                        $addMessage = $results['message'];
+                    }
+
+                    $this->template->addSuccess = $addSuccess;
+                    $this->template->addMessage = $addMessage;
+                    break;
+
                 case 'courseNew':
                     list($success, $newSyllabusVersion) = $this->createCourseSyllabus($syllabus->id, $courseSection);
                     if ($success)
@@ -941,6 +957,102 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         return [$anyChange, $newSyllabusVersion];
     }
 
+    private function saveResourceToSyllabi ($resourceId, $syllabiIds)
+    {
+        $viewer = $this->requireLogin();
+        $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
+        $sections = $this->schema('Syllabus_Syllabus_Section');
+        $sectionVersions = $this->schema('Syllabus_Syllabus_SectionVersion');
+        $campusResources = $this->schema('Syllabus_Syllabus_CampusResource');
+        $resources = $this->schema('Syllabus_Resources_Resources');
+        
+        if ($campusResource = $campusResources->get($resourceId))
+        {
+            $numberUpdated = 0;
+            foreach ($syllabiIds as $syllabusId)
+            {
+                if ($syllabus = $syllabi->get($syllabusId))
+                {
+                    $newResource = $this->schema('Syllabus_Resources_Resource')->createInstance();
+                    $syllabusVersion = $syllabus->latestVersion;
+                    $syllabusSectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
+                    $resourcesSectionVersion = null;
+                    $resourcesSection = null;
+                    $realSection = null;
+                    foreach ($syllabusSectionVersions as $sv)
+                    {
+                        if (isset($sv->resources_id))
+                        {
+                            $resourcesSectionVersion = $sv;
+                            $resourcesSection = $sv->section;
+                            $resourcesSection->modifiedDate = new DateTime;
+                            $realSection = $sv->resolveSection();
+                            break;
+                        }
+                    }
+
+                    if (!$resourcesSectionVersion)
+                    {
+                        $realSection = $resources->createInstance();
+                        $resourcesSection = $sections->createInstance();
+                        $resourcesSectionVersion = $sectionVersions->createInstance();
+                        $realSection->save();
+                        $resourcesSection->createdById = $viewer->id;
+                        $resourcesSection->createdDate = new DateTime;
+                        $resourcesSection->modifiedDate = new DateTime;
+                        $resourcesSection->save();
+                        $resourcesSectionVersion->title = 'Resources';
+                        $resourcesSectionVersion->createdDate = new DateTime;
+                        $resourcesSectionVersion->sectionId = $resourcesSection->id;
+                        $resourcesSectionVersion->resources_id = $realSection->id;
+                        $resourcesSectionVersion->save();
+                        $syllabusVersion->sectionVersions->add($resourcesSectionVersion);
+                        $sortOrder = @count($syllabusSectionVersions) + 1 ?? 1;
+                        $syllabusVersion->sectionVersions->setProperty($resourcesSectionVersion, 'sort_order', $sortOrder);
+                        $syllabusVersion->sectionVersions->setProperty($resourcesSectionVersion, 'is_anchored', true);
+                        $syllabusVersion->save();
+                        $syllabusVersion->sectionVersions->save();
+                    }
+                    $sortOrder = isset($realSection->resources) ? @count($realSection->resources)+1 : 1;
+                    $resourceData = $campusResource->getData();
+                    unset($resourceData['id']);
+                    unset($resourceData['image']);
+                    $newResource->absorbData($resourceData);
+                    $newResource->campusResourcesId = $campusResource->id;
+                    $newResource->resources_id = $realSection->id;
+                    $newResource->sortOrder = $sortOrder;
+                    $newResource->isCustom = false;
+                    $newResource->save();
+
+                    $syllabus->modifiedDate = new DateTime;
+                    $syllabus->save();
+                    $syllabusVersion->createdDate = new DateTime;
+                    $syllabusVersion->save();
+
+                    $numberUpdated++;
+                }
+            }
+
+            $results = [
+                'message' => 'Success! You added '.$campusResource->title.' resource to '.$numberUpdated.' syllabi.',
+                'status' => 'success',
+                'data' => ''
+            ];
+        }
+        else
+        {
+            $results = [
+                'message' => 'An incorrect resource was attempted to be saved.',
+                'status' => 'error',
+                'data' => ''
+            ];
+        }
+
+        return $results;
+        // echo json_encode($results);
+        // exit;  
+    }
+
     private function createCourseSyllabus ($versionId, $fromCourseSection, $inherited=false)
     {
         $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
@@ -1241,34 +1353,86 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $urls = [];
         $messages = [];
         $uid = $viewer->id;
+        $uid = sha1($syllabusId);
+        $checkFailCache = false;
 
-        $keyPrefix = "{$uid}-";
-        $screenshotter = $screenshotter ?? new Syllabus_Services_Screenshotter($this->getApplication());
-        $screenshotter->saveUids($uid, $syllabus->id);
+        if ($checkFailCache)
+        {
+            if ($this->cacheFail($syllabusId, true))
+            {
+                $results = new stdClass;
+                $results->imageUrls = new stdClass;
+                $results->imageUrls->$syllabusId = 'assets/images/testing01.jpg';                         
+            }
+            else
+            {
+                $keyPrefix = "{$uid}-";
+                $screenshotter = $screenshotter ?? new Syllabus_Services_Screenshotter($this->getApplication());
+                $screenshotter->saveUids($uid, $syllabus->id);
 
-        $urls[$syllabus->id] = $this->baseUrl("syllabus/{$syllabus->id}/screenshot");
-        $results = $screenshotter->concurrentRequests($urls, $cacheImages, $keyPrefix);
-        $results = json_decode($results);
+                $urls[$syllabus->id] = $this->baseUrl("syllabus/{$syllabus->id}/screenshot");
+                $results = $screenshotter->concurrentRequests($urls, $cacheImages, $keyPrefix);
+                $results = json_decode($results);
+
+                if (isset($results->messages) && $results->messages !== '' && $results->messages !== [])         
+                {
+                    $results->imageUrls->$syllabusId = 'assets/images/testing01.jpg';
+                    $this->cacheFail($syllabusId);
+                }
+            }
+        }
+        else
+        {
+            $keyPrefix = "{$uid}-";
+            $screenshotter = $screenshotter ?? new Syllabus_Services_Screenshotter($this->getApplication());
+            $screenshotter->saveUids($uid, $syllabus->id);
+
+            $urls[$syllabus->id] = $this->baseUrl("syllabus/{$syllabus->id}/screenshot");
+            $results = $screenshotter->concurrentRequests($urls, $cacheImages, $keyPrefix);
+            $results = json_decode($results);
+        }
 
         return $results;
     }
 
+    private function cacheFail ($sid, $checkCached=false)
+    {
+        $cookieName = 'syllabus-screenshot-fail-'.$sid;
+        $cookieValue = $sid;
+
+        if ($checkCached && isset($_COOKIE[$cookieName]) && $_COOKIE[$cookieName] !== $cookieValue)
+        {
+            return true;
+        }
+        setcookie($cookieName, $cookieValue, time()+60*60, '/');
+    }
+
     public function screenshot ()
     {
-        // $viewer = $this->requireLogin();
+        $tokenHeader = $this->requireExists($this->request->getHeader('X-Custom-Header'));
 
-        $this->setScreenshotTemplate();
+        $sid = $this->getRouteVariable('id');
+        $keyPrefix = sha1($sid) . '-';
+        $key = "{$keyPrefix}{$sid}";
+        $uid = Syllabus_Services_Screenshotter::CutUid($key);
 
-        $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
-        $sections = $this->schema('Syllabus_Syllabus_Section');
-        
-        $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
-        $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
+        if ($tokenHeader && $uid && ($tokenHeader == $uid))
+        {
+            $this->setScreenshotTemplate();
 
+            $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
+            $sections = $this->schema('Syllabus_Syllabus_Section');
+            
+            $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
+            $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
 
-        $this->template->syllabus = $syllabus;
-        $this->template->syllabusVersion = $syllabusVersion;
-        $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
+            $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
+        }
+        else
+        {
+            http_response_code (401);
+            die;        
+        }
     }
 
     /**

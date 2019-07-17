@@ -32,9 +32,11 @@ class Syllabus_Services_Screenshotter
 
     public function __construct($app, $options=array(), $defaultImgName='')
     {
+        // echo "<pre>"; var_dump($test); die;
         $siteSettings = $app->siteSettings;
         $defaultOptions = array(
-            'appName'   => ($app->configuration->appName ?? get_class($this)),
+            // 'appName'   => ($app->configuration->appName ?? get_class($this)),
+            'appName'   => sha1($app->baseUrl('')),
             'type'      => 'jpeg',
             'quality'   => '100',
             'width'     => '1024',
@@ -80,7 +82,7 @@ class Syllabus_Services_Screenshotter
 
     public function concurrentRequests ($captureUrls, $cachedVersions=true, $tokenPrefix='')
     {
-        $results = $imageUrls = $responses = $messages = $promises = array();
+        $results = $imageUrls = $responses = $messages = $promises = $options = array();
 
         // Initiate each request but do not block
         try {
@@ -89,7 +91,8 @@ class Syllabus_Services_Screenshotter
             {
                 $imageUrls[$key] = $this->defaultImgName;
                 $token = $this->redisClient->get($tokenPrefix . $key);
-				$options = array('headers' => array('Access-Token' => $token));
+                // echo "<pre>"; var_dump($token); die;
+				$options = array('headers' => array('X-Custom-Header' => $token));
                 $promises[$key] = $this->client->getAsync('?url=' . urlencode($url) . $query, $options);
             }
         // } catch (GuzzleHttp\Exception\ConnectException $e) {
@@ -179,6 +182,7 @@ class Syllabus_Services_Screenshotter
     {
         $path = 'assets/images/';
         $imageName = 'screenshotter_sfsu_default.jpg';
+        $imageName = 'testing01.jpg';
 
         if (($defaultImgName !== '') && (file_exists($path . $defaultImgName)))
         {

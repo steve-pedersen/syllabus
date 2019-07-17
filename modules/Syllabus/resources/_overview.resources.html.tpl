@@ -15,6 +15,7 @@
 	<div class="col-lg-4 col-md-6">
 		<div class="card h-100">
 			<div class="card-body" id="{$i}">
+				<input type="hidden" value="{$campusResource->id}" id="campusResourceId{$i}">
 				<div class="media campus-resource">
 					<img class="align-self-center mr-2 ml-0 img-thumbnail w-25" id="image{$i}" src="{$campusResource->imageSrc}" alt="{$campusResource->title}">
 					<div class="media-body pl-1">
@@ -49,9 +50,14 @@
 {/if}
 </div>
 
+{if $showSaveResourceModal}
+<button class="d-none" id="toggleSummaryModal" data-toggle="modal" data-target="#resourceAddSummaryModal" style=""></button>
+{/if}
+
 <!-- Add to Syllabus Modal -->
 <div class="modal fade" id="resourceAddModal" tabindex="-1" role="dialog" aria-labelledby="addTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-lg modal-sm" role="document">
+<form method="post" action="{$smarty.server.REQUEST_URI|escape}">
     <div class="modal-content">
 	<div class="modal-header">
 		<div class="modal-title d-block-inline">
@@ -66,6 +72,7 @@
 		<span id="addText"></span>
 	</div>
 	<div class="modal-body">
+		
 		<div class="container-fluid">
 			<p class="text-muted">Click on each syllabus that you want to import this resource into.</p>
 			<h6 class="">Most recent syllabi:</h6>
@@ -79,7 +86,7 @@
 					<div class="card-body h-100">
 						<div class="ml-auto text-right">
 							<div class="form-check">
-								<input data-index="{$i}" type="checkbox" class="form-check-input overlay-checkbox" id="overlayCheck{$i}" value="{$syllabus->id}">
+								<input data-index="{$i}" type="checkbox" class="form-check-input overlay-checkbox" id="overlayCheck{$i}" name="syllabi[]" value="{$syllabus->id}">
 							</div>
 						</div>
 						<div class="card-img-top-overlay p-0">
@@ -111,7 +118,44 @@
 	</div>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-		<button type="button" class="btn btn-success">Add Resource to Selected Syllabi</button>
+		<button type="submit" class="btn btn-success" id="resourceToSyllabiBtn" name="command[resourceToSyllabi][]">Add Resource to Selected Syllabi</button>
+	</div>
+    </div>
+<div>{generate_form_post_key}</div>
+</form>
+  </div>
+</div>
+
+<!-- Add to Syllabus Summary Modal -->
+<div class="modal fade" id="resourceAddSummaryModal" tabindex="-1" role="dialog" aria-labelledby="addTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-sm" role="document">
+    <div class="modal-content">
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+			<span aria-hidden="true">&times;</span>
+		</button>
+		<span id="addText"></span>
+	</div>
+	<div class="modal-body">
+		<div class="jumbotron">
+			<h1 class="display-4">{if $addSuccess}Success!{else}That didn't quite work...{/if}</h1>
+			<p class="lead text-center">
+				{if $addSuccess}
+					<i class="far fa-thumbs-up fa-5x text-success"></i>
+				{else}
+					<i class="fas fa-exclamation-triangle fa-5x text-danger"></i>
+				{/if}
+				<br>
+				{$addMessage}
+			</p>
+			{if !$addSuccess}
+				<hr class="my-4">
+				<p>You can still add resources to your syllabi by simply editing the resource section of each syllabus.</p>
+			{/if}
+		</div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 	</div>
     </div>
   </div>

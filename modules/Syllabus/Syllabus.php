@@ -34,12 +34,12 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
     }
 
     // $withExt - adds a 'section' property to the section object containing it's extension
-    public function getSections ($withExt=false)
+    public function getSections ($withExt=true)
     {
         $sections = null;
         if ($this->getLatestVersion())
         {
-            $sections = $this->getLatestVersion()->getSections($withExt);
+            $sections = $this->getLatestVersion()->getSectionVersionsWithExt($withExt);
         }
         return $sections;
     }
