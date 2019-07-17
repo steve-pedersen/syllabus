@@ -3,7 +3,12 @@
 <div class="col">
 <ul class="">
 {foreach $realSection->materials as $material}
-<li>{$material->title} - <span class="dont-break-out">{l text=$material->url href=$material->url}</span> {if $material->required} <span class="text-danger">*Required</span>{/if}</li>
+	<li>
+		<em>{$material->title}</em>  {if $material->required} <span class="ml-3 text-danger">*Required</span>{/if}
+		{if $material->url}<span class="ml-3"></span><span class="dont-break-out">{l text=$material->url href=$material->url}</span>{/if}
+		{if $material->publisher}<span class="ml-3"></span><strong>Publisher: </strong>{$material->publisher}{/if}
+		{if $material->isbn}<span class="ml-3"></span><strong>ISBN: </strong>{$material->isbn}{/if}
+	</li>
 {/foreach}
 </ul>
 </div>

@@ -21,15 +21,27 @@
                     </button>
                 </div>
                 <div class="form-group title row px-3">
-                    <label class="col-lg-3 col-form-label form-control-label">Material #{$i+1} Title</label>
+                    <label class="col-lg-3 col-form-label form-control-label">Title</label>
                     <div class="col-lg-9">
                         <input class="form-control" type="text" name="section[real][{$materialId}][title]" value="{$material->title}">
                     </div>
                 </div>
                 <div class="form-group url row px-3">
-                    <label class="col-lg-3 col-form-label form-control-label">Material #{$i+1} URL</label>
+                    <label class="col-lg-3 col-form-label form-control-label">URL</label>
                     <div class="col-lg-9">
                         <input class="form-control" type="text" name="section[real][{$materialId}][url]" value="{$material->url}">
+                    </div>
+                </div>
+                <div class="form-group publisher row px-3">
+                    <label class="col-lg-3 col-form-label form-control-label">Publisher</label>
+                    <div class="col-lg-9">
+                        <input class="form-control" type="text" name="section[real][{$materialId}][publisher]" value="{$material->publisher}">
+                    </div>
+                </div>
+                <div class="form-group isbn row px-3">
+                    <label class="col-lg-3 col-form-label form-control-label">ISBN</label>
+                    <div class="col-lg-9">
+                        <input class="form-control" type="text" name="section[real][{$materialId}][isbn]" value="{$material->isbn}">
                     </div>
                 </div>
                 <div class="form-group required row px-3">
@@ -52,11 +64,13 @@
                         <i class="fas fa-bars text-dark" data-toggle="tooltip" data-placement="top" title="Click and drag to change the order."></i>
                     </div>
                     <div class="col-1 text-truncate"><strong>#{$i+1}</strong></div>
-                    <div class="col-5 text-truncate"><strong>Title: </strong>{$material->title|truncate:50}</div>
+                    <div class="col-3 text-truncate"><strong>Title: </strong>{$material->title|truncate:50}</div>
                     <div class="col-3 text-truncate ">
                         <strong>URL: </strong><a href="{$material->url}">{$material->url|strip_tags:true|truncate:30}</a>
                     </div>
-                    <div class="col-2 text-truncate">
+                    <div class="col-2 text-truncate">{$material->publisher|truncate:50}</div>
+                    <div class="col-1 text-truncate">{$material->isbn|truncate:50}</div>
+                    <div class="col-1 text-truncate">
                         {if $material->required}<span class="text-danger">Required</span>{/if}
                     </div>
                 </div>   
@@ -83,20 +97,33 @@
             
 <div class="sort-item mt-3 border p-2" id="newSortItem{$i}">
     <div class="mb-2 d-flex flex-row bg-white p-2 dragdrop-handle">
-         <i class="fas fa-bars text-dark" data-toggle="tooltip" data-placement="top" title="Click and drag to change the order."></i>
+        <i class="fas fa-bars text-dark" data-toggle="tooltip" data-placement="top" title="Click and drag to change the order."></i>
+    <!-- <span class="mx-auto">Note, this new item will only be saved if you fill out information in the fields.</span> -->
     </div>
    
     <input type="hidden" name="section[real][{$materialId}][sortOrder]" value="{$sortOrder}" class="sort-order-value" id="form-field-{$sortOrder}-sort-order">
     <div class="form-group title row">
-        <label class="col-lg-3 title col-form-label form-control-label">Material #{$i+1} Title</label>
+        <label class="col-lg-3 title col-form-label form-control-label">Title</label>
         <div class="col-lg-9">
             <input class="form-control" type="text" name="section[real][{$materialId}][title]" value="">
         </div>
     </div>
     <div class="form-group url row">
-        <label class="col-lg-3 url col-form-label form-control-label">Material #{$i+1} URL</label>
+        <label class="col-lg-3 url col-form-label form-control-label">URL</label>
         <div class="col-lg-9">
             <input class="form-control" type="text" name="section[real][{$materialId}][url]" value="">
+        </div>
+    </div>
+    <div class="form-group publisher row">
+        <label class="col-lg-3 publisher col-form-label form-control-label">Publisher</label>
+        <div class="col-lg-9">
+            <input class="form-control" type="text" name="section[real][{$materialId}][publisher]" value="">
+        </div>
+    </div>
+    <div class="form-group isbn row">
+        <label class="col-lg-3 isbn col-form-label form-control-label">ISBN</label>
+        <div class="col-lg-9">
+            <input class="form-control" type="text" name="section[real][{$materialId}][isbn]" value="">
         </div>
     </div>
     <div class="form-group required row">
@@ -114,7 +141,8 @@
     </div>
 </div>  
             
-    <div class="form-group d-flex flex-row-reverse mt-4">
+    <div class="form-group d-flex flex-row mt-4">
+        <small class="alert alert-muted mr-auto mt-3">Note, new material items will be saved <u>only</u> if you fill out information in the fields above.</small>
         <input class="btn btn-light" id="addMaterialsSectionItemBtn" type="submit" name="command[addsectionitem][{$realSectionClass}]" value="+ Add Another Material" />
     </div>
 
