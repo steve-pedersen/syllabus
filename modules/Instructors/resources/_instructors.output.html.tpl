@@ -1,8 +1,8 @@
 {assign var=realSection value=$sectionVersion->resolveSection()}
 {if count($realSection->instructors) > 1}
-<h2 class="real-section-title instructors-title">
-	---
-</h2>
+<!-- <h3 class="real-section-title instructors-title">
+	
+</h3> -->
 {/if}
 <div class="real-section-content instructors-description">
 	<div class="col">

@@ -1,6 +1,6 @@
 {assign var=realSection value=$sectionVersion->resolveSection()}
 
-<h2 class="real-section-title course-info-title">{$realSection->title}</h2>
+<h3 class="real-section-title course-info-title">{$realSection->title}</h3>
 <div class="real-section-content course-info-content">
 	<dl class="">
 		<dt class="class-number-label">Class Number</dt>

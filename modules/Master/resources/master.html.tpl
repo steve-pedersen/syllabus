@@ -32,7 +32,7 @@
     <div class="wrapper" id="mainTemplate">
 	{if $viewer}
         <!-- Sidebar  -->
-        <nav id="sidebar" class="bg-dark">
+        <nav id="sidebar" class="bg-dark {if $sidebarMinimized}active{/if}">
             <div class="sidebar-header bg-light navbar">
             	<div class="navbar-brand d-block-inline  d-flex justify-content-between">
                 <a class="" href="{$baseUrl}">
