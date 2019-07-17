@@ -99,16 +99,12 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         if ($this->request->wasPostedByUser())
         {    
-            $courseSection = $courseSections->get(key($this->getPostCommandData()));
             $data = $this->request->getPostParameters();
 
-            $universityTemplate = $this->requireExists($syllabi->get($templateId));
-            $syllabus = $this->startWith($universityTemplate, true, true);
-
             switch ($this->getPostCommand()) {
+                
                 case 'resourceToSyllabi':
                     $resourceId = key($this->getPostCommandData());
-                    $data = $this->request->getPostParameters();
                     $this->template->showSaveResourceModal = true;
                     
                     $addMessage = 'No syllabi were selected';
@@ -124,6 +120,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     break;
 
                 case 'courseNew':
+                    $courseSection = $courseSections->get(key($this->getPostCommandData()));
+                    $universityTemplate = $this->requireExists($syllabi->get($templateId));
+                    $syllabus = $this->startWith($universityTemplate, true, true);
                     list($success, $newSyllabusVersion) = $this->createCourseSyllabus($syllabus->id, $courseSection);
                     if ($success)
                     {
@@ -133,6 +132,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     break;
 
                 case 'courseClone':
+                    $courseSection = $courseSections->get(key($this->getPostCommandData()));
                     $pastSyllabus = isset($data['courseSyllabus']) ? $syllabi->get(isset($data['courseSyllabus'])) : null;
                         
                     if ($pastSyllabus && $this->hasCloningPermission($pastSyllabus, $viewer))
@@ -965,7 +965,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $sectionVersions = $this->schema('Syllabus_Syllabus_SectionVersion');
         $campusResources = $this->schema('Syllabus_Syllabus_CampusResource');
         $resources = $this->schema('Syllabus_Resources_Resources');
-        
+        $syllabiIds = array_reverse($syllabiIds);
+
         if ($campusResource = $campusResources->get($resourceId))
         {
             $numberUpdated = 0;
@@ -979,6 +980,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $resourcesSectionVersion = null;
                     $resourcesSection = null;
                     $realSection = null;
+                    
                     foreach ($syllabusSectionVersions as $sv)
                     {
                         if (isset($sv->resources_id))
@@ -1033,8 +1035,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 }
             }
 
+            $endOfMsg = $numberUpdated . (($numberUpdated > 1) ? ' syllabi.' : ' syllabus.');
+
             $results = [
-                'message' => 'Success! You added '.$campusResource->title.' resource to '.$numberUpdated.' syllabi.',
+                'message' => 'Success! You added the '.$campusResource->title.' resource to '.$endOfMsg,
                 'status' => 'success',
                 'data' => ''
             ];

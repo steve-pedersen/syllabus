@@ -91,7 +91,6 @@ class Syllabus_Services_Screenshotter
             {
                 $imageUrls[$key] = $this->defaultImgName;
                 $token = $this->redisClient->get($tokenPrefix . $key);
-                // echo "<pre>"; var_dump($token); die;
 				$options = array('headers' => array('X-Custom-Header' => $token));
                 $promises[$key] = $this->client->getAsync('?url=' . urlencode($url) . $query, $options);
             }
