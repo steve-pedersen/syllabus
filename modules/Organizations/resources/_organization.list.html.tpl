@@ -5,8 +5,8 @@
 		<p class="card-text">{$organization->description}</p>
 		<div class="d-flex justify-content-between align-items-center">
 			<div class="">
-				<!-- <a href="{$organization->routeName}/{$organization->id}" class="btn btn-outline-primary">View</a> -->
-				<button class="btn btn-outline-info btn-lg" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<a href="{$organization->routeName}/{$organization->id}" class="btn btn-outline-primary">View</a>
+<!-- 				<button class="btn btn-outline-info btn-lg" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					Options &nbsp;<i class="fas fa-ellipsis-v"></i>
 				</button>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -34,12 +34,9 @@
 					<a href="{$organization->routeName}/{$organization->id}/communications/new" class="dropdown-item">Send Communication</a>
 					<a href="{$organization->routeName}/{$organization->id}/communications" class="dropdown-item">View Communications</a>
 				{/if}
-				</div>
+				</div> -->
 			</div>
 
 		</div>
 	</div>
-<!-- 	<div class="card-footer text-muted">
-		<small class="text-muted">Last modified - {$organization->modifiedDate->format('M d, Y')}</small>
-	</div> -->
 </div>

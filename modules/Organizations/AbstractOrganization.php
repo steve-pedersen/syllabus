@@ -68,10 +68,10 @@ abstract class Syllabus_Organizations_AbstractOrganization extends Bss_ActiveRec
     ];
     public static $RoleDisplayNames = [
         'member'                => 'Member',
-        'communicator'          => 'Communicator',
+        // 'communicator'          => 'Communicator',
         'creator'               => 'Creator',
-        'repository_manager'    => 'Repository Manager',
-        'moderator'             => 'Moderator',
+        // 'repository_manager'    => 'Repository Manager',
+        // 'moderator'             => 'Moderator',
         'manager'               => 'Manager',
     ];
     public static $RoleDefaultHelpText = [
@@ -161,10 +161,10 @@ abstract class Syllabus_Organizations_AbstractOrganization extends Bss_ActiveRec
         $authZ = $this->application->authorizationManager;
         $userRoles = [
             'member' => $authZ->hasPermission($user, self::$RoleDefinitions['member'], $this),
-            'communicator' => $authZ->hasPermission($user, self::$RoleDefinitions['communicator'], $this),
+            // 'communicator' => $authZ->hasPermission($user, self::$RoleDefinitions['communicator'], $this),
             'creator' => $authZ->hasPermission($user, self::$RoleDefinitions['creator'], $this),
-            'repository_manager' => $authZ->hasPermission($user, self::$RoleDefinitions['repository_manager'], $this),
-            'moderator' => $authZ->hasPermission($user, self::$RoleDefinitions['moderator'], $this),
+            // 'repository_manager' => $authZ->hasPermission($user, self::$RoleDefinitions['repository_manager'], $this),
+            // 'moderator' => $authZ->hasPermission($user, self::$RoleDefinitions['moderator'], $this),
             'manager' => $authZ->hasPermission($user, self::$RoleDefinitions['manager'], $this),
         ];
         if ($display)
@@ -209,16 +209,22 @@ abstract class Syllabus_Organizations_AbstractOrganization extends Bss_ActiveRec
      * @param $role should be one of 'role keys' such as 'member' or 'manager'
      * @return array of Bss_AuthN_Accounts
      */  
-    public function getRoleUsers ($role, $reload=true)
+    public function getRoleUsers ($role, $reload=true, $condition=null, $optionMap=[])
     {
         $authZ = $this->application->authorizationManager;
         $roleKey = '_' . $role . 's';
         if ($reload)
         {
             $userAzids = $authZ->getSubjectsWhoCan(self::$RoleDefinitions[$role], $this);
-            $this->$roleKey = $this->getSchema('Bss_AuthN_Account')->getByAzids($userAzids);
+            $this->$roleKey = $this->getSchema('Bss_AuthN_Account')->getByAzids($userAzids, $condition, $optionMap);
         }
         return $this->$roleKey;
+    }
+
+    public function getRoleUserCount ($role, $reload=true, $condition=null, $optionMap=[])
+    {
+        $optionMap['count'] = true;
+        return $this->getRoleUsers($role, $reload, $condition, $optionMap);
     }
 
     public function requireRole ($role, $ctrl)

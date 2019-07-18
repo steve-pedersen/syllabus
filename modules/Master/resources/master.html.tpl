@@ -233,7 +233,7 @@
 				</nav>
 		        <div class="bc">
 					{if $breadcrumbList}
-					<div class="container">
+					<div class="container-fluid">
 						<div class="col">
 						<ol class="at breadcrumb">
 							{foreach name="breadcrumbs" item="crumb" from=$breadcrumbList}

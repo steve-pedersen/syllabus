@@ -794,12 +794,20 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         $routeBase = $this->getRouteVariable('routeBase', '');
         $organization = $this->getRouteVariable('organization', null);
+        if ($organization)
+        {
+            $this->template->addBreadcrumb($routeBase, $organization->name . ' Home');
+        }
+        else
+        {
+            $this->template->addBreadcrumb('syllabi', 'My Syllabi');
+        }
 
         $pathParts = [];
         $pathParts[] = $this->getRouteVariable('routeBase');
         $pathParts[] = 'syllabus';
 
-        $this->template->addBreadcrumb('syllabi', 'My Syllabi');
+        // $this->template->addBreadcrumb('syllabi', 'My Syllabi');
         $this->template->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);
         $this->template->editable = $editable;
         $this->template->title = $title;

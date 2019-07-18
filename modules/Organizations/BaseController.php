@@ -10,7 +10,6 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
     public function dashboard ()
     {
-        
         $organization = $this->getOrganization($this->getRouteVariable('oid'));
         $this->template->organization = $organization;
         $this->buildHeader('partial:_header.html.tpl', 'Dashboard', $organization->name, '');
@@ -19,14 +18,97 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         $this->addBreadcrumb($organization->routeName, ucfirst($organization->routeName));
     }
 
+    public function start ()
+    {
+        $organization = $this->getOrganization($this->getRouteVariable('oid'));
+        $orgType = $organization->routeName;
+        $routeBase = $orgType . '/' .$organization->id . '/';
+        $this->forward('syllabus/start', [
+            'organization' => $organization, 
+            'routeBase' => $routeBase
+        ]);
+    }
+
+    public function edit ()
+    {
+        $organization = $this->getOrganization($this->getRouteVariable('oid'));
+        $orgType = $organization->routeName;
+        $routeBase = $orgType . '/' .$organization->id . '/';
+        $id = $this->getRouteVariable('id');
+        $this->template->addBreadcrumb($routeBase, $organization->abbreviation . ' Home');
+        $this->template->addBreadcrumb($routeBase."syllabus/$id", 'Edit syllabus');
+
+        $this->forward('syllabus/new', [
+            'organization' => $organization, 
+            'routeBase' => $routeBase,
+            'id' => $id
+        ]);
+    }
+
+    public function view ()
+    {
+        $organization = $this->getOrganization($this->getRouteVariable('oid'));
+        $syllabusId = $this->getRouteVariable('id');
+        $orgType = $organization->routeName;
+        $routeBase = $orgType . '/' .$organization->id . '/';
+        $this->template->addBreadcrumb($routeBase, $organization->abbreviation . ' Home');
+        $this->template->addBreadcrumb($routeBase."syllabus/$id", 'View template');
+
+        $this->forward("syllabus/$syllabusId/view", [
+            'id' => $syllabusId,
+            'organization' => $organization, 
+            'routeBase' => $routeBase,
+            'templateAuthorizationId' => $organization->templateAuthorizationId
+        ]);
+    }
+
+    public function delete ()
+    {
+        $organization = $this->getOrganization($this->getRouteVariable('oid'));
+        $syllabusId = $this->getRouteVariable('id');
+        $orgType = $organization->routeName;
+        $routeBase = $orgType . '/' .$organization->id . '/';
+        $this->template->addBreadcrumb($routeBase, $organization->abbreviation . ' Home');
+        $this->template->addBreadcrumb($routeBase."syllabus/$id", 'Delete syllabus');
+
+        $this->forward("syllabus/$syllabusId/delete", [
+            'id' => $syllabusId,
+            'organization' => $organization, 
+            'routeBase' => $routeBase,
+            'templateAuthorizationId' => $organization->templateAuthorizationId
+        ]);
+    }
+
+    public function startWith ()
+    {
+        $organization = $this->getOrganization($this->getRouteVariable('oid'));
+        $syllabusId = $this->getRouteVariable('id');
+        $orgType = $organization->routeName;
+        $routeBase = $orgType . '/' .$organization->id . '/';
+
+        if ($organization && $organization->userHasRole($this->requireLogin(), 'creator'))
+        {
+            $this->forward("syllabus/startwith/$syllabusId", [
+                'id' => $syllabusId,
+                'organization' => $organization, 
+                'routeBase' => $routeBase,
+                'templateAuthorizationId' => $organization->templateAuthorizationId
+            ]);         
+        }
+    }
+
+
     public function listTemplates ()
     {
         $organization = $this->getOrganization($this->getRouteVariable('oid'));
+        $orgType = $organization->routeName;
+        $routeBase = $orgType . '/' .$organization->id . '/';
         $this->template->organization = $organization;
         $this->buildHeader('partial:_header.html.tpl', 'Templates', $organization->name, '');
         $this->template->clearBreadcrumbs();
         $this->addBreadcrumb('organizations', 'My Organizations');
-        $this->addBreadcrumb($organization->routeName, ucfirst($organization->routeName));
+        $this->template->addBreadcrumb($routeBase, $organization->abbreviation . ' Home');
+        $this->addBreadcrumb($routeBase.'templates', 'View Templates');
 
         $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
 
@@ -48,7 +130,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
     public function myOrganizations ()
     {
-        $this->buildHeader('partial:_header.edit.html.tpl', 'My Organizations', '', '');
+        // $this->buildHeader('partial:_header.edit.html.tpl', 'My Organizations', '', '');
         $viewer = $this->requireLogin();
         $departmentSchema = $this->schema('Syllabus_AcademicOrganizations_Department');
         $collegeSchema = $this->schema('Syllabus_AcademicOrganizations_College');
@@ -111,11 +193,14 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         $viewer = $this->requireLogin();
         $organization = $this->getOrganization($this->getRouteVariable('oid'));
         $organization->requireRole('manager', $this);
+        $orgType = $organization->routeName;
+        $routeBase = $orgType . '/' .$organization->id . '/';
         $this->buildHeader('partial:_header.html.tpl', 'Manage Users', $organization->name, '');
         $this->template->clearBreadcrumbs();
         $this->addBreadcrumb('organizations', 'My Organizations');
         $this->addBreadcrumb($organization->routeName, ucfirst($organization->routeName));
-        $this->addBreadcrumb($organization->routeName .'/'. $organization->id, $organization->name);
+        $this->addBreadcrumb($routeBase, $organization->abbreviation . ' Home');
+        $this->addBreadcrumb($routeBase, 'Manage Users');
 
         $accounts = $this->schema('Bss_AuthN_Account');
 
@@ -172,20 +257,20 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                     $accounts->emailAddress->lower()->like($pattern)
                 );
         }
-        
-        $totalAccounts = $accounts->count($condition);
+  
+        $totalAccounts = $organization->getRoleUserCount('member', true, $condition);
         $pageCount = ceil($totalAccounts / $limit);
-        
         $this->template->pagesAroundCurrent = $this->getPagesAroundCurrent($page, $pageCount, $organization);
-        
+
         // DEBUG override of optionMap
-        $accountList = $accounts->find($condition, $optionMap);
+        $memberList = $organization->getRoleUsers('member', true, $condition, $optionMap);
         
+
         $this->template->searchQuery = $searchQuery;
         $this->template->totalAccounts = $totalAccounts;
         $this->template->pageCount = $pageCount;
         $this->template->currentPage = $page;
-        $this->template->accountList = $accountList;
+        $this->template->accountList = $memberList;
         $this->template->sortBy = $sortBy;
         $this->template->dir = $sortDir;
         $this->template->oppositeDir = ($sortDir == 'asc' ? 'desc' : 'asc');
@@ -205,6 +290,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         $this->addBreadcrumb($organization->routeName, ucfirst($organization->routeName));
         $this->addBreadcrumb($organization->routeName.'/'.$organization->id, $organization->name);
         $this->addBreadcrumb($organization->routeName.'/'.$organization->id.'/users', 'Users');
+        $this->addBreadcrumb($organization->routeName.'/'.$organization->id.'/users', $user->fullName);
 
         $this->buildHeader('partial:_header.html.tpl', 'Manage User', $user->fullName, $user->emailAddress . ' ' . $user->username);
         $returnTo = $this->request->getQueryParameter('returnTo');

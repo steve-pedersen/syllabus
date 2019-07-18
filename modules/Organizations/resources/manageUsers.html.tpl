@@ -10,7 +10,7 @@
     <div class="col">
         <div class="form-group">
             <label for="account-search" class="">Search accounts: </label>
-            <input class="account-autocomplete form-control mx-sm-3 " type="text" id="account-search" name="sq" value="{$searchQuery|escape}">
+            <input class="form-control mx-sm-3 " type="text" id="account-search" name="sq" value="{$searchQuery|escape}">
             <label class="sr-only" for="account-search-button">Search</label>
             <input class="btn btn-info" type="submit" id="account-search-button" name="btn" value="Search">
             <div class="search-container"></div>
@@ -72,7 +72,7 @@
                 
                 <tbody>
 
-            {foreach $organization->getRoleUsers('member') as $account}
+            {foreach $accountList as $account}
                     <tr class="">
                         <td scope="row"><a class="text-capitalize" href="{$organization->routeName}/{$organization->id}/users/{$account->id}?returnTo={$smarty.server.REQUEST_URI|escape|escape}">{$account->lastName|escape}, {$account->firstName|escape} {$account->middleName|escape}</a></td>
                         <td>{$account->emailAddress}</td>

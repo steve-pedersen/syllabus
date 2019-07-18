@@ -20,6 +20,16 @@ class Syllabus_AcademicOrganizations_College extends Syllabus_Organizations_Abst
             'modifiedDate' => ['datetime', 'nativeName' => 'modified_date'],
 
             'departments' => ['1:N', 'to' => 'Syllabus_AcademicOrganizations_Department', 'reverseOf' => 'parent', 'orderBy' => ['id']],
+            'children' => ['1:N', 'to' => 'Syllabus_AcademicOrganizations_Department', 'reverseOf' => 'parent', 'orderBy' => ['id']],
         ];
+    }
+
+    public function setAbbreviation ($abbrev)
+    {
+        if (($pos = strrpos($abbrev, ' - ')) !== false)
+        {
+            $abbrev = substr($abbrev, $pos+3);
+        }
+        $this->_assign('abbreviation', $abbrev);
     }
 }
