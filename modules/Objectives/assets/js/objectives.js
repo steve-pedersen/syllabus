@@ -14,7 +14,7 @@
       $clone.find('.sort-order-value').attr('name',`section[real][new-${i}][sortOrder]`).val(sortOrder+1);
       $clone.find('.form-group').first().find('label').text(`Objective #${i+1} Title`);
       $clone.find('.form-group').first().find('input').attr('name',`section[real][new-${i}][title]`).val('').text('');
-      $clone.find('.form-group').last().find('label').text(`Objective #${i+1} Title`);
+      $clone.find('.form-group').last().find('label').text(`Objective #${i+1} Description`);
       
       var rowSize = '4em'; 
       var $textarea = $clone.find('.form-group').last().find('textarea');
