@@ -1,15 +1,16 @@
 <div class="container">
+	<h1>{$syllabusVersion->title}</h1>
 	{foreach $sectionVersions as $i => $sectionVersion}
 		
 		{assign var=ext value=$sectionVersion->extension}
 		<div class="section-container mt-4 mb-2">	
-			<h1 class="section-title" id="section{$ext::getExtensionName()}{$i}">
+			<h2 class="section-title" id="section{$ext::getExtensionName()}{$i}">
 				{if $sectionVersion->title}
 					{$sectionVersion->title}
 				{else}
 					{$ext->getDisplayName()}
 				{/if}
-			</h1>
+			</h2>
 			{if $sectionVersion->description}
 				<p class="section-description">{$sectionVersion->description}</p>
 			{/if}

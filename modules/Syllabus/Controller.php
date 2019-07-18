@@ -17,6 +17,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabi'                   => ['callback' => 'mySyllabi'],
             'syllabus/:id'              => ['callback' => 'edit', ':id' => '[0-9]+|new'],
             'syllabus/:id/view'         => ['callback' => 'view', ':id' => '[0-9]+'],
+            'syllabus/:id/delete'       => ['callback' => 'delete', ':id' => '[0-9]+'],
             'syllabus/:id/screenshot'   => ['callback' => 'screenshot', ':id' => '[0-9]+'],
             'syllabus/courses'          => ['callback' => 'courseLookup'],
             'syllabus/start'            => ['callback' => 'start'],
@@ -252,7 +253,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         if (!$templatesAvailable && !$pastCourseSyllabi)
         {
-            // echo "<pre>"; var_dump('here'); die;
             $startingTemplate = $this->requireExists($syllabi->get($templateId));
             $syllabus = $this->startWith($startingTemplate, true, true);
             $version = $syllabus->latestVersion;
@@ -673,6 +673,73 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->sectionExtensions = $sectionExtensions;
         $this->template->userCourses = $currentCourses ?? null;
         $this->template->organization = $organization;
+        $this->template->routeBase = $routeBase;
+    }
+
+    public function delete ()
+    {
+        $viewer = $this->requireLogin();  
+        $syllabus = $this->requireExists($this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id'));
+        $syllabusVersion = $syllabus->latestVersion;
+
+        // TODO: require it is owner's syllabus, admin or organization manager
+        if (!$this->hasPermission('admin') && !$this->hasDeletePermission($syllabus, $viewer))
+        {
+            $this->accessDenied("You don't have permission to delete this syllabus.");            
+        }
+
+        $title = 'Delete Syllabus?';
+        $this->setPageTitle($title);
+
+        $routeBase = $this->getRouteVariable('routeBase', 'syllabi');
+        $organization = $this->getRouteVariable('organization', null);
+
+        $pathParts = [];
+        $pathParts[] = $routeBase;
+        $pathParts[] = 'syllabus';
+
+        $sid = $syllabus->id;
+        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
+        $results = $this->getScreenshotUrl($sid, $screenshotter, true);
+        $syllabus->imageUrl = $results->imageUrls->$sid;
+
+        $hasDownstreamSyllabiSection = false;
+        foreach ($syllabusVersion->sectionVersions as $sv)
+        {
+            if ($this->hasDownstreamSection($sv, $syllabus, $viewer))
+            {
+                $hasDownstreamSyllabiSection = true;
+                break;
+            }
+        }
+
+        if ($this->request->wasPostedByUser())
+        {   
+            $data = $this->request->getPostParameters();
+            switch ($this->getPostCommand()) {
+
+                case 'deletesyllabus':
+
+                    if ($this->hasPermission('admin') || $this->hasDeletePermission($syllabus, $viewer))
+                    {
+                        $syllabus->delete();
+                        $this->flash('Delete successful', 'success');
+                    }
+                    else
+                    {
+                        $this->flash('You do not have permission to delete this.', 'danger');
+                    }
+                    $this->response->redirect($routeBase);
+                    break;
+            }
+        }
+
+        $this->template->title = $title;
+        $this->template->syllabus = $syllabus;
+        $this->template->syllabusVersion = $syllabusVersion;
+        $this->template->hasDownstreamSyllabiSection = $hasDownstreamSyllabiSection;
+        $this->template->organization = $organization;
+        $this->template->routeBase = $routeBase;
     }
 
     protected function saveSection ($syllabus, $syllabusVersion, $extKey, $organization=null)
@@ -986,6 +1053,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $newSyllabusVersion->sectionVersions->save();
         }
 
+        // update preview
+        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
+        $this->getScreenshotUrl($syllabus->id, $screenshotter, false);
+
         return [$anyChange, $newSyllabusVersion];
     }
 
@@ -1203,6 +1274,47 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         return $syllabusVersion;
     }
 
+    // TODO: abstract and combine hasDelete with hasClone
+    private function hasDeletePermission ($syllabus, $user=null)
+    {
+        $user = $user ?? $this->requireLogin();
+        $hasPermission = true;
+
+        if ($syllabus->templateAuthorizationId)
+        {
+            $organization = null;
+            $hasPermission = false;
+            list($type, $id) = explode('/', $syllabus->templateAuthorizationId);
+            
+            switch ($type)
+            {
+                case 'departments':
+                    $organization = $this->schema('Syllabus_AcademicOrganizations_Department')->get($id);
+                    break;
+
+                case 'colleges':
+                    $organization = $this->schema('Syllabus_AcademicOrganizations_College')->get($id);
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (!$organization)
+            {
+                $this->accessDenied("Could not find any '{$type}' with id '{$id}'.");            
+            }
+
+            $hasPermission = $organization->userHasRole($user, 'manager');
+        }
+        elseif ($syllabus->createdById !== $user->id)
+        {
+            $hasPermission = false;
+        }
+
+        return $hasPermission;
+    }
+    // TODO: abstract and combine hasDelete with hasClone
     private function hasCloningPermission ($syllabus, $user=null)
     {
         $user = $user ?? $this->requireLogin();
@@ -1218,11 +1330,12 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             {
                 case 'departments':
                     $organization = $this->schema('Syllabus_AcademicOrganizations_Department')->get($id);
+                    break;
 
-                    break;
                 case 'colleges':
-                    echo "<pre>"; var_dump('need to implement'); die;
+                    $organization = $this->schema('Syllabus_AcademicOrganizations_College')->get($id);
                     break;
+
                 default:
                     break;
             }
@@ -1380,69 +1493,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
     }
 
-    // TODO: put this in ActiveRecord?
-    // TODO: update for multiple syllabusIds requests at a time
-    private function getScreenshotUrl ($syllabusId, $screenshotter=null, $cacheImages=true)
-    {
-        $viewer = $this->requireLogin();
-        $syllabus = $this->requireExists($this->schema('Syllabus_Syllabus_Syllabus')->get($syllabusId));
-        $urls = [];
-        $messages = [];
-        $uid = $viewer->id;
-        $uid = sha1($syllabusId);
-        $checkFailCache = false;
-
-        if ($checkFailCache)
-        {
-            if ($this->cacheFail($syllabusId, true))
-            {
-                $results = new stdClass;
-                $results->imageUrls = new stdClass;
-                $results->imageUrls->$syllabusId = 'assets/images/testing01.jpg';                         
-            }
-            else
-            {
-                $keyPrefix = "{$uid}-";
-                $screenshotter = $screenshotter ?? new Syllabus_Services_Screenshotter($this->getApplication());
-                $screenshotter->saveUids($uid, $syllabus->id);
-
-                $urls[$syllabus->id] = $this->baseUrl("syllabus/{$syllabus->id}/screenshot");
-                $results = $screenshotter->concurrentRequests($urls, $cacheImages, $keyPrefix);
-                $results = json_decode($results);
-
-                if (isset($results->messages) && $results->messages !== '' && $results->messages !== [])         
-                {
-                    $results->imageUrls->$syllabusId = 'assets/images/testing01.jpg';
-                    $this->cacheFail($syllabusId);
-                }
-            }
-        }
-        else
-        {
-            $keyPrefix = "{$uid}-";
-            $screenshotter = $screenshotter ?? new Syllabus_Services_Screenshotter($this->getApplication());
-            $screenshotter->saveUids($uid, $syllabus->id);
-
-            $urls[$syllabus->id] = $this->baseUrl("syllabus/{$syllabus->id}/screenshot");
-            $results = $screenshotter->concurrentRequests($urls, $cacheImages, $keyPrefix);
-            $results = json_decode($results);
-        }
-
-        return $results;
-    }
-
-    private function cacheFail ($sid, $checkCached=false)
-    {
-        $cookieName = 'syllabus-screenshot-fail-'.$sid;
-        $cookieValue = $sid;
-
-        if ($checkCached && isset($_COOKIE[$cookieName]) && $_COOKIE[$cookieName] !== $cookieValue)
-        {
-            return true;
-        }
-        setcookie($cookieName, $cookieValue, time()+60*60, '/');
-    }
-
     public function screenshot ()
     {
         $this->setScreenshotTemplate();
@@ -1453,7 +1503,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
         $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
 
-        $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);   
+        $this->template->syllabusVersion = $syllabusVersion;
+        $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
 
 
         // $tokenHeader = $this->requireExists($this->request->getHeader('X-Custom-Header'));

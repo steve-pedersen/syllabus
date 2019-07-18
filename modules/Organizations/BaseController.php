@@ -30,10 +30,20 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
         $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
 
-        $this->template->templates = $syllabi->find(
+        $templates = $syllabi->find(
             $syllabi->templateAuthorizationId->equals($organization->templateAuthorizationId),
             ['orderBy' => '-createdDate']
         );
+        
+        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
+        foreach ($templates as $template)
+        {
+            $tid = $template->id;
+            $results = $this->getScreenshotUrl($tid, $screenshotter);
+            $template->imageUrl = $results->imageUrls->$tid;
+        }
+
+        $this->template->templates = $templates;
     }
 
     public function myOrganizations ()

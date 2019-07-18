@@ -39,7 +39,7 @@
 
 		</div>
 	</div>
-	<div class="card-footer text-muted">
+<!-- 	<div class="card-footer text-muted">
 		<small class="text-muted">Last modified - {$organization->modifiedDate->format('M d, Y')}</small>
-	</div>
+	</div> -->
 </div>

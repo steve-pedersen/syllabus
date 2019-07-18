@@ -16,6 +16,7 @@ class Syllabus_AcademicOrganizations_DepartmentController extends Syllabus_Organ
             // '/departments/:oid/templates/:tid' => ['callback' => 'editTemplate', ':oid' => '[0-9]+'],
             '/departments/:oid/syllabus/start' => ['callback' => 'start', ':oid' => '[0-9]+'],
             '/departments/:oid/syllabus/:id'   => ['callback' => 'edit', ':oid' => '[0-9]+|new'],
+            '/departments/:oid/syllabus/:id/delete' => ['callback' => 'delete', ':oid' => '[0-9]+'],
             '/departments/:oid/templates'      => ['callback' => 'listTemplates', ':oid' => '[0-9]+'],
             '/departments/:oid/syllabus/startwith/:id'   => ['callback' => 'startWith', ':oid' => '[0-9]+|new'],
         ];
@@ -35,11 +36,28 @@ class Syllabus_AcademicOrganizations_DepartmentController extends Syllabus_Organ
     public function edit ()
     {
         $department = $this->getOrganization($this->getRouteVariable('oid'));
+        $routeBase = 'departments/' . $department->id . '/';
+        $id = $this->getRouteVariable('id');
+        $this->template->addBreadcrumb($routeBase, $department->abbreviation . ' Home');
+        $this->template->addBreadcrumb($routeBase."syllabus/$id", 'Edit syllabus');
 
         $this->forward('syllabus/new', [
             'organization' => $department, 
+            'routeBase' => $routeBase,
+            'id' => $id
+        ]);
+    }
+
+    public function delete ()
+    {
+        $department = $this->getOrganization($this->getRouteVariable('oid'));
+        $syllabusId = $this->getRouteVariable('id');
+
+        $this->forward("syllabus/$syllabusId/delete", [
+            'id' => $syllabusId,
+            'organization' => $department, 
             'routeBase' => 'departments/' . $department->id,
-            'id' => $this->getRouteVariable('id')
+            'templateAuthorizationId' => $department->templateAuthorizationId
         ]);
     }
 

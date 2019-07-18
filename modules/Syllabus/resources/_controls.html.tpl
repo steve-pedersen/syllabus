@@ -12,7 +12,7 @@
 				<div class="editor-controls-left">
 				{/if}
 				{if $organization}
-					<span class="bg-secondary p-2 rounded text-white">
+					<span class="text-dark">
 						<strong>[{$organization->name} Template]</strong>
 					</span>
 				{/if}
@@ -58,6 +58,11 @@
 			<a class="btn btn-dark my-1" id="viewFromEditor" href="syllabus/{$syllabus->id}/view">
 				View
 			</a>
+			{if $syllabus->inDataSource}
+			<a sr-only="Delete" class="btn btn-danger my-1" id="viewFromEditor" href="{$routeBase}syllabus/{$syllabus->id}/delete">
+				<i class="fas fa-trash"></i>
+			</a>
+			{/if}
 			<a href="{if $syllabus->inDataSource}syllabus/{$syllabus->id}{else}{$smarty.server.REQUEST_URI}{/if}" class="btn btn-default my-1">Cancel</a>
 		</div>
 <!-- 		<div class="">

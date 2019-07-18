@@ -144,6 +144,69 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
         parent::beforeCallback($callback);
     }
 
+    // TODO: put this in ActiveRecord?
+    // TODO: update for multiple syllabusIds requests at a time
+    public function getScreenshotUrl ($syllabusId, $screenshotter=null, $cacheImages=true)
+    {
+        $viewer = $this->requireLogin();
+        $syllabus = $this->requireExists($this->schema('Syllabus_Syllabus_Syllabus')->get($syllabusId));
+        $urls = [];
+        $messages = [];
+        $uid = $viewer->id;
+        $uid = sha1($syllabusId);
+        $checkFailCache = false;
+
+        if ($checkFailCache)
+        {
+            if ($this->cacheFail($syllabusId, true))
+            {
+                $results = new stdClass;
+                $results->imageUrls = new stdClass;
+                $results->imageUrls->$syllabusId = 'assets/images/testing01.jpg';                         
+            }
+            else
+            {
+                $keyPrefix = "{$uid}-";
+                $screenshotter = $screenshotter ?? new Syllabus_Services_Screenshotter($this->getApplication());
+                $screenshotter->saveUids($uid, $syllabus->id);
+
+                $urls[$syllabus->id] = $this->baseUrl("syllabus/{$syllabus->id}/screenshot");
+                $results = $screenshotter->concurrentRequests($urls, $cacheImages, $keyPrefix);
+                $results = json_decode($results);
+
+                if (isset($results->messages) && $results->messages !== '' && $results->messages !== [])         
+                {
+                    $results->imageUrls->$syllabusId = 'assets/images/testing01.jpg';
+                    $this->cacheFail($syllabusId);
+                }
+            }
+        }
+        else
+        {
+            $keyPrefix = "{$uid}-";
+            $screenshotter = $screenshotter ?? new Syllabus_Services_Screenshotter($this->getApplication());
+            $screenshotter->saveUids($uid, $syllabus->id);
+
+            $urls[$syllabus->id] = $this->baseUrl("syllabus/{$syllabus->id}/screenshot");
+            $results = $screenshotter->concurrentRequests($urls, $cacheImages, $keyPrefix);
+            $results = json_decode($results);
+        }
+
+        return $results;
+    }
+
+    private function cacheFail ($sid, $checkCached=false)
+    {
+        $cookieName = 'syllabus-screenshot-fail-'.$sid;
+        $cookieValue = $sid;
+
+        if ($checkCached && isset($_COOKIE[$cookieName]) && $_COOKIE[$cookieName] !== $cookieValue)
+        {
+            return true;
+        }
+        setcookie($cookieName, $cookieValue, time()+60*60, '/');
+    }
+
     public function buildHeader ($file, $title='', $subtitle='', $description='', $ctrl=null)
     {
         $ctrl = $ctrl ?? $this;
