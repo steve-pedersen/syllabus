@@ -18,13 +18,16 @@
 </div>
 {/if}
 
-	<div class="d-block-inline bg-light p-2 section-collapse-link dragdrop-handle border" data-toggle="collapse" href="#{$extName}CollapseEdit" aria-expanded="false" aria-controls="{$extName}CollapseEdit">
+	<div class="d-block-inline bg-light p-2 section-collapse-link dragdrop-handle border border-warning" data-toggle="collapse" href="#{$extName}CollapseEdit" aria-expanded="false" aria-controls="{$extName}CollapseEdit">
 		<i class="fas fa-bars fa-2x dragdrop-handle mr-2" data-toggle="tooltip" data-placement="top" title="Click and drag to change the order."></i>
 		<a class="d-block-inline p-3" data-toggle="collapse" href="#{$extName}CollapseEdit"><div class="text-left d-inline-block" id="{$extName}Heading">
 			<span class="mb-0 section-title">
 				<strong>{if $currentSectionVersion->title}{$currentSectionVersion->title}{else}{$displayName}{/if}</strong><small><i class="fas fa-chevron-down text-dark pl-2"></i></small>
 			</span></div></a>
 		{if $currentSectionVersion->description}<small class="text-dark">{$currentSectionVersion->description}</small>{/if}
+<!-- 		<span class="ml-5 text-primary">
+			Currently being edited
+		</span> -->
 		{if $currentSectionVersion}
 <!-- 		<span class="float-right">
 			<small class="badge badge-default">Section Version #{$currentSectionVersion->normalizedVersion}

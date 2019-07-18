@@ -176,6 +176,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $this->template->pStartFromNothing = true;
         }
 
+        $templatesAvailable = false;
+        $pastCourseSyllabi = null;
+
         // if based off of a course
         if ($courseSectionId = $this->request->getQueryParameter('course'))
         {
@@ -195,7 +198,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $userSyllabi = $syllabi->find(
                 $syllabi->createdById->equals($viewer->id), 
                 ['orderBy' => ['-modifiedDate', '-createdDate'], 'limit' => 4]
-            );        
+            );
+            $templatesAvailable = $templatesAvailable || !empty($userSyllabi);
             foreach ($userSyllabi as $userSyllabus)
             {
                 $sid = $userSyllabus->id;
@@ -215,6 +219,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $syllabi->templateAuthorizationId->equals($cs->department->templateAuthorizationId),
                     ['orderBy' => ['-modifiedDate', '-createdDate'], 'limit' => '4']
                 );
+                $templatesAvailable = $templatesAvailable || !empty($templates[$cs->department->id]);
                 foreach ($templates[$cs->department->id] as $template)
                 {
                     $sid = $template->id;
@@ -244,6 +249,33 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $pathParts = [];
         $pathParts[] = $this->getRouteVariable('routeBase');
         $pathParts[] = 'syllabus';
+
+        if (!$templatesAvailable && !$pastCourseSyllabi)
+        {
+            // echo "<pre>"; var_dump('here'); die;
+            $startingTemplate = $this->requireExists($syllabi->get($templateId));
+            $syllabus = $this->startWith($startingTemplate, true, true);
+            $version = $syllabus->latestVersion;
+            if ($courseSection)
+            {
+                list($success, $version) = $this->createCourseSyllabus($syllabus->id, $courseSection);
+                $this->flash("
+                    Your new syllabus draft includes all SF State requirements and course information for 
+                    $courseSection->fullDisplayName. It is ready for you to edit.", 
+                    'success'
+                );
+            }
+            else
+            {
+                $this->flash("
+                    Your new syllabus draft includes all SF State requirements. It is ready for you to edit.", 
+                    'success'
+                );
+            }
+            $pathParts[] = $version->syllabus->id;
+            $pathParts = array_filter($pathParts);
+            $this->response->redirect(implode('/', $pathParts));
+        }
 
         if ($this->request->wasPostedByUser())
         {
