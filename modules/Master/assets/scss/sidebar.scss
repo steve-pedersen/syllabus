@@ -116,8 +116,8 @@
 		}
 
 		ul.components {
-		    padding: 30px 0 30px 0;
-		    border-bottom: 1px solid $secondary;
+		    padding: 30px 0 0 0;
+		    // border-bottom: 1px solid $secondary;
 		}
 		&.active {
 			ul.components {

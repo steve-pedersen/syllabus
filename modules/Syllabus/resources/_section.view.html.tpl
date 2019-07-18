@@ -27,7 +27,7 @@
 			        <label class="col-lg-3 col-form-label form-control-label"></label>
 			        <div class="col-lg-9 d-flex flex-row-reverse">
 			        	{if $editable}
-			            <a class="btn btn-info" href="syllabus/{$syllabus->id}?edit={$sectionVersionId}">Edit</a>
+			            <a class="btn btn-info" href="{$routeBase}syllabus/{$syllabus->id}?edit={$sectionVersionId}">Edit</a>
 			        	{else}
 						<span class="d-inline-block" tabindex="0" data-toggle="tooltip" title="This section can't be edited, but you can still change it's order.">
 							<button class="btn btn-dark" style="pointer-events: none;" type="button" disabled>Read Only</button>

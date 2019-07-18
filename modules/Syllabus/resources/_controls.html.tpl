@@ -55,7 +55,7 @@
 			<button class="btn btn-success  my-1" type="submit" name="command[savesyllabus]" id="globalSave">
 				Save
 			</button>
-			<a class="btn btn-dark my-1" id="viewFromEditor" href="syllabus/{$syllabus->id}/view">
+			<a class="btn btn-dark my-1" id="viewFromEditor" href="{$routeBase}syllabus/{$syllabus->id}/view">
 				View
 			</a>
 			{if $syllabus->inDataSource}
@@ -63,7 +63,7 @@
 				<i class="fas fa-trash"></i>
 			</a>
 			{/if}
-			<a href="{if $syllabus->inDataSource}syllabus/{$syllabus->id}{else}{$smarty.server.REQUEST_URI}{/if}" class="btn btn-default my-1">Cancel</a>
+			<a href="{$routeBase}{if $syllabus->inDataSource}syllabus/{$syllabus->id}{else}{$smarty.server.REQUEST_URI}{/if}" class="btn btn-default my-1">Cancel</a>
 		</div>
 <!-- 		<div class="">
 			<button class="btn btn-link accordion-collapse-all align-bottom">Collapse all sections</button>
