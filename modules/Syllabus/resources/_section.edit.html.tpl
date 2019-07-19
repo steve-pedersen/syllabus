@@ -24,7 +24,7 @@
 			<span class="mb-0 section-title">
 				<strong>{if $currentSectionVersion->title}{$currentSectionVersion->title}{else}{$displayName}{/if}</strong><small><i class="fas fa-chevron-down text-dark pl-2"></i></small>
 			</span></div></a>
-		{if $currentSectionVersion->description}<small class="text-dark">{$currentSectionVersion->description}</small>{/if}
+		
 <!-- 		<span class="ml-5 text-primary">
 			Currently being edited
 		</span> -->

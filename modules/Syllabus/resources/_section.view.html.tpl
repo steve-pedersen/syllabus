@@ -11,7 +11,7 @@
 		<span class="mb-0 section-title">
 			<strong>{$sectionVersion->title}</strong><small><i class="fas fa-chevron-down text-dark pl-2"></i></small>
 		</span></div></a>
-		{if $sectionVersion->description}<span class="text-dark">{$sectionVersion->description}</span>{/if}
+		
 		{if !$editable}<span class=""><i class="fas fa-lock ml-3 mr-2"></i> (Read Only)</span>{/if}
 	</div>
 
@@ -22,6 +22,7 @@
 	<div class="collapse multi-collapse show section-collapsible" id="{$extName}Collapse{$i}">
 		<div class="card card-outline-secondary border-top-0 rounded-0">
 			<div class="card-body">
+				{if $sectionVersion->description}<p><span class="text-dark">{$sectionVersion->description}</span></p>{/if}
 				{include file="{$ext->getViewFragment()}"}
 			    <div class="form-group row">
 			        <label class="col-lg-3 col-form-label form-control-label"></label>

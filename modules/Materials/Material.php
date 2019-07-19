@@ -21,6 +21,7 @@ class Syllabus_Materials_Material extends Bss_ActiveRecord_Base
             'sortOrder' => ['int', 'nativeName' => 'sort_order'],
             'publisher' => 'string',
             'isbn' => 'string',
+            'authors' => 'string',
 
             'materialsSection' => ['1:1', 'to' => 'Syllabus_Materials_Materials', 'keyMap' => ['materials_id' => 'id']],
         ];

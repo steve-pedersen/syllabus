@@ -1,9 +1,7 @@
 {assign var=realSection value=$sectionVersion->resolveSection()}
 <div class="real-section-content grades">
-
-	<div class="col">
-	<table class="table table-responsive table-sm">
-		<thead>
+	<table class="table table-responsive table-sm table-striped">
+		<thead class="thead-dark">
 			<tr>
 				<th scope="col">{$realSection->header1}</th>
 				<th scope="col">{$realSection->header2}</th>
@@ -22,8 +20,8 @@
 	</table>
 
 	{if $realSection->additionalInformation}
+	<div class="col">
 		{$realSection->additionalInformation}
-	{/if}
 	</div>
-
+	{/if}
 </div>

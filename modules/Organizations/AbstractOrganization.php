@@ -232,22 +232,4 @@ abstract class Syllabus_Organizations_AbstractOrganization extends Bss_ActiveRec
         $ctrl->requirePermission(self::$RoleDefinitions[$role], $this);
     }
 
-  //   public function getDashboardTemplate ()
-  //   {
-  //       return $this->getOrganizationTemplate('dashboard');
-  //   }
-
-  //   public function getManageUsersTemplate ()
-  //   {
-		// return $this->getOrganizationTemplate('manageUsers');
-  //   }
-
-  //   public function getOrganizationTemplate ($callback)
-  //   {
-  //       $template = new DivaTemplate;
-  //       $template->setDefaultResourceDirectory(glue_path(dirname(__FILE__), 'resources'));
-  //       $template->setTemplateFile($callback . '.html.tpl');
-        
-  //       return $template;
-  //   }
 }

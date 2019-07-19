@@ -121,6 +121,7 @@
 					<strong><i class="fas fa-arrow-up pr-2"></i> Go To Top</strong>
 					</a>
 				</li>
+				{assign var=editSection value=false}
 			{foreach $sectionVersions as $i => $sectionVersion}
 				{if ($sectionVersion->resolveSection()->id != $realSection->id) && $sectionVersion->isAnchored}
 					{assign var=ext value=$sectionVersion->extension}
@@ -130,9 +131,16 @@
 					{if $sectionVersion->title}{$sectionVersion->title}{else}{$ext->getDisplayName()}{/if}
 					</a>
 				</li>
+				{elseif $realSection && $sectionVersion->resolveSection()->id == $realSection->id && $sectionVersion->isAnchored}
+					{assign var=editSection value=true}
+				<li class="nav-item sidebar-anchor-item">
+					<a class="nav-link active" href="{$smarty.server.REQUEST_URI}#section{$extName}Edit">
+					{if $currentSectionVersion}{$currentSectionVersion->title}{else}{$displayName}{/if}
+					</a>
+				</li>
 				{/if}				
 			{/foreach}
-			{if $realSection}
+			{if $realSection && !$editSection}
 				{assign var=extName value=$sectionExtension::getExtensionName()}
 				{assign var=displayName value=$sectionExtension->getDisplayName()}
 				<li class="nav-item sidebar-anchor-item">

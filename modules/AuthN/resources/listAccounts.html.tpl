@@ -83,7 +83,7 @@
                         <td><a class="text-capitalize" href="admin/accounts/{$account->id}?returnTo={$smarty.server.REQUEST_URI|escape|escape}">{$account->lastName|escape}, {$account->firstName|escape} {$account->middleName|escape}</a></td>
                         <td>{$account->emailAddress|escape}</td>
                         <td>{$account->username|escape|default:'<span class="detail">n/a</a>'}</td>
-                        <td style="font-size:9pt;">{if $account->lastLoginDate}{$account->lastLoginDate->format('M j, Y')}{else}<span class="detail">never</span>{/if}</td>
+                        <td style="font-size:0.9rem;">{if $account->lastLoginDate}{$account->lastLoginDate->format('M j, Y')}{else}<span class="detail">never</span>{/if}</td>
                         <td>{if $account->isActive}Active{else}Inactive{/if}</td>
                         <td>
                             <a class="btn btn-info btn-sm" href="admin/accounts/{$account->id}?returnTo={$smarty.server.REQUEST_URI|escape|escape}">Edit</a>

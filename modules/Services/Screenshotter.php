@@ -32,21 +32,23 @@ class Syllabus_Services_Screenshotter
 
     public function __construct($app, $options=array(), $defaultImgName='')
     {
-        // echo "<pre>"; var_dump($test); die;
+        $w1 = 1024;
+        $h1 = 768;
+        $w2 = 1024;
+        $h2 = 900;
         $siteSettings = $app->siteSettings;
         $defaultOptions = array(
-            // 'appName'   => ($app->configuration->appName ?? get_class($this)),
             'appName'   => sha1($app->baseUrl('')),
             'type'      => 'jpeg',
             'quality'   => '100',
-            'width'     => '1024',
-            'height'    => '768',
+            'width'     => $w2,
+            'height'    => $h2,
             'clip'      => $this->formatClip(
                 array(
                     'x'     => '0',
-                    'y'     => '75',
-                    'width' => '1024',
-                    'height'=> '768'
+                    'y'     => '0',
+                    'width' => $w2,
+                    'height'=> $h2
                 )
             ),
         );
@@ -181,7 +183,8 @@ class Syllabus_Services_Screenshotter
     {
         $path = 'assets/images/';
         $imageName = 'screenshotter_sfsu_default.jpg';
-        $imageName = 'testing01.jpg';
+        $imageName = 'default_syllabus_image.png';
+        $imageName = 'placeholder_syllabus.jpg';
 
         if (($defaultImgName !== '') && (file_exists($path . $defaultImgName)))
         {

@@ -1,9 +1,7 @@
 {assign var=realSection value=$sectionVersion->resolveSection()}
 <div class="real-section-content learning-outcomes">
-
-	<div class="col">
-	<table class="table table-sm">
-		<thead>
+	<table class="table table-sm table-striped">
+		<thead class="thead-dark">
 			<tr>
 				<th scope="col">{$realSection->header1}</th>
 				<th scope="col">{$realSection->header2}</th>
@@ -20,10 +18,9 @@
 		{/foreach}
 		</tbody>
 	</table>
-
 	{if $realSection->additionalInformation}
+	<div class="col">
 		{$realSection->additionalInformation}
-	{/if}
 	</div>
-
+	{/if}
 </div>

@@ -8,6 +8,8 @@
  */
 class Syllabus_Resources_Resource extends Bss_ActiveRecord_Base
 {
+    private $_imageSrc;
+    
     public static function SchemaInfo ()
     {
         return [

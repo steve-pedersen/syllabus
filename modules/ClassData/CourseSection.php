@@ -94,6 +94,11 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
         return $this->shortName.' - '.$this->_fetch('title');
     }
 
+    public function getFullSummary ()
+    {
+        return $this->getFullDisplayName() .' ['.$this->getTerm().']';
+    }
+
     public function getRelevantPastCoursesWithSyllabi ($user, $limit=-1)
     {
         $pastCourseSections = [];

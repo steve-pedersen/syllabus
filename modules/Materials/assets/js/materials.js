@@ -18,6 +18,7 @@
       // $clone.find('.form-group').last().find('label').text(`Material #${i+1} Title`);
       // $clone.find('.form-group.url').find('label').text(`Material #${i+1} URL`);
       $clone.find('.form-group.url').find('input').attr('name',`section[real][new-${i}][url]`).val('').text('');
+      $clone.find('.form-group.authors').find('input').attr('name',`section[real][new-${i}][authors]`).val('').text('');
       $clone.find('.form-group.publisher').find('input').attr('name',`section[real][new-${i}][publisher]`).val('').text('');
       $clone.find('.form-group.isbn').find('input').attr('name',`section[real][new-${i}][isbn]`).val('').text('');
       var $yesReq = $clone.find('.form-group.required').find('.form-check').first();

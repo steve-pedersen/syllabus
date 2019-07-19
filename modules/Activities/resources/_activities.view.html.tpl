@@ -1,8 +1,8 @@
 {assign var=realSection value=$sectionVersion->resolveSection()}
 <!-- Activities Section - View -->
 <div class="col">
-<table class="table table-sm">
-	<thead>
+	<table class="table table-sm table-striped">
+		<thead class="thead-dark">
 		<tr>
 			<th scope="col">#</th>
 			<th scope="col">Name</th>

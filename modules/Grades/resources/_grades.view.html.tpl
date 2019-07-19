@@ -1,8 +1,8 @@
 {assign var=realSection value=$sectionVersion->resolveSection()}
 <!-- Grades Section - View -->
 <div class="col">
-<table class="table table-responsive table-sm">
-	<thead>
+	<table class="table table-responsive table-sm table-striped">
+		<thead class="thead-dark">
 		<tr>
 			<th scope="col">{$realSection->header1}</th>
 			<th scope="col">{$realSection->header2}</th>

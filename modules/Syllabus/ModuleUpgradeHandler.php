@@ -122,6 +122,12 @@ class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                 $def->save();
 
                 break;
+
+            case 1:
+
+                $def = $this->alterEntityType('syllabus_published_syllabus', $this->getDataSource('Syllabus_Syllabus_PublishedSyllabus'));
+                $def->addProperty('share_level', 'string');
+                $def->save();
         }
     }
 }

@@ -1,7 +1,7 @@
 #require js/3.3.1/jquery-3.3.1.min.js
 #require js/jquery-ui.min.js
 #require js/bootstrap/4.2.1/dist/bootstrap.bundle.min.js
-#require js/bootstrap/4.2.1/dist/bootstrap.min.js
+// #require js/bootstrap/4.2.1/dist/bootstrap.min.js
 #require js/ckeditor.js
 #require js/jquery.are-you-sure.js
 #require js/jquery.are-you-sure.ios-support.js

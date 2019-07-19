@@ -17,17 +17,18 @@ class Syllabus_Syllabus_PublishedSyllabus extends Bss_ActiveRecord_Base
             'id' => 'int',
             'syllabusId' => ['int', 'nativeName' => 'syllabus_id'],
             'publishedDate' => ['datetime', 'nativeName' => 'published_date'],
+            'shareLevel' => ['string', 'nativeName' => 'share_level'],
 
             'syllabus' => ['1:1', 'to' => 'Syllabus_Syllabus_Syllabus', 'keyMap' => ['syllabus_id' => 'id']],
 
-            'sections' => ['N:M',
-                'to' => 'Syllabus_Syllabus_Section',
-                'via' => 'syllabus_published_syllabus_section_map',
-                'fromPrefix' => 'published_syllabus',
-                'toPrefix' => 'section_id',
-                'properties' =>['sort_order' => 'int', 'is_anchored' => 'bool'],
-                'orderBy' =>['+_map.sort_order']
-            ],         
+            // 'sections' => ['N:M',
+            //     'to' => 'Syllabus_Syllabus_Section',
+            //     'via' => 'syllabus_published_syllabus_section_map',
+            //     'fromPrefix' => 'published_syllabus',
+            //     'toPrefix' => 'section_id',
+            //     'properties' =>['sort_order' => 'int', 'is_anchored' => 'bool'],
+            //     'orderBy' =>['+_map.sort_order']
+            // ],         
         ];
     }
 

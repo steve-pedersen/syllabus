@@ -43,7 +43,7 @@
 										<span class="float-left"><i class="fas fa-eye"></i></span>
 										View
 									</a>
-									<a disabled style="max-width:200px;" href="syllabus/{$syllabus->id}/share" class="my-3 btn btn-outline-primary d-block disabled">
+									<a style="max-width:200px;" href="syllabus/{$syllabus->id}/share" class="my-3 btn btn-outline-primary d-block">
 										<span class="float-left"><i class="fas fa-share"></i></span>
 										Share
 									</a>

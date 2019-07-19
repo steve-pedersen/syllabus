@@ -83,6 +83,20 @@ class Syllabus_Syllabus_SyllabusVersion extends Bss_ActiveRecord_Base
         return count($this->sectionVersions);
     }
 
+    public function getCourseInfoSection ()
+    {
+        $courseInfoSection = null;
+        foreach ($this->sectionVersions as $sv)
+        {
+            if (isset($sv->course_id))
+            {
+                $courseInfoSection = $sv;
+                break;
+            }
+        }
+        return $courseInfoSection;
+    }
+
     public function getOrganization ()
     {
         $organization = null;

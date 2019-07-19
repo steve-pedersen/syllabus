@@ -5,7 +5,7 @@
 	<div class="editor-controls-left col-xl-9">
 		<div class="row">
 			<div class="col-md-3 d-block">
-				<h3 class="mt-0 mb-4 pt-0 mr-3" style="text-decoration:underline;">Add Section:</h3>
+				<h3 class="mt-0 mb-4 pt-0 mr-3 text-uppercase" style="text-decoration:underline;">Add Section:</h3>
 				{if $position == 'Top'}
 				<div class="editor-controls-header">
 				{else}
@@ -55,19 +55,35 @@
 			<button class="btn btn-success  my-1" type="submit" name="command[savesyllabus]" id="globalSave">
 				Save
 			</button>
-			<a class="btn btn-dark my-1" id="viewFromEditor" href="{$routeBase}syllabus/{$syllabus->id}/view">
-				View
-			</a>
-			{if $syllabus->inDataSource}
-			<a sr-only="Delete" class="btn btn-danger my-1" id="viewFromEditor" href="{$routeBase}syllabus/{$syllabus->id}/delete">
-				<i class="fas fa-trash"></i>
-			</a>
-			{/if}
+			<div class="dropdown d-inline">
+				<a class="btn btn-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Options
+				</a>
+				<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+					<a class="dropdown-item" id="viewFromEditor" href="{$routeBase}syllabus/{$syllabus->id}/view">
+						<i class="far fa-eye fa-2x mr-2 text-dark"></i> View
+					</a>
+				{if !$organization}
+					<div class="dropdown-divider"></div>
+					<a href="syllabus/{$syllabus->id}/share" class="dropdown-item">
+						<i class="fas fa-share-square fa-2x mr-2 text-primary"></i> Share
+					</a>
+				{/if}
+					<div class="dropdown-divider"></div>
+					<a href="{$routeBase}syllabus/startwith/{$syllabus->id}" class="dropdown-item">
+						<i class="far fa-copy fa-2x mr-2 text-secondary"></i> Clone
+					</a>
+				{if $syllabus->inDataSource}
+					<div class="dropdown-divider"></div>
+					<a sr-only="Delete" class="dropdown-item" id="viewFromEditor" href="{$routeBase}syllabus/{$syllabus->id}/delete">
+						<i class="fas fa-trash fa-2x mr-2 text-danger"></i> Delete
+					</a>
+				{/if}
+				</div>
+			</div>
+
 			<a href="{$routeBase}{if $syllabus->inDataSource}syllabus/{$syllabus->id}{else}{$smarty.server.REQUEST_URI}{/if}" class="btn btn-default my-1">Cancel</a>
 		</div>
-<!-- 		<div class="">
-			<button class="btn btn-link accordion-collapse-all align-bottom">Collapse all sections</button>
-		</div> -->
 	</div>
 
 </div> <!-- End row -->

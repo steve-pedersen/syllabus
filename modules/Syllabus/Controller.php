@@ -17,6 +17,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabi'                   => ['callback' => 'mySyllabi'],
             'syllabus/:id'              => ['callback' => 'edit', ':id' => '[0-9]+|new'],
             'syllabus/:id/view'         => ['callback' => 'view', ':id' => '[0-9]+'],
+            'syllabus/:id/share'        => ['callback' => 'share', ':id' => '[0-9]+'],
             'syllabus/:id/delete'       => ['callback' => 'delete', ':id' => '[0-9]+'],
             'syllabus/:id/screenshot'   => ['callback' => 'screenshot', ':id' => '[0-9]+'],
             'syllabus/courses'          => ['callback' => 'courseLookup'],
@@ -102,7 +103,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {    
             $data = $this->request->getPostParameters();
 
-            switch ($this->getPostCommand()) {
+            switch ($this->getPostCommand()) 
+            {
                 
                 case 'resourceToSyllabi':
                     $resourceId = key($this->getPostCommandData());
@@ -453,8 +455,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         if ($this->request->wasPostedByUser())
         {      
-            switch ($this->getPostCommand()) {
-
+            switch ($this->getPostCommand()) 
+            {
                 case 'editsyllabus':
                     $this->template->editMetadata = true;
                     $this->template->syllabusVersion = $syllabusVersion;
@@ -676,13 +678,64 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->routeBase = $routeBase;
     }
 
+    public function share ()
+    {
+        $viewer = $this->requireLogin();  
+        $syllabus = $this->requireExists($this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id'));
+        $syllabusVersion = $syllabus->latestVersion;
+        $publishSchema = $this->schema('Syllabus_Syllabus_PublishedSyllabus');
+        $published = null;
+        $published = @$publishSchema->findOne($publishSchema->syllabusId->equals($syllabus->id));
+
+        $this->setPageTitle('Share Syllabus');
+        $this->addBreadcrumb('syllabus/'.$syllabus->id, 'Edit Syllabus');
+        $this->addBreadcrumb('syllabus/'.$syllabus->id.'/share', 'Share');
+
+        $sid = $syllabus->id;
+        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
+        $results = $this->getScreenshotUrl($sid, $screenshotter, true);
+        $syllabus->imageUrl = $results->imageUrls->$sid;
+
+        if ($this->request->wasPostedByUser())
+        {   
+            switch ($this->getPostCommand()) 
+            {
+                case 'share':
+                    $shareLevel = $this->request->getPostParameter('share');
+                    $published = $this->publishSyllabus($syllabus, $shareLevel, $published);
+
+                    $this->flash('Share level updated!', 'success');
+                    $this->response->redirect('syllabus/' . $syllabus->id . '/share');
+                    break;
+            }
+        }
+
+        $shareLevel = $published && isset($published->shareLevel) ? $published->shareLevel : 'private';
+        $this->template->syllabus = $syllabus;
+        $this->template->syllabusVersion = $syllabusVersion;
+        $this->template->courseInfoSection = $syllabusVersion->getCourseInfoSection();
+        $this->template->published = $published;
+        $this->template->shareLevel = $shareLevel;
+    }
+
+    private function publishSyllabus ($syllabus, $shareLevel='all', $published=null)
+    {
+        $schema = $this->schema('Syllabus_Syllabus_PublishedSyllabus');
+        $publishedSyllabus = $published ? $schema->get($published->id) : $schema->createInstance();
+        $publishedSyllabus->syllabusId = $syllabus->id;
+        $publishedSyllabus->shareLevel = $shareLevel;
+        $publishedSyllabus->publishedDate = new DateTime;
+        $publishedSyllabus->save();
+
+        return $publishedSyllabus;
+    }
+
     public function delete ()
     {
         $viewer = $this->requireLogin();  
         $syllabus = $this->requireExists($this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id'));
         $syllabusVersion = $syllabus->latestVersion;
 
-        // TODO: require it is owner's syllabus, admin or organization manager
         if (!$this->hasPermission('admin') && !$this->hasDeletePermission($syllabus, $viewer))
         {
             $this->accessDenied("You don't have permission to delete this syllabus.");            
@@ -691,9 +744,14 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $title = 'Delete Syllabus?';
         $this->setPageTitle($title);
 
-        $routeBase = $this->getRouteVariable('routeBase', 'syllabi');
+        $routeBase = $this->getRouteVariable('routeBase', '');
         $organization = $this->getRouteVariable('organization', null);
 
+        $this->setPageTitle('Share Syllabus');
+        $this->addBreadcrumb($routeBase . 'syllabus/'.$syllabus->id, 'Edit Syllabus');
+        $this->addBreadcrumb($routeBase . 'syllabus/'.$syllabus->id.'/delete', 'Delete');
+
+        $routeBase = $routeBase === '' ? 'syllabi' : $routeBase;
         $pathParts = [];
         $pathParts[] = $routeBase;
         $pathParts[] = 'syllabus';
@@ -715,9 +773,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         if ($this->request->wasPostedByUser())
         {   
-            $data = $this->request->getPostParameters();
-            switch ($this->getPostCommand()) {
-
+            switch ($this->getPostCommand()) 
+            {
                 case 'deletesyllabus':
 
                     if ($this->hasPermission('admin') || $this->hasDeletePermission($syllabus, $viewer))

@@ -32,6 +32,12 @@
                         <input class="form-control" type="text" name="section[real][{$materialId}][url]" value="{$material->url}">
                     </div>
                 </div>
+                <div class="form-group authors row px-3">
+                    <label class="col-lg-3 col-form-label form-control-label">Author(s)</label>
+                    <div class="col-lg-9">
+                        <input class="form-control" type="text" name="section[real][{$materialId}][authors]" value="{$material->authors}">
+                    </div>
+                </div>
                 <div class="form-group publisher row px-3">
                     <label class="col-lg-3 col-form-label form-control-label">Publisher</label>
                     <div class="col-lg-9">
@@ -65,10 +71,11 @@
                     </div>
                     <div class="col-1 text-truncate"><strong>#{$i+1}</strong></div>
                     <div class="col-3 text-truncate"><strong>Title: </strong>{$material->title|truncate:50}</div>
-                    <div class="col-3 text-truncate ">
+                    <div class="col-2 text-truncate ">
                         <strong>URL: </strong><a href="{$material->url}">{$material->url|strip_tags:true|truncate:30}</a>
                     </div>
-                    <div class="col-2 text-truncate">{$material->publisher|truncate:50}</div>
+                    <div class="col-2 text-truncate">{$material->authors|truncate:50}</div>
+                    <div class="col-1 text-truncate">{$material->publisher|truncate:50}</div>
                     <div class="col-1 text-truncate">{$material->isbn|truncate:50}</div>
                     <div class="col-1 text-truncate">
                         {if $material->required}<span class="text-danger">Required</span>{/if}
@@ -112,6 +119,12 @@
         <label class="col-lg-3 url col-form-label form-control-label">URL</label>
         <div class="col-lg-9">
             <input class="form-control" type="text" name="section[real][{$materialId}][url]" value="">
+        </div>
+    </div>
+    <div class="form-group authors row">
+        <label class="col-lg-3 authors col-form-label form-control-label">Author(s)</label>
+        <div class="col-lg-9">
+            <input class="form-control" type="text" name="section[real][{$materialId}][authors]" value="">
         </div>
     </div>
     <div class="form-group publisher row">
