@@ -40,6 +40,7 @@ class Syllabus_Policies_Policies extends Bss_ActiveRecord_Base
         {
             $this->save();
             $schema = $this->getSchema('Syllabus_Policies_Policy');
+            $htmlSanitizer = new Bss_RichText_HtmlSanitizer();
             foreach ($data['section']['real'] as $id => $policy)
             {
                 if ($this->isNotWhiteSpaceOnly($policy, 'description'))
@@ -56,6 +57,8 @@ class Syllabus_Policies_Policies extends Bss_ActiveRecord_Base
                     if ($save)
                     {
                         $obj->absorbData($policy);
+                        $obj->title = isset($policy['title']) ? strip_tags(trim($policy['title'])) : '';
+                        $obj->description = $htmlSanitizer->sanitize(trim($policy['description']));
                         $obj->policies_id = $this->id;
                         $obj->save();
                     }   

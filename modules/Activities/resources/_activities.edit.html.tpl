@@ -29,7 +29,7 @@
                     </div>
                 </div>
                 <div class="form-group value row px-3">
-                    <label class="col-lg-3 col-form-label form-control-label">Value</label>
+                    <label class="col-lg-3 col-form-label form-control-label">Contribution to Grade</label>
                     <div class="col-lg-9">
                         <input class="form-control" type="text" name="section[real][{$activityId}][value]" value="{$activity->value}">
                     </div>
@@ -85,7 +85,7 @@
         </div>
     </div>
     <div class="form-group value row">
-        <label class="col-lg-3 col-form-label form-control-label">Value</label>
+        <label class="col-lg-3 col-form-label form-control-label">Contribution to Grade</label>
         <div class="col-lg-9">
             <input class="form-control" type="text" name="section[real][{$activityId}][value]" value="">
         </div>

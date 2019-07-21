@@ -1,5 +1,6 @@
 {assign var=realSection value=$sectionVersion->resolveSection()}
 <!-- Course Section - View --> 
+{if $realSection->title}
 <div class="col">
 	<dl class="row">
 		<dt class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
@@ -29,4 +30,5 @@
 		</dd>
 	</dl>
 </div>
+{/if}
 <!-- End Course Section - View -->

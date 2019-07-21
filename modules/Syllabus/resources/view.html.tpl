@@ -31,9 +31,9 @@
 	</nav>
 
 	<!-- <nav class="col-md-2 col-sm-12 col-xs-12 d-sm-block ml-auto anchor-links-sidebar-left bg-white text-dark"> -->
-	<nav class="col-2 ml-auto anchor-links-sidebar-left bg-white text-dark">
+	<nav class="col-2 ml-auto anchor-links-sidebar-left bg-white text-dark mt-3">
 		<div class="sidebar-sticky mt-5 py-3">
-			<ul class="nav flex-column pt-5 text-right text-primary">
+			<ul class="nav flex-column  text-right text-primary">
 				<li class="nav-item sidebar-anchor-item">
 					<a class="nav-link" href="{$smarty.server.REQUEST_URI}#goToTop">
 					<strong>Go To Top</strong> <i class="fas fa-arrow-up pl-2"></i> 

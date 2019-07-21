@@ -176,7 +176,8 @@
 			</main>
         </div>
     </div>      
-
+    <footer id="footer"></footer>
+    
 		<script> 
 			var CKEDITOR_BASEPATH = "{$baseUrl|escape}/assets/js/ckeditor/"; 
 			window.CKEDITOR_BASEPATH = CKEDITOR_BASEPATH;

@@ -39,25 +39,27 @@ class Syllabus_Resources_Resources extends Bss_ActiveRecord_Base
     {
         $data = $request->getPostParameters();
         $errorMsg = '';
-
+        echo "<pre>"; var_dump('fix bug: add preset resource, then add custom resource with no title and save. this deletes all fields from the preset one.'); die;
         if (isset($data['section']) && isset($data['section']['real']))
         {
-            if ($this->isNotWhiteSpaceOnly($data['section']['real'], 'additionalInformation'))
+            $data = $data['section']['real'];
+            $htmlSanitizer = new Bss_RichText_HtmlSanitizer();
+            if ($this->isNotWhiteSpaceOnly($data, 'additionalInformation'))
             {
-                $this->additionalInformation = $data['section']['real']['additionalInformation'];
+                $this->additionalInformation = $htmlSanitizer->sanitize(trim($data['additionalInformation']));
             }
-            unset($data['section']['real']['additionalInformation']);
+            unset($data['additionalInformation']);
             $this->save();
 
             $resources = $this->getSchema('Syllabus_Resources_Resource');
             $campusResources = $this->getSchema('Syllabus_Syllabus_CampusResource');
 
-            foreach ($data['section']['real'] as $id => $resource)
+            foreach ($data as $id => $resource)
             {
                 if ($id === 'campusResources')
                 {
                 	$existingResources = [];
-                	foreach ($data['section']['real'] as $otherId => $otherResource)
+                	foreach ($data as $otherId => $otherResource)
                 	{
                 		if (is_numeric($otherId))
                 		{
@@ -87,9 +89,10 @@ class Syllabus_Resources_Resources extends Bss_ActiveRecord_Base
                 			$errorMsg = 'Invalid Campus Resource id was submitted.';
                 		}
                 	}
-                	unset($data['section']['real']['campusResources']);
+                	unset($data['campusResources']);
                 }
-                elseif ($this->isNotWhiteSpaceOnly($resource, 'title') || (isset($resource['isCustom']) && $resource['isCustom'] === 'false'))
+                elseif ($this->isNotWhiteSpaceOnly($resource, 'title') || 
+                    (isset($resource['isCustom']) && $resource['isCustom'] === 'false'))
                 {
                     $obj = (!is_numeric($id)) ? $resources->createInstance() : $resources->get($id);
                     $save = true;
@@ -103,6 +106,10 @@ class Syllabus_Resources_Resources extends Bss_ActiveRecord_Base
                     if ($save)
                     {
                         $obj->absorbData($resource);
+                        $obj->title = isset($resource['title']) ? strip_tags(trim($resource['title'])) : '';
+                        $obj->url = isset($resource['url']) ? strip_tags(trim($resource['url'])) : '';
+                        $obj->abbreviation = isset($resource['abbreviation']) ? strip_tags(trim($resource['abbreviation'])) : '';
+                        $obj->description = $htmlSanitizer->sanitize(trim($resource['description']));
                         $obj->resources_id = $this->id;
                         $obj->isCustom = (isset($resource['isCustom']) && ($resource['isCustom']==='false')) ? false : true;
                         $obj->save();

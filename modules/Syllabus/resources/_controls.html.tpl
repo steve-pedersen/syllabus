@@ -61,22 +61,22 @@
 				</a>
 				<div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
 					<a class="dropdown-item" id="viewFromEditor" href="{$routeBase}syllabus/{$syllabus->id}/view">
-						<i class="far fa-eye fa-2x mr-2 text-dark"></i> View
+						<i class="far fa-eye  mr-3 text-dark"></i> View
 					</a>
-				{if !$organization}
+				{if !$organization && $hasCourseSection}
 					<div class="dropdown-divider"></div>
 					<a href="syllabus/{$syllabus->id}/share" class="dropdown-item">
-						<i class="fas fa-share-square fa-2x mr-2 text-primary"></i> Share
+						<i class="fas fa-share-square  mr-3 text-primary"></i> Share
 					</a>
 				{/if}
 					<div class="dropdown-divider"></div>
 					<a href="{$routeBase}syllabus/startwith/{$syllabus->id}" class="dropdown-item">
-						<i class="far fa-copy fa-2x mr-2 text-secondary"></i> Clone
+						<i class="far fa-copy  mr-3 text-secondary"></i> Clone
 					</a>
 				{if $syllabus->inDataSource}
 					<div class="dropdown-divider"></div>
 					<a sr-only="Delete" class="dropdown-item" id="viewFromEditor" href="{$routeBase}syllabus/{$syllabus->id}/delete">
-						<i class="fas fa-trash fa-2x mr-2 text-danger"></i> Delete
+						<i class="fas fa-trash  mr-3 text-danger"></i> Delete
 					</a>
 				{/if}
 				</div>

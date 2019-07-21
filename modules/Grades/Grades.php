@@ -56,17 +56,23 @@ class Syllabus_Grades_Grades extends Bss_ActiveRecord_Base
 
         if (isset($data['section']) && isset($data['section']['real']))
         {
-            $this->absorbData($data['section']['real']);
+            $data = $data['section']['real'];
+            $htmlSanitizer = new Bss_RichText_HtmlSanitizer();
+            $this->absorbData($data);
+            $this->header1 = isset($data['header1']) ? strip_tags(trim($data['header1'])) : '';
+            $this->header2 = isset($data['header2']) ? strip_tags(trim($data['header2'])) : '';
+            $this->header3 = isset($data['header3']) ? strip_tags(trim($data['header3'])) : '';
+            $this->additionalInformation = $htmlSanitizer->sanitize(trim($data['additionalInformation']));
             $this->save();
 
-            unset($data['section']['real']['columns']);
-            unset($data['section']['real']['header1']);
-            unset($data['section']['real']['header2']);
-            unset($data['section']['real']['header3']);
-            unset($data['section']['real']['additionalInformation']);
+            unset($data['columns']);
+            unset($data['header1']);
+            unset($data['header2']);
+            unset($data['header3']);
+            unset($data['additionalInformation']);
 
             $schema = $this->getSchema('Syllabus_Grades_Grade');
-            foreach ($data['section']['real'] as $id => $grade)
+            foreach ($data as $id => $grade)
             {
                 if ($this->isNotWhiteSpaceOnly($grade, 'column1'))
                 {
@@ -82,6 +88,9 @@ class Syllabus_Grades_Grades extends Bss_ActiveRecord_Base
                     if ($save)
                     {
                         $obj->absorbData($grade);
+                        $obj->column1 = $htmlSanitizer->sanitize(trim($grade['column1']));
+                        $obj->column2 = $htmlSanitizer->sanitize(trim($grade['column2']));
+                        $obj->column3 = $htmlSanitizer->sanitize(trim($grade['column3']));
                         $obj->grades_id = $this->id;
                         $obj->save();
                     }   

@@ -95,25 +95,12 @@ html {
 }
 
 .viewer-main-container {
-	// h1 {
-	// 	font-size: 16pt;
-	// 	font-weight: bold;
-	// 	text-decoration: underline;
-	// }
-	// h2 {
-	// 	font-size: 14pt;
-	// 	font-weight: bold;
-	// }
-	// h3 {
-	// 	font-size: 12pt;
-	// 	font-weight: bold;
-	// }
-	// p {
-	// 	font-size: 12pt;
-	// }
-
 	.sidebar-sticky {
-		border-right: 5px solid $light;
+		ul {
+			padding-top: 1.5rem;
+			padding-bottom: 1.5rem;
+			border-right: 5px solid $light;
+		}
 	}
 	.syllabus-viewer {
 		box-shadow: 0 0 10px $grey_light_4;
@@ -150,6 +137,11 @@ div.my-syllabi-nav {
 div.overview-container {
 	.overview-section {
 		margin-bottom: 10rem;
+		.my-syllabi-overview {
+			.start-card {
+			    box-shadow: 0 0 5px #e2e2e2;
+			}
+		}
 	}
 	h2 {
 		font-size: 1.75rem;
@@ -243,7 +235,6 @@ div.overview-container {
 }
 .anchor-links-sidebar {
 	padding-left: 0;
-	white-space: nowrap;
 	> .sidebar-sticky {
 		position: relative;
 		> ul {
@@ -393,13 +384,41 @@ div.overview-container {
 	}
 }
 form#chooseStartingPoint {
+	h1 {
+		font-family: $brand-font-family;
+		font-weight: 500;
+		letter-spacing: 0.8px;
+	}
 	.collapsed {
 		color: $muted;
 	}
 	@media (max-width: 767.98px) {
 		h2 {
 			font-size: 2.75rem;
-		}		
+		}
+		li.media {
+			margin-top: 2em;
+			border: 2px solid $success;
+			border-bottom: none;
+			border-radius: 10px 10px 0 0;
+			&.collapsed {
+				border: 2px solid $info;
+				border-radius: 10px;
+				box-shadow: 0 0 5px #e2e2e2;
+				&:hover,
+				&:focus {
+					background-color: $light;
+					box-shadow: 0 0 10px #e2e2e2;
+				}				
+			}
+		}
+		div.collapse.show {
+			border: 2px solid $success;
+			border-top: none;
+			border-radius: 0 0 10px 10px;
+			padding-bottom: 1em;
+		}
+
 	}
 	@media (max-width: 575.98px) {
 		i.start-icon {

@@ -135,7 +135,7 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
                 $orgs['colleges'][$cs->department->college->id] = $cs->department->college;
             }
         }
-        // echo "<pre>"; var_dump(count($orgs['colleges'])); die;
+        // echo "<pre>"; var_dump(count($orgs['departments'])); die;
         return $orgs;
     }
 

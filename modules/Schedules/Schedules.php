@@ -53,21 +53,28 @@ class Syllabus_Schedules_Schedules extends Bss_ActiveRecord_Base
     {
         $data = $request->getPostParameters();
         $errorMsg = '';
-
+        echo "<pre>"; var_dump('fix bug: changing order when editing new rows deactivcates the ckeditors. test this on other sections that have ckeditors too.'); die;
         if (isset($data['section']) && isset($data['section']['real']))
         {
-            $this->absorbData($data['section']['real']);
+            $data = $data['section']['real'];
+            $htmlSanitizer = new Bss_RichText_HtmlSanitizer();
+            $this->absorbData($data);
+            $this->header1 = isset($data['header1']) ? strip_tags(trim($data['header1'])) : '';
+            $this->header2 = isset($data['header2']) ? strip_tags(trim($data['header2'])) : '';
+            $this->header3 = isset($data['header3']) ? strip_tags(trim($data['header3'])) : '';
+            $this->header4 = isset($data['header4']) ? strip_tags(trim($data['header4'])) : '';
+            $this->additionalInformation = $htmlSanitizer->sanitize(trim($data['additionalInformation']));
             $this->save();
 
-            unset($data['section']['real']['columns']);
-            unset($data['section']['real']['header1']);
-            unset($data['section']['real']['header2']);
-            unset($data['section']['real']['header3']);
-            unset($data['section']['real']['header4']);
-            unset($data['section']['real']['additionalInformation']);
+            unset($data['columns']);
+            unset($data['header1']);
+            unset($data['header2']);
+            unset($data['header3']);
+            unset($data['header4']);
+            unset($data['additionalInformation']);
 
             $schema = $this->getSchema('Syllabus_Schedules_Schedule');
-            foreach ($data['section']['real'] as $id => $schedule)
+            foreach ($data as $id => $schedule)
             {
                 if ($this->isNotWhiteSpaceOnly($schedule, 'column1') || $this->isNotWhiteSpaceOnly($schedule, 'column2'))
                 {
@@ -83,6 +90,10 @@ class Syllabus_Schedules_Schedules extends Bss_ActiveRecord_Base
                     if ($save)
                     {
                         $obj->absorbData($schedule);
+                        $obj->column1 = $htmlSanitizer->sanitize(trim($schedule['column1']));
+                        $obj->column2 = $htmlSanitizer->sanitize(trim($schedule['column2']));
+                        $obj->column3 = $htmlSanitizer->sanitize(trim($schedule['column3']));
+                        $obj->column4 = $htmlSanitizer->sanitize(trim($schedule['column4']));
                         $obj->schedules_id = $this->id;
                         $obj->save();
                     }   

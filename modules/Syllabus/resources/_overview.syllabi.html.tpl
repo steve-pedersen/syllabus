@@ -6,7 +6,7 @@
 </p>
 	<div class="row mb-3">
 		<div class="col-lg-3 col-md-4 px-2">
-			<div class="card">
+			<div class="card start-card">
 				<a href="syllabus/start" class="text-center stretched-link align-text-middle text-success start-syllabus">
 				<div class="card-body text-center align-text-middle text-success h-100">
 					<i class="mt-5 mb-5 fas fa-plus-circle fa-7x"></i>

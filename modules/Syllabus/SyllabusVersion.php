@@ -72,7 +72,23 @@ class Syllabus_Syllabus_SyllabusVersion extends Bss_ActiveRecord_Base
 
         return $sectionVersions;
     }
-    
+
+    public function setTitle ($title)
+    {      
+        $title = (is_string($title) ? strip_tags(trim($title)) : null);
+        $this->_assign('title', $title);
+        
+        if (empty($title))
+        {
+            $this->invalidate('title', 'Please provide a title for your syllabus.');
+        }
+    }
+    public function setDescription ($description)
+    {        
+        $description = (is_string($description) ? strip_tags(trim($description)) : null);
+        $this->_assign('description', $description);
+    }
+
     public function getNormalizedVersion ()
     {
         return $this->syllabus->getNormalizedVersion($this->id);

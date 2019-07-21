@@ -1,5 +1,5 @@
 <div class="row editor-main-container">
-	<main role="main" class="col-md-10 ml-sm-auto col-lg-10 mt-0">
+	<main role="main" class="col-md-9 ml-sm-auto col-lg-9 col-xl-10 mt-0">
 		{if $isUniversityTemplate}
 		<div class="text-center alert alert-danger alert-dismissible fade show" role="alert">
 			<strong>Attention!</strong> 
@@ -106,7 +106,7 @@
 	<input type="hidden" value="{$editUri}" id="editUri">
 	{/if}
 	
-	<nav class="col-md-2 d-none d-md-block anchor-links-sidebar bg-light text-dark px-0">
+	<nav class="col-xl-2 col-lg-3 col-md-3  anchor-links-sidebar bg-light text-dark px-0">
 		<div class="sidebar-sticky">
 			<ul class="nav flex-column">
 				<div class="mb-3 border-bottom text-right">

@@ -65,7 +65,7 @@
 				</li>
 			</ul>
 
-		{if $privilegedOrganizations || $pAdmin}
+		{if $privilegedOrganizations['departments'] || $privilegedOrganizations['colleges'] || $pAdmin}
 			<ul class="list-unstyled components my-orgs">
 				<li class="">
 					<a class="nav-category" href="organizations" id="sidebarMyOrganizations">
@@ -298,7 +298,7 @@
 
   
 
-		<footer class="sticky-footer fixed-bottom">
+		<footer class="sticky-footer fixed-bottom" id="footer">
 			<nav class="navbar at-footer">
 				<div class="footer-row-1 container-fluid">
 					<div class="container">

@@ -110,21 +110,23 @@
         topPadding = 20;
         transition = 200;
         transition = 0,
-        minimize   = false;
+        minimize   = false,
+        maxY = $('#footer').offset().top;
+
 
     var windowWidth = $(window).width();
     $window.resize(function() {
         windowWidth = $(window).width();
 	    if ($sidebar.length && (windowWidth > 991)) {
 		    $window.scroll(function() {
-		        if ($window.scrollTop() > offset.top && (windowWidth > 991)) {
+		        if ($window.scrollTop() > offset.top && (windowWidth > 991) && $window.scrollTop() < maxY) {
 		            $sidebar.stop().animate({
 		                marginTop: $window.scrollTop() - offset.top + topPadding
 		            }, transition);
 		        } else {
 		            $sidebar.stop().animate({
 		                marginTop: 0
-		            }, transition);
+		            }, 10);
 		        }
 		    });    	
 	    } else if (windowWidth < 992) {
@@ -146,14 +148,14 @@
 
     if ($sidebar.length && (windowWidth > 991)) {
 	    $window.scroll(function() {
-	        if ($window.scrollTop() > offset.top && (windowWidth > 991)) {
+	        if ($window.scrollTop() > offset.top && (windowWidth > 991) && $window.scrollTop() < maxY) {
 	            $sidebar.stop().animate({
 	                marginTop: $window.scrollTop() - offset.top + topPadding
 	            }, transition);
 	        } else {
 	            $sidebar.stop().animate({
 	                marginTop: 0
-	            }, transition);
+	            }, 10);
 	        }
 	    });    	
     } else if (windowWidth < 992) {

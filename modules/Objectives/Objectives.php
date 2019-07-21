@@ -40,6 +40,7 @@ class Syllabus_Objectives_Objectives extends Bss_ActiveRecord_Base
         {
             $this->save();
             $schema = $this->getSchema('Syllabus_Objectives_Objective');
+            $htmlSanitizer = new Bss_RichText_HtmlSanitizer();
             foreach ($data['section']['real'] as $id => $objective)
             {
                 if ($this->isNotWhiteSpaceOnly($objective, 'description'))
@@ -56,6 +57,8 @@ class Syllabus_Objectives_Objectives extends Bss_ActiveRecord_Base
                     if ($save)
                     {
                         $obj->absorbData($objective);
+                        $obj->title = isset($objective['title']) ? strip_tags(trim($objective['title'])) : '';
+                        $obj->description = $htmlSanitizer->sanitize(trim($objective['description']));
                         $obj->objectives_id = $this->id;
                         $obj->save();
                     }   

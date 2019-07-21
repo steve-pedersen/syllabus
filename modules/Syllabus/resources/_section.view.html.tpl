@@ -22,7 +22,10 @@
 	<div class="collapse multi-collapse show section-collapsible" id="{$extName}Collapse{$i}">
 		<div class="card card-outline-secondary border-top-0 rounded-0">
 			<div class="card-body">
-				{if $sectionVersion->description}<p><span class="text-dark">{$sectionVersion->description}</span></p>{/if}
+				{if $sectionVersion->description}
+					<!-- <p><span class="text-dark">{$sectionVersion->description}</span></p> -->
+					{$sectionVersion->description}
+				{/if}
 				{include file="{$ext->getViewFragment()}"}
 			    <div class="form-group row">
 			        <label class="col-lg-3 col-form-label form-control-label"></label>

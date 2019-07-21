@@ -36,10 +36,12 @@ class Syllabus_Instructors_Instructors extends Bss_ActiveRecord_Base
     {
         $data = $request->getPostParameters();
         $errorMsg = '';
+        // echo "<pre>"; var_dump($data['section']['real']); die;
         if (isset($data['section']) && isset($data['section']['real']))
         {
             $this->save();
             $schema = $this->getSchema('Syllabus_Instructors_Instructor');
+            $htmlSanitizer = new Bss_RichText_HtmlSanitizer();
             foreach ($data['section']['real'] as $id => $instructor)
             {
                 if ($this->isNotWhiteSpaceOnly($instructor, 'name'))
@@ -56,6 +58,15 @@ class Syllabus_Instructors_Instructors extends Bss_ActiveRecord_Base
                     if ($save)
                     {
                         $obj->absorbData($instructor);
+                        $obj->name = isset($instructor['name']) ? strip_tags(trim($instructor['name'])) : '';
+                        $obj->title = isset($instructor['title']) ? strip_tags(trim($instructor['title'])) : '';
+                        $obj->email = isset($instructor['email']) ? strip_tags(trim($instructor['email'])) : '';
+                        $obj->credentials = isset($instructor['credentials']) ? strip_tags(trim($instructor['credentials'])) : '';
+                        $obj->office = isset($instructor['office']) ? strip_tags(trim($instructor['office'])) : '';
+                        $obj->website = isset($instructor['website']) ? strip_tags(trim($instructor['website'])) : '';
+                        $obj->phone = isset($instructor['phone']) ? strip_tags(trim($instructor['phone'])) : '';
+                        $obj->officeHours = $htmlSanitizer->sanitize(trim($instructor['officeHours']));
+                        $obj->about = $htmlSanitizer->sanitize(trim($instructor['about']));
                         $obj->instructors_id = $this->id;
                         $obj->save();
                     }   

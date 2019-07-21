@@ -292,3 +292,7 @@ hr {
 	font-size: 18pt;
 	font-size: 1.5rem;
 }
+.text-break {
+	overflow-wrap: break-word;
+	word-break: break-word;
+}

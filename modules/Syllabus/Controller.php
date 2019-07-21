@@ -661,13 +661,20 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $this->requireExists($templateId);
         }
 
+        $hasCourseSection = false;
         $syllabusSectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
         foreach ($syllabusSectionVersions as $sv)
         {
             $sv->canEditReadOnly = $sv->canEdit($viewer, $syllabusVersion, $organization);
+            if ($sv->extension->getExtensionKey() === 'course_id' && isset($sv->resolveSection()->externalKey))
+            {
+
+            	$hasCourseSection = true;
+            }
         }
 
         $this->template->sidebarMinimized = true;
+        $this->template->hasCourseSection = $hasCourseSection;
         $this->template->title = $title;
         $this->template->syllabus = $syllabus;
         $this->template->syllabusVersion = $syllabusVersion;
@@ -684,8 +691,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $syllabus = $this->requireExists($this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id'));
         $syllabusVersion = $syllabus->latestVersion;
         $publishSchema = $this->schema('Syllabus_Syllabus_PublishedSyllabus');
-        $published = null;
-        $published = @$publishSchema->findOne($publishSchema->syllabusId->equals($syllabus->id));
+        // $published = null;
+        $published = $this->getPublishedSyllabus($syllabus);
 
         $this->setPageTitle('Share Syllabus');
         $this->addBreadcrumb('syllabus/'.$syllabus->id, 'Edit Syllabus');
@@ -710,12 +717,29 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             }
         }
 
-        $shareLevel = $published && isset($published->shareLevel) ? $published->shareLevel : 'private';
+        // $shareLevel = $published && isset($published->shareLevel) ? $published->shareLevel : 'private';
         $this->template->syllabus = $syllabus;
         $this->template->syllabusVersion = $syllabusVersion;
         $this->template->courseInfoSection = $syllabusVersion->getCourseInfoSection();
         $this->template->published = $published;
-        $this->template->shareLevel = $shareLevel;
+        $this->template->shareLevel = $this->getShareLevel($syllabus);
+    }
+
+    public function getPublishedSyllabus ($syllabus)
+    {
+        $schema = $this->schema('Syllabus_Syllabus_PublishedSyllabus');
+        $published = $schema->findOne(
+            $schema->syllabusId->isNotNull()->andIf(
+                $schema->syllabusId->equals($syllabus->id)
+            )
+        );
+        return $published;        
+    }
+
+    public function getShareLevel ($syllabus)
+    {
+        $published = $this->getPublishedSyllabus($syllabus);
+        return ($published ? $published->shareLevel : 'private');
     }
 
     private function publishSyllabus ($syllabus, $shareLevel='all', $published=null)
@@ -890,7 +914,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $anyChange = false;
         $sectionChange = false;
         $sectionDelete = false;
-        
+        // echo "<pre>"; var_dump($data['section']['real'], $data); die;
         if ((isset($data['section']) && isset($data['section']['versionId'])))
         {
         	$sectionVersionId = $data['section']['versionId'];
@@ -971,25 +995,26 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             {
             	$this->template->addUserMessage($errorMsg, '');
             }
-            if (isset($data['section']) && isset($data['section']['real']) && isset($data['section']['real']['external_key']))
-            {	// TODO: figure out why this isn't working in the Courses procesEdit()
-                $realSection->absorbData($data['section']['real']);
-                $realSection->externalKey = $data['section']['real']['external_key'];
-            }
-            $realSection->save();
+          //   if (isset($data['section']) && isset($data['section']['real']) && isset($data['section']['real']['external_key']))
+          //   {	// TODO: figure out why this isn't working in the Courses procesEdit()
+        		// // echo "<pre>"; var_dump($data['section']['real'], $data); die;
+          //       $realSection->absorbData($data['section']['real']);
+          //       $realSection->externalKey = $data['section']['real']['external_key'];
+          //   }
+          //   $realSection->save();
 
-            if ($extKey === 'course_id' && $realSection->externalKey)
-            {
-                $courses = $this->schema('Syllabus_ClassData_CourseSection');
-                $course = $courses->findOne($courses->id->equals($realSection->externalKey));
-                $course->syllabus_id = $syllabus->id ?? '';
-                $course->save();
-                $courseData = $course->getData();
-                $courseData['semester'] = Syllabus_Admin_Semester::ConvertToTerm($courseData['semester'], true);
-                unset($courseData['id']);
-                $realSection->absorbData($courseData);
-                $realSection->save();
-            }
+          //   if ($extKey === 'course_id' && $realSection->externalKey)
+          //   {
+          //       $courses = $this->schema('Syllabus_ClassData_CourseSection');
+          //       $course = $courses->findOne($courses->id->equals($realSection->externalKey));
+          //       $course->syllabus_id = $syllabus->id ?? '';
+          //       $course->save();
+          //       $courseData = $course->getData();
+          //       $courseData['semester'] = Syllabus_Admin_Semester::ConvertToTerm($courseData['semester'], true);
+          //       unset($courseData['id']);
+          //       $realSection->absorbData($courseData);
+          //       $realSection->save();
+          //   }
 
             // TODO: add Subsection logic
             // $subsection = $subsections->createInstance(); 
@@ -1000,7 +1025,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $newSectionVersion->$extKey = $realSection->id;
             if (isset($data['section']['generic'][$sectionVersionId]))
             {
-                $newSectionVersion->absorbData($data['section']['generic'][$sectionVersionId]);
+                // $newSectionVersion->absorbData($data['section']['generic'][$sectionVersionId]);
+                $newSectionVersion->title = $data['section']['generic'][$sectionVersionId]['title'];
+                $newSectionVersion->description = $data['section']['generic'][$sectionVersionId]['description'];
             }
             $newSectionVersion->save();
         }
@@ -1035,7 +1062,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
    
             if (isset($data['syllabus']) && isset($data['syllabus']['title']))
             {
-                $newSyllabusVersion->absorbData($data['syllabus']);
+                // $newSyllabusVersion->absorbData($data['syllabus']);
+                $newSyllabusVersion->title = $data['syllabus']['title'];
+                $newSyllabusVersion->description = isset($data['syllabus']['description']) ? $data['syllabus']['description'] : '';
             }
             
             $newSyllabusVersion->save();

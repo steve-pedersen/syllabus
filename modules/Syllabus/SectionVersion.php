@@ -46,6 +46,23 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
         ];
     }
 
+    public function setTitle ($title)
+    {      
+        $title = (is_string($title) ? strip_tags(trim($title)) : null);
+        $this->_assign('title', $title);
+        
+        if (empty($title))
+        {
+            $this->invalidate('title', 'Please provide a title for your section.');
+        }
+    }
+    public function setDescription ($description)
+    {        
+        $htmlSanitizer = new Bss_RichText_HtmlSanitizer();
+        $description = (is_string($description) ? $htmlSanitizer->sanitize(trim($description)) : null);
+        $this->_assign('description', $description);
+    }
+
     public function resolveSection ()
     {
         $extensions = $this->_schema->getExtensions();

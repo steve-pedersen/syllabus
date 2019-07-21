@@ -40,6 +40,7 @@ class Syllabus_Activities_Activities extends Bss_ActiveRecord_Base
         {
             $this->save();
             $schema = $this->getSchema('Syllabus_Activities_Activity');
+            $htmlSanitizer = new Bss_RichText_HtmlSanitizer();
             foreach ($data['section']['real'] as $id => $activity)
             {
                 if ($this->isNotWhiteSpaceOnly($activity, 'name'))
@@ -56,6 +57,9 @@ class Syllabus_Activities_Activities extends Bss_ActiveRecord_Base
                     if ($save)
                     {
                         $obj->absorbData($activity);
+                        $obj->name = strip_tags(trim($activity['name']));
+                        $obj->value = strip_tags(trim($activity['value']));
+                        $obj->description = $htmlSanitizer->sanitize(trim($activity['description']));
                         $obj->activities_id = $this->id;
                         $obj->save();
                     }   

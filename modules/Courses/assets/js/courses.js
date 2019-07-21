@@ -39,25 +39,34 @@
 		}
 	};
 
+	var clearCourseForm = function () {
+		var courseForm = $('#courseForm');
+		courseForm.find("input[type=text], textarea, input[type=hidden]").val("");
+	}
+
     var apiUrl = $('base').attr('href') + 'syllabus/courses';
     $('#courseSelectLookup').on('change', function (e) {
-		$.ajax(apiUrl + '?courses=' + $(this).val(), {
-			type: 'get',
-			dataType: 'json',
-			success: function (o) {
-				switch (o.status) {
-					case 'success':
-						autofillCourseForm(o.data)
-						break;
-					case 'error':
-						console.log(o.message);
-						break;
-					default:
-						console.log('unknown error');
-						break;
+    	if ($(this).val() !== 'off') {
+			$.ajax(apiUrl + '?courses=' + $(this).val(), {
+				type: 'get',
+				dataType: 'json',
+				success: function (o) {
+					switch (o.status) {
+						case 'success':
+							autofillCourseForm(o.data)
+							break;
+						case 'error':
+							console.log(o.message);
+							break;
+						default:
+							console.log('unknown error');
+							break;
+					}
 				}
-			}
-		});
+			});    		
+    	} else {
+    		clearCourseForm();
+    	}
     });
 
 

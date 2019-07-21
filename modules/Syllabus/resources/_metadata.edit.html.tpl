@@ -4,7 +4,7 @@
         <div class="form-group row">
             <label class="col-lg-3 col-form-label form-control-label">Syllabus Title</label>
             <div class="col-lg-9">
-                <input class="form-control" type="text" name="syllabus[title]" value="{$syllabusVersion->title}">
+                <input class="form-control" type="text" name="syllabus[title]" value="{$syllabusVersion->title}" required>
             </div>
         </div>
         <div class="form-group row">
