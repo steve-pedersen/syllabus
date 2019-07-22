@@ -27,17 +27,17 @@
         autoGrow_minHeight: rowSize
       };
 
-      $textarea.attr('name',`section[real][new-${i}][column1]`).val('').text('').attr('id', 'ckeditor-'+i);
+      $textarea.attr('name',`section[real][new-${i}][column1]`).val('').text('').attr('id', `ckeditor-${i}-1`);
       $textarea.next('.cke').remove();
       $textarea.ckeditor(config);
       
       $textarea = $clone.find('.learning-outcome-row .column2').find('textarea');
-      $textarea.attr('name',`section[real][new-${i}][column2]`).val('').text('').attr('id', 'ckeditor-'+i);
+      $textarea.attr('name',`section[real][new-${i}][column2]`).val('').text('').attr('id', `ckeditor-${i}-2`);
       $textarea.next('.cke').remove();
       $textarea.ckeditor(config);
 
       $textarea = $clone.find('.learning-outcome-row .column3').find('textarea');
-      $textarea.attr('name',`section[real][new-${i}][column3]`).val('').text('').attr('id', 'ckeditor-'+i);
+      $textarea.attr('name',`section[real][new-${i}][column3]`).val('').text('').attr('id', `ckeditor-${i}-3`);
       $textarea.next('.cke').remove();
       $textarea.ckeditor(config);
 

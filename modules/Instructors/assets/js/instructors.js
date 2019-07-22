@@ -40,7 +40,7 @@
           height:rowSize,
           autoGrow_minHeight: rowSize
         };
-        $textarea.attr('name',`section[real][new-${i}][officeHours]`).val('').text('').attr('id', 'ckeditor-'+i);
+        $textarea.attr('name',`section[real][new-${i}][officeHours]`).val('').text('').attr('id', `ckeditor-${i}-office-hours`);
         $textarea.next('.cke').remove();
         $textarea.ckeditor(config);
 
@@ -50,7 +50,7 @@
           var rows = parseInt($textarea.attr('rows'));
           rowSize = (rows * 2) + 'em';
         }
-        $textarea.attr('name',`section[real][new-${i}][about]`).val('').text('').attr('id', 'ckeditor-'+i);
+        $textarea.attr('name',`section[real][new-${i}][about]`).val('').text('').attr('id', `ckeditor-${i}-about`);
         $textarea.next('.cke').remove();
         $textarea.ckeditor(config);
 

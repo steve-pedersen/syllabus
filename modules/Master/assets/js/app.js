@@ -39,7 +39,12 @@
         start:function (event,ui) {
             // save each ckeditor config, create ckeditor html's clone
             // destroy ckeditor, hide the textarea and insert the clone to create an illusion that cke is still there
-            $('textarea', ui.item).each(function(){
+            $('textarea', ui.item).each(function(i){
+                console.log('current id: ', $(this).attr('id'));
+                if (!$(this).attr('id')) {
+                    console.log('need to generate unique id');
+                    $(this).attr('id', `ckeditor-${i}-${$(this.attr('name'))}`);   
+                }
                 var tagId = $(this).attr('id');
                 var ckeClone = $(this).next('.wysiwyg').clone().addClass('cloned');
                 ckeConfigs[tagId] = CKEDITOR.instances[tagId].config;

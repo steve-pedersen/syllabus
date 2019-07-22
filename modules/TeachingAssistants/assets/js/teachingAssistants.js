@@ -17,10 +17,21 @@
       $clone.find('.form-group.email').find('label').text(`Email`);
       $clone.find('.form-group.email').find('input').attr('name',`section[real][new-${i}][email]`).val('').text('');
       
+      var rowSize = null;
       var $textarea = $clone.find('.form-group.additional-information').last().find('textarea');
+      if ($textarea.attr('rows'))
+      {
+        var rows = parseInt($textarea.attr('rows'));
+        rowSize = (rows * 2) + 'em';
+      }
+      var config = {
+        customConfig: '../ckeditor_custom/ckeditor_config_basic.js',
+        height:rowSize,
+        autoGrow_minHeight: rowSize
+      };
       $textarea.attr('name',`section[real][new-${i}][additionalInformation]`).val('').text('').attr('id', 'ckeditor-'+i);
       $textarea.next('.cke').remove();
-      $textarea.ckeditor({customConfig: '../ckeditor_custom/ckeditor_config_basic.js'});
+      $textarea.ckeditor(config);
       
       $itemToClone.after($clone);
   	});
