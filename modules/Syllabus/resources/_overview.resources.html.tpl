@@ -185,10 +185,10 @@
 					</span>
 				</div>
 			</div>
-			<div class="row bg-primary rounded">
+<!-- 			<div class="row bg-primary rounded">
 				<h6 class="pt-2 pl-2 text-white">Example syllabus with a new resource added:</h6>
 				<img src="assets/images/resource-preview.png" alt="Example of importing a resource into a syllabus" class="img-fluid border border-primary rounded">
-			</div>
+			</div> -->
 		</div>
 	</div>
 	<div class="modal-footer">
