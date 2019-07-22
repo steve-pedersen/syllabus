@@ -701,7 +701,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $syllabus = $this->requireExists($this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id'));
         $syllabusVersion = $syllabus->latestVersion;
         $publishSchema = $this->schema('Syllabus_Syllabus_PublishedSyllabus');
-        // $published = null;
         $published = $this->getPublishedSyllabus($syllabus);
 
         $this->setPageTitle('Share Syllabus');
@@ -715,19 +714,13 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         if ($this->request->wasPostedByUser())
         {   
-            switch ($this->getPostCommand()) 
-            {
-                case 'share':
-                    $shareLevel = $this->request->getPostParameter('share');
-                    $published = $this->publishSyllabus($syllabus, $shareLevel, $published);
+            $shareLevel = $this->request->getPostParameter('share');
+            $published = $this->publishSyllabus($syllabus, $shareLevel, $published);
 
-                    $this->flash('Share level updated!', 'success');
-                    $this->response->redirect('syllabus/' . $syllabus->id . '/share');
-                    break;
-            }
+            $this->flash('Share level updated!', 'success');
+            $this->response->redirect('syllabus/' . $syllabus->id . '/share');
         }
 
-        // $shareLevel = $published && isset($published->shareLevel) ? $published->shareLevel : 'private';
         $this->template->syllabus = $syllabus;
         $this->template->syllabusVersion = $syllabusVersion;
         $this->template->courseInfoSection = $syllabusVersion->getCourseInfoSection();

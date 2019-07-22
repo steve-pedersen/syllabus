@@ -25,7 +25,18 @@
 					{if $courseSection->sectionNumber}Section {$courseSection->sectionNumber}<br>{/if}
 					<strong>{$courseSection->title}</strong><br>
 					<span class="badge badge-secondary">{$term}</span>
+					{if $syllabus}
+	                <p class="my-2 pt-3">
+	                    <strong class="mr-1" style="font-weight:900;">Share Status: <br></strong> 
+	                    {if $syllabus->shareLevel == 'all'}
+	                        <i class="fas fa-user-check text-success mr-1"></i> All enrolled in course
+	                    {else}
+	                        <i class="fas fa-user-lock text-warning mr-1"></i> Only course instructors (private)
+	                    {/if}
+	                </p>
+					{/if}
 					</div>
+						
 				</td>
 				<td style="">
 				{if $syllabus}

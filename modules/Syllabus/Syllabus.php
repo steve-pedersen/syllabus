@@ -44,6 +44,23 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
         return $sections;
     }
 
+    public function getPublishedSyllabus ($syllabus)
+    {
+        $schema = $this->getSchema('Syllabus_Syllabus_PublishedSyllabus');
+        $published = $schema->findOne(
+            $schema->syllabusId->isNotNull()->andIf(
+                $schema->syllabusId->equals($this->_fetch('id'))
+            )
+        );
+        return $published;        
+    }
+
+    public function getShareLevel ()
+    {
+        $published = $this->getPublishedSyllabus($this);
+        return ($published ? $published->shareLevel : 'private');
+    }
+
     public function getOrganization ()
     {
         $organization = null;
@@ -55,10 +72,10 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
                 switch ($type)
                 {
                     case 'departments':
-                        $organization = $this->schema('Syllabus_AcademicOrganizations_Department')->get($id);
+                        $organization = $this->getSchema('Syllabus_AcademicOrganizations_Department')->get($id);
                         break;
                     case 'colleges':
-                        $organization = $this->schema('Syllabus_AcademicOrganizations_College')->get($id);
+                        $organization = $this->getSchema('Syllabus_AcademicOrganizations_College')->get($id);
                         break;
                     default:
                         break;

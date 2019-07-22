@@ -13,8 +13,8 @@
                 {if $syllabusVersion->description}<strong>Description: </strong>{$syllabusVersion->description}{/if}
                     <br><strong>Last modified: </strong> {$syllabusVersion->createdDate->format('F jS, Y - h:i a')}
                 </p>
-                <p class="my-5 lead alert alert-light">
-                    <strong class="mr-3" style="font-weight:900;">Share Status: </strong> 
+                <p class="my-5 lead alert alert-light d-block">
+                    <strong class="mr-3 align-self-middle" style="font-weight:900;">Share Status: </strong> 
                     {if $shareLevel == 'all'}
                         <i class="fas fa-user-check fa-2x text-success mr-3"></i> All enrolled in course
                     {else}
@@ -25,13 +25,13 @@
                 <div class="mt-4 p-4 border border-info rounded">
                     <label for="share"><strong>Share with:</strong></label>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="share" id="all" value="all" {if $shareLevel == 'all'}checked{/if}>
+                        <input class="form-check-input" type="radio" name="share" id="all" value="all" {if $shareLevel == 'all'}checked{/if} onchange="this.form.submit()">
                         <label class="form-check-label pl-2" for="all">
                             All enrolled in course
                         </label>
                     </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="share" id="private" value="private" {if $shareLevel == 'private'}checked{/if}>
+                        <input class="form-check-input" type="radio" name="share" id="private" value="private" {if $shareLevel == 'private'}checked{/if} onchange="this.form.submit()">
                         <label class="form-check-label pl-2" for="private">
                             Only course instructors (private)
                         </label>

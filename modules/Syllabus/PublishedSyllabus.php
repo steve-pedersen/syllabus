@@ -11,7 +11,7 @@ class Syllabus_Syllabus_PublishedSyllabus extends Bss_ActiveRecord_Base
     public static function SchemaInfo ()
     {
         return [
-            '__type' => 'syllabus_syllabus',
+            '__type' => 'syllabus_published_syllabus',
             '__pk' => ['id'],
             
             'id' => 'int',
@@ -35,7 +35,7 @@ class Syllabus_Syllabus_PublishedSyllabus extends Bss_ActiveRecord_Base
     // returns the latest version of the Syllabus with this id
     public function getSyllabus ()
     {
-        return $this->syllabus->getLatestVersion();
+        return $this->_fetch('syllabus');
     }
 
     public function getSections ()
