@@ -131,7 +131,7 @@
 					{if $sectionVersion->title}{$sectionVersion->title}{else}{$ext->getDisplayName()}{/if}
 					</a>
 				</li>
-				{elseif $realSection && $sectionVersion->resolveSection()->id == $realSection->id && $sectionVersion->isAnchored}
+				{elseif $realSection && $sectionVersion->resolveSection()->id == $realSection->id && $sectionVersion->isAnchored && !$editSection}
 					{assign var=editSection value=true}
 				<li class="nav-item sidebar-anchor-item">
 					<a class="nav-link active" href="{$smarty.server.REQUEST_URI}#section{$extName}Edit">

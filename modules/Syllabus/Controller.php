@@ -678,7 +678,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $sv->canEditReadOnly = $sv->canEdit($viewer, $syllabusVersion, $organization);
             if ($sv->extension->getExtensionKey() === 'course_id' && isset($sv->resolveSection()->externalKey))
             {
-
             	$hasCourseSection = true;
             }
         }

@@ -19,16 +19,7 @@ class Syllabus_Syllabus_PublishedSyllabus extends Bss_ActiveRecord_Base
             'publishedDate' => ['datetime', 'nativeName' => 'published_date'],
             'shareLevel' => ['string', 'nativeName' => 'share_level'],
 
-            'syllabus' => ['1:1', 'to' => 'Syllabus_Syllabus_Syllabus', 'keyMap' => ['syllabus_id' => 'id']],
-
-            // 'sections' => ['N:M',
-            //     'to' => 'Syllabus_Syllabus_Section',
-            //     'via' => 'syllabus_published_syllabus_section_map',
-            //     'fromPrefix' => 'published_syllabus',
-            //     'toPrefix' => 'section_id',
-            //     'properties' =>['sort_order' => 'int', 'is_anchored' => 'bool'],
-            //     'orderBy' =>['+_map.sort_order']
-            // ],         
+            'syllabus' => ['1:1', 'to' => 'Syllabus_Syllabus_Syllabus', 'keyMap' => ['syllabus_id' => 'id']],        
         ];
     }
 
@@ -36,17 +27,6 @@ class Syllabus_Syllabus_PublishedSyllabus extends Bss_ActiveRecord_Base
     public function getSyllabus ()
     {
         return $this->_fetch('syllabus');
-    }
-
-    public function getSections ()
-    {
-        $sections = [];
-        foreach ($this->sections->asArray() as $section)
-        {
-            $sections[] = $section->getLatestVersion();
-        }
-
-        return $sections;
     }
 
     // make sure version is the latest for this syllabus

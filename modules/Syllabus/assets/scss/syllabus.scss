@@ -16,6 +16,14 @@ html {
 		background-color: #EDFFFC;
 	}
 }
+.syllabus-resources {
+	&.odd {
+		// background-color: #fff;
+	}
+	&.even {
+		// background-color: $light;
+	}
+}
 
 #startAccordion {
 	li.media > div > label {

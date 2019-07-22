@@ -137,14 +137,16 @@
 
     $( window ).resize(function() {
         let currentWidth = $(window).width();
-        if (768 < currentWidth && currentWidth < 991) {
-            if (!$('#sidebar').hasClass('active')) {
-                $('#sidebar').addClass('active');
-            }
-        } else if (currentWidth > 991) {
-            if ($('#sidebar').hasClass('active')) {
-                $('#sidebar').removeClass('active');
-            }          
+        if (!$('#syllabusEditor').length) {
+            if (768 < currentWidth && currentWidth < 991) {
+                if (!$('#sidebar').hasClass('active')) {
+                    $('#sidebar').addClass('active');
+                }
+            } else if (currentWidth > 991) {
+                if ($('#sidebar').hasClass('active')) {
+                    $('#sidebar').removeClass('active');
+                }          
+            }            
         }
     });
 
