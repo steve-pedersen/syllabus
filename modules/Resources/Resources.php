@@ -39,7 +39,7 @@ class Syllabus_Resources_Resources extends Bss_ActiveRecord_Base
     {
         $data = $request->getPostParameters();
         $errorMsg = '';
-        echo "<pre>"; var_dump('fix bug: add preset resource, then add custom resource with no title and save. this deletes all fields from the preset one.'); die;
+        // echo "<pre>"; var_dump($data['section']['real']); die;
         if (isset($data['section']) && isset($data['section']['real']))
         {
             $data = $data['section']['real'];
@@ -74,11 +74,7 @@ class Syllabus_Resources_Resources extends Bss_ActiveRecord_Base
                 		{
                 			$sortCounter++;
                 			$obj = $resources->createInstance();
-                			$resourceData = $campusResource->getData();
-                			unset($resourceData['id']);
-                			unset($resourceData['image']);
-                			$obj->absorbData($resourceData);
-                			$obj->campusResourcesId = $campusResource->id;
+                			$obj = $this->copyCampusResource($campusResource, $obj);
                 			$obj->resources_id = $this->id;
                 			$obj->sortOrder = $sortCounter;
                 			$obj->isCustom = false;
@@ -91,8 +87,17 @@ class Syllabus_Resources_Resources extends Bss_ActiveRecord_Base
                 	}
                 	unset($data['campusResources']);
                 }
-                elseif ($this->isNotWhiteSpaceOnly($resource, 'title') || 
-                    (isset($resource['isCustom']) && $resource['isCustom'] === 'false'))
+                elseif (is_numeric($id) && isset($resource['isCustom']) && $resource['isCustom'] === 'false')
+                {
+                    $obj = $resources->createInstance();
+                    $campusResource = $campusResources->get($resource['campusResourcesId']);
+                    $obj = $this->copyCampusResource($campusResource, $obj);
+                    $obj->resources_id = $this->id;
+                    $obj->sortOrder = $resource['sortOrder'];
+                    $obj->isCustom = false;
+                    $obj->save();                   
+                }
+                elseif ($this->isNotWhiteSpaceOnly($resource, 'title'))
                 {
                     $obj = (!is_numeric($id)) ? $resources->createInstance() : $resources->get($id);
                     $save = true;
@@ -124,4 +129,31 @@ class Syllabus_Resources_Resources extends Bss_ActiveRecord_Base
 
         return $errorMsg;
     }
+
+    public function copyCampusResource ($campusResource, $resource)
+    {
+        $resourceData = $campusResource->getData();
+        unset($resourceData['id']);
+        unset($resourceData['image']);
+        $resource->absorbData($resourceData);
+        $resource->campusResourcesId = $campusResource->id;
+
+        return $resource;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

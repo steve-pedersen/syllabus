@@ -192,8 +192,8 @@
                         <div class="card-text text-muted" id="text{$i}">
                             {$campusResource->description|truncate:200}
                         </div>
-                        <div class="w-100 d-block">
-                            <span id="url{$i} text-truncate">{l text="{$campusResource->url|truncate:40}" href=$campusResource->url}</span>
+                        <div class="w-100 d-block dont-break-out">
+                            <span id="url{$i} text-truncate">{l text="{$campusResource->url}" href=$campusResource->url}</span>
                         </div>
                     </div>
                 </div>
