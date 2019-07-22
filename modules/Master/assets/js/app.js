@@ -34,6 +34,7 @@
         handle: ".dragdrop-handle",
         opacity: 0.5,
         cursor: "move",
+        items: ".sort-item",
         update: function (event, ui) {
             $('.sort-order-value').each(function (index, value) {
                 $(value).val(index+1);
