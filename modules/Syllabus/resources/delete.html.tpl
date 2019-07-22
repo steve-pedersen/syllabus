@@ -18,7 +18,7 @@
     	</div>
         <div class="row pt-3">
             <div class="col-xl-5 col-lg-6 col-md-12">
-                <h2 class=" pb-3"><u>{$syllabusVersion->title}</u></h2>
+                <h2 class=" pb-3">{$syllabusVersion->title}</h2>
                 <p>
                 {if $courseInfoSection}
                     <strong>{$courseInfoSection->title}:</strong>

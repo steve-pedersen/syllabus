@@ -4,13 +4,13 @@
     	<h1>Share Syllabus</h1>
         <div class="row pt-3">
             <div class="col-xl-7 col-lg-6 col-md-12">
-                <h2 class=" pb-3"><u>{$syllabusVersion->title}</u></h2>
+                <h2 class=" pb-3">{$syllabusVersion->title}</h2>
                 <p>
                 {if $courseInfoSection}
                     <strong>{$courseInfoSection->title}:</strong>
                     {$courseInfoSection->resolveSection()->classDataCourseSection->getFullSummary()}<br>
                 {/if}
-                    <strong>Description: </strong>{$syllabusVersion->description}
+                {if $syllabusVersion->description}<strong>Description: </strong>{$syllabusVersion->description}{/if}
                     <br><strong>Last modified: </strong> {$syllabusVersion->createdDate->format('F jS, Y - h:i a')}
                 </p>
                 <p class="my-5 lead alert alert-light">
