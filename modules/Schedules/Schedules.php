@@ -53,7 +53,7 @@ class Syllabus_Schedules_Schedules extends Bss_ActiveRecord_Base
     {
         $data = $request->getPostParameters();
         $errorMsg = '';
-        echo "<pre>"; var_dump('fix bug: changing order when editing new rows deactivcates the ckeditors. test this on other sections that have ckeditors too.'); die;
+        // echo "<pre>"; var_dump($data['section']['real']); die;
         if (isset($data['section']) && isset($data['section']['real']))
         {
             $data = $data['section']['real'];

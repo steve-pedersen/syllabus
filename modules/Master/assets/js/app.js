@@ -28,14 +28,35 @@
       e.preventDefault();
     });
 
-  // TODO: https://johnny.github.io/jquery-sortable/
+    // TODO: https://johnny.github.io/jquery-sortable/
+    var ckeConfigs = [];
     $('.sort-container').sortable({
         placeholder: "ui-state-highlight",
         handle: ".dragdrop-handle",
         opacity: 0.5,
         cursor: "move",
         items: ".sort-item",
+        start:function (event,ui) {
+            // save each ckeditor config, create ckeditor html's clone
+            // destroy ckeditor, hide the textarea and insert the clone to create an illusion that cke is still there
+            $('textarea', ui.item).each(function(){
+                var tagId = $(this).attr('id');
+                var ckeClone = $(this).next('.wysiwyg').clone().addClass('cloned');
+                ckeConfigs[tagId] = CKEDITOR.instances[tagId].config;
+                CKEDITOR.instances[tagId].destroy();
+                $(this).hide().after(ckeClone);
+            });
+        },
+        stop: function(event, ui) {
+            // for each textarea init ckeditor anew and remove the clone
+            $('textarea', ui.item).each(function(){
+                var tagId = $(this).attr('id');
+                CKEDITOR.replace(tagId, ckeConfigs[tagId]);
+                $(this).next('.cloned').remove();
+            });
+        },
         update: function (event, ui) {
+            // update sort order
             $('.sort-order-value').each(function (index, value) {
                 $(value).val(index+1);
             });
