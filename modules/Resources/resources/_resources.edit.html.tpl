@@ -12,7 +12,7 @@
 
 <div class="container-fluid mb-2" id="resourceContainer{$resourceId}">
     <div class="row sort-item">
-        <div class="tab-content col-11 px-0" id="toggleEditViewTab{$i}">
+        <div class="tab-content col-sm-11 col-xs-10 px-0" id="toggleEditViewTab{$i}">
             <div class="tab-pane fade border" id="nav-edit-{$i}" role="tabpanel" aria-labelledby="nav-edit-{$i}-tab">
                 <div class="mb-2 mx-0 d-flex flex-row bg-light p-3 dragdrop-handle">
                     <i class="fas fa-bars text-dark" data-toggle="tooltip" data-placement="top" title="Click and drag to change the order."></i>
@@ -72,7 +72,7 @@
                 </div>   
             </div>
         </div>
-        <div class="nav nav-tabs col-1 toggle-edit d-inline-block border-0" role="tablist">
+        <div class="nav nav-tabs col-sm-1 col-xs-2 toggle-edit d-inline-block border-0" role="tablist">
             <a class="btn {if !$resource->isCustom}btn-dark{else}btn-info{/if} py-2" id="nav-edit-{$i}-tab" data-toggle="tab" href="#nav-edit-{$i}" role="tab" aria-controls="nav-edit-{$i}" aria-selected="false">
             {if !$resource->isCustom}
                 View #{$i+1}
@@ -126,11 +126,11 @@
 
     <div class="mt-5">
         
-        <div class="form-group d-flex justify-content-between mt-4">
+        <div class="form-group d-sm-block d-md-flex justify-content-between mt-4 choose-add-resource">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#resourceAddModal">
             + Add Preset Campus Resources
             </button>
-            <span class="display-4 w-100 mx-lg-5 mx-md-0 border-bottom border-top text-center">OR</span>
+            <span class="display-4 w-100 mx-lg-5 mx-md-0 border-bottom border-top text-center big-or">OR</span>
             <input class="btn btn-light" id="addResourcesSectionItemBtn" type="submit" name="command[addsectionitem][{$realSectionClass}]" value="+ Add Another Custom Resource" />
         </div>
 

@@ -9,6 +9,20 @@
     padding: 1.25em;
 }
 
+#syllabusEditor {
+	.editor-resources {
+		@media (max-width: 991px) {
+			.choose-add-resource {
+				text-align: center;
+				.big-or {
+					font-size: 2rem;
+					display: block;
+				}
+			}
+		}
+	}
+}
+
 // .drop-placeholder {
 // 	background-color: lightgray;
 // 	height: 3.5em;
