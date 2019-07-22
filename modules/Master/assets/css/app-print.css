@@ -1,15 +1,18 @@
-/*a[href]:after {
-  content:"" !important;
+
+@import url("https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css");
+
+@media print {
+	.container {
+		width: auto;
+	}
+	img, .print-button {
+		display: none;
+	}
+	.section-container {
+		page-break-inside: avoid;
+	}
 }
-
-abbr[title]:after { content: "" !important; }
-
-.sticky-footer { position: relative;}
-
-div.container {
-    width: 100%!important;
+@page {
+	margin-top: 10%;
+	margin-bottom: 10%;
 }
-
-form button.btn {
-    display: none;
-}*/

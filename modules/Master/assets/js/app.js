@@ -28,6 +28,10 @@
       e.preventDefault();
     });
 
+    if ($('#printContainer').length) {
+        $('.print-button').click();
+    }
+
     // TODO: https://johnny.github.io/jquery-sortable/
     var ckeConfigs = [];
     $('.sort-container').sortable({

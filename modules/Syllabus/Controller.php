@@ -19,6 +19,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/:id/view'         => ['callback' => 'view', ':id' => '[0-9]+'],
             'syllabus/:id/share'        => ['callback' => 'share', ':id' => '[0-9]+'],
             'syllabus/:id/delete'       => ['callback' => 'delete', ':id' => '[0-9]+'],
+            'syllabus/:id/print'        => ['callback' => 'print', ':id' => '[0-9]+'],
             'syllabus/:id/screenshot'   => ['callback' => 'screenshot', ':id' => '[0-9]+'],
             'syllabus/courses'          => ['callback' => 'courseLookup'],
             'syllabus/start'            => ['callback' => 'start'],
@@ -148,7 +149,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $courseSection = $courseSections->get(key($this->getPostCommandData()));
                     $pastSyllabus = isset($data['courseSyllabus']) ? $syllabi->get(isset($data['courseSyllabus'])) : null;
                         
-                    if ($pastSyllabus && $this->hasCloningPermission($pastSyllabus, $viewer))
+                    if ($pastSyllabus && $this->hasSyllabusPermission($pastSyllabus, $viewer, 'clone'))
                     {
                         $newSyllabus = $this->startWith($pastSyllabus, true);
                         $newSyllabusVersion = $this->updateCourseSyllabus($pastSyllabus, $newSyllabus, $courseSection);
@@ -377,7 +378,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $fromSyllabus = $this->requireExists($this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id'));
         }
         
-        if (!$baseTemplate && !$this->hasCloningPermission($fromSyllabus, $viewer))
+        if (!$baseTemplate && !$this->hasSyllabusPermission($fromSyllabus, $viewer, 'clone'))
         {
             $this->sendError(403, 'Forbidden', 'Non-Member', 'You must be a member of this organization in order to use this template.');
         }
@@ -678,6 +679,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $sv->canEditReadOnly = $sv->canEdit($viewer, $syllabusVersion, $organization);
             if ($sv->extension->getExtensionKey() === 'course_id' && isset($sv->resolveSection()->externalKey))
             {
+
             	$hasCourseSection = true;
             }
         }
@@ -762,7 +764,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $syllabus = $this->requireExists($this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id'));
         $syllabusVersion = $syllabus->latestVersion;
 
-        if (!$this->hasPermission('admin') && !$this->hasDeletePermission($syllabus, $viewer))
+        if (!$this->hasPermission('admin') && !$this->hasSyllabusPermission($syllabus, $viewer, 'delete'))
         {
             $this->accessDenied("You don't have permission to delete this syllabus.");            
         }
@@ -803,7 +805,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             {
                 case 'deletesyllabus':
 
-                    if ($this->hasPermission('admin') || $this->hasDeletePermission($syllabus, $viewer))
+                    if ($this->hasPermission('admin') || $this->hasSyllabusPermission($syllabus, $viewer, 'delete'))
                     {
                         $syllabus->delete();
                         $this->flash('Delete successful', 'success');
@@ -851,6 +853,24 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         return [$syllabusVersion, $newSectionVersionId];
    	}
+
+    public function print ()
+    {
+        $viewer = $this->requireLogin();
+        $syllabus = $this->requireExists($this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id'));
+        $syllabusVersion = $syllabus->latestVersion;
+
+        if (!$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
+        {
+            $this->accessDenied("You don't have permission to print this syllabus.");  
+        }
+        $this->setPrintTemplate();
+        $this->setPageTitle('Print Syllabus');
+
+        $this->template->syllabus = $syllabus;
+        $this->template->syllabusVersion = $syllabusVersion;
+        $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
+    }
 
     public function view ()
     {
@@ -1370,8 +1390,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         return $syllabusVersion;
     }
 
-    // TODO: abstract and combine hasDelete with hasClone
-    private function hasDeletePermission ($syllabus, $user=null)
+    private function hasSyllabusPermission ($syllabus, $user=null, $permission='view')
     {
         $user = $user ?? $this->requireLogin();
         $hasPermission = true;
@@ -1401,54 +1420,25 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 $this->accessDenied("Could not find any '{$type}' with id '{$id}'.");            
             }
 
-            $hasPermission = $organization->userHasRole($user, 'manager');
-        }
-        elseif ($syllabus->createdById !== $user->id)
-        {
-            $hasPermission = false;
-        }
-
-        return $hasPermission;
-    }
-    // TODO: abstract and combine hasDelete with hasClone
-    private function hasCloningPermission ($syllabus, $user=null)
-    {
-        $user = $user ?? $this->requireLogin();
-        $hasPermission = true;
-
-        if ($syllabus->templateAuthorizationId)
-        {
-            $organization = null;
-            $hasPermission = false;
-            list($type, $id) = explode('/', $syllabus->templateAuthorizationId);
-            
-            switch ($type)
+            switch ($permission)
             {
-                case 'departments':
-                    $organization = $this->schema('Syllabus_AcademicOrganizations_Department')->get($id);
+                case 'delete':
+                    $hasPermission = $organization->userHasRole($user, 'manager');
                     break;
-
-                case 'colleges':
-                    $organization = $this->schema('Syllabus_AcademicOrganizations_College')->get($id);
-                    break;
-
+                case 'view':
+                case 'clone':
                 default:
+                    $hasPermission = $organization->userHasRole($user, 'member');
                     break;
             }
-
-            if (!$organization)
-            {
-                $this->accessDenied("Could not find any '{$type}' with id '{$id}'.");            
-            }
-
-            $hasPermission = $organization->userHasRole($user, 'member');
+            
         }
         elseif ($syllabus->createdById !== $user->id)
         {
             $hasPermission = false;
         }
 
-        return $hasPermission;
+        return $hasPermission;        
     }
 
     public function isInheritedSection ($sectionVersion, $templateAuthorizationId)

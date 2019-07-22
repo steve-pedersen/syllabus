@@ -71,7 +71,7 @@
 			<div class="text-right col-lg-6 px-2 mt-3">
 				{if $editable}<span class=""><a class="btn btn-secondary btn-sm" href="syllabus/{$syllabus->id}">Back to Edit</a></span>{/if}
 				<span class="text-muted mx-2"><small>Last updated: {$syllabus->modifiedDate->format('F jS, Y - h:i a')}</small></span>
-				<span class=""><a href="#">Print <i class="fas fa-print"></i></a></span>
+				<span class=""><a href="{$routeBase}syllabus/{$syllabus->id}/print">Print <i class="fas fa-print"></i></a></span>
 			</div>	
 		</div>
 
