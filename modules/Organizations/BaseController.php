@@ -52,7 +52,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         $orgType = $organization->routeName;
         $routeBase = $orgType . '/' .$organization->id . '/';
         $this->template->addBreadcrumb($routeBase, $organization->abbreviation . ' Home');
-        $this->template->addBreadcrumb($routeBase."syllabus/$id", 'View template');
+        $this->template->addBreadcrumb($routeBase."syllabus/$syllabusId", 'View template');
 
         $this->forward("syllabus/$syllabusId/view", [
             'id' => $syllabusId,
@@ -69,7 +69,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         $orgType = $organization->routeName;
         $routeBase = $orgType . '/' .$organization->id . '/';
         $this->template->addBreadcrumb($routeBase, $organization->abbreviation . ' Home');
-        $this->template->addBreadcrumb($routeBase."syllabus/$id", 'Delete syllabus');
+        $this->template->addBreadcrumb($routeBase."syllabus/$syllabusId", 'Delete syllabus');
 
         $this->forward("syllabus/$syllabusId/delete", [
             'id' => $syllabusId,
