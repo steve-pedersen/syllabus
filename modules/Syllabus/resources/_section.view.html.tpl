@@ -23,8 +23,10 @@
 		<div class="card card-outline-secondary border-top-0 rounded-0">
 			<div class="card-body">
 				{if $sectionVersion->description}
+				<div class="mb-5 px-3">
 					<!-- <p><span class="text-dark">{$sectionVersion->description}</span></p> -->
 					{$sectionVersion->description}
+				</div>
 				{/if}
 				{include file="{$ext->getViewFragment()}"}
 			    <div class="form-group row">

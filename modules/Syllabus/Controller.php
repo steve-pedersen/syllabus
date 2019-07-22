@@ -83,13 +83,23 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $syllabi->createdById->equals($viewer->id)->andIf($syllabi->templateAuthorizationId->isNull()), 
                     ['orderBy' => ['-modifiedDate', '-createdDate'], 'limit' => $limit, 'offset' => $offset]
                 );
-                
+              
                 foreach ($userSyllabi as $userSyllabus)
                 {
                     $sid = $userSyllabus->id;
                     $results = $this->getScreenshotUrl($sid, $screenshotter);
                     $userSyllabus->imageUrl = $results->imageUrls->$sid;
+                    $userSyllabus->hasCourseSection = false;
+                    foreach ($userSyllabus->latestVersion->getSectionVersionsWithExt(true) as $sv)
+                    {
+                        if ($sv->extension->getExtensionKey() === 'course_id' && isset($sv->resolveSection()->externalKey))
+                        {
+                            $userSyllabus->hasCourseSection = true;
+                            break;
+                        }                        
+                    }
                 }
+
                 $this->template->syllabi = $userSyllabi;
                 $this->template->campusResources = $campusResources->find(
                     $campusResources->deleted->isFalse()->orIf($campusResources->deleted->isNull()),

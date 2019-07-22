@@ -4,9 +4,33 @@ $icon-font-path:          	"../fonts/";
 $font-family-sans-serif:  	"Lato", Arial, Tahoma, sans-serif;//"Muli",Helvetica, sans-serif;
 // $brand-font-family:			'Alegreya Sans SC', sans-serif;
 // $brand-font-family:			'Vollkorn SC', serif;
-$brand-font-family:			'Alegreya Sans SC', sans-serif;
+// $brand-font-family:			'Alegreya Sans SC', sans-serif;
+$brand-font-family:     'Montserrat', sans-serif;
 // $headings-font-family:    	'Alegreya Sans SC', sans-serif;
 $headings-font-family:    	'Lato', sans-serif;
+
+@font-face {
+    font-weight: normal;
+    font-style: normal;
+    font-family: 'Alegreya Sans SC';
+    src: url('../fonts/AlegreyaSansSC-Regular.ttf') format('truetype'),
+         url('../fonts/AlegreyaSansSC-Medium.ttf') format('truetype'),
+         url('../fonts/AlegreyaSansSC-Thin.ttf') format('truetype'),
+         url('../fonts/AlegreyaSansSC-Bold.ttf') format('truetype');  
+}
+@font-face {
+    font-weight: normal;
+    font-style: normal;
+    font-family: 'SofiaProLight';
+    src: url('../fonts/SofiaProLight-webfont.eot');
+    src: url('../fonts/SofiaProLight-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/SofiaProLight-webfont.woff') format('woff'),
+         url('../fonts/SofiaProLight-webfont.ttf') format('truetype'),
+         url('../fonts/SofiaProLight-webfont.svg#junction_regularregular') format('svg');  
+}
+// $brand-font-family: 'SofiaProLight', sans-serif;
+$brand-font-family:      'Alegreya Sans SC', sans-serif;
+
 $headings-font-weight:    	600;
 $headings-line-height:    	1.1;
 $headings-color:          	#1c1325;

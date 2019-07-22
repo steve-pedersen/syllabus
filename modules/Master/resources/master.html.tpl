@@ -128,7 +128,7 @@
 				{if $viewer}
 					<div class="navbar-brand d-block-inline mr-auto mobile-brand">
 	                	<a class="" href="{$baseUrl}">
-						<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"></a>
+						<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-2" alt="Syllabus Logo" id="brandLogo"></a>
 					</div>
                     <button type="button" id="mainSidebarCollapse" class="btn btn-secondary ml-2">
                         <i class="fas fa-align-left"></i>
@@ -140,7 +140,7 @@
 				{else}
 					<div class="navbar-brand d-block-inline mr-auto">
 	                	<a class="" href="{$baseUrl}">
-						<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"> <span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
+						<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-2" alt="Syllabus Logo" id="brandLogo"> <span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
 					</div>
 				{/if}
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
