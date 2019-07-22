@@ -90,6 +90,14 @@ class Syllabus_Schedules_Schedules extends Bss_ActiveRecord_Base
                     if ($save)
                     {
                         $obj->absorbData($schedule);
+                        if (strpos($schedule['column1'], 'data-timestamp="') !== false)
+                        {
+                            $p0 = strpos($schedule['column1'], '<span data-timestamp="');
+                            $p1 = $p0 + 22;
+                            $p2 = strpos($schedule['column1'], '"', $p1+1);
+                            $dateField = substr($schedule['column1'], $p1, $p2-$p1);
+                            $obj->dateField = new DateTime($dateField) ?? null;
+                        }
                         $obj->column1 = $htmlSanitizer->sanitize(trim($schedule['column1']));
                         $obj->column2 = $htmlSanitizer->sanitize(trim($schedule['column2']));
                         $obj->column3 = $htmlSanitizer->sanitize(trim($schedule['column3']));

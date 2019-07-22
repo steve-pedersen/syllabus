@@ -35,6 +35,23 @@ class Syllabus_Schedules_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModul
                 $def->save();
                
                break;
+
+            case 1:
+                // $def = $this->alterEntityType('syllabus_schedules_schedules', 
+                //     $this->getDataSource('Syllabus_Schedules_Schedule')
+                // );
+                // $def->addProperty('date_field', 'datetime');
+                // $def->save();
+                break;
+
+            case 2:
+                $def = $this->alterEntityType('syllabus_schedules_schedules', 
+                    $this->getDataSource('Syllabus_Schedules_Schedule')
+                );
+                $def->addProperty('date_field', 'datetime');
+                $def->save();
+
+                break;
         }
     }
 }

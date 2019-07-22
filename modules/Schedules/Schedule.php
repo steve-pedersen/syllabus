@@ -19,6 +19,7 @@ class Syllabus_Schedules_Schedule extends Bss_ActiveRecord_Base
             'column2' => 'string',
             'column3' => 'string',
             'column4' => 'string',
+            'dateField' => ['datetime', 'nativeName' => 'date_field'],
             'sortOrder' => ['int', 'nativeName' => 'sort_order'],
 
             'parent' => ['1:1', 'to' => 'Syllabus_Schedules_Schedules', 'keyMap' => ['schedules_id' => 'id']],

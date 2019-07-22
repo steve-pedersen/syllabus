@@ -24,7 +24,10 @@ html {
 		// background-color: $light;
 	}
 }
-
+.ui-datepicker a:hover,
+.ui-datepicker a:focus {
+    cursor: pointer;
+}
 #startAccordion {
 	li.media > div > label {
 		&:hover {
