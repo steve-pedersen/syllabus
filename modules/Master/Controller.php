@@ -106,6 +106,10 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
             }
             $page = $uri;
         }
+        elseif ($callback === 'migrate')
+        {
+            $page = 'migrate';
+        }
         
         $this->template->page = $page;
 

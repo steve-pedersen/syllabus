@@ -61,6 +61,11 @@
 								<span class="sidebar-text">Courses</span>
 							</a>
 						</li>
+						<li class="{if $page == 'migrate'}active{/if}">
+							<a class="sub-link" href="syllabus/migrate">
+								<span class="sidebar-text">Migrate</span>
+							</a>
+						</li>
 					</ul>
 				</li>
 			</ul>

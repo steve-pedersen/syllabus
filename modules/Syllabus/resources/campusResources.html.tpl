@@ -1,5 +1,6 @@
 <div class="col p-3">
-<h1>Upload any images you want to use before saving the resource below</h1>
+<h1 class="pb-3 border-bottom">Manage Campus Resources</h1>
+<h2>Upload any images you want to use before saving the resource below</h2>
 <form action="{$smarty.server.REQUEST_URI}" method="post" class="form" role="form" id="uploadResourceImage" enctype="multipart/form-data">
     <div class="form-group upload-form mb-5">
         <label for="image" class="field-label field-linked">Upload thumbnail image</label>       
@@ -17,7 +18,7 @@
 {generate_form_post_key}
 </form>
 <hr>
-<h1 class="my-5">Add/Edit Campus Resources</h1>
+<h2 class="my-5">Add/Edit Campus Resources</h2>
 <form action="{$smarty.server.REQUEST_URI}" method="post" class="form" role="form" id="editCampusResources">
 	<div class="col">
 		<div class="form-row">
@@ -66,7 +67,7 @@
 
 {if $campusResources}
 <hr>
-<h1 class="my-5">Campus Resources</h1>
+<h2 class="my-5">Campus Resources</h2>
 <form action="{$smarty.server.REQUEST_URI}" method="post" class="form" role="form" id="configureCampusResources">
 	<div class="container-fluid sort-container mb-5 campus-resources row">
 		{foreach $campusResources as $i => $campusResource}

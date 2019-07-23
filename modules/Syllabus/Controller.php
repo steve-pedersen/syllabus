@@ -24,6 +24,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/courses'          => ['callback' => 'courseLookup'],
             'syllabus/start'            => ['callback' => 'start'],
             'syllabus/startwith/:id'    => ['callback' => 'startWith', ':id' => '[0-9]+'],
+            'syllabus/migrate'          => ['callback' => 'migrate'],
         ];
     }
 
@@ -33,7 +34,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
         $courseSections = $this->schema('Syllabus_ClassData_CourseSection');
         $offset = 0;
-        $limit = 6;
+        $limit = 9;
 
         $siteSettings = $this->getApplication()->siteSettings;
         $userId = $siteSettings->getProperty('university-template-user-id');
@@ -93,7 +94,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $userSyllabus->hasCourseSection = false;
                     foreach ($userSyllabus->latestVersion->getSectionVersionsWithExt(true) as $sv)
                     {
-                        if ($sv->extension->getExtensionKey() === 'course_id' && isset($sv->resolveSection()->externalKey))
+                        if (isset($sv->extension) && $sv->extension->getExtensionKey() === 'course_id' && isset($sv->resolveSection()->externalKey))
                         {
                             $userSyllabus->hasCourseSection = true;
                             break;
@@ -1017,26 +1018,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             {
             	$this->template->addUserMessage($errorMsg, '');
             }
-          //   if (isset($data['section']) && isset($data['section']['real']) && isset($data['section']['real']['external_key']))
-          //   {	// TODO: figure out why this isn't working in the Courses procesEdit()
-        		// // echo "<pre>"; var_dump($data['section']['real'], $data); die;
-          //       $realSection->absorbData($data['section']['real']);
-          //       $realSection->externalKey = $data['section']['real']['external_key'];
-          //   }
-          //   $realSection->save();
-
-          //   if ($extKey === 'course_id' && $realSection->externalKey)
-          //   {
-          //       $courses = $this->schema('Syllabus_ClassData_CourseSection');
-          //       $course = $courses->findOne($courses->id->equals($realSection->externalKey));
-          //       $course->syllabus_id = $syllabus->id ?? '';
-          //       $course->save();
-          //       $courseData = $course->getData();
-          //       $courseData['semester'] = Syllabus_Admin_Semester::ConvertToTerm($courseData['semester'], true);
-          //       unset($courseData['id']);
-          //       $realSection->absorbData($courseData);
-          //       $realSection->save();
-          //   }
 
             // TODO: add Subsection logic
             // $subsection = $subsections->createInstance(); 
@@ -1617,6 +1598,269 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         //     http_response_code (401);
         //     die;        
         // }
+    }
+
+
+    public function migrate ()
+    {
+        $viewer = $this->requireLogin();
+        $newSyllabus = null;
+        if ($this->request->wasPostedByUser())
+        {    
+            $file = $this->schema('Syllabus_Files_File')->createInstance();
+            $file->createFromRequest($this->request, 'file');
+            
+            if ($file->isValid())
+            {
+                $file->uploadedBy = $this->getAccount();
+                $file->moveToPermanentStorage();
+                $file->save();
+
+                // begin migration
+                if ($json = file_get_contents($file->localFilename))
+                {
+                    $newSyllabus = $this->migrateData($json);
+                    if (!$newSyllabus)
+                    {
+                        $this->flash('An error occurred during migration', 'danger');
+                    }
+                    else
+                    {
+                        $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
+                        $newSyllabus = $syllabi->findOne($syllabi->createdById->equals($viewer->id));
+                    }
+                }
+                $file->delete();
+            }
+            
+            $this->template->errors = $file->getValidationMessages();
+        }
+        $this->template->newSyllabus = $newSyllabus;
+    }
+
+    private function migrateData ($json)
+    {
+        set_time_limit(0);
+        ini_set('memory_limit', '-1');
+        $viewer = $this->requireLogin();
+        $now = new DateTime;
+
+        $siteSettings = $this->getApplication()->siteSettings;
+        $templateId = $siteSettings->getProperty('university-template-id');
+        $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
+        $startingTemplate = $this->requireExists($syllabi->get($templateId));
+        $syllabus = $this->startWith($startingTemplate, true, true);
+        $syllabusVersion = $syllabus->latestVersion;
+        $syllabusVersion->createdDate = $now;
+        $syllabusVersion->title = 'Migrated Syllabus on '. $syllabus->createdDate->format('F jS, Y - h:i a');
+        $syllabusVersion->save();
+
+        $success = false;
+        $data = json_decode($json);
+        $counter = 1;
+        foreach ($data->modules as $type => $module)
+        {   
+            if (isset($module->items) && !empty($module->items))
+            {
+                $section = $this->schema('Syllabus_Syllabus_Section')->createInstance();
+                $sectionVersion = $this->schema('Syllabus_Syllabus_SectionVersion')->createInstance();
+                $section->createdDate = $now;
+                $section->modifiedDate = $now;
+                $section->createdById = $viewer->id;
+                $section->save();
+                $sectionVersion->createdDate = $now;
+                $sectionVersion->title = $module->module_custom_name ?? '';
+                $sectionVersion->sectionId = $section->id;
+                $realSectionKey = '';
+                switch ($type)
+                {
+                    case 'assignments':
+                        $realSectionKey = 'activities_id';
+                        $sectionVersion->title = ($sectionVersion->title==='') ? 'Assignments' : $sectionVersion->title;
+                        $realSection = $this->schema('Syllabus_Activities_Activities')->createInstance();
+                        $realSection->save();
+                        if (isset($module->items) && !empty($module->items))
+                        {
+                            foreach ($module->items as $i => $item)
+                            {
+                                $realItem = $this->schema('Syllabus_Activities_Activity')->createInstance();
+                                $realItem->name = $item->assignment_title;
+                                $realItem->value = $item->assignment_value;
+                                $realItem->description = $item->assignment_desc;
+                                $realItem->sortOrder = $i + 1;
+                                $realItem->activities_id = $realSection->id;
+                                $realItem->save();
+                            }                        
+                        }
+
+                        break;
+
+                    case 'materials':
+                        $realSectionKey = 'materials_id';
+                        $sectionVersion->title = ($sectionVersion->title==='') ? 'Materials' : $sectionVersion->title;
+                        $realSection = $this->schema('Syllabus_Materials_Materials')->createInstance();
+                        $realSection->save();
+                        $info = '';
+                        if (isset($module->items) && !empty($module->items))
+                        {
+                            foreach ($module->items as $i => $item)
+                            {
+                                $realItem = $this->schema('Syllabus_Materials_Material')->createInstance();
+                                $realItem->title = $item->material_title;
+                                $realItem->required = $item->material_required;
+                                $realItem->publishers = strip_tags(trim($item->material_info));
+                                $realItem->sortOrder = $i + 1;
+                                $realItem->materials_id = $realSection->id;
+                                $realItem->save();
+                                $info .= $item->material_info . '<br>';
+                            }                        
+                        }
+
+                        $realSection->additionalInformation = $info;
+                        $realSection->save();
+                        break;
+
+                    case 'methods':
+                        $realSectionKey = 'objectives_id';
+                        $sectionVersion->title = ($sectionVersion->title==='') ? 'Methods' : $sectionVersion->title;
+                        $realSection = $this->schema('Syllabus_Objectives_Objectives')->createInstance();
+                        $realSection->save();
+                        if (isset($module->items) && !empty($module->items))
+                        {
+                            foreach ($module->items as $i => $item)
+                            {
+                                $realItem = $this->schema('Syllabus_Objectives_Objective')->createInstance();
+                                $realItem->name = $item->method_title;
+                                $realItem->description = $item->method_text;
+                                $realItem->sortOrder = $i + 1;
+                                $realItem->objectives_id = $realSection->id;
+                                $realItem->save();
+                            }                        
+                        }
+
+                        break;
+
+                    case 'objectives':
+                        $realSectionKey = 'objectives_id';
+                        $sectionVersion->title = ($sectionVersion->title==='') ? 'Objectives' : $sectionVersion->title;
+                        $realSection = $this->schema('Syllabus_Objectives_Objectives')->createInstance();
+                        $realSection->save();
+                        if (isset($module->items) && !empty($module->items))
+                        {
+                            foreach ($module->items as $i => $item)
+                            {
+                                $realItem = $this->schema('Syllabus_Objectives_Objective')->createInstance();
+                                $realItem->name = $item->objective_title;
+                                $realItem->description = $item->objective_text;
+                                $realItem->sortOrder = $i + 1;
+                                $realItem->objectives_id = $realSection->id;
+                                $realItem->save();
+                            }                        
+                        }
+
+                        break;
+
+                    case 'policies':
+                        $realSectionKey = 'policies_id';
+                        $sectionVersion->title = ($sectionVersion->title==='') ? 'Policies' : $sectionVersion->title;
+                        $realSection = $this->schema('Syllabus_Policies_Policies')->createInstance();
+                        $realSection->save();
+                        if (isset($module->items) && !empty($module->items))
+                        {
+                            foreach ($module->items as $i => $item)
+                            {
+                                $realItem = $this->schema('Syllabus_Policies_Policy')->createInstance();
+                                $realItem->name = $item->policy_title;
+                                $realItem->description = $item->policy_text;
+                                $realItem->sortOrder = $i + 1;
+                                $realItem->policies_id = $realSection->id;
+                                $realItem->save();
+                            }                        
+                        }
+
+                        break;
+
+                    case 'schedules':
+                        $realSectionKey = 'schedule_id';
+                        $sectionVersion->title = ($sectionVersion->title==='') ? 'Schedule' : $sectionVersion->title;
+                        $realSection = $this->schema('Syllabus_Schedules_Schedules')->createInstance();
+                        $realSection->columns = 3;
+                        $realSection->header1 = 'Date';
+                        $realSection->header2 = 'Notes';
+                        $realSection->header3 = 'Due';
+                        $realSection->save();
+                        if (isset($module->items) && !empty($module->items))
+                        {
+                            foreach ($module->items as $i => $item)
+                            {
+                                $realItem = $this->schema('Syllabus_Schedules_Schedule')->createInstance();
+                                $date = $item->schedule_date;
+                                $dateCol = $item->schedule_period === 'd' ? '<p>' : '<p>Week of ';
+                                $realItem->column1 = $dateCol . '<span data-timestamp="'.$date.'">'.$date.'</span></p>';
+                                $realItem->column2 = $item->schedule_desc;
+                                $realItem->column3 = $item->schedule_due;
+                                $realItem->dateField = new DateTime($date);
+                                $realItem->sortOrder = $i + 1;
+                                $realItem->schedules_id = $realSection->id;
+                                $realItem->save();
+                            }                        
+                        }
+
+                        break;
+
+                    case 'tas':
+                        $realSectionKey = 'teaching_assistants_id';
+                        $sectionVersion->title = ($sectionVersion->title==='') ? 
+                            'Teaching Assistants' : $sectionVersion->title;
+                        $realSection = $this->schema('Syllabus_TeachingAssistants_TeachingAssistants')->createInstance();
+                        $realSection->save();
+                        if (isset($module->items) && !empty($module->items))
+                        {
+                            foreach ($module->items as $i => $item)
+                            {
+                                $realItem = $this->schema('Syllabus_TeachingAssistants_TeachingAssistant')->createInstance();
+                                $realItem->name = $item->ta_name;
+                                $realItem->email = $item->ta_email;
+                                $realItem->sortOrder = $i + 1;
+                                $realItem->teaching_assistants_id = $realSection->id;
+                                $realItem->save();
+                            }                        
+                        }
+
+                        break;
+                }
+
+                $sectionVersion->$realSectionKey = $realSection->id;
+                $sectionVersion->save();
+                $syllabusVersion->sectionVersions->add($sectionVersion);
+                $syllabusVersion->sectionVersions->setProperty($sectionVersion, 'sort_order', $counter);
+                $syllabusVersion->sectionVersions->setProperty($sectionVersion, 'read_only', false);
+                $syllabusVersion->sectionVersions->setProperty($sectionVersion, 'inherited', false);
+                $syllabusVersion->sectionVersions->setProperty($sectionVersion, 'is_anchored', true);
+                $syllabusVersion->sectionVersions->setProperty($sectionVersion, 'log', 'Migrated from old Syllabus app.');
+                $syllabusVersion->sectionVersions->save();
+                $syllabusVersion->save();
+                $counter++;                
+            }          
+
+            $success = true;
+        }
+
+        $syllabusVersion->save();
+        $syllabusVersion->sectionVersions->save();
+        $syllabus->versions->add($syllabusVersion);
+        $syllabus->versions->save();
+        $syllabus->save();
+        $this->getScreenshotUrl($syllabus->id);
+
+        if (!$success)
+        {
+            $syllabusVersion->delete();
+            $syllabus->delete();
+            return null;
+        }
+
+        return $syllabusVersion;
     }
 
     /**
