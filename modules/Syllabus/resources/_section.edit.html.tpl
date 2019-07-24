@@ -92,7 +92,7 @@
 	</div>
 
 	<div class="card-footer">
-	{if $organization}
+	{if $organization || $isUniversityTemplate}
 		<!-- Only need to show Read-Only when editing a template -->
 		<div class="form-group row pt-3 border-bottom">
 		{if $genericSection->readOnly == 'true' || $genericSection->readOnly == true || $genericSection->inherited || $organization}

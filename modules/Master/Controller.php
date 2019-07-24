@@ -80,7 +80,7 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
             $this->template->flashClass = $session->flashClass;
             unset($session->flashClass);
         }
-
+        
         $page = '';
         if ($callback === 'mySyllabi' || $callback === 'start')
         {
@@ -113,7 +113,7 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
         
         $this->template->page = $page;
 
-        if ($callback !== 'screenshot')
+        if ($callback !== 'screenshot' && $callback !== 'export')
         {
             $this->template->privilegedOrganizations = $this->getPrivelegedUserOrganizations();
         }
@@ -412,6 +412,11 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
     public function setPrintTemplate ()
     {
         $this->template->setMasterTemplate(Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', 'print.html.tpl'));
+    }
+
+    public function setExportTemplate ()
+    {
+        $this->template->setMasterTemplate(Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', 'export.html.tpl'));
     }
 
     public function createEmailMessage ($contentTemplate = null)

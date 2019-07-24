@@ -188,14 +188,23 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
             $sectionParentOrganization = $this->parentOrganization;
         }
 
-        if ($this->section->createdById == $userId && $this->section->createdById !== $viewer->id)
+        if ($viewer->id == $userId && $viewer->id === $this->section->createdById)
+        {
+            $this->canEditReadOnly = true;
+        }
+        elseif ($this->section->createdById == $userId && $this->section->createdById !== $viewer->id)
         {
             $this->canEditReadOnly = !$this->readOnly;
         }
         else
         {
+            // echo "<pre>"; var_dump($this->readOnly); die;
             // section is read-only and belongs to this organization (not a parent one) 
-            if (($this->readOnly && $organization) || ($this->readOnly && $organization && !$sectionParentOrganization))
+            if (!$this->readOnly)
+            {
+                $this->canEditReadOnly = true;
+            }
+            elseif (($this->readOnly && $organization) || ($this->readOnly && $organization && !$sectionParentOrganization))
             {
                 $this->canEditReadOnly = $organization->userHasRole($viewer, 'creator') || $organization->userHasRole($viewer, 'manager');
             }

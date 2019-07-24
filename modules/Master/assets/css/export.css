@@ -1,0 +1,15 @@
+
+.container {
+	width: auto;
+}
+img, .print-button {
+	display: none;
+}
+.section-container {
+	page-break-inside: avoid;
+}
+.table .thead-dark th {
+	background-color: #fff;
+	color: #000;
+    border-color: #454d55;
+}

@@ -40,15 +40,19 @@ class Syllabus_Files_File extends Bss_ActiveRecord_Base
         return  (($result !== null) && !empty($result));
     }
 
-    public function createFromRequest ($request, $inputName)
+    public function createFromRequest ($request, $inputName, $scan=true)
     {
         if ($file = $request->getFileUpload($inputName))
         {
             if ($file->isValid())
             {
                 $antiVirus = $this->getApplication()->antiVirusManager;
-                
-                if (($messages = $antiVirus->scanFile($file->getLocalPath())) === null)
+                $messages = null;
+                if ($scan)
+                {
+                    $messages = $antiVirus->scanFile($file->getLocalPath());
+                }
+                if ($messages === null)
                 {
                     $this->_assign('hash', $file->getHash());
                     if ($localName = $this->getLocalFilename(true))

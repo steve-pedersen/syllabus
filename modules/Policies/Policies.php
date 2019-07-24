@@ -45,15 +45,17 @@ class Syllabus_Policies_Policies extends Bss_ActiveRecord_Base
             {
                 if ($this->isNotWhiteSpaceOnly($policy, 'description'))
                 {
-                    $obj = (!is_numeric($id)) ? $schema->createInstance() : $schema->get($id);
+                    // $obj = (!is_numeric($id)) ? $schema->createInstance() : $schema->get($id);
+                    // $save = true;
+                    // if ($obj->inDatasource)
+                    // {
+                    //     if ($obj->id != $id)
+                    //     {
+                    //         $save = false;
+                    //     }
+                    // }
                     $save = true;
-                    if ($obj->inDatasource)
-                    {
-                        if ($obj->id != $id)
-                        {
-                            $save = false;
-                        }
-                    }
+                    $obj = $schema->createInstance();
                     if ($save)
                     {
                         $obj->absorbData($policy);

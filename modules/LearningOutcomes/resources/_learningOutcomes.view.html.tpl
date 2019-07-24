@@ -1,8 +1,9 @@
 {assign var=realSection value=$sectionVersion->resolveSection()}
 <!-- LearningOutcomes Section - View -->
 <div class="col">
-	<table class="table table-sm table-striped">
-		<thead class="thead-dark">
+{if $realSection->learningOutcomes}
+<table class="table table-sm table-striped">
+	<thead class="thead-dark">
 		<tr>
 			<th scope="col">{$realSection->header1}</th>
 			<th scope="col">{$realSection->header2}</th>
@@ -19,6 +20,7 @@
 	{/foreach}
 	</tbody>
 </table>
+{/if}
 
 {if $realSection->additionalInformation}
 	<h5>Additional Information</h5>

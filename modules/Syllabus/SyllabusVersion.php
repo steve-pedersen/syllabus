@@ -53,24 +53,66 @@ class Syllabus_Syllabus_SyllabusVersion extends Bss_ActiveRecord_Base
                 $oldSv = $sv;
                 if ($this->sectionVersions->getProperty($sv, 'inherited'))
                 {
+                    // echo "<pre>"; var_dump($sv->section->latestVersion->id); die;
                     $sv = $sv->section->latestVersion;
                     $sv->inherited = true;
+                }
+                $latestSyllabusVersion = null;
+                if ($oldSv->id !== $sv->id)
+                {
+                    $latestSyllabusVersion = $this->getLatestSyllabusVersionOfInheritedSectionVersion($sv);
                 }
                 if ($withExt)
                 {
                     $sv->extension = $oldSv->getExtensionByRecord(get_class($oldSv->resolveSection()));
                 }
+                if ($latestSyllabusVersion)
+                {
+                    $sv->readOnly      = $latestSyllabusVersion->sectionVersions->getProperty($sv, 'read_only');
+                    $a                 = $latestSyllabusVersion->sectionVersions->getProperty($sv, 'is_anchored');
+                    $sv->isAnchored    = ($a===null || $a===true || $a==='true') ? true : false;
+                }
+                else
+                {
+                    $sv->readOnly      = $this->sectionVersions->getProperty($oldSv, 'read_only');
+                    $a                 = $this->sectionVersions->getProperty($oldSv, 'is_anchored');
+                    $sv->isAnchored    = ($a===null || $a===true || $a==='true') ? true : false;                    
+                }
+
                 $sv->sortOrder     = $this->sectionVersions->getProperty($oldSv, 'sort_order');
-                $sv->readOnly      = $this->sectionVersions->getProperty($oldSv, 'read_only');
                 $sv->log           = $this->sectionVersions->getProperty($oldSv, 'log');
-                $a                 = $this->sectionVersions->getProperty($oldSv, 'is_anchored');
-                $sv->isAnchored    = ($a===null || $a===true || $a==='true') ? true : false;
+
                 $sv->normalizedVersion = $sv->section->getNormalizedVersion($sv->id);
                 $sectionVersions[] = $sv;
             }
         }
 
         return $sectionVersions;
+    }
+
+    public function getLatestSyllabusVersionOfInheritedSectionVersion ($sectionVersion)
+    {
+
+        $result = false;
+        if ($sectionVersion)
+        {
+            $rs = pg_query("
+                select syllabus_version_id from syllabus_syllabus_version_section_version_map svsv 
+                where section_version_id = {$sectionVersion->id} and inherited = 'f'
+                order by syllabus_version_id desc limit 1"
+            );
+
+            while (($row = pg_fetch_row($rs)))
+            {
+                $result = $row[0];
+                break;
+            }          
+        }
+        if ($result)
+        {
+            return $this->getSchema('Syllabus_Syllabus_SyllabusVersion')->get($result);
+        }
+        return $result;
     }
 
     public function setTitle ($title)

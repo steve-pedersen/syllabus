@@ -40,25 +40,28 @@ class Syllabus_TeachingAssistants_TeachingAssistants extends Bss_ActiveRecord_Ba
         {
             $this->save();
             $schema = $this->getSchema('Syllabus_TeachingAssistants_TeachingAssistant');
-            foreach ($data['section']['real'] as $id => $teachingAssistant)
+            $htmlSanitizer = new Bss_RichText_HtmlSanitizer();
+            foreach ($data['section']['real'] as $id => $ta)
             {
-                if ($this->isNotWhiteSpaceOnly($teachingAssistant, 'name'))
+                if ($this->isNotWhiteSpaceOnly($ta, 'name'))
                 {
-                    $obj = (!is_numeric($id)) ? $schema->createInstance() : $schema->get($id);
+                    // $obj = (!is_numeric($id)) ? $schema->createInstance() : $schema->get($id);
+                    // $save = true;
+                    // if ($obj->inDatasource)
+                    // {
+                    //     if ($obj->id != $id)
+                    //     {
+                    //         $save = false;
+                    //     }
+                    // }
                     $save = true;
-                    if ($obj->inDatasource)
-                    {
-                        if ($obj->id != $id)
-                        {
-                            $save = false;
-                        }
-                    }
-                    if ($save)
-                    {
-                        $obj->absorbData($teachingAssistant);
-                        $obj->teaching_assistants_id = $this->id;
-                        $obj->save();
-                    }   
+                    $obj = $schema->createInstance();
+                    $obj->absorbData($ta);
+                    $obj->name = isset($ta['name']) ? strip_tags(trim($ta['name'])) : '';
+                    $obj->email = isset($ta['email']) ? strip_tags(trim($ta['email'])) : '';
+                    $obj->additionalInformation = $htmlSanitizer->sanitize(trim($ta['additionalInformation']));
+                    $obj->teaching_assistants_id = $this->id;
+                    $obj->save();
                 }
                 else
                 {

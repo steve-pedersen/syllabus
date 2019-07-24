@@ -20,6 +20,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/:id/share'        => ['callback' => 'share', ':id' => '[0-9]+'],
             'syllabus/:id/delete'       => ['callback' => 'delete', ':id' => '[0-9]+'],
             'syllabus/:id/print'        => ['callback' => 'print', ':id' => '[0-9]+'],
+            'syllabus/:id/export'       => ['callback' => 'export', ':id' => '[0-9]+'],
             'syllabus/:id/screenshot'   => ['callback' => 'screenshot', ':id' => '[0-9]+'],
             'syllabus/courses'          => ['callback' => 'courseLookup'],
             'syllabus/start'            => ['callback' => 'start'],
@@ -502,7 +503,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
                 	unset($_POST['section']['real'][$deleteId]);
 
-					$syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;
+                    if (!$syllabus->templateAuthorizationId) 
+                    {
+                        $syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;    
+                    }
                 	list($syllabusVersion, $newSectionVersionId) = $this->saveSection($syllabus, $syllabusVersion, $extKey, $organization);
 
                 	$this->flash('Item deleted from section.', 'info');
@@ -525,7 +529,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 		}
                 		unset($_POST['real']);
 
-	                	$syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;
+                        if (!$syllabus->templateAuthorizationId) 
+                        {
+                            $syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;    
+                        }
+	                	
                 		list($syllabusVersion, $newSectionVersionId) = $this->saveSection(
                 			$syllabus, $syllabusVersion, $extKey, $organization);
 
@@ -551,7 +559,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 case 'savesection':
                 case 'savesyllabus':
                     // echo "<pre>"; var_dump($data['section'], $data); die;
-                    $syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;
+                    if (!$syllabus->templateAuthorizationId)
+                    {
+                        $syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;
+                    }
+                    
                     list($updated, $syllabusVersion) = $this->saveSyllabus($syllabus);
                     if ($updated)
                     {
@@ -654,6 +666,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 		            ['orderBy' => ['sortOrder', 'title']]
 		        );
             }
+
             $this->template->realSection = $realSection;
             $this->template->realSectionClass = get_class($realSection);
             $this->template->sectionExtension = $realSectionExtension;
@@ -677,10 +690,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $syllabusSectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
         foreach ($syllabusSectionVersions as $sv)
         {
+
             $sv->canEditReadOnly = $sv->canEdit($viewer, $syllabusVersion, $organization);
             if ($sv->extension->getExtensionKey() === 'course_id' && isset($sv->resolveSection()->externalKey))
             {
-
             	$hasCourseSection = true;
             }
         }
@@ -839,7 +852,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             }
         }
 
-        $syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;
+        if (!$syllabus->templateAuthorizationId)
+        {
+            $syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;
+        }
+        
         list($updated, $syllabusVersion) = $this->saveSyllabus($syllabus);
         
         $newSectionVersionId = null;
@@ -867,6 +884,24 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
         $this->setPrintTemplate();
         $this->setPageTitle('Print Syllabus');
+
+        $this->template->syllabus = $syllabus;
+        $this->template->syllabusVersion = $syllabusVersion;
+        $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
+    }
+
+    public function export ()
+    {
+        // $viewer = $this->requireLogin();
+        $syllabus = $this->requireExists($this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id'));
+        $syllabusVersion = $syllabus->latestVersion;
+
+        // if (!$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
+        // {
+        //     $this->accessDenied("You don't have permission to print this syllabus.");  
+        // }
+        $this->setExportTemplate();
+        $this->setPageTitle('Export Syllabus');
 
         $this->template->syllabus = $syllabus;
         $this->template->syllabusVersion = $syllabusVersion;
@@ -937,7 +972,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $anyChange = false;
         $sectionChange = false;
         $sectionDelete = false;
-        // echo "<pre>"; var_dump($data['section']['real'], $data); die;
+
+        // echo "<pre>"; var_dump($data['section']['properties']); die;
         if ((isset($data['section']) && isset($data['section']['versionId'])))
         {
         	$sectionVersionId = $data['section']['versionId'];
@@ -991,7 +1027,17 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 {
                     $this->accessDenied('Incorrect syllabus version id.');
                 }
-                if (!$oldSyllabusVersion->sectionVersions->has($prevSectionVersion))
+                $prevSection = $prevSectionVersion->section;
+                $hasSection = false;
+                foreach ($oldSyllabusVersion->sectionVersions as $sectionVersion)
+                {  
+                    if ($sectionVersion->section->id === $prevSection->id)
+                    {
+                        $hasSection = true;
+                        break;
+                    }
+                }
+                if (!$hasSection)
                 {
                     $this->accessDenied('Incorrect section version id.');
                 }
@@ -999,6 +1045,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 if ($this->isInheritedSection($prevSectionVersion, $syllabus->templateAuthorizationId) ||
                     $this->isUpstreamSection($prevSectionVersion, $syllabus, $viewer))
                 {
+                    // echo "<pre>"; var_dump('yo', $syllabus->templateAuthorizationId); die;
                     $genericSection = $sections->createInstance();
                     $genericSection->createdDate = new DateTime;
                     $genericSection->createdById = $viewer->id;
@@ -1445,7 +1492,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             where 
                 svsv.section_version_id = {$sectionVersion->id} and 
                 s.template_authorization_id != '{$templateAuthorizationId}' and
-                svsv.inherited = 'f'");
+                svsv.inherited = 'f' and svsv2.inherited = 'f'");
 
             while (($row = pg_fetch_row($rs)))
             {
@@ -1608,7 +1655,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         if ($this->request->wasPostedByUser())
         {    
             $file = $this->schema('Syllabus_Files_File')->createInstance();
-            $file->createFromRequest($this->request, 'file');
+            $file->createFromRequest($this->request, 'file', false);
             
             if ($file->isValid())
             {

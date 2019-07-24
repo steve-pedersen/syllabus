@@ -1,5 +1,6 @@
 {assign var=realSection value=$sectionVersion->resolveSection()}
 <div class="real-section-content activities">
+	{if $realSection->activities}
 	<table class="table table-sm table-striped">
 		<thead class="thead-dark">
 			<tr>
@@ -20,4 +21,5 @@
 		{/foreach}
 		</tbody>
 	</table>
+	{/if}
 </div>

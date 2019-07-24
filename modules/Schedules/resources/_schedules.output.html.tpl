@@ -1,5 +1,6 @@
 {assign var=realSection value=$sectionVersion->resolveSection()}
 <div class="real-section-content schedules">
+	{if $realSection->schedules}
 	<table class="table table-sm table-striped">
 		<thead class="thead-dark">
 			<tr>
@@ -20,6 +21,7 @@
 		{/foreach}
 		</tbody>
 	</table>
+	{/if}
 
 	{if $realSection->additionalInformation}
 	<div class="col">

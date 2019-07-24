@@ -50,8 +50,10 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_AdminController
             {
                 case 'select':
                     $templateId = $this->request->getPostParameter('template');
-                    if ($syllabi->get($templateId))
+                    if ($template = $syllabi->get($templateId))
                     {
+                        $template->templateAuthorizationId = 'university/' . $templateId;
+                        $template->save();
                         $siteSettings->setProperty('university-template-id', $templateId);
                         $this->flash('The University Template has been set.');
                     }
@@ -89,7 +91,7 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_AdminController
             {
                 case 'upload':
                     $file = $files->createInstance();
-                    $file->createFromRequest($this->request, 'file');
+                    $file->createFromRequest($this->request, 'file', false);
                     
                     if ($file->isValid())
                     {

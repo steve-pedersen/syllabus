@@ -1,5 +1,6 @@
 {assign var=realSection value=$sectionVersion->resolveSection()}
 <div class="real-section-content grades">
+	{if $realSection->grades}
 	<table class="table table-responsive table-sm table-striped">
 		<thead class="thead-dark">
 			<tr>
@@ -18,6 +19,7 @@
 		{/foreach}
 		</tbody>
 	</table>
+	{/if}
 
 	{if $realSection->additionalInformation}
 	<div class="col">

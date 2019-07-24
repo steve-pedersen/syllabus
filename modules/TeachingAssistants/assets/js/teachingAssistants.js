@@ -12,9 +12,9 @@
       var sortOrder = parseInt($itemToClone.find(`input[name='section[real][new-${i-1}][sortOrder]']`).val());
       $clone.attr('id', 'newSortItem'+i);
       $clone.find('.sort-order-value').attr('name',`section[real][new-${i}][sortOrder]`).val(sortOrder+1);
-      $clone.find('.form-group.name').find('label').text(`Name`);
+      // $clone.find('.form-group.name').find('label').text(`Name`);
       $clone.find('.form-group.name').find('input').attr('name',`section[real][new-${i}][name]`).val('').text('');
-      $clone.find('.form-group.email').find('label').text(`Email`);
+      // $clone.find('.form-group.email').find('label').text(`Email`);
       $clone.find('.form-group.email').find('input').attr('name',`section[real][new-${i}][email]`).val('').text('');
       
       var rowSize = null;
