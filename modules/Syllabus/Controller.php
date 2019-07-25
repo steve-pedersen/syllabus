@@ -1589,24 +1589,27 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
         elseif ($permission === 'view')
         {
-            if ($sectionVersion = $syllabus->latestVersion->getCourseInfoSection())
+            if ($syllabus->createdById !== $user->id)
             {
-                $courseSection = $sectionVersion->resolveSection()->classDataCourseSection;
-                if ($courseSection->enrollments->has($user->classDataUser))
+                if ($sectionVersion = $syllabus->latestVersion->getCourseInfoSection())
                 {
-                    $roles = $this->schema('Syllabus_AuthN_Role');
-                    $studentRole = $roles->findOne($roles->name->equals('Student'));
-                    if ($user->roles->has($studentRole))
+                    $courseSection = $sectionVersion->resolveSection()->classDataCourseSection;
+                    if ($courseSection && $courseSection->enrollments->has($user->classDataUser))
                     {
-                        if ($syllabus->getShareLevel() === 'private')
+                        $roles = $this->schema('Syllabus_AuthN_Role');
+                        $studentRole = $roles->findOne($roles->name->equals('Student'));
+                        if ($user->roles->has($studentRole))
                         {
-                            $hasPermission = false;
-                        }
-                    }                    
-                }
-                else
-                {
-                    $hasPermission = false;
+                            if ($syllabus->getShareLevel() === 'private')
+                            {
+                                $hasPermission = false;
+                            }
+                        }                    
+                    }
+                    else
+                    {
+                        $hasPermission = false;
+                    }
                 }
             }
         }
