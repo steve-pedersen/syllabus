@@ -119,6 +119,7 @@
         windowWidth = $(window).width();
 	    if ($sidebar.length && (windowWidth > 991)) {
 		    $window.scroll(function() {
+		    	maxY = $('#footer').offset().top;
 		        if ($window.scrollTop() > offset.top && (windowWidth > 991) && $window.scrollTop() < maxY) {
 		            $sidebar.stop().animate({
 		                marginTop: $window.scrollTop() - offset.top + topPadding
@@ -133,6 +134,7 @@
 			var $stickyNavbar = $('#stickyNavbar');
   
 		    $window.scroll(function() {
+		    	maxY = $('#footer').offset().top;
 		    	if ($window.scrollTop() > offset.top) {
 		    		if (!$stickyNavbar.hasClass('sticky')) {
 		    			$stickyNavbar.addClass('sticky');
@@ -148,6 +150,7 @@
 
     if ($sidebar.length && (windowWidth > 991)) {
 	    $window.scroll(function() {
+	    	maxY = $('#footer').offset().top;
 	        if ($window.scrollTop() > offset.top && (windowWidth > 991) && $window.scrollTop() < maxY) {
 	            $sidebar.stop().animate({
 	                marginTop: $window.scrollTop() - offset.top + topPadding
@@ -163,6 +166,7 @@
     	// var offset     = $stickyNavbar.offset();
 
 	    $window.scroll(function() {
+	    	maxY = $('#footer').offset().top;
 	    	if ($window.scrollTop() > offset.top) {
 	    		if (!$stickyNavbar.hasClass('sticky')) {
 	    			$stickyNavbar.addClass('sticky');
