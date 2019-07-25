@@ -9,7 +9,7 @@
         {foreach $realSection->resources as $i => $resource}
             {assign var=linkedResource value="{$resource->getCampusResource()}"}
             {assign var=resourceId value="{$resource->id}"}
-
+            {assign var=sortOrder value="{str_pad($i+1, 3, '0', STR_PAD_LEFT)}"}
 <div class="container-fluid mb-2" id="resourceContainer{$resourceId}">
     <div class="row sort-item">
         <div class="tab-content col-sm-11 col-xs-10 px-0" id="toggleEditViewTab{$i}">
@@ -18,7 +18,7 @@
                     <i class="fas fa-bars text-dark" data-toggle="tooltip" data-placement="top" title="Click and drag to change the order."></i>
                 </div>
                
-                <input type="hidden" name="section[real][{$resourceId}][sortOrder]" value="{$i+1}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
+                <input type="hidden" name="section[real][{$resourceId}][sortOrder]" value="{$sortOrder}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
                 {if $linkedResource}
                 <input type="hidden" name="section[real][{$resourceId}][campusResourcesId]" value="{$resource->campusResourcesId}">
                 <input type="hidden" name="section[real][{$resourceId}][imageId]" value="{$resource->imageId}">

@@ -36,7 +36,7 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
                     'created_date' => 'datetime',
                     'modified_date' => 'datetime',
                 ],
-                'orderBy' => ['course_section_id'],
+                'orderBy' => ['-_map.role', 'lastName', 'firstName'],
             ],
 
             'course'        => ['1:1', 'to' => 'Syllabus_ClassData_Course', 'keyMap' => ['course_id' => 'id']],

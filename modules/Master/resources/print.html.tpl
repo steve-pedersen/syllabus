@@ -52,6 +52,7 @@
 									My Syllabi
 								</a>
 							</li>
+						{if !$isStudent}
 							<li class="nav-item mobile-link {if $page == 'start'}active{/if}">
 								<a class="nav-link" href="syllabus/start">
 									Create New Syllabus
@@ -109,6 +110,7 @@
 									{/foreach}
 								
 								{/if}
+							{/if}
 							{/if}
 						{else}
 							<li class="nav-item">

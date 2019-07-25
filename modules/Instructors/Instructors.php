@@ -32,7 +32,7 @@ class Syllabus_Instructors_Instructors extends Bss_ActiveRecord_Base
         return !empty($instructors) ? $instructors : null;
     }
 
-    public function processEdit ($request) 
+    public function processEdit ($request, $data=null) 
     {
         $data = $request->getPostParameters();
         $errorMsg = '';

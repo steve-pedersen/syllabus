@@ -32,7 +32,7 @@ class Syllabus_Activities_Activities extends Bss_ActiveRecord_Base
         return !empty($activities) ? $activities : null;
     }
 
-    public function processEdit ($request) 
+    public function processEdit ($request, $data=null) 
     {
         $data = $request->getPostParameters();
         $errorMsg = '';

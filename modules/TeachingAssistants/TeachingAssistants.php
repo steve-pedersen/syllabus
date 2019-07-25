@@ -32,7 +32,7 @@ class Syllabus_TeachingAssistants_TeachingAssistants extends Bss_ActiveRecord_Ba
         return !empty($teachingAssistants) ? $teachingAssistants : null;
     }
 
-    public function processEdit ($request) 
+    public function processEdit ($request, $data=null) 
     {
         $data = $request->getPostParameters();
         $errorMsg = '';

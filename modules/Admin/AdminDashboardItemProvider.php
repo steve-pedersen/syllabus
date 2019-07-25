@@ -19,7 +19,7 @@ class Syllabus_Admin_AdminDashboardItemProvider extends At_Admin_DashboardItemPr
             'dates-set-semester' => [
                 'section' => 'Site Settings',
                 'order' => 1,
-                'href' => 'admin/classdata/semesters',
+                'href' => 'admin/semesters',
                 'text' => 'Set active and visible semesters',
             ],
         ];

@@ -1,5 +1,6 @@
 {assign var=extName value=$sectionExtension::getExtensionName()}
 {assign var=displayName value=$sectionExtension->getDisplayName()}
+
 {if $currentSectionVersion}
 	{assign var=sectionVersionId value=$currentSectionVersion->id}
 {else}
@@ -8,13 +9,17 @@
 
 <div class="sort-item editor-{$extName} border border-warning active-section-editor rounded-0 p-1 mt-3" id="section{$extName}Edit">
 
-{if $isUpstreamSection}
+{if $upstreamSyllabi}
 <div class="alert alert-warning">
-	This section is inherited from a previous syllabus. Leave this section unedited if you want to continue inheriting changes from that section.
+	This section is cloned from: 
+	{foreach $upstreamSyllabi as $upstream}
+		<em>{$upstream->latestVersion->title}</em>{if !$upstream@last}, {/if}
+	{/foreach}
+	<br>Leave this section unedited if you want to continue receiving changes from that syllabus.
 </div>
 {elseif $hasDownstreamSection}
 <div class="alert alert-warning">
-	This section has been inherited by your other syllabi. Any changes made here will be reflected in the other syllabi.
+	This section has been cloned by your other syllabi. Any changes made here will be reflected in the other syllabi.
 </div>
 {/if}
 
@@ -47,11 +52,12 @@
 	{else}
 		{assign var=editingSectionSortOrder value="{$syllabusVersion->sectionCount + 1}"}
 	{/if}
+	{assign var=sortOrder value="{str_pad($editingSectionSortOrder, 3, '0', STR_PAD_LEFT)}"}
 
 	<input type="hidden" name="section[versionId]" value="{$sectionVersionId}">
 	<input type="hidden" name="section[realClass][{$sectionVersionId}]" value="{$realSectionClass}">
 	<input type="hidden" name="section[extKey][{$sectionVersionId}]" value="{$sectionExtension->getExtensionKey()}">
-	<input type="hidden" name="section[properties][sortOrder][{$sectionVersionId}]" value="{$editingSectionSortOrder}" 
+	<input type="hidden" name="section[properties][sortOrder][{$sectionVersionId}]" value="{$sortOrder}" 
 		class="sort-order-value" id="form-field-{$editingSectionSortOrder}-sort-order">
 	<input type="hidden" name="section[properties][log][{$sectionVersionId}]" value="{$genericSection->log}">
 

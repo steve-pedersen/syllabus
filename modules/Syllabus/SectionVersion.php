@@ -170,11 +170,11 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
         return $organization;
     }
 
-    public function processEdit ($request)
+    public function processEdit ($request, $data=null)
     {
         if ($realSection = $this->resolveSection())
         {
-            $realSection->processEdit($request);
+            $realSection->processEdit($request, $data);
         }
     }
 

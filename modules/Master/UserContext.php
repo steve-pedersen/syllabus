@@ -38,6 +38,10 @@ class Syllabus_Master_UserContext extends Bss_Master_UserContext
             }
             $this->response->redirect('syllabi?mode=overview');
         }
+        elseif ($account->roles->has($roles->findOne($roles->name->equals('Student'))))
+        {
+            $this->response->redirect('syllabi?mode=overview');
+        }
         $this->response->redirect('syllabi');        
     }
 

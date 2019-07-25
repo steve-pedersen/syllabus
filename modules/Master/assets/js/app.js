@@ -32,6 +32,12 @@
         $('.print-button').click();
     }
 
+    var pad = function (num, size) {
+        var s = num+"";
+        while (s.length < size) s = "0" + s;
+        return s;
+    }
+
     // TODO: https://johnny.github.io/jquery-sortable/
     var ckeConfigs = [];
     $('.sort-container').sortable({
@@ -67,7 +73,8 @@
         update: function (event, ui) {
             // update sort order
             $('.sort-order-value').each(function (index, value) {
-                $(value).val(index+1);
+                var sortOrder = pad(index+1, 3);
+                $(value).val(sortOrder);
             });
         }
     });
@@ -153,56 +160,9 @@
             }            
         }
     });
-
-
-
-    /*                   *\
-    |                     |
-    | --==| SIDEBAR |==-- |
-    |                     |
-    \*                   */
-
-    // $('#sidebarToggle').on('click', toggleSidebar);
-    // $('#sidebar').on('click', function (e) {
-    //   var target = $(e.target);
-    //   if (target.is('div') || target.is('nav')) {
-    //     e.stopPropagation();
-    //     e.preventDefault();
-    //     toggleSidebar();
-    //   }
-    // });
-
-
-    // var startSize = $(window).width();
-    // if (startSize < 977) {
-    //   closeSidebar(true);
-    //   $('#sidebarToggle').hide();
-    //   // brandLogo.css({"margin-left": "-0.2em"}, 0);
-    // } else {
-    //   // brandLogo.css({"margin-left": "0"}, 0);
-    // }
-
-    // $( window ).resize(function() {
-    //   let currentWidth = $(window).width();
-    //   if (970 < currentWidth || currentWidth < 980) {
-    //     if (currentWidth < 977) {
-    //       closeSidebar();
-    //       // brandLogo.css({"margin-left": "-0.2em"}, 0);
-    //       $('#sidebarToggle').hide();
-    //     }
-    //     else if (!minimized || !$('#syllabusEditor').length) {
-    //       openSidebar();
-    //       // brandLogo.css({"margin-left": "0"}, 0);
-    //     }
-    //   }
-    // });
-
-    
+ 
 
   });
 
 
 })(jQuery);
-
-// console.log(CKEDITOR);
-

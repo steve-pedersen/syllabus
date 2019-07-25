@@ -49,7 +49,7 @@ class Syllabus_Schedules_Schedules extends Bss_ActiveRecord_Base
         return !empty($schedules) ? $schedules : null;
     }
 
-    public function processEdit ($request) 
+    public function processEdit ($request, $data=null) 
     {
         $data = $request->getPostParameters();
         $errorMsg = '';

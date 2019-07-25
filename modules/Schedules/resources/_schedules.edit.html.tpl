@@ -43,6 +43,7 @@
 
         {foreach $realSection->schedules as $i => $schedule}
             {assign var=scheduleId value="{$schedule->id}"}
+            {assign var=sortOrder value="{str_pad($i+1, 3, '0', STR_PAD_LEFT)}"}
 <div class="container-fluid mb-2 pr-0" id="scheduleContainer{$scheduleId}">
     <div class="row sort-item">
         <div class="tab-content col-11 px-0" id="toggleEditViewTab{$i}">
@@ -51,7 +52,7 @@
                     <i class="fas fa-bars text-dark" data-toggle="tooltip" data-placement="top" title="Click and drag to change the order."></i>
                 </div>
                 
-                <input type="hidden" name="section[real][{$scheduleId}][sortOrder]" value="{$i+1}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
+                <input type="hidden" name="section[real][{$scheduleId}][sortOrder]" value="{$sortOrder}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
                 
                 <div class="d-flex justify-content-between">
                     <label class="form-control-label px-2 row-label">Row #{$i + 1}</label>

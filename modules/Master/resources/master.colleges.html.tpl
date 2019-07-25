@@ -20,14 +20,114 @@
 		<link href="https://fonts.googleapis.com/css?family=Vollkorn+SC&display=swap" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Vollkorn&display=swap" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Old+Standard+TT&display=swap" rel="stylesheet">
-		<link rel="shortcut icon" type="image/x-icon" href="assets/icons/logo_square_512-01.png" />
+		<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
+		<!-- <link rel="shortcut icon" type="image/x-icon" href="assets/icons/logo-3-128.png" /> -->
+		<link rel="shortcut icon" type="image/x-icon" href="assets/icons/logo_square_128-01.png"  />
 		<script>document.write('<link rel="stylesheet" type="text/css" href="assets/css/app-js.css" media="screen">');</script>
 	</head>
 
 	<body>
 		<a href="#mainContent" class="sr-only sr-only-focusable">Skip Navigation</a>
 
-    <div class="wrapper" id="viewTemplate">
+    <div class="wrapper" id="mainTemplate">
+	{if $viewer}
+        <!-- Sidebar  -->
+        <nav id="sidebar" class="bg-dark {if $sidebarMinimized}active{/if}">
+            <div class="sidebar-header bg-light navbar">
+            	<div class="navbar-brand d-block-inline  d-flex justify-content-between">
+                <a class="" href="{$baseUrl}">
+					<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
+				</div>
+            </div>
+
+			<ul class="list-unstyled components">
+				<li class="mt-4">
+					<a class="nav-category" href="syllabi" id="sidebarMySyllabi">
+						<img class="my-syllabi" src="assets/icons/menu-my-syllabi.svg" width="44"> <span class="pl-2 sidebar-text">My Syllabi</span>
+					</a>
+
+					<ul class="list-unstyled">
+						<li class="{if $page == 'start'}active{/if}">
+							<a class="sub-link" href="syllabus/start">
+								<span class="sidebar-text">Create New Syllabus</span>
+							</a>
+						</li>
+						<li class="{if $page == 'overview'}active{/if}">
+							<a class="sub-link" href="syllabi?mode=overview">
+								<span class="sidebar-text">Overview</span>
+							</a>
+						</li>
+						<li class="{if $page == 'courses'}active{/if}">
+							<a class="sub-link" href="syllabi?mode=courses">
+								<span class="sidebar-text">Courses</span>
+							</a>
+						</li>
+						<li class="{if $page == 'migrate'}active{/if}">
+							<a class="sub-link" href="syllabus/migrate">
+								<span class="sidebar-text">Migrate</span>
+							</a>
+						</li>
+					</ul>
+
+				</li>
+			</ul>
+
+
+		{if $privilegedOrganizations['departments'] || $privilegedOrganizations['colleges'] || $pAdmin}
+			<ul class="list-unstyled components my-orgs">
+				<li class="">
+					<a class="nav-category" href="organizations" id="sidebarMyOrganizations">
+						<img class="my-orgs fa-school" src="assets/icons/menu-my-orgs.svg" width="38"> <span class="pl-2 sidebar-text">My Organizations</span>
+					</a>
+					{assign var=departments value=$privilegedOrganizations['departments']}
+					<ul class="list-unstyled">
+					{if (!empty($departments) && count($departments) > 1) || $pAdmin}
+						<li class="{if $page == 'departments'}active{/if}">
+							<a class="sub-link" href="departments">
+								<span class="sidebar-text">Departments</span>
+							</a>
+						</li>
+					{elseif !empty($departments) && count($departments) == 1}
+						{foreach $departments as $dept}
+						<li class="{if $page == 'departments'}active{/if}">
+							<a class="sub-link" href="departments/{$dept->id}">
+								<span class="sidebar-text">
+									{$dept->name}
+								</span>
+							</a>
+						</li>
+						{/foreach}
+					{/if}
+
+					{assign var=colleges value=$privilegedOrganizations['colleges']}
+
+					{if (!empty($colleges) && count($colleges) > 1) || $pAdmin}
+						<li class="{if $page == 'colleges'}active{/if}">
+							<a class="sub-link" href="colleges">
+								<span class="sidebar-text">Colleges</span>
+							</a>
+						</li>
+					{elseif !empty($colleges) && count($colleges) == 1}
+						{foreach $colleges as $college}
+						<li class="{if $page == 'colleges'}active{/if}">
+							<a class="sub-link" href="colleges/{$college->id}">
+								<span class="sidebar-text">
+									{$college->name}
+								</span>
+							</a>
+						</li>
+						{/foreach}
+					{/if}
+
+					</ul>
+				</li>
+			</ul>
+		{/if}
+        </nav>
+
+    {/if}
+
+
         <!-- Page Content  -->
         <div id="content">
 
@@ -35,14 +135,24 @@
 				<span id="goToTop" class="hidden" aria-hidden="true"></span>
 				<!-- <div class="container-fluid"> -->
 				<nav class="navbar navbar-expand-lg navbar-light">
+				{if $viewer}
 					<div class="navbar-brand d-block-inline mr-auto mobile-brand">
 	                	<a class="" href="{$baseUrl}">
-						<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
+						<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-2" alt="Syllabus Logo" id="brandLogo"></a>
 					</div>
-
+                    <button type="button" id="mainSidebarCollapse" class="btn btn-secondary ml-2">
+                        <i class="fas fa-align-left"></i>
+                        <span>Toggle Sidebar</span>
+                    </button>
 					<button class="navbar-toggler mr-3 ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 						<span class="navbar-toggler-icon"></span>
 					</button>
+				{else}
+					<div class="navbar-brand d-block-inline mr-auto">
+	                	<a class="" href="{$baseUrl}">
+						<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-2" alt="Syllabus Logo" id="brandLogo"> <span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
+					</div>
+				{/if}
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav ml-auto">
 						{if $viewer}
@@ -60,7 +170,7 @@
 									My Syllabi
 								</a>
 							</li>
-						{if !$isStudent}
+
 							<li class="nav-item mobile-link {if $page == 'start'}active{/if}">
 								<a class="nav-link" href="syllabus/start">
 									Create New Syllabus
@@ -119,20 +229,39 @@
 								
 								{/if}
 							{/if}
-							{/if}
+
 						{else}
-							<li class="nav-item">
+							<li class="nav-item border-top">
 								<a class="login-button nav-link" href="{$app->baseUrl('login')}">Login</a>
 							</li>
 						{/if} 
 						</ul>
 					{if $viewer}
-						<form method="post" action="logout" class="form logout-form p-2">
-							<button class="btn btn-outline-primary logout " type="submit" name="command[logout]" id="logout-button" value="Logout">Logout</button>
+						<form method="post" action="logout" class="form logout-form p-2 border-top">
+							<button class="btn btn-outline-secondary logout " type="submit" name="command[logout]" id="logout-button" value="Logout">Logout</button>
 						</form>
 					{/if}
 					</div>
 				</nav>
+		        <div class="bc">
+					{if $breadcrumbList}
+					<div class="container-fluid">
+						<div class="col">
+						<ol class="at breadcrumb">
+							{foreach name="breadcrumbs" item="crumb" from=$breadcrumbList}
+							<li{if $smarty.foreach.breadcrumbs.last} class="active"{elseif $smarty.foreach.breadcrumbs.first} class="first"{/if}>
+								{if $crumb@last}
+									{$crumb.text}
+								{else}
+									{l text=$crumb.text href=$crumb.href}
+								{/if}
+							</li>
+							{/foreach}
+						</ol>
+						</div>
+					</div>
+					{/if}
+		        </div>
 		    	<!-- </div> -->
 			</header>	
 
@@ -177,9 +306,62 @@
 				{include file=$contentTemplate}
 			</main>
         </div>
-    </div>      
-    <footer id="footer"></footer>
-    
+    </div>
+
+  
+
+		<footer class="sticky-footer fixed-bottom" id="footer">
+			<nav class="navbar at-footer">
+				<div class="footer-row-1 container-fluid">
+					<div class="container">
+						<div class="row">
+							<div class="info col">
+								<h1>Maintained by <a href="http://at.sfsu.edu" class="title">Academic Technology</a></h1>
+								<p>Academic Technology supports and advances effective learning, teaching, scholarship, and community service with technology.</p>
+							</div>
+							<div class="learn-more col">
+								<div class="row">
+									<div class="half col">
+										<h2>We Also Work On</h2>
+										<ul class="list-unstyled">
+											<li><a href="https://ilearn.sfsu.edu/">iLearn</a></li>
+											<li><a href="http://at.sfsu.edu/labspace">Labspace</a></li>
+											<li><a href="http://at.sfsu.edu/coursestream">CourseStream</a></li>
+										</ul>
+									</div>
+									<div class="half col">
+										<h2>Need Help?</h2>
+										<ul>
+											<li>(415) 405-5555</li>
+											<li><a href="mailto:ilearn@sfsu.edu">ilearn@sfsu.edu</a></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="footer-row-2 container-fluid">
+					<div class="container">
+						<div class="row">
+							<div id="contact-university" class="col">
+								<a href="http://www.sfsu.edu/"> <img src="assets/images/logo.png" alt="San Francisco State University Logo" width="50" class="logo"></a>
+								<ul class="list-unstyled">
+									<li><a href="http://www.sfsu.edu/">San Francisco State University</a></li>
+									<li class="first"><a href="http://www.calstate.edu/">A California State University Campus</a></li>
+								</ul>
+							</div>
+							<div id="contact-local" class="col">
+								<ul class="list-unstyled">
+									<li><strong>Academic Technology</strong></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</footer>
+
 		<script> 
 			var CKEDITOR_BASEPATH = "{$baseUrl|escape}/assets/js/ckeditor/"; 
 			window.CKEDITOR_BASEPATH = CKEDITOR_BASEPATH;

@@ -4,7 +4,30 @@
 html {
   scroll-behavior: smooth;
 }
-
+.student-container {
+	#termAccordion {
+		a.collapse-term {
+			&:hover,
+			&:focus {
+				text-decoration: none;
+			}
+			h3 i.minimized {
+				display: none;
+			}
+			h3 i.expanded {
+				display: inline;
+			}
+			&.collapsed {
+				h3 i.minimized {
+					display: inline;
+				}
+				h3 i.expanded {
+					display: none;
+				}
+			}
+		}
+	}
+}
 .toggle-edit {
 	a.active {
 		display: none;
@@ -229,6 +252,9 @@ div.overview-container {
 	}
 	&.card-bordered-danger {
 		border-color: $danger;
+	}
+	&.card-bordered-light {
+		border-color: $light;
 	}
 }
 .editor-main-container {

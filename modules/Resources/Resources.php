@@ -35,7 +35,7 @@ class Syllabus_Resources_Resources extends Bss_ActiveRecord_Base
         return !empty($resources) ? $resources : null;
     }
 
-    public function processEdit ($request) 
+    public function processEdit ($request, $data=null) 
     {
         $data = $request->getPostParameters();
         $errorMsg = '';

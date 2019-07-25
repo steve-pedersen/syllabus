@@ -37,7 +37,7 @@ class Syllabus_LearningOutcomes_LearningOutcomes extends Bss_ActiveRecord_Base
         return !empty($learningOutcomes) ? $learningOutcomes : null;
     }
 
-    public function processEdit ($request) 
+    public function processEdit ($request, $data=null) 
     {
         $data = $request->getPostParameters();
         $errorMsg = '';

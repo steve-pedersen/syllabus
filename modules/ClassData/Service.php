@@ -259,6 +259,7 @@ class Syllabus_ClassData_Service
         }
         else
         {
+
             // Keeps track of existing courses and users as we process the batches.
             $existingCourseSet = $courses->findValues(['id' => 'id']);
             $existingUserSet = $users->findValues(['id' => 'id']);
@@ -334,6 +335,7 @@ class Syllabus_ClassData_Service
                 }
             }
 
+            $data['enrollments'] = $data['enrollments'] ?? [];
             $existingEnrollmentSet = $this->loadExistingEnrollments($dataSource, $data['enrollments'], $existingCourseSet, $existingUserSet);
             
             // Enrollments.
@@ -604,7 +606,7 @@ class Syllabus_ClassData_Service
                 'createdDate' => $now,
                 'modifiedDate' => $now,
                 'deleted' => false,
-                'department_id' => $this->allDepartments[$data['department']] ?? '',
+                'department_id' => $this->allDepartments[$data['department']] ?? null,
             ],
             $courses->id->equals($courseId),
             ['transaction' => $tx]

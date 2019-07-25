@@ -49,7 +49,7 @@ class Syllabus_Grades_Grades extends Bss_ActiveRecord_Base
         return !empty($grades) ? $grades : null;
     }
 
-    public function processEdit ($request) 
+    public function processEdit ($request, $data=null) 
     {
         $data = $request->getPostParameters();
         $errorMsg = '';

@@ -6,6 +6,7 @@
 
         {foreach $realSection->objectives as $i => $objective}
             {assign var=objectiveId value="{$objective->id}"}
+            {assign var=sortOrder value="{str_pad($i+1, 3, '0', STR_PAD_LEFT)}"}
 <div class="container-fluid mb-2" id="objectiveContainer{$objectiveId}">
     <div class="row sort-item">
         <div class="tab-content col-11 px-0" id="toggleEditViewTab{$i}">
@@ -14,7 +15,7 @@
                     <i class="fas fa-bars text-dark" data-toggle="tooltip" data-placement="top" title="Click and drag to change the order."></i>
                 </div>
                
-                <input type="hidden" name="section[real][{$objectiveId}][sortOrder]" value="{$i+1}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
+                <input type="hidden" name="section[real][{$objectiveId}][sortOrder]" value="{$sortOrder}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
                 <div class="d-flex justify-content-end">
                     <button type="submit" aria-label="Delete" class="btn btn-link text-danger my-0 mx-2" name="command[deletesectionitem][Syllabus_Objectives_Objective][{$objectiveId}]" id="{$objectiveId}">
                         <i class="fas fa-trash-alt mr-1"></i>Delete

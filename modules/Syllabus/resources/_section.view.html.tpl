@@ -3,6 +3,7 @@
 {assign var=realSectionClass value=$ext->getRecordClass()}
 {assign var=sectionVersionId value=$sectionVersion->id}
 {assign var=editable value=(!$sectionVersion->readOnly || ($sectionVersion->readOnly && $sectionVersion->canEditReadOnly))}
+{assign var=sortOrder value="{str_pad($i+1, 3, '0', STR_PAD_LEFT)}"}
 
 <div class="sort-item editor-{$extName} mt-3 {if !$editable}text-muted{/if}" id="section{$extName}{$i}">
 	<div class="d-block-inline bg-light p-2 section-collapse-link dragdrop-handle border" data-toggle="collapse" href="#{$extName}Collapse{$i}" aria-expanded="false" aria-controls="{$extName}Collapse{$i}">
@@ -17,7 +18,7 @@
 
 	<input type="hidden" name="section[realClass][{$sectionVersionId}]" value="{$realSectionClass}">
 	<input type="hidden" name="section[extKey][{$sectionVersionId}]" value="{$ext->getExtensionKey()}">
-	<input type="hidden" name="section[properties][sortOrder][{$sectionVersionId}]" value="{$i+1}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
+	<input type="hidden" name="section[properties][sortOrder][{$sectionVersionId}]" value="{$sortOrder}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
 
 	<div class="collapse multi-collapse show section-collapsible" id="{$extName}Collapse{$i}">
 		<div class="card card-outline-secondary border-top-0 rounded-0">

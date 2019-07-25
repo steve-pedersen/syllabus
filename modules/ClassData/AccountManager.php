@@ -46,6 +46,7 @@ class Syllabus_ClassData_AccountManager
     /**
      * Gives any instructors the 'Faculty' role and give membership to their
      * enrolled course departments and colleges.
+     * Gives students the 'Student' role.
      */
     public function grantRoleAndMembership ($account, $classDataUser)
     {
@@ -54,6 +55,7 @@ class Syllabus_ClassData_AccountManager
         $colleges = $this->getSchema('Syllabus_AcademicOrganizations_College');
         $userDepartments = [];
         $userColleges = [];
+        $isStudent = false;
 
         foreach ($classDataUser->enrollments as $enrollment)
         {
@@ -74,6 +76,17 @@ class Syllabus_ClassData_AccountManager
                     $userColleges[$enrollment->department->parent->id] = $enrollment->department->parent;
                 }
             }
+            elseif ($classDataUser->enrollments->getProperty($enrollment, 'role') === 'student')
+            {
+                $isStudent = true;        
+            }
+        }
+
+        if ($isStudent)
+        {
+            $studentRole = $roles->findOne($roles->name->equals('Student'));
+            $account->roles->add($studentRole);
+            $account->roles->save();   
         }
 
         // auto grant instructors membership into their course departments

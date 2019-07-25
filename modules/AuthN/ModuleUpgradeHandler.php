@@ -64,6 +64,20 @@ class Syllabus_AuthN_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModuleUpg
                 );
                 
                 break;
+
+            case 1:
+
+                $this->useDataSource('Syllabus_AuthN_Role');
+
+                $roleIdMap = $this->insertRecords('syllabus_authn_roles',
+                    array(
+                        array('name' => 'Student', 'description' => 'Syllabus student role', 'is_system_role' => true)
+                    ),
+                    array(
+                        'idList' => array('id')
+                    )
+                );
+                break;
         }
     }
 }

@@ -27,9 +27,9 @@ class Syllabus_Courses_Course extends Bss_ActiveRecord_Base
         ];
     }
 
-    public function processEdit ($request) 
+    public function processEdit ($request, $data=null) 
     {
-        $data = $request->getPostParameters();
+        $data = $data ?? $request->getPostParameters();
         if (isset($data['syllabusVersion']) && isset($data['syllabusVersion']['id']) && 
             isset($data['section']) && isset($data['section']['real']))
         {
@@ -44,7 +44,7 @@ class Syllabus_Courses_Course extends Bss_ActiveRecord_Base
                 $courseData['semester'] = Syllabus_Admin_Semester::ConvertToTerm($courseData['semester'], true);
                 unset($courseData['id']);
                 $this->absorbData($courseData);
-                $this->externalKey = $externalKey;
+                $this->externalKey = $course->id;
             }
         }
         $this->save();

@@ -115,10 +115,25 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
 
         if ($callback !== 'screenshot' && $callback !== 'export')
         {
+            $roles = $this->schema('Syllabus_AuthN_Role');
+            $studentRole = $roles->findOne($roles->name->equals('Student'));
+            $this->template->isStudent = $this->getAccount()->roles->has($studentRole);
+            $this->template->activeSemester = $this->getActiveSemester();
             $this->template->privilegedOrganizations = $this->getPrivelegedUserOrganizations();
         }
 
         parent::afterCallback($callback);
+    }
+
+    public function getActiveSemester ()
+    {
+        $today = new DateTime;
+        $schema = $this->schema('Syllabus_Admin_Semester');
+        $activeSemester = $schema->findOne(
+            $schema->endDate->after($today), ['orderBy' => '+startDate']
+        );
+
+        return $activeSemester;
     }
 
     public function getPrivelegedUserOrganizations ()
@@ -134,10 +149,10 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
             {
                 $orgs['departments'][$cs->department->id] = $cs->department;
             }
-            if (!isset($orgs['colleges'][$cs->department->college->id]) && $cs->department->college->userIsMoreThanMember($viewer))
-            {
-                $orgs['colleges'][$cs->department->college->id] = $cs->department->college;
-            }
+            // if (!isset($orgs['colleges'][$cs->department->college->id]) && $cs->department->college->userIsMoreThanMember($viewer))
+            // {
+            //     $orgs['colleges'][$cs->department->college->id] = $cs->department->college;
+            // }
         }
         // echo "<pre>"; var_dump(count($orgs['departments'])); die;
         return $orgs;

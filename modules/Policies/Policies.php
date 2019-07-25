@@ -32,7 +32,7 @@ class Syllabus_Policies_Policies extends Bss_ActiveRecord_Base
         return !empty($policies) ? $policies : null;
     }
 
-    public function processEdit ($request) 
+    public function processEdit ($request, $data=null) 
     {
         $data = $request->getPostParameters();
         $errorMsg = '';

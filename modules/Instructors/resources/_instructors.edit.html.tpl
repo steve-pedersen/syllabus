@@ -5,7 +5,7 @@
 {if $realSection->instructors}
     {foreach $realSection->instructors as $i => $instructor}
         {assign var=instructorId value="{$instructor->id}"}
-
+        {assign var=sortOrder value="{str_pad($i+1, 3, '0', STR_PAD_LEFT)}"}
 <div class="container-fluid mb-2" id="instructorContainer{$instructorId}">
 <div class="row sort-item">
     <div class="tab-content col-11 px-0" id="toggleEditViewTab{$i}">
@@ -14,7 +14,7 @@
     <div class="mb-2 mx-0 d-flex flex-row bg-light p-3 dragdrop-handle">
         <i class="fas fa-bars text-dark" data-toggle="tooltip" data-placement="top" title="Click and drag to change the order."></i>
     </div>  
-    <input type="hidden" name="section[real][{$instructorId}][sortOrder]" value="{$i+1}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
+    <input type="hidden" name="section[real][{$instructorId}][sortOrder]" value="{$sortOrder}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
 
     <div class="d-flex justify-content-end">
         <button type="submit" aria-label="Delete" class="btn btn-link text-danger my-0 mx-2" name="command[deletesectionitem][Syllabus_Instructor_Instructor][{$instructorId}]" id="{$instructorId}">

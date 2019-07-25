@@ -64,17 +64,20 @@ class Syllabus_ClassData_AdminController extends At_Admin_Controller
             $service = new Syllabus_ClassData_Service($this->application);
             $service->importOrganizations();
 
-            $semesterCodes = $this->application->siteSettings->semesters ?? '2195,2193,2191,2187';
+            // $semesterCodes = $this->application->siteSettings->semesters ?? '2195,2193,2191,2187';
             // $semesterCodes = Syllabus_Admin_Semester::GetActiveSemesters($this->application);
             // $semesterCodes = '2175' - '2195'
-            // problem semesters have been: 2187, 2193
 
-            $semesterCodes = $this->application->siteSettings->semesters ?? '2177,2181,2183,2185,2187,2191,2193,2195,2197';
-            if (!is_array($semesterCodes))
-            {
-                $semesterCodes = explode(',', $semesterCodes);
-            }
-            foreach ($semesterCodes as $semesterCode)
+            // $semesterCodes = $this->application->siteSettings->semesters ?? '2177,2181,2183,2185,2187,2191,2193,2195,2197';
+
+            $semesters = $this->schema('Syllabus_Admin_Semester');
+            $activeSemesterCodes = $semesters->findValues('internal', $semesters->active->isTrue());
+            
+            // if (!is_array($semesterCodes))
+            // {
+            //     $semesterCodes = explode(',', $semesterCodes);
+            // }
+            foreach ($activeSemesterCodes as $semesterCode)
             {
                 $service->import($semesterCode);
             }

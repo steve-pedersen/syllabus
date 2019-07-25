@@ -32,7 +32,7 @@ class Syllabus_Objectives_Objectives extends Bss_ActiveRecord_Base
         return !empty($objectives) ? $objectives : null;
     }
 
-    public function processEdit ($request) 
+    public function processEdit ($request, $data=null) 
     {
         $data = $request->getPostParameters();
         $errorMsg = '';
