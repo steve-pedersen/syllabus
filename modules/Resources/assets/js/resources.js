@@ -25,7 +25,7 @@
         rowSize = (rows * 2) + 'em';
       }
       var config = {
-        customConfig: '../ckeditor_custom/ckeditor_config_basic.js',
+        customConfig: '../ckeditor_custom/ckeditor_config_syllabus_standard.js',
         height:rowSize,
         autoGrow_minHeight: rowSize
       };

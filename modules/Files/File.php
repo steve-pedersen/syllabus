@@ -40,11 +40,30 @@ class Syllabus_Files_File extends Bss_ActiveRecord_Base
         return  (($result !== null) && !empty($result));
     }
 
-    public function createFromRequest ($request, $inputName, $scan=true)
+    public function createFromRequest ($request, $inputName, $scan=true, $allowed='')
     {
         if ($file = $request->getFileUpload($inputName))
         {
-            if ($file->isValid())
+            $isAllowedType = true;
+            if ($allowed)
+            {
+                $isAllowedType = false;
+                $contentType = $file->getContentType();
+                foreach (explode(',', $allowed) as $mime)
+                {
+                    if ($mime === $contentType)
+                    {
+                        $isAllowedType = true;
+                        break;
+                    }
+                }
+            }
+            if (!$isAllowedType)
+            {
+                $this->invalidate($inputName, 'The wrong file type was uploaded.');
+                return true;
+            }
+            elseif ($file->isValid())
             {
                 $antiVirus = $this->getApplication()->antiVirusManager;
                 $messages = null;

@@ -24,32 +24,51 @@
 	<div class="col-xl-6 col-lg-6 col-md-12 mt-4">
 		<div class="card card-bordered card-bordered-left card-bordered-{if $course->courseSyllabus}success{else}light{/if} h-100 rounded">
 			<div class="card-body row">
-				<div class="col-4 border-right text-center d-block">
+				<!-- <div class="col-4 border-right text-center d-block"> -->
+				<div class="col-xl-4 col-lg-5 col-md-5 col-sm-12 col-xs-12 image-block border-right text-center d-block">
 				{if $course->courseSyllabus}
-					<img src="{$course->imageUrl}" class="img-thumbnail" alt="{$course->title} syllabus preview" style="min-height:140px;">
+				<a href="syllabus/{$course->courseSyllabus->id}/view" class="">
+					<div class="paper paper-bottom mb-1">
+					<img src="{$course->imageUrl}" class="img-thumbnail" alt="{$course->title} syllabus preview" style="min-height:120px;border:1px solid #dee2e6;border-radius:0;">
+				</div>
+				</a>
 				{else}
-					<span class="text-center d-block h-100 pt-5 text-muted">
+					<span class="text-center d-block h-100  text-muted no-syllabus">
+						<span class="vertical-spacer d-block"></span>
 						<em class="">No syllabus on file for this course</em>
 					</span>
 				{/if}
 				</div>
-				<div class="col-8">
-					<h5 class="card-title {if !$course->courseSyllabus}text-muted{/if}">
-						{$course->classNumber}: {$course->title}
+				<!-- <div class="col-8"> -->
+				<div class="col-xl-8 col-lg-7 col-md-7 col-sm-12 col-xs-12">
+					<h5 class="card-title mb-2 {if !$course->courseSyllabus}text-muted{/if}">
+						{$course->classNumber}: <span class="{if $course->courseSyllabus}text-dark{/if}">{$course->title}</span>
 					</h5>
-					<p class="card-text mb-5 mt-2 {if !$course->courseSyllabus}text-muted{/if}">
-						Section {$course->sectionNumber}
+<!-- 					<div class="wrap pb-1">
+						<div class="left w-100 {if !$course->courseSyllabus}border-light{/if}"></div>
+						<div class="right"></div>
+					</div> -->
+					<p class="card-text mb-3 mt-0 {if !$course->courseSyllabus}text-muted{/if}">
+						<span class="text-dark">Section {$course->sectionNumber}</span>
 					</p>
 				{if $course->courseSyllabus}
-					<a href="syllabus/{$course->courseSyllabus->id}/view" class="mb-2 btn btn-dark">
-						View
+			<div class="row text-center">
+				<div class="col-xl-8 offset-xl-2 col-lg-12 offset-lg-0 col-sm-10 offset-sm-1 col-xs-8 offset-xs-2 d-block">
+					<a href="syllabus/{$course->courseSyllabus->id}/view" class="mb-4 btn btn-dark btn-lg btn-block">
+						<i class="far fa-eye  mr-3"></i> View
 					</a>
-					<a href="syllabus/{$course->courseSyllabus->id}/export" class="mb-2 btn btn-link">
+				</div>
+				<div class="col-xl-8 col-lg-9 col-sm-8 col-xs-12 d-block">
+					<a href="syllabus/{$course->courseSyllabus->id}/export" class="mb-2 btn btn-link btn-blocks">
 						<i class="far fa-file-word"></i> Download as Word
 					</a>
-					<a href="syllabus/{$course->courseSyllabus->id}/print" class="mb-2 btn btn-link">
+				</div>
+				<div class="col-xl-4 col-lg-4 col-sm-4 col-xs-12 d-block">
+					<a href="syllabus/{$course->courseSyllabus->id}/print" class="mb-2 btn btn-link btn-blocks">
 						<i class="fas fa-print"></i> Print
 					</a>
+				</div>
+			</div>
 				{/if}
 				</div>
 

@@ -26,6 +26,31 @@ html {
 				}
 			}
 		}
+		@media (max-width: 767.98px) {
+			.image-block {
+				border-right: none !important;
+				padding-bottom: 1.5rem !important;
+				// .no-syllabus {
+				// 	padding-top: 1.5rem !important;
+				// }
+			}
+		}
+		@media (max-width: 567px) {
+			.image-block {
+				// padding-bottom: 1.5rem !important;
+				.no-syllabus {
+					// padding-top: 1.5rem;
+				}
+			}
+		}
+		.image-block {
+			.no-syllabus {
+				.vertical-spacer {
+					height: 2.5rem;
+					height: calc(40% - 20px);
+				}
+			}
+		}
 	}
 }
 .toggle-edit {
@@ -483,5 +508,16 @@ form#chooseStartingPoint {
 				}
 			}
 		}
+	}
+}
+
+@media (max-width: 991px) {
+	.migrate-text-container {
+		width: 75% !important;
+	}
+}
+@media (max-width: 768px) {
+	.migrate-text-container {
+		width: 100% !important;
 	}
 }

@@ -158,12 +158,14 @@
 		a[aria-expanded="true"] {
 		    color: #fff;
 		    border-right: 5px solid $info;
+		    background-color: $dark-2;
 		}
 		&.active {
 			ul li.active>a,
 			a[aria-expanded="true"] {
 			    color: #fff;
 			    border-right: none;
+			    background-color: $dark;
 			}			
 		}
 

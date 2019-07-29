@@ -163,7 +163,7 @@
     <div class="form-group row px-3 mt-5">
         <label class="col-lg-3 col-form-label form-control-label">Additional Information</label>
         <div class="col-lg-9">
-            <textarea class="form-control wysiwyg wysiwyg-basic" type="text" name="section[real][additionalInformation]" rows="5">{$realSection->additionalInformation}</textarea>
+            <textarea class="form-control wysiwyg wysiwyg-syllabus-full" type="text" name="section[real][additionalInformation]" rows="5">{$realSection->additionalInformation}</textarea>
         </div>
     </div>
 </div>

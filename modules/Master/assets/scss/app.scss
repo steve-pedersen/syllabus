@@ -296,3 +296,117 @@ hr {
 	overflow-wrap: break-word;
 	word-break: break-word;
 }
+
+
+blockquote {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 50px;
+  padding-left: 15px;
+  border-left: 3px solid #ccc;
+} 
+
+
+.paper {
+
+	&.paper-top {
+		// background: #fff;
+		box-shadow:
+			/* The top layer shadow */
+			0 -1px 1px rgba(0,0,0,0.15),
+			/* The second layer */
+			0 -10px 0 -5px #eee,
+			/* The second layer shadow */
+			0 -10px 1px -4px rgba(0,0,0,0.15),
+			/* The third layer */
+			0 -20px 0 -10px #eee,
+			/* The third layer shadow */
+			0 -20px 1px -9px rgba(0,0,0,0.15);
+	}
+
+
+	&.paper-bottom {
+		// background: #fff;
+		box-shadow:
+			/* The top layer shadow */
+			0 1px 1px rgba(0,0,0,0.15),
+			/* The second layer */
+			0 10px 0 -5px #eee,
+			/* The second layer shadow */
+			0 10px 1px -4px rgba(0,0,0,0.15),
+			/* The third layer */
+			0 20px 0 -10px #eee,
+			/* The third layer shadow */
+			0 20px 1px -9px rgba(0,0,0,0.15);
+	}
+
+
+	/* Diagonal stacked paper effect */
+	&.paper-diagonal {
+		// background-color: #fff;
+		/* Need position to allow stacking of pseudo-elements */
+		position: relative;
+		/* Padding for demo purposes */
+		// padding: 30px;
+	}
+	&.paper-diagonal,
+	&.paper-diagonal::before,
+	&.paper-diagonal::after {
+		/* Add shadow to distinguish sheets from one another */
+		box-shadow: 2px 1px 1px rgba(0,0,0,0.15);
+	}
+	&.paper-diagonal::before,
+	&.paper-diagonal::after {
+		content: "";
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background-color: #eee;
+	}
+	/* Second sheet of paper */
+	&.paper-diagonal::before {
+		left: 7px;
+		top: 5px;
+		z-index: -1;
+	}
+	/* Third sheet of paper */
+	&.paper-diagonal::after {
+		left: 12px;
+		top: 10px;
+		z-index: -2;
+	}
+
+
+	/* Diagonal stacked paper effect */
+	&.paper-disorganized {
+		background-color: #fff;
+		/* Need position to allow stacking of pseudo-elements */
+		position: relative;
+	}
+	&.paper-disorganized,
+	&.paper-disorganized::before,
+	&.paper-disorganized::after {
+		/* Add shadow to distinguish sheets from one another */
+		box-shadow: 2px 1px 1px rgba(0,0,0,0.15);
+	}
+	&.paper-disorganized::before,
+	&.paper-disorganized::after {
+		content: "";
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background-color: #eee;
+	}
+	/* Second sheet of paper */
+	&.paper-disorganized::before {
+		left: 7px;
+		top: 5px;
+		z-index: -1;
+	}
+	/* Third sheet of paper */
+	&.paper-disorganized::after {
+		left: 12px;
+		top: 10px;
+		z-index: -2;
+	}
+}

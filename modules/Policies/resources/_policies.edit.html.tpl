@@ -31,7 +31,7 @@
                 <div class="form-group row px-3">
                     <label class="col-lg-3 col-form-label form-control-label">Policy #{$i+1} Description</label>
                     <div class="col-lg-9">
-                        <textarea class="form-control wysiwyg wysiwyg-full" type="text" name="section[real][{$policyId}][description]" rows="5">{$policy->description}</textarea>
+                        <textarea class="form-control wysiwyg wysiwyg-syllabus-full" type="text" name="section[real][{$policyId}][description]" rows="5">{$policy->description}</textarea>
                     </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@
     <div class="form-group row">
         <label class="col-lg-3 col-form-label form-control-label">Policy #{$i+1} Description</label>
         <div class="col-lg-9">
-            <textarea class="form-control wysiwyg wysiwyg-full" type="text" name="section[real][{$policyId}][description]" rows="5"></textarea>
+            <textarea class="form-control wysiwyg wysiwyg-syllabus-full" type="text" name="section[real][{$policyId}][description]" rows="5"></textarea>
         </div>
     </div>
 </div>  

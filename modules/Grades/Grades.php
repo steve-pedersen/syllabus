@@ -58,11 +58,12 @@ class Syllabus_Grades_Grades extends Bss_ActiveRecord_Base
         {
             $data = $data['section']['real'];
             $htmlSanitizer = new Bss_RichText_HtmlSanitizer();
+            $options['allowTags'] = ['hr'];
             $this->absorbData($data);
             $this->header1 = isset($data['header1']) ? strip_tags(trim($data['header1'])) : '';
             $this->header2 = isset($data['header2']) ? strip_tags(trim($data['header2'])) : '';
             $this->header3 = isset($data['header3']) ? strip_tags(trim($data['header3'])) : '';
-            $this->additionalInformation = $htmlSanitizer->sanitize(trim($data['additionalInformation']));
+            $this->additionalInformation = $htmlSanitizer->sanitize(trim($data['additionalInformation']), $options);
             $this->save();
 
             unset($data['columns']);
@@ -74,18 +75,10 @@ class Syllabus_Grades_Grades extends Bss_ActiveRecord_Base
             $schema = $this->getSchema('Syllabus_Grades_Grade');
             foreach ($data as $id => $grade)
             {
-                if ($this->isNotWhiteSpaceOnly($grade, 'column1'))
+                if ($this->isNotWhiteSpaceOnly($grade, 'column1') ||
+                    $this->isNotWhiteSpaceOnly($grade, 'column2') ||
+                    $this->isNotWhiteSpaceOnly($grade, 'column3'))
                 {
-                    // $obj = (!is_numeric($id)) ? $schema->createInstance() : $schema->get($id);
-                    // $save = true;
-                    // if ($obj->inDatasource)
-                    // {
-                    //     if ($obj->id != $id)
-                    //     {
-                    //         $save = false;
-                    //     }
-                    // }
-
                     $save = true;
                     $obj = $schema->createInstance();
                     if ($save)
@@ -108,64 +101,4 @@ class Syllabus_Grades_Grades extends Bss_ActiveRecord_Base
         return $errorMsg;
     }
 
-
-    // public function getDefaults ()
-    // {
-    //     $gradeSchema = $this->getSchema('Syllabus_Grades_Grade');
-    //     $gradesSchema = $this->getSchema();
-    //     $grades = $gradesSchema->createInstance();
-    //     $grades->columns = 2;
-    //     $grades->header1 = 'Letter Grade';
-    //     $grades->header2 = 'Percentage Range';
-    //     // $grades->header3 = 'Explanation';
-    //     $grades->save();
-    //     $row1 = $gradeSchema->createInstance();
-    //     $row2 = $gradeSchema->createInstance();
-    //     $row3 = $gradeSchema->createInstance();
-    //     $row4 = $gradeSchema->createInstance();
-    //     $row5 = $gradeSchema->createInstance();
-
-    //     $row1->column1 = 'A';
-    //     $row1->column2 = '90 - 100%';
-    //     $row1->sortOrder = 1;
-    //     $row1->grades_id = $grades->id;
-    //     $row1->save();
-    //     $row2->column1 = 'B';
-    //     $row2->column2 = '80 - 89%';
-    //     $row2->sortOrder = 2;
-    //     $row2->grades_id = $grades->id;
-    //     $row2->save();
-    //     $row3->column1 = 'C';
-    //     $row3->column2 = '70 - 79%';
-    //     $row3->sortOrder = 3;
-    //     $row3->grades_id = $grades->id;
-    //     $row3->save();
-    //     $row4->column1 = 'D';
-    //     $row4->column2 = '60 - 69%';
-    //     $row4->sortOrder = 4;
-    //     $row4->grades_id = $grades->id;
-    //     $row4->save();
-    //     $row5->column1 = 'F';
-    //     $row5->column2 = '0 - 59%';
-    //     $row5->sortOrder = 5;
-    //     $row5->grades_id = $grades->id;
-    //     $row5->save();
-        
-    //     // // $collection = $this->_fetch('grades');
-    //     // $grades->grades->add($row1);
-    //     // $grades->grades->add($row2);
-    //     // $grades->grades->add($row3);
-    //     // $grades->grades->add($row4);
-    //     // $grades->grades->add($row5);
-    //     $rows = [];
-    //     $rows[] = $row1;
-    //     $rows[] = $row2;
-    //     $rows[] = $row3;
-    //     $rows[] = $row4;
-    //     $rows[] = $row5;
-    //     $grades->grades = $rows;
-
-
-    //     return $grades;
-    // }
 }

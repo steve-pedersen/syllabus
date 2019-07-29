@@ -87,7 +87,7 @@
 	            <label class="col-lg-3 col-form-label form-control-label">Intro Text</label>
 	            <div class="col-lg-9">
 	                <!-- <input class="form-control" type="text" name="section[generic][{$sectionVersionId}][description]" value="{if $currentSectionVersion->description}{$currentSectionVersion->description}{/if}"> -->
-	                <textarea class="form-control wysiwyg wysiwyg-basic" name="section[generic][{$sectionVersionId}][description]" value="{if $currentSectionVersion->description}{$currentSectionVersion->description}{/if}" rows="2">{$currentSectionVersion->description}</textarea>
+	                <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[generic][{$sectionVersionId}][description]" value="{if $currentSectionVersion->description}{$currentSectionVersion->description}{/if}" rows="2">{$currentSectionVersion->description}</textarea>
 					<small id="{$extName}HelpBlock2" class="form-text text-muted ml-1">
 						This intro text will be displayed immediately after the section title.
 					</small>

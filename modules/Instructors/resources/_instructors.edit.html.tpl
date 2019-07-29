@@ -57,11 +57,11 @@
     <div class="form-row px-3 row-3">
         <div class="col-md-6 mb-3 office-hours">
             <label for="officeHours">Office Hours</label>
-            <textarea class="form-control wysiwyg wysiwyg-basic" name="section[real][{$instructorId}][officeHours]" rows="3">{$instructor->officeHours}</textarea>
+            <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$instructorId}][officeHours]" rows="3">{$instructor->officeHours}</textarea>
         </div>
         <div class="col-md-6 mb-3 about">
             <label for="about">About Me</label>
-            <textarea class="form-control wysiwyg wysiwyg-basic" name="section[real][{$instructorId}][about]" rows="3">{$instructor->about}</textarea>
+            <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$instructorId}][about]" rows="3">{$instructor->about}</textarea>
         </div>
     </div>
 </div>
@@ -144,11 +144,11 @@
 <div class="form-row px-3 row-3">
     <div class="col-md-6 mb-3 office-hours">
         <label for="officeHours">Office Hours</label>
-        <textarea class="form-control wysiwyg wysiwyg-basic" name="section[real][{$instructorId}][officeHours]" rows="3"></textarea>
+        <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$instructorId}][officeHours]" rows="3"></textarea>
     </div>
     <div class="col-md-6 mb-3 about">
         <label for="about">About Me</label>
-        <textarea class="form-control wysiwyg wysiwyg-basic" name="section[real][{$instructorId}][about]" rows="3"></textarea>
+        <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$instructorId}][about]" rows="3"></textarea>
     </div>
 </div>
 </div>  

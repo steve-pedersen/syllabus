@@ -51,7 +51,7 @@
                     </div>
                     <div class="form-group col-md-9">
                         <label for="description">Description</label>
-                        <textarea class="form-control {if !$resource->isCustom}disabled{/if} wysiwyg wysiwyg-basic" name="section[real][{$resourceId}][description]" rows="3" {if !$resource->isCustom}disabled{/if}>{$resource->description}</textarea>
+                        <textarea class="form-control {if !$resource->isCustom}disabled{/if} wysiwyg wysiwyg-syllabus-standard" name="section[real][{$resourceId}][description]" rows="3" {if !$resource->isCustom}disabled{/if}>{$resource->description}</textarea>
                     </div>
                 </div>
 
@@ -120,7 +120,7 @@
         </div>
         <div class="form-group description">
             <label for="description">Description</label>
-            <textarea class="form-control wysiwyg wysiwyg-basic" id="description" name="section[real][{$resourceId}][description]" placeholder="This resource helps students by..." rows="3"></textarea>
+            <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" id="description" name="section[real][{$resourceId}][description]" placeholder="This resource helps students by..." rows="3"></textarea>
         </div>
     </div>  
 
@@ -139,7 +139,7 @@
         <div class="form-group row px-3 mt-5">
             <label class="col-lg-3 col-form-label form-control-label">Additional Information</label>
             <div class="col-lg-9">
-                <textarea class="form-control wysiwyg wysiwyg-basic" type="text" name="section[real][additionalInformation]" rows="5">{$realSection->additionalInformation}</textarea>
+                <textarea class="form-control wysiwyg wysiwyg-syllabus-full" type="text" name="section[real][additionalInformation]" rows="5">{$realSection->additionalInformation}</textarea>
             </div>
         </div>
     </div>

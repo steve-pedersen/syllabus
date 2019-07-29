@@ -36,7 +36,7 @@
                 <div class="form-group row px-3">
                     <label class="col-lg-3 col-form-label form-control-label">Additional Information</label>
                     <div class="col-lg-9">
-                        <textarea class="form-control wysiwyg wysiwyg-basic" name="section[real][{$taId}][additionalInformation]" rows="5">{$ta->additionalInformation}</textarea>
+                        <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$taId}][additionalInformation]" rows="5">{$ta->additionalInformation}</textarea>
                     </div>
                 </div>
             </div>
@@ -91,7 +91,7 @@
     <div class="form-group additional-information row">
         <label class="col-lg-3 col-form-label form-control-label">Additional Information</label>
         <div class="col-lg-9">
-            <textarea class="form-control wysiwyg wysiwyg-basic" name="section[real][{$taId}][additionalInformation]" rows="5"></textarea>
+            <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$taId}][additionalInformation]" rows="5"></textarea>
         </div>
     </div>
 </div>  

@@ -60,13 +60,13 @@
                 
                 <div class="form-group learning-outcome-row row px-2">
                     <div class="col-lg-4 column1">
-                        <textarea rows="2" class="form-control wysiwyg wysiwyg-basic" name="section[real][{$learningOutcomeId}][column1]" placeholder="Column 1">{$learningOutcome->column1}</textarea>
+                        <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$learningOutcomeId}][column1]" placeholder="Column 1">{$learningOutcome->column1}</textarea>
                     </div>
                     <div class="col-lg-4 column2">
-                        <textarea rows="2" class="form-control wysiwyg wysiwyg-basic" name="section[real][{$learningOutcomeId}][column2]" placeholder="Column 2">{$learningOutcome->column2}</textarea>
+                        <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$learningOutcomeId}][column2]" placeholder="Column 2">{$learningOutcome->column2}</textarea>
                     </div>
                     <div class="col-lg-4 column3 collapse" id="collapseColumn" data-parent="#columnAccordion">
-                        <textarea rows="2" class="form-control wysiwyg wysiwyg-basic" name="section[real][{$learningOutcomeId}][column3]" placeholder="Column 3">{$learningOutcome->column3}</textarea>
+                        <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$learningOutcomeId}][column3]" placeholder="Column 3">{$learningOutcome->column3}</textarea>
                     </div>
                 </div>
             </div>
@@ -109,13 +109,13 @@
         <label class="form-control-label px-2 row-label">Row #{$i + 1}</label>
         <div class="form-group learning-outcome-row row px-2">
             <div class="col-lg-4 column1">
-                <textarea rows="2" class="form-control wysiwyg wysiwyg-basic" name="section[real][{$learningOutcomeId}][column1]" placeholder="Column 1"></textarea>
+                <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$learningOutcomeId}][column1]" placeholder="Column 1"></textarea>
             </div>
             <div class="col-lg-4 column2">
-                <textarea rows="2" class="form-control wysiwyg wysiwyg-basic" name="section[real][{$learningOutcomeId}][column2]" placeholder="Column 2"></textarea>
+                <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$learningOutcomeId}][column2]" placeholder="Column 2"></textarea>
             </div>
             <div class="col-lg-4 column3 collapse" id="collapseColumn" data-parent="#columnAccordion">
-                <textarea rows="2" class="form-control wysiwyg wysiwyg-basic" name="section[real][{$learningOutcomeId}][column3]" placeholder="Column 3"></textarea>
+                <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$learningOutcomeId}][column3]" placeholder="Column 3"></textarea>
             </div>
 
             <hr class="fancy-line-2">
@@ -133,7 +133,7 @@
     <div class="form-group row px-3 mt-5">
         <label class="col-lg-3 col-form-label form-control-label">Additional Information</label>
         <div class="col-lg-9">
-            <textarea class="form-control wysiwyg wysiwyg-basic" type="text" name="section[real][additionalInformation]" rows="5">{$realSection->additionalInformation}</textarea>
+            <textarea class="form-control wysiwyg wysiwyg-syllabus-full" type="text" name="section[real][additionalInformation]" rows="5">{$realSection->additionalInformation}</textarea>
         </div>
     </div>
 
