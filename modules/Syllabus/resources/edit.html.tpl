@@ -57,27 +57,55 @@
 	
 			<div class="sort-container">				
 			{if $sectionVersions}
-				{assign var=counter value=0}
+
+				{assign var=nonInheritedCounter value=0}
+				{assign var=nonInheritedTotal value=0}
+
+				{foreach $sectionVersions as $sectionVersion}
+					{if !$sectionVersion->inherited}
+						{assign var=nonInheritedTotal value="{$nonInheritedTotal + 1}"}
+					{/if}
+				{/foreach}
+
 				{foreach $sectionVersions as $i => $sectionVersion}
 					
-					<!-- Render view template for existing section -->
-					{if !$currentSectionVersion || ($currentSectionVersion->id != $sectionVersion->id)}
+					<!-- Render view template for existing, non-inherited section -->
+					{if !$sectionVersion->inherited && (!$currentSectionVersion || ($currentSectionVersion->id != $sectionVersion->id))}
 
 						{include file="partial:_section.view.html.tpl"}
-						{assign var=counter value="{$counter + 1}"}
+						{assign var=nonInheritedCounter value="{$nonInheritedCounter + 1}"}
 
-					<!-- Editing an existing section -->
-					{elseif ($currentSectionVersion && ($currentSectionVersion->id == $sectionVersion->id)) || ($syllabus->inDataSource && $realSection)}
+					<!-- Editing an existing non-inherited section -->
+					{elseif !$sectionVersion->inherited && (($currentSectionVersion && ($currentSectionVersion->id == $sectionVersion->id)) || ($syllabus->inDataSource && $realSection))}
 						
 						{include file="partial:_section.edit.html.tpl"}
+						{assign var=nonInheritedCounter value="{$nonInheritedCounter + 1}"}
+
 					{/if}
+
 				{/foreach}
 				
 				<!-- At least 1 section exists already, plus 1 brand new is being created -->
-				{if (!$currentSectionVersion || ($syllabus->inDataSource && $realSection)) && ($realSection && count($sectionVersions) == $counter)}	
-					
+				{if (!$currentSectionVersion && !$currentSectionVersion->inherited) && ((!$currentSectionVersion || ($syllabus->inDataSource && $realSection)) && ($realSection && $nonInheritedTotal == $nonInheritedCounter))}	
 					{include file="partial:_section.edit.html.tpl"}
+
 				{/if}
+
+				{foreach $sectionVersions as $i => $sectionVersion}
+					
+					<!-- Render view template for existing inherited section -->
+					{if $sectionVersion->inherited && (!$currentSectionVersion || ($currentSectionVersion->id != $sectionVersion->id))}
+
+						{include file="partial:_section.view.html.tpl"}
+
+					<!-- Editing an existing inherited section -->
+					{elseif $sectionVersion->inherited && (($currentSectionVersion && ($currentSectionVersion->id == $sectionVersion->id)) || ($syllabus->inDataSource && $realSection))}
+						
+						{include file="partial:_section.edit.html.tpl"}
+
+					{/if}
+
+				{/foreach}
 
 			<!-- No sections exist yet, but 1 brand new is being edited -->
 			{elseif $syllabus->inDataSource && $realSection}
@@ -121,9 +149,11 @@
 					<strong><i class="fas fa-arrow-up pr-2"></i> Go To Top</strong>
 					</a>
 				</li>
-				{assign var=editSection value=false}
+			{assign var=editSection value=false}
+
 			{foreach $sectionVersions as $i => $sectionVersion}
-				{if ($sectionVersion->resolveSection()->id != $realSection->id) && $sectionVersion->isAnchored}
+
+				{if !$sectionVersion->inherited && ($sectionVersion->resolveSection()->id != $realSection->id) && $sectionVersion->isAnchored}
 					{assign var=ext value=$sectionVersion->extension}
 					{assign var=extName value=$ext::getExtensionName()}
 				<li class="nav-item sidebar-anchor-item">
@@ -131,7 +161,7 @@
 					{if $sectionVersion->title}{$sectionVersion->title}{else}{$ext->getDisplayName()}{/if}
 					</a>
 				</li>
-				{elseif $realSection && $sectionVersion->resolveSection()->id == $realSection->id && $sectionVersion->isAnchored && !$editSection}
+				{elseif !$sectionVersion->inherited && $realSection && $sectionVersion->resolveSection()->id == $realSection->id && $sectionVersion->isAnchored && !$editSection}
 					{assign var=editSection value=true}
 				<li class="nav-item sidebar-anchor-item">
 					<a class="nav-link active" href="{$smarty.server.REQUEST_URI}#section{$extName}Edit">
@@ -140,7 +170,9 @@
 				</li>
 				{/if}				
 			{/foreach}
-			{if $realSection && !$editSection}
+
+
+			{if (!$currentSectionVersion && !$currentSectionVersion->inherited) && $realSection && !$editSection}
 				{assign var=extName value=$sectionExtension::getExtensionName()}
 				{assign var=displayName value=$sectionExtension->getDisplayName()}
 				<li class="nav-item sidebar-anchor-item">
@@ -149,6 +181,28 @@
 					</a>
 				</li>
 			{/if}
+
+
+			{foreach $sectionVersions as $i => $sectionVersion}
+			
+				{if $sectionVersion->inherited && ($sectionVersion->resolveSection()->id != $realSection->id) && $sectionVersion->isAnchored}
+					{assign var=ext value=$sectionVersion->extension}
+					{assign var=extName value=$ext::getExtensionName()}
+				<li class="nav-item sidebar-anchor-item">
+					<a class="nav-link" href="{$smarty.server.REQUEST_URI}#section{$extName}{$i}">
+					{if $sectionVersion->title}{$sectionVersion->title}{else}{$ext->getDisplayName()}{/if}
+					</a>
+				</li>
+				{elseif $sectionVersion->inherited && $realSection && $sectionVersion->resolveSection()->id == $realSection->id && $sectionVersion->isAnchored && !$editSection}
+					{assign var=editSection value=true}
+				<li class="nav-item sidebar-anchor-item">
+					<a class="nav-link active" href="{$smarty.server.REQUEST_URI}#section{$extName}Edit">
+					{if $currentSectionVersion}{$currentSectionVersion->title}{else}{$displayName}{/if}
+					</a>
+				</li>
+				{/if}				
+			{/foreach}
+
 
 			</ul>
 		</div>
