@@ -3,12 +3,14 @@
 	{foreach $realSection->instructors as $instructor}
 		<dl class="row">
 			<dt class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+				{if $instructor->name}
 				<h3 class="real-section-title instructor-info-title">
 				{$instructor->name}
 				{if $instructor->title}
 					<br><small class="text-muted">{$instructor->title}</small>
 				{/if}
 				</h3>
+				{/if}
 			</dt>
 			<dd class="col-xl-9 col-lg-8 col-md-8 col-sm-12">
 				<dl class="row mb-0">
@@ -23,7 +25,7 @@
 				<dl class="row mb-0">
 					<dt class="col-xl-3 col-lg-4 col-md-5 col-sm-12">Office Information</dt>
 					<dd class="col-xl-9 col-lg-8 col-md-7 col-sm-12">
-						{if $instructor->office}<strong>Location:</strong> {$instructor->office}<br>{/if}
+						{if $instructor->office}<strong>Location:</strong> {$instructor->office}{/if}
 						{if $instructor->officeHours}{$instructor->officeHours}{/if}
 					</dd>
 				</dl>

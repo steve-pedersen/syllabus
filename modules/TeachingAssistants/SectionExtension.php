@@ -22,6 +22,10 @@ class Syllabus_TeachingAssistants_SectionExtension extends Syllabus_Syllabus_Sec
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_teachingAssistants.output.html.tpl');
     }
+    public function getExportFragment ()
+    {
+        return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_teachingAssistants.export.html.tpl');
+    }
     public function getExtensionProperties ()
     {
         return [

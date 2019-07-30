@@ -52,9 +52,13 @@
 			var id = $(this).attr('href');
 			id = id.substring(id.indexOf('#'));
 			var target = $(id);
+			var scrollTo = target.offset().top - 360;
+			// console.log(id, scrollTo);
+			// window.scroll( {top: scrollTo, behavior: 'smooth'} );
+			// $('body').css('height', '100%');
 			$('html,body').animate({
-	          scrollTop: target.offset().top-360
-	        }, 10);
+	          scrollTop: scrollTo
+	        }, 500);
 		}
 	});
 

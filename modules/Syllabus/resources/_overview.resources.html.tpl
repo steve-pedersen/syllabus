@@ -83,7 +83,7 @@
 			<div class="col-lg-4 col-md-6 px-2">
 				<div class="card">
 					<label class="form-check-label" for="overlayCheck{$i}">
-					<div class="card-body h-100">
+					<div class="card-body">
 						<div class="ml-auto text-right">
 							<div class="form-check">
 								<input data-index="{$i}" type="checkbox" class="form-check-input overlay-checkbox" id="overlayCheck{$i}" name="syllabi[]" value="{$syllabus->id}">

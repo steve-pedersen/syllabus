@@ -16,7 +16,7 @@
 			{/if}
 
 			<div class="section-content pt-3">
-				{include file="{$ext->getOutputFragment()}"}
+				{include file="{$ext->getExportFragment()}"}
 			</div>
 
 		</div>

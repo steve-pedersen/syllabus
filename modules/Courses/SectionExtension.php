@@ -26,6 +26,10 @@ class Syllabus_Courses_SectionExtension extends Syllabus_Syllabus_SectionExtensi
     { 
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_lookup.html.tpl');
     }
+    public function getExportFragment ()
+    {
+        return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_course.export.html.tpl');
+    }
     public function getExtensionProperties ()
     {
         return [

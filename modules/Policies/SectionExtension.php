@@ -21,6 +21,10 @@ class Syllabus_Policies_SectionExtension extends Syllabus_Syllabus_SectionExtens
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_policies.output.html.tpl');
     }
+    public function getExportFragment ()
+    {
+        return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_policies.export.html.tpl');
+    }
     public function getExtensionProperties ()
     {
         return [

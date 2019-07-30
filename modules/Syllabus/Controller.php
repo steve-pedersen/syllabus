@@ -22,6 +22,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/:id/print'        => ['callback' => 'print', ':id' => '[0-9]+'],
             'syllabus/:id/export'       => ['callback' => 'export', ':id' => '[0-9]+'],
             'syllabus/:id/screenshot'   => ['callback' => 'screenshot', ':id' => '[0-9]+'],
+            'syllabus/:id/ilearn'       => ['callback' => 'iLearn', ':id' => '[0-9]+'],
             'syllabus/courses'          => ['callback' => 'courseLookup'],
             'syllabus/start'            => ['callback' => 'start'],
             'syllabus/startwith/:id'    => ['callback' => 'startWith', ':id' => '[0-9]+'],
@@ -1031,7 +1032,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $this->accessDenied('Nope');
         }
 
-        // TODO: make sure this viewer has permission to view
         $editable = false;
         if (($syllabus->createdById === $viewer->id) || $this->hasPermission('admin'))
         {
@@ -1056,8 +1056,31 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $pathParts[] = $this->getRouteVariable('routeBase');
         $pathParts[] = 'syllabus';
 
-        // $this->template->addBreadcrumb('syllabi', 'My Syllabi');
-        $this->template->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);
+        $studentViewer = false;
+        $courseSection = null;
+        if ($sectionVersion = $syllabus->latestVersion->getCourseInfoSection())
+        {
+            $courseSection = $sectionVersion->resolveSection()->classDataCourseSection;
+            if ($courseSection && $courseSection->enrollments->has($viewer->classDataUser))
+            {
+                $roles = $this->schema('Syllabus_AuthN_Role');
+                $studentRole = $roles->findOne($roles->name->equals('Student'));
+                if ($viewer->roles->has($studentRole))
+                {
+                    $studentViewer = true;
+                }                    
+            }
+        }
+
+        if ($studentViewer && $courseSection)
+        {
+            $this->template->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $courseSection->title);
+        }
+        else
+        {
+            $this->template->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);    
+        }
+        
         $this->template->editable = $editable;
         $this->template->title = $title;
         $this->template->syllabus = $syllabus;
@@ -1792,6 +1815,13 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             echo json_encode($results);
             exit;
         }
+    }
+
+    public function iLearn ()
+    {   
+        $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
+        $shareLevel = $syllabus->getShareLevel();
+
     }
 
     public function screenshot ()
