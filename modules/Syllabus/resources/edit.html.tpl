@@ -92,7 +92,7 @@
 				{/if}
 
 				{foreach $sectionVersions as $i => $sectionVersion}
-					
+					{assign var=i value="{$nonInheritedCounter + $i + 1}"}
 					<!-- Render view template for existing inherited section -->
 					{if $sectionVersion->inherited && (!$currentSectionVersion || ($currentSectionVersion->id != $sectionVersion->id))}
 
