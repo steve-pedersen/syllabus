@@ -98,13 +98,13 @@
 						<div class="col-md-8 form-group mb-3 d-block-inline">
 							<div class="input-group">
 							<select name="courseSyllabus" class="form-control " id="course{$i}SyllabusOption">
-								<option value="" default>Choose past syllabus to start from...</option>
+								<option value="off" default>Choose other syllabus to start from...</option>
 							{foreach $courseSection->pastCourseSyllabi as $pastCourse}
 								<option value="{$pastCourse->syllabus->id}">[{$pastCourse->getShortName(true)}] {$pastCourse->syllabus->title}</option>
 							{/foreach}
 							</select>
 							<div class="input-group-append">
-								<input class="btn btn-primary btn-sm" type="submit" name="command[courseClone][{$courseSection->id}]" value="Submit" />
+								<input class="btn btn-primary btn-sm" type="submit" name="command[courseClone][{$courseSection->id}]" value="Clone" />
 							</div>
 							</div>
 						</div>

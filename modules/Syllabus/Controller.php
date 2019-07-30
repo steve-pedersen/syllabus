@@ -206,8 +206,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
                 case 'courseClone':
                     $courseSection = $courseSections->get(key($this->getPostCommandData()));
-                    $pastSyllabus = isset($data['courseSyllabus']) ? $syllabi->get(isset($data['courseSyllabus'])) : null;
-                        
+                    $sid = array_shift($data['course']);
+                    $pastSyllabus = isset($sid['syllabusId']) ? $syllabi->get($sid['syllabusId']) : null;
+  
                     if ($pastSyllabus && $this->hasSyllabusPermission($pastSyllabus, $viewer, 'clone'))
                     {
                         $newSyllabus = $this->startWith($pastSyllabus, true);
@@ -653,6 +654,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         // ADD SECTION
         if (!$this->request->wasPostedByUser() && ($realSectionName = $this->request->getQueryParameter('add')))
         {
+            if ($realSectionName === 'learning_outcomes')
+            {
+                $this->flash('The Student Learning Outcomes section type is unavailable at this time.', 'danger');
+                $this->response->redirect('syllabus/' . $syllabus->id);
+            }
             $realSectionExtension = $sectionVersions->createInstance()->getExtensionByName($realSectionName);
             $canHaveMultiple = true;
             if (!$realSectionExtension->canHaveMultiple())
@@ -1541,7 +1547,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     {
         $user = $user ?? $this->requireLogin();
         $hasPermission = true;
-
+        // echo "<pre>"; var_dump($user->id, $syllabus->createdById, $syllabus->id); die;
         if ($syllabus->templateAuthorizationId)
         {
             $organization = null;

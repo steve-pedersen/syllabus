@@ -19,7 +19,7 @@
 <!-- <h2>Begin new migration here</h2> -->
 <div class="migrate-text-container w-75">
 <p class="">
-	This migration tool allows you to automatically create new syllabi from your old content.  Simply select a backup file exported from the old Syllabus application, and upload. Any syllabus content migrated and uploaded into the new system should be reviewed for accuracy and formatting.
+	This migration tool allows you to automatically create new syllabi from your old Syllabus app content.  Simply select a backup file exported from the old Syllabus application, and upload. Any syllabus content migrated and uploaded into the new system should be reviewed for accuracy and formatting.
 </p>
 <p class="">
 	Note: The migration will be executed as soon as you select “Upload.” This process make take a few moments.

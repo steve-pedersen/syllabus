@@ -99,17 +99,9 @@ class Syllabus_Resources_Resources extends Bss_ActiveRecord_Base
                 }
                 elseif ($this->isNotWhiteSpaceOnly($resource, 'title'))
                 {
-                    // $obj = (!is_numeric($id)) ? $resources->createInstance() : $resources->get($id);
-                    // $save = true;
-                    // if ($obj->inDatasource)
-                    // {
-                    //     if ($obj->id != $id)
-                    //     {
-                    //         $save = false;
-                    //     }
-                    // }
+
                     $save = true;
-                    $obj = $schema->createInstance();
+                    $obj = $resources->createInstance();
                     if ($save)
                     {
                         $obj->absorbData($resource);
