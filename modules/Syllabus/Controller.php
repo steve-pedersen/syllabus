@@ -126,19 +126,29 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 else
                 {
                     $campusResources = $this->schema('Syllabus_Syllabus_CampusResource');
-                    
-                    if (!$this->hasPermission('admin'))
+                    $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
+                    $searchQuery = $this->request->getQueryParameter('search');
+                    $options = ['orderBy' => ['-modifiedDate', '-createdDate'], 'limit' => $limit, 'offset' => $offset];
+                    $this->template->searchQuery = $searchQuery;
+
+                    if (!empty($searchQuery))
+                    {
+                        $userSyllabi = $this->searchSyllabi($searchQuery, $viewer, $options);
+                    }
+                    elseif (!$this->hasPermission('admin'))
                     {
                         $userSyllabi = $syllabi->find(
-                            $syllabi->createdById->equals($viewer->id)->andIf($syllabi->templateAuthorizationId->isNull()), 
-                            ['orderBy' => ['-modifiedDate', '-createdDate'], 'limit' => $limit, 'offset' => $offset]
+                            $syllabi->createdById->equals($viewer->id)->andIf(
+                                $syllabi->templateAuthorizationId->isNull()
+                            ), 
+                            $options
                         );                    
                     }
                     else
                     {
                         $userSyllabi = $syllabi->find(
                             $syllabi->createdById->equals($viewer->id), 
-                            ['orderBy' => ['-modifiedDate', '-createdDate'], 'limit' => $limit, 'offset' => $offset]
+                            $options
                         );
                     }
                   
@@ -230,6 +240,68 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->mode = $mode;      
     }
 
+    // todo: add department joins
+    private function searchSyllabi ($searchQuery, $account, $options=[])
+    {
+        $result = [];
+        $rs = '';
+        $searchQuery = strtolower(strip_tags($searchQuery));
+        $searchWords = explode(' ', $searchQuery);
+        $query = 
+        "
+            select distinct s.id from syllabus_syllabus s 
+            inner join syllabus_syllabus_versions sv 
+                on (sv.syllabus_id = s.id)
+            inner join syllabus_syllabus_version_section_version_map svsv
+                on (sv.id = svsv.syllabus_version_id)
+            left join syllabus_classdata_course_sections cdcs 
+                on (sv.syllabus_id = cdcs.syllabus_id)
+            left join syllabus_departments d 
+                on (cdcs.department_id = d.id)
+            left join syllabus_colleges c 
+                on (d.college_id = c.id)
+            where 
+                (
+                    LOWER(sv.title) like '%{$searchQuery}%' or 
+                    LOWER(sv.description) like '%{$searchQuery}%' or 
+                    LOWER(cdcs.title) like '%{$searchQuery}%' or 
+                    LOWER(cdcs.class_number) like '%{$searchQuery}%' or 
+                    LOWER(cdcs.year) like '%{$searchQuery}%' or 
+                    LOWER(d.name) like '%{$searchQuery}%' or 
+                    LOWER(d.abbreviation) like '%{$searchQuery}%' or 
+                    LOWER(c.name) like '%{$searchQuery}%' or 
+                    LOWER(c.abbreviation) like '%{$searchQuery}%'
+                ) and 
+                s.created_by_id = {$account->id}";
+        if ($searchQuery && $account)
+        {
+            $rs = pg_query($query);
+
+            while (($row = pg_fetch_row($rs)))
+            {
+                $result[] = $row[0];
+            }          
+        }
+
+        $singleResults = [];
+        if (count($searchWords) > 1)
+        {
+            foreach ($searchWords as $word)
+            {
+                $searchQuery = $word;
+                $rs = pg_query($query);
+                while (($row = pg_fetch_row($rs)))
+                {
+                    $singleResults[] = $row[0];
+                }  
+            }
+            $result = array_unique(array_merge($result, $singleResults));
+        }
+
+        $schema = $this->schema('Syllabus_Syllabus_Syllabus');
+        
+        return $schema->find($schema->id->inList($result), $options);
+    }
 
     public function start ()
     {

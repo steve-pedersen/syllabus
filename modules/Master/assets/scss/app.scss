@@ -228,6 +228,12 @@ hr {
 	}
 }
 
+@media (max-width: 576px) {
+	.search-container {
+		margin-top: 2rem;
+	}
+}
+
 
 .mh-20 {
 	max-height: 20% !important;

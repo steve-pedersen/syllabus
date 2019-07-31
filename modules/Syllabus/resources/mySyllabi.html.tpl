@@ -10,9 +10,27 @@
 			<a class="nav-link mx-md-5 mx-sm-3 {if $mode == 'courses'}active{/if}" id="courses-tab"  href="syllabi?mode=courses" aria-controls="courses" aria-selected="false">
 				Courses
 			</a>
+		{if $mode == 'overview' || ($mode != 'courses' && $mode != 'submissions')}
+			<div class="ml-auto d-inline search-container">
+			<form action="{$smarty.server.REQUEST_URI}" method="get" class="form-inline" role="form" id="searchSyllabi">
+				<div class="input-group mb-3">
+					<div class="input-group-prepend">
+						<button class="btn btn-outline-secondary" type="submit" id="search-addon">Go</button>
+					</div>
+					<input type="text" name="search" class="form-control" placeholder="Search syllabi..." aria-label="Search for syllabi" aria-describedby="search-addon" value="{$searchQuery}">
+				</div>
+			</form>
+			</div>
+		{/if}
 		</nav>
 	</div>
 	</div>
+
+	{if $searchQuery}
+	<div class="ml-auto text-right remove-search-container" style="margin-top:-1.5em;position:relative;">					
+		<a href="syllabi" class="ml-auto remove-search-link font-w700" style="">Remove Search</a>				
+	</div>
+	{/if}
 
 	<div class="card border-0" id="mySyllabi">
 		<input type="hidden" name="mode" value="{$mode}">
