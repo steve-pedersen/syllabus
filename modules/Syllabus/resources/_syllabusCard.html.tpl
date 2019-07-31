@@ -42,6 +42,10 @@
 					<a href="syllabus/{$syllabus->id}/share" class="dropdown-item">
 						<i class="fas fa-share-square  mr-3 text-primary"></i> Share
 					</a>
+					<div class="dropdown-divider"></div>
+					<a href="syllabus/{$syllabus->id}/word" class="dropdown-item">
+						<i class="far fa-file-word  mr-3 text-dark"></i> Export
+					</a>
 				{/if}
 				{if $btnClone}
 					<div class="dropdown-divider"></div>
