@@ -168,7 +168,7 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
     public function getScreenshotUrl ($syllabusId, $screenshotter=null, $cacheImages=true)
     {
         $viewer = $this->requireLogin();
-        $syllabus = $this->requireExists($this->schema('Syllabus_Syllabus_Syllabus')->get($syllabusId));
+        $syllabus = $this->schema('Syllabus_Syllabus_Syllabus')->get($syllabusId);
         $urls = [];
         $messages = [];
         $uid = $viewer->id;
