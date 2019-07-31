@@ -12,6 +12,7 @@ class Syllabus_Services_AdminController extends Syllabus_Master_AdminController
     {
         return array(
             'admin/services' => array('callback' => 'index'),
+            'admin/atoffice' => ['callback' => 'atOffice'],
         );
     }
     
@@ -32,6 +33,18 @@ class Syllabus_Services_AdminController extends Syllabus_Master_AdminController
         $this->template->screenshotterApiKey = $siteSettings->getProperty('screenshotter-api-key');
         $this->template->screenshotterApiSecret = $siteSettings->getProperty('screenshotter-api-secret');
         $this->template->screenshotterDefaultImgName = $siteSettings->getProperty('screenshotter-default-img-name');
-        // $this->template->screenshotterDefaultImgNameDescription = $siteSettings->getProperties()['screenshotter-default-img-name']['description'];
+    }
+
+    public function atOffice ()
+    {
+        $siteSettings = $this->getApplication()->siteSettings;
+        
+        if ($this->getPostCommand() == 'save' && $this->request->wasPostedByUser())
+        {
+            $siteSettings->setProperty('atoffice-api-url',$this->request->getPostParameter('atoffice-api-url'));
+            $this->flash('Settings have been saved', 'success');
+        }
+        
+        $this->template->atofficeApiUrl = $siteSettings->getProperty('atoffice-api-url');
     }
 }

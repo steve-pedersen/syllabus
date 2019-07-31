@@ -83,10 +83,10 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
         $section = $this->_fetch('sectionNumber');
         if ($full)
         {
-            return $cn . ".$section-" . $this->getTerm();
+            return $cn . "-$section " . $this->getTerm();
         }
 
-        return $cn . ".$section";
+        return $cn . "-$section";
     }
 
     public function getFullDisplayName ()

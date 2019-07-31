@@ -12,6 +12,9 @@
 	.section-container {
 		page-break-inside: avoid;
 	}
+	.no-print {
+		display: none;
+	}
 }
 @page {
 	margin-top: 10%;

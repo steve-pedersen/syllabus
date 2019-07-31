@@ -59,7 +59,7 @@
 					</a>
 				</div>
 				<div class="col-xl-8 col-lg-9 col-sm-8 col-xs-12 d-block">
-					<a href="syllabus/{$course->courseSyllabus->id}/export" class="mb-2 btn btn-link btn-blocks">
+					<a href="syllabus/{$course->courseSyllabus->id}/word" class="mb-2 btn btn-link btn-blocks">
 						<i class="far fa-file-word"></i> Download as Word
 					</a>
 				</div>

@@ -44,7 +44,7 @@
                     <div class="card-footer bg-white border-0">
                         <small class="d-block"><em class="text-muted">This preview is from when the syllabus was last edited.</em></small>
                         <div class="mt-3">
-                            <a class="px-3" href="{$routeBase}syllabus/{$syllabus->id}/export"><i class="far fa-file-word"></i> Download as Word</a>
+                            <a class="px-3" href="{$routeBase}syllabus/{$syllabus->id}/word"><i class="far fa-file-word"></i> Download as Word</a>
                             <a class="px-3" href="{$routeBase}syllabus/{$syllabus->id}/print"><i class="fas fa-print"></i></i> Print</a>
                         </div>
                     </div>

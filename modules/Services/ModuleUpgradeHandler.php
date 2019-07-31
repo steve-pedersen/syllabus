@@ -22,6 +22,10 @@ class Syllabus_Services_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                     'string'
                 );
                 break;
+
+            case 1:
+                $siteSettings->defineProperty('atoffice-api-url', 'API URL endpoint for the AT Office service.', 'string');
+                break;
         }
     }
 }

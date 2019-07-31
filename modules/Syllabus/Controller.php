@@ -20,6 +20,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/:id/share'        => ['callback' => 'share', ':id' => '[0-9]+'],
             'syllabus/:id/delete'       => ['callback' => 'delete', ':id' => '[0-9]+'],
             'syllabus/:id/print'        => ['callback' => 'print', ':id' => '[0-9]+'],
+            'syllabus/:id/word'         => ['callback' => 'word', ':id' => '[0-9]+'],
             'syllabus/:id/export'       => ['callback' => 'export', ':id' => '[0-9]+'],
             'syllabus/:id/screenshot'   => ['callback' => 'screenshot', ':id' => '[0-9]+'],
             'syllabus/:id/ilearn'       => ['callback' => 'iLearn', ':id' => '[0-9]+'],
@@ -990,6 +991,18 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
         $this->setPrintTemplate();
         $this->setPageTitle('Print Syllabus');
+        $this->template->addBreadcrumb('syllabi', 'My Syllabi');
+
+        list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
+
+        if ($type === 'student' && $courseSection)
+        {
+            $this->template->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $courseSection->title);
+        }
+        else
+        {
+            $this->template->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);    
+        }
 
         $this->template->syllabus = $syllabus;
         $this->template->syllabusVersion = $syllabusVersion;
@@ -1002,16 +1015,103 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $syllabus = $this->requireExists($this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id'));
         $syllabusVersion = $syllabus->latestVersion;
 
-        // if (!$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
-        // {
-        //     $this->accessDenied("You don't have permission to print this syllabus.");  
-        // }
         $this->setExportTemplate();
         $this->setPageTitle('Export Syllabus');
 
         $this->template->syllabus = $syllabus;
         $this->template->syllabusVersion = $syllabusVersion;
         $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
+    }
+
+    public function word ()
+    {
+        $viewer = $this->requireLogin();
+        $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
+        $url = $this->getApplication()->siteSettings->getProperty('atoffice-api-url');
+        
+        if (!$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
+        {
+            $this->accessDenied('Nope');
+        }
+
+        $courseSection = null;
+        if ($sectionVersion = $syllabus->latestVersion->getCourseInfoSection())
+        {
+            $courseSection = $sectionVersion->resolveSection()->classDataCourseSection;
+        }
+        if ($courseSection)
+        {
+            $title = 'Syllabus for ' . $courseSection->getShortName(true);
+        }
+        else
+        {
+            $title = $syllabus->latestVersion->title;
+        }
+        $url = $url ?? 'https://atoffice.test.at.sfsu.edu/api/session';
+        $data = [
+            'title' => $title,
+            'source' => $this->baseUrl('syllabus/'.$syllabus->id.'/export'),
+            'sessionType' => 'word'
+        ];
+
+        list($code, $response) = $this->sendRequest($url, true, $data);
+
+        if ($code === 200)
+        {
+            $response = json_decode($response, true);
+            if (isset($response['data']) && isset($response['data']['url']))
+            {
+                $url = $response['data']['url'];
+                $filename = $title . '.doc';
+                header('Content-Type: application/octet-stream');
+                header("Content-Transfer-Encoding: Binary"); 
+                header("Content-disposition: attachment; filename=\"".$filename."\""); 
+                readfile($url);
+                exit;
+            }
+        }
+        else
+        {
+            $this->flash(
+                'The Word exporter is currently unavailble. Please contact support for more information',
+                'warning'
+            );
+            $this->response->redirect('syllabus/'.$syllabus->id.'/view');
+        }
+
+        exit;
+    }
+
+    protected function sendRequest ($url, $post=false, $postData=[])
+    {
+        $data = null;
+        
+        $ch = curl_init();
+        $timeout = 5;
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+        if ($post) 
+        { 
+            curl_setopt($ch, CURLOPT_POST, true); 
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json'
+            ]);
+        } 
+        $rawData = curl_exec($ch);
+
+        if (!curl_error($ch)) {
+            // $data = json_decode($rawData, true);
+            $data = $rawData;
+        }
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        curl_close($ch);
+        
+        return [$httpCode, $data];
     }
 
     public function view ()
@@ -1024,7 +1124,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $sections = $this->schema('Syllabus_Syllabus_Section');
         $sectionVersions = $this->schema('Syllabus_Syllabus_SectionVersion');
         
-        $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id', ['allowNew' => true]);
+        $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id', ['allowNew' => false]);
         $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
 
         if (!$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
@@ -1056,23 +1156,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $pathParts[] = $this->getRouteVariable('routeBase');
         $pathParts[] = 'syllabus';
 
-        $studentViewer = false;
-        $courseSection = null;
-        if ($sectionVersion = $syllabus->latestVersion->getCourseInfoSection())
-        {
-            $courseSection = $sectionVersion->resolveSection()->classDataCourseSection;
-            if ($courseSection && $courseSection->enrollments->has($viewer->classDataUser))
-            {
-                $roles = $this->schema('Syllabus_AuthN_Role');
-                $studentRole = $roles->findOne($roles->name->equals('Student'));
-                if ($viewer->roles->has($studentRole))
-                {
-                    $studentViewer = true;
-                }                    
-            }
-        }
+        list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
 
-        if ($studentViewer && $courseSection)
+        if ($type === 'student' && $courseSection)
         {
             $this->template->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $courseSection->title);
         }
@@ -1087,6 +1173,27 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->syllabusVersion = $syllabusVersion;
         $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
         $this->template->organization = $organization;
+    }
+
+    protected function getEnrollmentType ($syllabus, $viewer)
+    {
+        $courseSection = null;
+        $type = 'instructor';
+        if ($sectionVersion = $syllabus->latestVersion->getCourseInfoSection())
+        {
+            $courseSection = $sectionVersion->resolveSection()->classDataCourseSection;
+            if ($courseSection && $courseSection->enrollments->has($viewer->classDataUser))
+            {
+                $roles = $this->schema('Syllabus_AuthN_Role');
+                $studentRole = $roles->findOne($roles->name->equals('Student'));
+                if ($viewer->roles->has($studentRole))
+                {
+                    $type = 'student';
+                }                    
+            }
+        }
+
+        return [$type, $courseSection];
     }
 
     /**
@@ -1570,7 +1677,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     {
         $user = $user ?? $this->requireLogin();
         $hasPermission = true;
-        // echo "<pre>"; var_dump($user->id, $syllabus->createdById, $syllabus->id); die;
+
         if ($syllabus->templateAuthorizationId)
         {
             $organization = null;
@@ -1641,6 +1748,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     }
                 }
             }
+        }
+        if ($this->hasPermission('admin'))
+        {
+            $hasPermission = true;
         }
 
         return $hasPermission;        

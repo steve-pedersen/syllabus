@@ -77,7 +77,7 @@
 					<a href="{$routeBase}syllabus/{$syllabus->id}/print"><i class="fas fa-print"></i> Print</a>
 				</span>
 				<span class="ml-3 d-inline-block">
-					<a href="{$routeBase}syllabus/{$syllabus->id}/export"><i class="far fa-file-word"></i> Download as Word</a>
+					<a href="{$routeBase}syllabus/{$syllabus->id}/word"><i class="far fa-file-word"></i> Download as Word</a>
 				</span>
 			</div>	
 		</div>

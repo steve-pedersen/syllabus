@@ -23,6 +23,12 @@ class Syllabus_Services_AdminDashboardItemProvider extends At_Admin_DashboardIte
                 'text' => '<a href="admin/services">Screenshotter API Settings</a>',
                 'allowHtml' => true,
             ),
+            'at-office' => [
+                'section' => 'Services',
+                'order' => 3,
+                'href' => 'admin/atoffice',
+                'text' => 'AT Office API',
+            ],
         );
     }
 }
