@@ -14,6 +14,11 @@ class Syllabus_ClassData_AccountManager
         $this->application = $app;
     }
 
+    public function hasEnrollment ($identity)
+    {
+        return $this->getSchema('Syllabus_ClassData_User')->get($identity->getProperty('username'));
+    }
+
     public function createUserAccount ($identity)
     {
         $accounts = $this->getSchema('Bss_AuthN_Account');

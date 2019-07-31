@@ -43,6 +43,7 @@ class Syllabus_AuthN_NoAccountErrorHandler extends Syllabus_Master_ErrorHandler
         
         $identity = $error->getExtraInfo();
         $provider = $identity->getIdentityProvider();
+        $accountManager = new Syllabus_ClassData_AccountManager($this->getApplication());
         
         // TODO: Remove this temporary hack to spoof authentication for dev
         // NOTE: choose dev idp, enter in whatever for username/pass, 
@@ -125,9 +126,13 @@ class Syllabus_AuthN_NoAccountErrorHandler extends Syllabus_Master_ErrorHandler
                     $this->getUserContext()->login($account);
                 }
             }
+            elseif ($accountManager->hasEnrollment($identity))
+            {
+                $identity->setProperty('allowCreateAccount', true);
+            }
+            
             if (($allowCreateAccount = $identity->getProperty('allowCreateAccount')))
             {
-                $accountManager = new Syllabus_ClassData_AccountManager($this->getApplication());
                 $account = $accountManager->createUserAccount($identity);
                 
                 $this->getUserContext()->login($account);
