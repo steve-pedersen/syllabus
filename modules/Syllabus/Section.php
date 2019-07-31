@@ -23,7 +23,7 @@ class Syllabus_Syllabus_Section extends Bss_ActiveRecord_Base
             'modifiedDate' => ['datetime', 'nativeName' => 'modified_date'],
 
             'createdBy' => ['1:1', 'to' => 'Bss_AuthN_Account', 'keyMap' => ['created_by_id' => 'id']],
-            'versions' => ['1:N', 'to' => 'Syllabus_Syllabus_SectionVersion', 'reverseOf' => 'section', 'orderBy' => ['+createdDate']],
+            'versions' => ['1:N', 'to' => 'Syllabus_Syllabus_SectionVersion', 'reverseOf' => 'section', 'orderBy' => ['+createdDate', '+id']],
         ];
     }
 

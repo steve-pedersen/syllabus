@@ -23,7 +23,7 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
             'templateAuthorizationId' => ['string', 'nativeName' => 'template_authorization_id'],
            
             'createdBy' => ['1:1', 'to' => 'Bss_AuthN_Account', 'keyMap' => ['created_by_id' => 'id']],
-            'versions' => ['1:N', 'to' => 'Syllabus_Syllabus_SyllabusVersion', 'reverseOf' => 'syllabus', 'orderBy' => ['+createdDate']],
+            'versions' => ['1:N', 'to' => 'Syllabus_Syllabus_SyllabusVersion', 'reverseOf' => 'syllabus', 'orderBy' => ['+createdDate', '+id']],
         ];
     }
 
