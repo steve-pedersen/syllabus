@@ -126,7 +126,8 @@ class Syllabus_AuthN_NoAccountErrorHandler extends Syllabus_Master_ErrorHandler
                     $this->getUserContext()->login($account);
                 }
             }
-            elseif ($accountManager->hasEnrollment($identity))
+            
+            if ($accountManager->hasEnrollment($identity))
             {
                 $identity->setProperty('allowCreateAccount', true);
             }
