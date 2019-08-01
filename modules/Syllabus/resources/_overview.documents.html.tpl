@@ -1,5 +1,5 @@
 <div class="container-fluid documents-overview mb-5">
-<h2>Guidelines & Documents</h2>
+<h2>Guidelines <span class="fancy-amp">&amp;</span> Documents</h2>
 <p class="text-muted">Learn about the many ways you can improve your syllabus.</p>
 
 <div class="row">

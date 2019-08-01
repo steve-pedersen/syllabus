@@ -23,7 +23,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/:id/word'         => ['callback' => 'word', ':id' => '[0-9]+'],
             'syllabus/:id/export'       => ['callback' => 'export', ':id' => '[0-9]+'],
             'syllabus/:id/screenshot'   => ['callback' => 'screenshot', ':id' => '[0-9]+'],
-            'syllabus/:id/ilearn'       => ['callback' => 'iLearn', ':id' => '[0-9]+'],
+            'syllabus/:id/ping'         => ['callback' => 'ping'],
             'syllabus/courses'          => ['callback' => 'courseLookup'],
             'syllabus/start'            => ['callback' => 'start'],
             'syllabus/startwith/:id'    => ['callback' => 'startWith', ':id' => '[0-9]+'],
@@ -2000,11 +2000,22 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
     }
 
-    public function iLearn ()
+    public function ping ()
     {   
-        $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
-        $shareLevel = $syllabus->getShareLevel();
+        $courseSection = $this->helper('activeRecord')->fromRoute('Syllabus_ClassData_CourseSection', 'id');
+        $returnArray = [];
+        if ($courseSection && $courseSection->syllabus && $courseSection->syllabus->getShareLevel() === 'all') {
+            $returnArray['exists'] = true;
+            $returnArray['url'] = $this->baseUrl('syllabus/view/' . $courseSection->syllabus->id);
+            $returnArray['edited'] = true;
+            $returnArray['visible'] = true;
+        } else {
+            $returnArray['exists'] = false;
+        }
 
+        $return_json = json_encode($returnArray);
+        echo($return_json);
+        exit;
     }
 
     public function screenshot ()

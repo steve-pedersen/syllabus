@@ -1,4 +1,19 @@
-<div class="card h-100">
+<div class="card h-100 mb-sm-2 {if !$organization && $syllabus->hasCourseSection}ribbon-wrapper{/if}">
+	{if !$organization && $syllabus->hasCourseSection}
+	<div class="ribbon-wrapper-gray">
+		{if $syllabus->getShareLevel() == 'all'}
+		<div class="ribbon ribbon-successs">
+			<i class="fas fa-user-check text-success"></i> 
+			<small class="font-w700">Shared</small>
+		</div>
+		{else}
+		<div class="ribbon ribbon-warnings">
+			<i class="fas fa-user-lock text-warning"></i> 
+			<small class="font-w700">Private</small>
+		</div>
+		{/if}
+	</div>
+	{/if}
 	<div class="card-body h-100">
 	{if $syllabus->imageUrl}
 		<img src="{$syllabus->imageUrl}" class="border-bottom card-img-top crop-top crop-top-{if $cropSize}{$cropSize}{else}10{/if}" alt="{$syllabus->title}">
