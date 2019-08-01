@@ -113,7 +113,7 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
         
         $this->template->page = $page;
 
-        if ($callback !== 'screenshot' && $callback !== 'export')
+        if ($callback !== 'screenshot' && $callback !== 'export' && $callback !== 'ping')
         {
             $roles = $this->schema('Syllabus_AuthN_Role');
             $studentRole = $roles->findOne($roles->name->equals('Student'));
