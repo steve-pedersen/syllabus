@@ -20,9 +20,21 @@
 	{else}
 		<img src="assets/images/testing0{$i}.jpg" class="border-bottom card-img-top crop-top crop-top-{if $cropSize}{$cropSize}{else}10{/if}" alt="{$syllabus->title}">
 	{/if}
-		<h5 class="mt-3">{$syllabus->title}</h5>
-		<p class="card-text">{$syllabus->description}</p>
-		{if !$hideDate}
+		<h5 class="mt-3">
+		{if $pastCourseSyllabi}
+			{$syllabus->syllabus->title}
+		{else}
+			{$syllabus->title}
+		{/if}
+		</h5>
+		<p class="card-text">
+		{if $pastCourseSyllabi}
+			{$syllabus->syllabus->description}
+		{else}
+			{$syllabus->description}
+		{/if}
+		</p>
+		{if !$hideDate && !$pastCourseSyllabi}
 		<small class="d-block"><strong>Last Modified:</strong> {$syllabus->modifiedDate->format('F jS, Y - h:i a')}</small>
 		{/if}
 	</div>

@@ -81,16 +81,16 @@
 				</label>
 			</div>
 		</li>
-		<div id="collapseTwo" class="collapse col-12 mt-0" aria-labelledby="headingTwo" data-parent="#startAccordion">
+		<div id="collapseTwo" class="collapse col-12 mt-0 mb-3" aria-labelledby="headingTwo" data-parent="#startAccordion">
 			{if $organizations}
 				{assign var=btnStartTemplateForCourse value=true}
 				{assign var=isTemplate value=true}
 				{assign var=commandDataKey value='department'}
 				{assign var=hideDate value=true}
-			{foreach $organizations as $organization}
+			{foreach $organizations as $org}
 			<div class="col px-2">
 				<div class="row px-4">
-					{foreach $templates[$organization->id] as $i => $template}
+					{foreach $templates[$org->id] as $i => $template}
 						{assign var=syllabus value=$template}
 					<div class="col-xl-3 p-xl-1 col-lg-4 col-md-6 col-sm-8 col-xs-12 text-center p-2 mh-50">
 						{include file="partial:_syllabusCard.html.tpl"}
@@ -100,7 +100,7 @@
 					{/foreach}
 				</div>
 			</div>
-			{if $organization@iteration == 4}{break}{/if}
+			{if $org@iteration == 4}{break}{/if}
 				
 			{/foreach}
 			{else}
@@ -112,8 +112,8 @@
 		</div>
 	{/if}
 
-	{if !$isTemplate}
-		<li class="media my-lg-5 my-md-2 p-3 px-xs-1 collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+	{if !$isTemplate || $instructorView}
+		<li class="media my-lg-3 my-md-2 p-3 px-xs-1 collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
 			<div class="form-check d-block-inline">
 				<label class="form-check-label" for="startingTemplate3">
 					<i class="start-icon fas fa-file-invoice fa-7x align-self-start mr-3 d-md-inline d-sm-none"></i>
@@ -139,9 +139,14 @@
 {else}
 	{assign var=relevantSyllabi value=$syllabi}
 {/if}
-
+{if $instructorView}
+	{assign var=btnStartTemplateForCourse value=false}
+	{assign var=isTemplate value=false}
+	{assign var=hideDate value=false}
+{/if}
 	{assign var=btnStart value=true}
 	{foreach $relevantSyllabi as $i => $syllabus}
+
 		{if $i == 4}{break}{/if}
 			<div class="col-xl-3 p-xl-1 col-lg-4 col-md-6 col-sm-8 col-xs-12 text-center p-2">
 				{include file="partial:_syllabusCard.html.tpl"}

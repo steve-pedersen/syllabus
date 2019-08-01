@@ -240,6 +240,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->mode = $mode;      
     }
 
+    // todo: add 'section ##' search
     // todo: add department joins
     private function searchSyllabi ($searchQuery, $account, $options=[])
     {
@@ -345,9 +346,17 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer);
             foreach ($pastCourseSyllabi as $courseSyllabus)
             {
-                $sid = $courseSyllabus->id;
-                $results = $this->getScreenshotUrl($sid, $screenshotter);
-                $courseSyllabus->imageUrl = $results->imageUrls->$sid;
+                $sid = !is_string($courseSyllabus->id) ? $courseSyllabus->id : $courseSyllabus->syllabus->id;
+                if ($sid)
+                {
+                    $results = $this->getScreenshotUrl($sid, $screenshotter);
+                    $courseSyllabus->imageUrl = $results->imageUrls->$sid;                    
+                }
+                else
+                {
+                    $courseSyllabus->imageUrl = 'assets/images/placeholder-3.jpg';
+                }
+
             }
             $this->template->pastCourseSyllabi = $pastCourseSyllabi;
         }
@@ -366,6 +375,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             }
             $this->template->syllabi = $userSyllabi;
         }
+        // $this->template->isTemplate = false;
 
         $orgs = [];
         $templates = [];
@@ -377,14 +387,21 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $syllabi->templateAuthorizationId->equals($cs->department->templateAuthorizationId),
                     ['orderBy' => ['-modifiedDate', '-createdDate'], 'limit' => '4']
                 );
-                $templatesAvailable = $templatesAvailable || !empty($templates[$cs->department->id]);
-                foreach ($templates[$cs->department->id] as $template)
+                if (empty($templates[$cs->department->id]))
                 {
-                    $sid = $template->id;
-                    $results = $this->getScreenshotUrl($sid, $screenshotter);
-                    $template->imageUrl = $results->imageUrls->$sid;
+                    unset($templates[$cs->department->id]);
                 }
-                $orgs[$cs->department->id] = $cs->department;
+                else
+                {
+                    foreach ($templates[$cs->department->id] as $template)
+                    {
+                        $sid = $template->id;
+                        $results = $this->getScreenshotUrl($sid, $screenshotter);
+                        $template->imageUrl = $results->imageUrls->$sid;
+                    }
+                    $orgs[$cs->department->id] = $cs->department;                    
+                }
+                $templatesAvailable = $templatesAvailable || !empty($templates[$cs->department->id]);
             }
         }
         $this->template->organizations = $orgs;
@@ -402,6 +419,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 default:
                     break;
             }
+        }
+        else
+        {
+            $this->template->instructorView = true;
         }
 
         $pathParts = [];
