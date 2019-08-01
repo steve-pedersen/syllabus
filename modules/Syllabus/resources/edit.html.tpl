@@ -150,10 +150,12 @@
 					</a>
 				</li>
 			{assign var=editSection value=false}
+			{assign var=nonInheritedCounter value=0}
 
 			{foreach $sectionVersions as $i => $sectionVersion}
 
 				{if !$sectionVersion->inherited && ($sectionVersion->resolveSection()->id != $realSection->id) && $sectionVersion->isAnchored}
+					{assign var=nonInheritedCounter value="{$nonInheritedCounter + 1}"}
 					{assign var=ext value=$sectionVersion->extension}
 					{assign var=extName value=$ext::getExtensionName()}
 				<li class="nav-item sidebar-anchor-item">
@@ -162,6 +164,7 @@
 					</a>
 				</li>
 				{elseif !$sectionVersion->inherited && $realSection && $sectionVersion->resolveSection()->id == $realSection->id && $sectionVersion->isAnchored && !$editSection}
+					{assign var=nonInheritedCounter value="{$nonInheritedCounter + 1}"}
 					{assign var=editSection value=true}
 				<li class="nav-item sidebar-anchor-item">
 					<a class="nav-link active" href="{$smarty.server.REQUEST_URI}#section{$extName}Edit">
@@ -184,7 +187,8 @@
 
 
 			{foreach $sectionVersions as $i => $sectionVersion}
-			
+				{assign var=i value="{$nonInheritedCounter + $i + 1}"}
+				
 				{if $sectionVersion->inherited && ($sectionVersion->resolveSection()->id != $realSection->id) && $sectionVersion->isAnchored}
 					{assign var=ext value=$sectionVersion->extension}
 					{assign var=extName value=$ext::getExtensionName()}
