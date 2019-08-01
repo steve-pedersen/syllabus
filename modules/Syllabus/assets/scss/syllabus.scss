@@ -534,4 +534,21 @@ form#chooseStartingPoint {
 	.migrate-text-container {
 		width: 100% !important;
 	}
+	.syllabus-viewer {
+		overflow-y: scroll; /* has to be scroll, not auto */
+		-webkit-overflow-scrolling: touch;
+		padding: 1rem !important;
+	}
+}
+@media (max-width: 567px) {
+	.migrate-text-container {
+		width: 100% !important;
+	}
+	#viewerContainer {
+		padding: 0.5rem !important;
+	}
+	.syllabus-viewer {
+		box-shadow: none;
+		padding: 0.5rem !important;
+	}
 }

@@ -55,7 +55,7 @@
 	</nav>
 
 	<!-- <main role="main" class="col-lg-10 col-sm-12 col-xs-12 ml-sm-auto mt-0 px-3"> -->
-	<main role="main" class="col-lg-10 col-md-12 col-sm-12 ml-sm-auto mt-0 px-3">
+	<main role="main" class="col-lg-10 col-md-12 col-sm-12 ml-sm-auto mt-0 px-3" id="viewerContainer">
 		<div class="row m-3">
 			<div class="left col-lg-6 mt-3">
 				{foreach $breadcrumbList as $crumb}
@@ -82,7 +82,7 @@
 			</div>	
 		</div>
 
-		<div class="syllabus-viewer p-5" id="syllabusViewer">		
+		<div class="syllabus-viewer p-md-5 p-sm-2 p-xs-1" id="syllabusViewer">		
 
 			{foreach $sectionVersions as $i => $sectionVersion}
 				{assign var=ext value=$sectionVersion->extension}
@@ -98,7 +98,7 @@
 					<p class="section-description ">{$sectionVersion->description}</p>
 				{/if}
 
-				<div class="section-content pt-3">
+				<div class="section-content pt-3 dont-break-out" style="max-width:100%;">
 					{include file="{$ext->getOutputFragment()}"}
 				</div>
 
