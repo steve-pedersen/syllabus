@@ -1771,7 +1771,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $user = $user ?? $this->requireLogin();
         $hasPermission = true;
 
-        if ($syllabus->templateAuthorizationId)
+        if ($syllabus->templateAuthorizationId && !$this->hasPermission('admin'))
         {
             $organization = null;
             $hasPermission = false;

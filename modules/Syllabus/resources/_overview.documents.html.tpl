@@ -6,12 +6,12 @@
 	<div class="col-lg-4 col-md-6  mb-3">
 		<div class="card card-bordered card-bordered-left card-bordered-secondary h-100">
 			<div class="card-body">
-				<h5 class="card-title"><i class="fas fa-blind mr-1"></i> Accessible Syllabus</h5>
-				<p class="card-text text-muted align-middle">Accessible classroom resources promote student engagement and agency.</p>
+				<h5 class="card-title"><i class="fas fa-graduation-cap mr-1"></i> SF State Syllabi Policy</h5>
+				<p class="card-text text-muted align-middle">Course syllabi policy from the Academic Senate at SF State.</p>
 				
 			</div>
 			<div class="card-footer bg-white border-0">
-				<a href="https://www.accessiblesyllabus.com/" target="_blank" class="btn btn-link text-info font-weight-bold"><span class=""><i class="fas fa-external-link-alt"></i></span> View</a>
+				<a href="https://senate.sfsu.edu/content/proposed-academic-senate-policy-course-syllabi" target="_blank" class="btn btn-link text-info font-weight-bold"><span class=""><i class="fas fa-external-link-alt"></i></span> View</a>
 			</div>
 		</div>
 	</div>
@@ -24,6 +24,18 @@
 			</div>
 			<div class="card-footer bg-white border-0">
 				<a href="assets/files/Traditional vs Social Justice Syllabus.docx" target="_blank" class="btn btn-link text-dark font-weight-bold"><span class=""><i class="fas fa-download"></i></span> Download</a>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4 col-md-6  mb-3">
+		<div class="card card-bordered card-bordered-left card-bordered-secondary h-100">
+			<div class="card-body">
+				<h5 class="card-title"><i class="fas fa-blind mr-1"></i> Accessible Syllabus</h5>
+				<p class="card-text text-muted align-middle">Accessible classroom resources promote student engagement and agency.</p>
+				
+			</div>
+			<div class="card-footer bg-white border-0">
+				<a href="https://www.accessiblesyllabus.com/" target="_blank" class="btn btn-link text-info font-weight-bold"><span class=""><i class="fas fa-external-link-alt"></i></span> View</a>
 			</div>
 		</div>
 	</div>
