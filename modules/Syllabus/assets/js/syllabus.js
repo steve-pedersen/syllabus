@@ -138,12 +138,10 @@
 		    $window.scroll(function() {
 		    	maxY = $('#footer').offset().top;
 		        if ($window.scrollTop() > offset.top && (windowWidth > maxW) && $window.scrollTop() < maxY) {
-		        	// console.log('1');
 		            $sidebar.stop().animate({
 		                marginTop: $window.scrollTop() - offset.top + topPadding
 		            }, transition);
 		        } else {
-		        	// console.log('2');
 		            $sidebar.stop().animate({
 		                marginTop: 0
 		            }, 10);
@@ -155,12 +153,10 @@
 		    $window.scroll(function() {
 		    	maxY = $('#footer').offset().top;
 		    	if ($window.scrollTop() > offset.top) {
-		    		// console.log('3');
 		    		if (!$stickyNavbar.hasClass('sticky')) {
 		    			$stickyNavbar.addClass('sticky');
 		    		}
 		    	} else {
-		    		// console.log('4');
 		    		if ($stickyNavbar.hasClass('sticky')) {
 		    			$stickyNavbar.removeClass('sticky');
 		    		}
@@ -173,12 +169,10 @@
 	    $window.scroll(function() {
 	    	maxY = $('#footer').offset().top;
 	        if ($window.scrollTop() > offset.top && (windowWidth > maxW) && $window.scrollTop() < maxY) {
-	        	// console.log('5');
 	            $sidebar.stop().animate({
 	                marginTop: $window.scrollTop() - offset.top + topPadding
 	            }, transition);
 	        } else {
-	        	// console.log('6');
 	            $sidebar.stop().animate({
 	                marginTop: 0
 	            }, 0);
@@ -191,12 +185,10 @@
 	    $window.scroll(function() {
 	    	maxY = $('#footer').offset().top;
 	    	if ($window.scrollTop() > offset.top) {
-	    		// console.log('7');
 	    		if (!$stickyNavbar.hasClass('sticky')) {
 	    			$stickyNavbar.addClass('sticky');
 	    		}		
 	    	} else {
-	    		// console.log('8');
 	    		if ($stickyNavbar.hasClass('sticky')) {
 	    			$stickyNavbar.removeClass('sticky');
 	    		}

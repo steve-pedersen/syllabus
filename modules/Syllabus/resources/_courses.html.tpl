@@ -47,8 +47,8 @@
 						<div class="media">
 							<div class="media-body row">
 								<div class="col-xl-3 col-lg-5 col-md-6 col-sm-7 col-xs-8" >
-									<div class="paper paper-bottom mb-3">
-									<img src="{$courseSection->imageUrl}" class="img-thumbnail" alt="Syllabus thumbnail" style="max-height: 12rem; min-height: 10rem;border:2px solid #efefef;">
+									<div class=" mb-3">
+									<img src="{if $courseSection->imageUrl}{$courseSection->imageUrl}{else}assets/images/placeholder-3.jpg{/if}" class="img-thumbnail paper paper-bottom" alt="Syllabus thumbnail" style="max-height: 12rem; min-height: 10rem;border:2px solid #efefef;">
 									</div>
 								</div>
 								<div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 col-xs-10 d-block">
@@ -100,7 +100,11 @@
 							<select name="courseSyllabus" class="form-control " id="course{$i}SyllabusOption">
 								<option value="off" default>Choose other syllabus to start from...</option>
 							{foreach $courseSection->pastCourseSyllabi as $pastCourse}
+								{if $pastCourse->semester}
 								<option value="{$pastCourse->syllabus->id}">[{$pastCourse->getShortName(true)}] {$pastCourse->syllabus->title}</option>
+								{else}
+								<option value="{$pastCourse->id}">[Non-course syllabus] {$pastCourse->latestVersion->title}</option>
+								{/if}
 							{/foreach}
 							</select>
 							<div class="input-group-append">

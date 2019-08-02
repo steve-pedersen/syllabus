@@ -102,6 +102,7 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
     public function getRelevantPastCoursesWithSyllabi ($user, $limit=-1)
     {
         $pastCourseSections = [];
+        $syllabusIds = [];
 
         // step-1
         // find all $this->course->courseSections that also have ->syllabus
@@ -115,26 +116,36 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
                 if ($courseSection->syllabus)
                 {
                     $pastCourseSections[$courseSection->id] = $courseSection;
+                    $syllabusIds[] = $courseSection->syllabus->id;
                 }
             }
             if (count($pastCourseSections) === $limit) break;
         }
-
-        // foreach ($this->course->sections as $courseSection)
-        // {
-        //     if (($this->id !== $courseSection->id) && !array_key_exists($courseSection->id, $pastCourseSections)) // NOTE: This line is for testing purposes only ******
-        //     // if ($courseSection->syllabus && ($this->id !== $courseSection->id))
-        //     {
-        //         $pastCourseSections[$courseSection->id] = $courseSection;
-        //     }
-        //     if (count($pastCourseSections) === $limit) break;
-        // }
 
         // step-2
         // search for other courseSections that have same/similar classNumber and title,
         // as well as have ->syllabus. check that they aren't already added to $pastCourseSections.
         // if count(step-1) == limit, then check count(step-2) and replace 2nd half of step-1 
         // elements with at most limit/2 step-2 elements
+
+        // step-3
+        // add a few syllabi that don't have course information sections, aka detached syllabi
+        $schema = $this->getSchema('Syllabus_Syllabus_Syllabus');
+        $results = $schema->find(
+            $schema->createdById->equals($user->id)->andIf($schema->id->notInList($syllabusIds)),
+            ['orderBy' => ['+modifiedDate', '+createdDate']]
+        );
+        $counter = 0;
+        $max = 3;
+        foreach ($results as $syllabus)
+        {
+            if (!$syllabus->latestVersion->courseInfoSection)
+            {
+                $pastCourseSections[$syllabus->id] = $syllabus;
+                $counter++;
+            }
+            if ($counter === $max) break;
+        }
 
         return $pastCourseSections;
     }
