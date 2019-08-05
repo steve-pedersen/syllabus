@@ -28,6 +28,12 @@ class Syllabus_Syllabus_AdminDashboardItemProvider extends At_Admin_DashboardIte
                 'href' => 'admin/syllabus/resources',
                 'text' => 'Manage Campus Resources',
             ],
+            'guide-docs' => [
+                'section' => 'Site Settings',
+                'order' => 3,
+                'href' => 'admin/syllabus/guidedocs',
+                'text' => 'Shared Resources, Guidelines, and Documents',
+            ],
         ];
     }
 }

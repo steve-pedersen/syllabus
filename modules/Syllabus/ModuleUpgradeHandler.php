@@ -128,6 +128,23 @@ class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                 $def = $this->alterEntityType('syllabus_published_syllabus', $this->getDataSource('Syllabus_Syllabus_PublishedSyllabus'));
                 $def->addProperty('share_level', 'string');
                 $def->save();
+
+                break;
+
+            case 2:
+                $def = $this->createEntityType('syllabus_shared_resources', $this->getDataSource('Syllabus_Syllabus_SharedResource'));
+                $def->addProperty('id', 'int', ['sequence' => true, 'primaryKey' => true]);
+                $def->addProperty('title', 'string');
+                $def->addProperty('description', 'string');
+                $def->addProperty('icon_class', 'string');
+                $def->addProperty('url', 'string');
+                $def->addProperty('file_id', 'int');
+                $def->addProperty('sort_order', 'int');
+                $def->addProperty('created_date', 'datetime');
+                $def->addProperty('active', 'bool');
+                $def->save();
+
+                break;
         }
     }
 }

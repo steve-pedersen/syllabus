@@ -126,6 +126,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 else
                 {
                     $campusResources = $this->schema('Syllabus_Syllabus_CampusResource');
+                    $guideDocs = $this->schema('Syllabus_Syllabus_SharedResource');
                     $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
                     $searchQuery = $this->request->getQueryParameter('search');
                     $options = ['orderBy' => ['-modifiedDate', '-createdDate'], 'limit' => $limit, 'offset' => $offset];
@@ -171,7 +172,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                         $campusResources->deleted->isFalse()->orIf($campusResources->deleted->isNull()),
                         ['orderBy' => ['sortOrder', 'title']]
                     );   
-
+                    $this->template->guideDocs = $guideDocs->find(
+                        $guideDocs->active->isTrue()->andIf($guideDocs->active->isNotNull()),
+                        ['orderBy' => ['sortOrder', 'title']]
+                    );
                     $this->template->syllabi = $userSyllabi;        
                 }
 
