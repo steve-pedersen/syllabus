@@ -69,7 +69,7 @@
 				{/foreach}
 			</div>
 			<div class="text-right col-lg-6 px-2 mt-3">
-				{if $editable}<span class=""><a class="btn btn-secondary btn-sm" href="syllabus/{$syllabus->id}">Back to Edit</a></span>{/if}
+				{if $editable && false}<span class=""><a class="btn btn-secondary btn-sm" href="syllabus/{$syllabus->id}">Back to Edit</a></span>{/if}
 				<span class="text-muted mx-2 d-inline-block">
 					<small>Last updated: {$syllabus->modifiedDate->format('F jS, Y - h:i a')}</small>
 				</span>

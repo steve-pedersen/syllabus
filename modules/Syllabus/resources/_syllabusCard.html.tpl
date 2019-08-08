@@ -73,6 +73,10 @@
 					<a href="syllabus/{$syllabus->id}/word" class="dropdown-item">
 						<i class="far fa-file-word  mr-3 text-dark"></i> Export
 					</a>
+<!-- 					<div class="dropdown-divider"></div>
+					<a href="syllabus/{$syllabus->id}/print" class="dropdown-item">
+						<i class="fas fa-print  mr-3 "></i> Print
+					</a> -->
 				{/if}
 				{if $btnClone}
 					<div class="dropdown-divider"></div>

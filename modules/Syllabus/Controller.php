@@ -1262,6 +1262,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
         else
         { 
+            $this->addBreadcrumb('syllabus/'.$syllabus->id, 'Edit');    
             $this->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);    
         }
         

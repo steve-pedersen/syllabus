@@ -75,6 +75,14 @@
 					</a>
 				{/if}
 					<div class="dropdown-divider"></div>
+					<a href="syllabus/{$syllabus->id}/word" class="dropdown-item">
+						<i class="far fa-file-word  mr-3 text-dark"></i> Export
+					</a>
+					<div class="dropdown-divider"></div>
+					<a href="syllabus/{$syllabus->id}/print" class="dropdown-item">
+						<i class="fas fa-print  mr-3 "></i> Print
+					</a>
+					<div class="dropdown-divider"></div>
 					<a href="{$routeBase}syllabus/startwith/{$syllabus->id}" class="dropdown-item">
 						<i class="far fa-copy  mr-3 text-secondary"></i> Clone
 					</a>
