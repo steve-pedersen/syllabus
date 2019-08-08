@@ -1,7 +1,7 @@
 <div class="container-fluid campus-resources-overview mb-5">
 <h2>Campus Resources</h2>
 <p class="text-muted">Add links to various campus resources to your syllabi. Choose "Add to syllabus" to select which syllabi to import each resource into.</p>
-	<div class="row mb-4">
+	<div class="row ">
 	{assign var=hasSeeMore value=false}
 {foreach $campusResources as $i => $campusResource}	
 	{if $i > 0 && ($i % 3) == 0}
@@ -10,9 +10,9 @@
 			<div class="collapse" id="seeMoreResources">
 			{assign var=hasSeeMore value=true}
 		{/if}
-		<div class="row mb-4">
+		<div class="row ">
 	{/if}
-	<div class="col-lg-4 col-md-6">
+	<div class="col-lg-4 col-md-6 my-2">
 		<div class="card h-100">
 			<div class="card-body" id="{$i}">
 				<input type="hidden" value="{$campusResource->id}" id="campusResourceId{$i}">

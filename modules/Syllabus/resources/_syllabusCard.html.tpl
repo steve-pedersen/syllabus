@@ -22,16 +22,16 @@
 	{/if}
 		<h5 class="mt-3">
 		{if $syllabus->semester}
-			{$syllabus->syllabus->title}
+			{$syllabus->syllabus->title|truncate:75}
 		{else}
-			{$syllabus->title}
+			{$syllabus->title|truncate:75}
 		{/if}
 		</h5>
 		<p class="card-text">
 		{if $syllabus->semester}
-			{$syllabus->syllabus->description}
+			{$syllabus->syllabus->description|truncate:175}
 		{else}
-			{$syllabus->description}
+			{$syllabus->description|truncate:175}
 		{/if}
 		</p>
 		{if !$hideDate && !$syllabus->semester}

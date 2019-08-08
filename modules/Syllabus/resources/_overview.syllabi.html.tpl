@@ -5,7 +5,7 @@
 	{if count($syllabi) > 3} Click "see more" to show more results.{/if}
 </p>
 	<div class="row mb-3">
-		<div class="col-lg-3 col-md-4 px-2">
+		<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 px-2">
 			<div class="card start-card">
 				<a href="syllabus/start" class="text-center stretched-link align-text-middle text-success start-syllabus">
 				<div class="card-body text-center align-text-middle text-success h-100">
@@ -23,17 +23,17 @@
 	{assign var=hasSeeMore value=false}
 	
 {foreach $syllabi as $i => $syllabus}
-	{if $i == 9}{break}{/if}
+
 	{if $i == 3}
 		{assign var=hasSeeMore value=true}
-	</div> <!-- END row1 -->
-<div class="collapse" id="seeMoreSyllabi">
-	<div class="row mb-3">
+	<!-- </div> END row1 -->
+<div class="collapse row px-3" id="seeMoreSyllabi">
+	<!-- <div class="row mb-3"> -->
 	{elseif ($i > 4 && ($i % 4) == 0)}
-	</div> <!-- END row2 -->
-	<div class="row mb-3">
+	<!-- </div> END row2 -->
+	<!-- <div class="row mb-3"> -->
 	{/if}
-		<div class="col-lg-3 col-md-4 px-2">
+		<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 px-2 my-2">
 			{include file="partial:_syllabusCard.html.tpl"}
 		</div>
 {foreachelse}

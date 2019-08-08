@@ -37,7 +37,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
         $courseSections = $this->schema('Syllabus_ClassData_CourseSection');
         $offset = 0;
-        $limit = 9;
+        $limit = 11;
 
         $siteSettings = $this->getApplication()->siteSettings;
         $userId = $siteSettings->getProperty('university-template-user-id');
