@@ -82,7 +82,7 @@
 			</div>	
 		</div>
 
-		<div class="syllabus-viewer p-md-5 p-sm-2 p-xs-1" id="syllabusViewer">		
+		<div class="syllabus-viewer p-lg-5 p-md-3 p-sm-2 p-xs-1" id="syllabusViewer">		
 
 			{foreach $sectionVersions as $i => $sectionVersion}
 				{assign var=ext value=$sectionVersion->extension}

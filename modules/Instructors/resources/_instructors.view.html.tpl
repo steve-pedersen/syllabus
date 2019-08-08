@@ -31,8 +31,8 @@
 			{/if}
 			{if $instructor->about}
 			<dl class="row mb-0">
-				<dt class="col-xl-3 col-lg-4 col-md-5 col-sm-12">About</dt>
-				<dd class="col-xl-9 col-lg-8 col-md-7 col-sm-12">
+				<dt class="col-sm-12">About</dt>
+				<dd class="col-sm-12">
 			    	{if $instructor->credentials}
 			    		{$instructor->name} &mdash; <span class="text-muted">{$instructor->credentials}</span>
 			    	{/if}

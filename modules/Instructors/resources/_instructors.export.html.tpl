@@ -6,16 +6,26 @@
 		<h3 class="real-section-title instructor-info-title">
 		{$instructor->name}
 		{if $instructor->title}
-			<br><small class="text-muted">{$instructor->title}</small>
+			<p class="text-muted">{$instructor->title}</p>
 		{/if}
 		</h3>
 		{/if}
 		<dl>
 			<dt><h4>Contact</h4></dt>
 			<dd>
-				{if $instructor->email}{l href="mailto:{$instructor->email}" text=$instructor->email}<br>{/if}
-				{if $instructor->phone}{$instructor->phone}<br>{/if}
-				{if $instructor->website}<span class="dont-break-out">{l href=$instructor->website text=$instructor->website}</span><br>{/if}
+				{if $instructor->email}
+					<strong>Email: </strong>{l href="mailto:{$instructor->email}" text=$instructor->email}
+				{/if}
+				{if $instructor->phone}
+					<br>
+					<strong>Phone: </strong>{$instructor->phone}
+				{/if}
+				{if $instructor->website}
+					<br>
+					<span class="dont-break-out">
+						<strong>Website: </strong>{l href=$instructor->website text=$instructor->website}
+					</span>
+				{/if}
 			</dd>
 		{if $instructor->office}
 			<dt><h4>Office Location</h4></dt>

@@ -121,7 +121,10 @@ class Syllabus_Services_Screenshotter
         {
             if (isset($result['value']) && $result['state'] === 'fulfilled')
             {
-                $imageUrls[$key] = json_decode($result['value']->getBody()->getContents())->imageurl;
+                if ($json = json_decode($result['value']->getBody()->getContents()))
+                {
+                    $imageUrls[$key] = $json->imageurl;
+                }
             }
         }
 
@@ -184,7 +187,7 @@ class Syllabus_Services_Screenshotter
         $path = 'assets/images/';
         $imageName = 'screenshotter_sfsu_default.jpg';
         $imageName = 'default_syllabus_image.png';
-        $imageName = 'placeholder_syllabus.jpg';
+        $imageName = 'placeholder-4.jpg';
 
         if (($defaultImgName !== '') && (file_exists($path . $defaultImgName)))
         {

@@ -53,9 +53,6 @@
 			id = id.substring(id.indexOf('#'));
 			var target = $(id);
 			var scrollTo = target.offset().top - 360;
-			// console.log(id, scrollTo);
-			// window.scroll( {top: scrollTo, behavior: 'smooth'} );
-			// $('body').css('height', '100%');
 			$('html,body').animate({
 	          scrollTop: scrollTo
 	        }, 500);
@@ -124,77 +121,46 @@
     	maxW = 991;
     }
     var $window    = $(window),
-        offset     = $sidebar.offset(),
-        topPadding = 20,
-    	transition = 0,
         minimize   = false,
-        maxY = $('#footer').offset().top;
+		scrollPos = 0,
+    	windowWidth = $(window).width();
 
-
-    var windowWidth = $(window).width();
     $window.resize(function() {
         windowWidth = $(window).width();
-	    if ($sidebar.length && (windowWidth > maxW)) {
-		    $window.scroll(function() {
-		    	maxY = $('#footer').offset().top;
-		        if ($window.scrollTop() > offset.top && (windowWidth > maxW) && $window.scrollTop() < maxY) {
-		            $sidebar.stop().animate({
-		                marginTop: $window.scrollTop() - offset.top + topPadding
-		            }, transition);
-		        } else {
-		            $sidebar.stop().animate({
-		                marginTop: 0
-		            }, 10);
-		        }
-		    });    	
-	    } else if (windowWidth < 992) {
-			var $stickyNavbar = $('#stickyNavbar');
-  
-		    $window.scroll(function() {
-		    	maxY = $('#footer').offset().top;
-		    	if ($window.scrollTop() > offset.top) {
-		    		if (!$stickyNavbar.hasClass('sticky')) {
-		    			$stickyNavbar.addClass('sticky');
-		    		}
-		    	} else {
-		    		if ($stickyNavbar.hasClass('sticky')) {
-		    			$stickyNavbar.removeClass('sticky');
-		    		}
-		        }
-		    });    	
+
+	    if (windowWidth < 992) {
+	    	$('#stickyNavbar').addClass('sticky');
+			var scrollPos = 0;
+			$window.scroll(function () {
+			    var currentScrollPos = $(this).scrollTop();
+			    stickyMobileLinks(scrollPos, currentScrollPos);
+			    scrollPos = currentScrollPos;
+			});   	
 	    }
     });
 
-    if ($sidebar.length && (windowWidth > maxW)) {
-	    $window.scroll(function() {
-	    	maxY = $('#footer').offset().top;
-	        if ($window.scrollTop() > offset.top && (windowWidth > maxW) && $window.scrollTop() < maxY) {
-	            $sidebar.stop().animate({
-	                marginTop: $window.scrollTop() - offset.top + topPadding
-	            }, transition);
-	        } else {
-	            $sidebar.stop().animate({
-	                marginTop: 0
-	            }, 0);
-	        }
-	    });    	
-    } else if (windowWidth < 992) {
-		var $stickyNavbar = $('#stickyNavbar');
-    	// var offset     = $stickyNavbar.offset();
-
-	    $window.scroll(function() {
-	    	maxY = $('#footer').offset().top;
-	    	if ($window.scrollTop() > offset.top) {
-	    		if (!$stickyNavbar.hasClass('sticky')) {
-	    			$stickyNavbar.addClass('sticky');
-	    		}		
-	    	} else {
-	    		if ($stickyNavbar.hasClass('sticky')) {
-	    			$stickyNavbar.removeClass('sticky');
-	    		}
-	        }
-	    });    	
+    if (windowWidth < 992) {
+		$('#stickyNavbar').addClass('sticky');
+		var scrollPos = 0;
+		$window.scroll(function () {
+		    var currentScrollPos = $(this).scrollTop();
+		    stickyMobileLinks(scrollPos, currentScrollPos);
+		    scrollPos = currentScrollPos;
+		});  	
     }
+
+	var stickyMobileLinks = function (scrollPos, currentScrollPos) {
+		var $stickyNavbar = $('#stickyNavbar');
+	    if ((scrollPos > 375) && (currentScrollPos > scrollPos)) {
+	    	if (!$stickyNavbar.hasClass('minimize')) {
+	    		$stickyNavbar.addClass('minimize');
+	    	}
+	    } else {
+	    	if ($stickyNavbar.hasClass('minimize')) {
+	    		$stickyNavbar.removeClass('minimize');
+	    	}
+	    } 		
+	}
 
     $('#anchorLinksCollapse a').on('click', function (e) {
     	$('#stickyNavbar .navbar-toggler').click();
@@ -202,23 +168,6 @@
     		$('#stickyNavbar').addClass('minimize');
     	}
     });
-
-
-	var iScrollPos = 0;
-	$window.scroll(function () {
-	    var iCurScrollPos = $(this).scrollTop();
-	    if ((iScrollPos > 375) && (iCurScrollPos > iScrollPos)) {
-	    	if (!$('#stickyNavbar').hasClass('minimize')) {
-	    		$('#stickyNavbar').addClass('minimize');
-	    	}
-	    } else {
-	    	if ($('#stickyNavbar').hasClass('minimize')) {
-	    		$('#stickyNavbar').removeClass('minimize');
-	    	}
-	    }
-	    iScrollPos = iCurScrollPos;
-	});
-
 
 
     if ($('#mySyllabi').length) {

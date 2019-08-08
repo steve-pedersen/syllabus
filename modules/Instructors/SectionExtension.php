@@ -5,7 +5,7 @@ class Syllabus_Instructors_SectionExtension extends Syllabus_Syllabus_SectionExt
     public static function getExtensionName () { return 'instructors'; }
     
     public function getExtensionKey () { return 'instructor_id'; }
-    public function getDisplayName ($plural = false) { return 'Instructors'; }
+    public function getDisplayName ($plural = false) { return 'Instructor'; }
     public function getHelpText () { return 'Add multiple instructors at a time in this Instructors section type.'; }
     public function getRecordClass () { return 'Syllabus_Instructors_Instructors'; }
     public function getSectionTasks () { return []; }

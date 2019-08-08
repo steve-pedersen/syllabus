@@ -24,8 +24,8 @@
 				<dd class="col-xl-9 col-lg-8 col-md-7 col-sm-12">{$realSection->semester} {$realSection->year}</dd>
 			</dl>
 			<dl class="row mb-0">
-				<dt class="col-xl-3 col-lg-4 col-md-5 col-sm-12">Description</dt>
-				<dd class="col-xl-9 col-lg-8 col-md-7 col-sm-12">{$realSection->description}</dd>
+				<dt class="col-sm-12">Description</dt>
+				<dd class="col-sm-12">{$realSection->description}</dd>
 			</dl>
 		</dd>
 	</dl>

@@ -358,7 +358,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 }
                 else
                 {
-                    $courseSyllabus->imageUrl = 'assets/images/placeholder-3.jpg';
+                    $courseSyllabus->imageUrl = 'assets/images/placeholder-4.jpg';
                 }
 
             }
@@ -1088,17 +1088,18 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
         $this->setPrintTemplate();
         $this->setPageTitle('Print Syllabus');
-        $this->template->addBreadcrumb('syllabi', 'My Syllabi');
+        $this->addBreadcrumb('syllabi', 'My Syllabi');
 
         list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
 
         if ($type === 'student' && $courseSection)
         {
-            $this->template->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $courseSection->title);
+            $this->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $courseSection->title);
         }
         else
         {
-            $this->template->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);    
+            $this->addBreadcrumb('syllabus/'.$syllabus->id, 'Edit');
+            $this->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);    
         }
 
         $this->template->syllabus = $syllabus;
@@ -1159,7 +1160,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             if (isset($response['data']) && isset($response['data']['url']))
             {
                 $url = $response['data']['url'];
-                $filename = $title . '.doc';
+                $filename = $title . '.docx';
                 header('Content-Type: application/octet-stream');
                 header("Content-Transfer-Encoding: Binary"); 
                 header("Content-disposition: attachment; filename=\"".$filename."\""); 
@@ -1242,11 +1243,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $organization = $this->getRouteVariable('organization', null);
         if ($organization)
         {
-            $this->template->addBreadcrumb($routeBase, $organization->name . ' Home');
+            $this->addBreadcrumb($routeBase, $organization->name . ' Home');
         }
         else
         {
-            $this->template->addBreadcrumb('syllabi', 'My Syllabi');
+            $this->addBreadcrumb('syllabi', 'My Syllabi');
         }
 
         $pathParts = [];
@@ -1257,11 +1258,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         if ($type === 'student' && $courseSection)
         {
-            $this->template->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $courseSection->title);
+            $this->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $courseSection->title);
         }
         else
-        {
-            $this->template->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);    
+        { 
+            $this->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);    
         }
         
         $this->template->editable = $editable;
@@ -2045,42 +2046,26 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
     public function screenshot ()
     {
+        $sid = $this->getRouteVariable('id');
+        $keyPrefix = sha1($sid) . '-';
+        $key = "{$keyPrefix}{$sid}";
+        $accessToken = Syllabus_Services_Screenshotter::CutUid($key);
+        $tokenHeader = $this->request->getHeader('X-Custom-Header');
+
+        // if (!$tokenHeader && !$accessToken && ($tokenHeader !== $accessToken))
+        if (!$tokenHeader && !$accessToken)
+        {
+            $this->accessDenied('No access token available in this request.');
+        }
+
         $this->setScreenshotTemplate();
 
-        $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
-        $sections = $this->schema('Syllabus_Syllabus_Section');
-        
+        $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');   
         $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
         $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
 
         $this->template->syllabusVersion = $syllabusVersion;
         $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
-
-
-        // $tokenHeader = $this->requireExists($this->request->getHeader('X-Custom-Header'));
-
-        // $sid = $this->getRouteVariable('id');
-        // $keyPrefix = sha1($sid) . '-';
-        // $key = "{$keyPrefix}{$sid}";
-        // $uid = Syllabus_Services_Screenshotter::CutUid($key);
-
-        // if ($tokenHeader && $uid && ($tokenHeader == $uid))
-        // {
-        //     $this->setScreenshotTemplate();
-
-        //     $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
-        //     $sections = $this->schema('Syllabus_Syllabus_Section');
-            
-        //     $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
-        //     $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
-
-        //     $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
-        // }
-        // else
-        // {
-        //     http_response_code (401);
-        //     die;        
-        // }
     }
 
 

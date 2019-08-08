@@ -5,7 +5,7 @@ class Syllabus_Schedules_SectionExtension extends Syllabus_Syllabus_SectionExten
     public static function getExtensionName () { return 'schedules'; }
     
     public function getExtensionKey () { return 'schedule_id'; }
-    public function getDisplayName ($plural = false) { return 'Schedules' . ($plural ? 's' : ''); }
+    public function getDisplayName ($plural = false) { return 'Schedule' . ($plural ? 's' : ''); }
     public function getHelpText () { return ''; }
     public function getRecordClass () { return 'Syllabus_Schedules_Schedules'; }
     public function getSectionTasks () { return []; }
