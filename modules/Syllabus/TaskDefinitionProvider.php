@@ -18,7 +18,7 @@ class Syllabus_Syllabus_TaskDefinitionProvider extends Bss_AuthZ_TaskDefinitionP
             'section share' => 'share the section with others',
             'section delete' => 'delete the section',
             'section make required' => 'make a section required for this syllabus (template) and editable by you only',
-
+            'program admin' => 'be the program admin',
         ];
 
         $extensions = $this->getApplication()->moduleManager->getExtensions('at:syllabus:syllabus/sectionExtensions');

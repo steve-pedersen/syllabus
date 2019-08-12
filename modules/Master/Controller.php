@@ -63,6 +63,8 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
     protected function afterCallback ($callback)
     {
         $this->template->pAdmin = $this->hasPermission('admin');
+        $this->template->pFaculty = $this->hasPermission('syllabus edit');
+        $this->template->pProgramAdmin = $this->hasPermission('program admin');
         $this->template->onLoad = $this->onLoadScriptList;
         $this->template->userMessageList = $this->userMessageList;
         $this->template->includeScripts = $this->includeScriptList;

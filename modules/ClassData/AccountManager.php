@@ -16,7 +16,8 @@ class Syllabus_ClassData_AccountManager
 
     public function hasEnrollment ($identity)
     {
-        return $this->getSchema('Syllabus_ClassData_User')->get($identity->getProperty('username'));
+        $schema =  $this->getSchema('Syllabus_ClassData_Enrollment');
+        return $schema->findOne($schema->userId->equals($identity->getProperty('username')));
     }
 
     public function createUserAccount ($identity)

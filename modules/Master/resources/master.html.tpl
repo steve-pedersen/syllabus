@@ -45,7 +45,7 @@
 					<a class="nav-category" href="syllabi" id="sidebarMySyllabi">
 						<img class="my-syllabi" src="assets/icons/menu-my-syllabi.svg" width="44"> <span class="pl-2 sidebar-text">My Syllabi</span>
 					</a>
-					{if !$isStudent}
+					{if !$isStudent && $pFaculty}
 					<ul class="list-unstyled">
 						<li class="{if $page == 'start'}active{/if}">
 							<a class="sub-link" href="syllabus/start">
@@ -71,7 +71,7 @@
 					{/if}
 				</li>
 			</ul>
-			{if !$isStudent}
+			{if !$isStudent && $pFaculty}
 			{if $privilegedOrganizations['departments'] || $pAdmin}
 			<ul class="list-unstyled components my-orgs">
 				<li class="">
@@ -143,7 +143,7 @@
 									My Syllabi
 								</a>
 							</li>
-						{if !$isStudent}
+						{if !$isStudent && $pFaculty}
 							<li class="nav-item mobile-link {if $page == 'start'}active{/if}">
 								<a class="nav-link" href="syllabus/start">
 									Create New Syllabus

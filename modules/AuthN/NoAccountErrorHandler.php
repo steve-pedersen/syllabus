@@ -131,6 +131,10 @@ class Syllabus_AuthN_NoAccountErrorHandler extends Syllabus_Master_ErrorHandler
             {
                 $identity->setProperty('allowCreateAccount', true);
             }
+            else
+            {
+                $identity->setProperty('allowCreateAccount', false);   
+            }
             
             if (($allowCreateAccount = $identity->getProperty('allowCreateAccount')))
             {
