@@ -163,6 +163,8 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
     protected function beforeCallback ($callback)
     {
         parent::beforeCallback($callback);
+        $this->template->pFaculty = $this->hasPermission('syllabus edit');
+        $this->template->pProgramAdmin = $this->hasPermission('program admin');
     }
 
     // TODO: put this in ActiveRecord?

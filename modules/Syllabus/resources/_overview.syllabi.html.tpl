@@ -2,7 +2,7 @@
 <h2>My Syllabi: <small class="text-muted">Recently Modified</small></h2>
 <p class="text-muted">
 	Create a new syllabus or access your most recently modified syllabi.
-	{if count($syllabi) > 3} Click "see more" to show more results.{/if}
+	{if $syllabi && count($syllabi) > 3} Click "see more" to show more results.{/if}
 </p>
 	<div class="row mb-3">
 		<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 px-2">

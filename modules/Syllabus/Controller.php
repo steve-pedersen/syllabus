@@ -1721,6 +1721,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
     private function hasSyllabusPermission ($syllabus, $user=null, $permission='view')
     {
+        // echo "<pre>"; var_dump($permission); die;
         $user = $user ?? $this->requireLogin();
         $hasPermission = true;
 
@@ -1765,59 +1766,36 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             }
             
         }
-        // elseif ($permission !== 'view' && $syllabus->createdById !== $user->id)
-        // {
-        //     $hasPermission = false;
-        // }
-        elseif ($permission === 'view')
-        {
-            $this->requirePermission('syllabus view');
-            if ($syllabus->createdById !== $user->id)
-            {
-                if ($sectionVersion = $syllabus->latestVersion->getCourseInfoSection())
-                {
-                    $courseSection = $sectionVersion->resolveSection()->classDataCourseSection;
-                    if ($courseSection && $courseSection->enrollments->has($user->classDataUser))
-                    {
-                        $roles = $this->schema('Syllabus_AuthN_Role');
-                        $studentRole = $roles->findOne($roles->name->equals('Student'));
-                        if ($user->roles->has($studentRole))
-                        {
-                            if ($syllabus->getShareLevel() === 'private')
-                            {
-                                $hasPermission = false;
-                            }
-                        }                    
-                    }
-                    else
-                    {
-                        $hasPermission = false;
-                    }
-                }
-            }
-        }
         else
         {
+            // type is instructor if user is an enrolled instructor and student if user is enrolled student
+            list($type, $courseSection) = $this->getEnrollmentType($syllabus, $user);
             switch ($permission)
             {
                 case 'delete':
                     $this->requirePermission('syllabus delete');
+                    $hasPermission = $syllabus->createdById === $user->id;
                     break;
                 case 'edit':
                     $this->requirePermission('syllabus edit');
+                    $hasPermission = $type === 'instructor' || $syllabus->createdById === $user->id;
                     break;
                 case 'view':
                     $this->requirePermission('syllabus view');
+                    $hasPermission = $courseSection && $type !== '' || $syllabus->createdById === $user->id;
                     break;
                 case 'clone':
                     $this->requirePermission('syllabus edit');
+                    $hasPermission = $type === 'instructor' || $syllabus->createdById === $user->id;
                     break;
                 case 'share':
                     $this->requirePermission('syllabus share');
+                    $hasPermission = $type === 'instructor' || $syllabus->createdById === $user->id;
                     break;
                 case 'list':
                 default:
                     $this->requirePermission('syllabus list');
+                    $hasPermission = $type !== '';
                     break;
             }            
         }
@@ -2000,15 +1978,17 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
     }
 
+    // type is instructor if user is an enrolled instructor and student if user is enrolled student
     protected function getEnrollmentType ($syllabus, $viewer)
     {
         $courseSection = null;
-        $type = 'instructor';
+        $type = '';
         if ($sectionVersion = $syllabus->latestVersion->getCourseInfoSection())
         {
             $courseSection = $sectionVersion->resolveSection()->classDataCourseSection;
             if ($courseSection && $courseSection->enrollments->has($viewer->classDataUser))
             {
+                $type = 'instructor';
                 $roles = $this->schema('Syllabus_AuthN_Role');
                 $studentRole = $roles->findOne($roles->name->equals('Student'));
                 if ($viewer->roles->has($studentRole))
