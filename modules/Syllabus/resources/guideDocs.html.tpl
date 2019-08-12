@@ -45,7 +45,7 @@
 		</div>
 		<div class="form-group">
 			<label for="url">Website URL</label>
-			<input type="text" class="form-control" id="url" name="resource[url]" placeholder="https://sfsu.edu">
+			<input type="text" class="form-control" id="url" name="resource[url]" placeholder="https://sfsu.edu" value="{$resource->url}">
 		</div>
 		<div class="col-xs-12 form-group">
 			<label for="file">File</label>
