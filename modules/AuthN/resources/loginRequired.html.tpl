@@ -9,7 +9,7 @@
 			authorized account. To sign-in, choose your university from the list below and click
 			the sign-in button.</p>
 
-{include file="partial:_wayf"}
+{include file="partial:_wayf2"}
 		</div>
 	</div>
 </div>

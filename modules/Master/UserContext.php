@@ -26,7 +26,12 @@ class Syllabus_Master_UserContext extends Bss_Master_UserContext
         $schemaManager = $this->request->getApplication()->schemaManager;
         $roles = $schemaManager->getSchema('Syllabus_AuthN_Role');
         $authZ = $this->getAuthorizationManager();
-        if ($authZ->hasPermission($account, 'admin'))
+        
+        if ($return = $this->request->getQueryParameter('returnTo'))
+        {
+            $this->response->redirect($return);
+        }
+        elseif ($authZ->hasPermission($account, 'admin'))
         {
             $this->response->redirect('admin');
         }
