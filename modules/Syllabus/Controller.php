@@ -2007,7 +2007,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $returnArray = [];
         if ($courseSection && $courseSection->syllabus && $courseSection->syllabus->getShareLevel() === 'all') {
             $returnArray['exists'] = true;
-            $returnArray['url'] = $this->baseUrl('syllabus/view/' . $courseSection->syllabus->id);
+            $returnArray['url'] = $this->baseUrl('syllabus/' . $courseSection->syllabus->id . '/view');
             $returnArray['edited'] = true;
             $returnArray['visible'] = true;
         } else {
