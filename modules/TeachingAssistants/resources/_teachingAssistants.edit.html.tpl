@@ -47,7 +47,7 @@
                     </div>
                     <div class="col-1 text-truncate"><strong>#{$i+1}</strong></div>
                     <div class="col-5 text-truncate"><strong>{$ta->name|truncate:40}</strong></div>
-                    <div class="col-5 text-truncate">{l href="mailto:{$ta->email}"" text=$ta->email}</div>
+                    <div class="col-5 text-truncate">{l href="mailto:{$ta->email}" text=$ta->email}</div>
                 </div>   
             </div>
         </div>
