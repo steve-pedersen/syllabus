@@ -12,21 +12,23 @@ class Syllabus_ClassData_CronJob extends Bss_Cron_Job
         {
             set_time_limit(0);
             
-            $service = new Syllabus_ClassData_Service($this->application);
+            $service = new Syllabus_ClassData_Service($this->getApplication());
             $service->importOrganizations();
 
-            // $semesterCodes = $this->application->siteSettings->semester;
-            $semesterCodes = Syllabus_Admin_Semester::GetActiveSemesters($this->application);
+            $semesters = $this->schema('Syllabus_Admin_Semester');
+            $activeSemesterCodes = $semesters->findValues('internal', $semesters->active->isTrue());
 
-            if (!is_array($semesterCodes))
-            {
-                $semesterCodes = explode(',', $semesterCodes);
-            }
-            foreach ($semesterCodes as $semesterCode)
+            foreach ($activeSemesterCodes as $semesterCode)
             {
                 $service->import($semesterCode);
             }
+
             return true;
         }
+    }
+
+    private function schema ($recordClass)
+    {
+        return $this->getApplication()->schemaManager->getSchema($recordClass);
     }
 }
