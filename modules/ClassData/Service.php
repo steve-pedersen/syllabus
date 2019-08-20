@@ -233,14 +233,15 @@ class Syllabus_ClassData_Service
         $newLog = $logs->createInstance();
         $enrollData = $enrollments->findOne($enrollments->yearSemester->equals($semesterCode));
 
-        if (($lastLog === null) || !$enrollData)
-        {
-            $since = '1970-01-01';
-        }
-        else
-        {
-            $since = $lastLog->dt->format('c');
-        } 
+        // if (($lastLog === null) || !$enrollData)
+        // {
+        //     $since = '1970-01-01';
+        // }
+        // else
+        // {
+        //     $since = $lastLog->dt->format('c');
+        // } 
+         $since = '1970-01-01';
 
         list($status, $data) = $this->getChanges($semesterCode, $since);
 

@@ -2005,12 +2005,15 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     {   
         $courseSection = $this->helper('activeRecord')->fromRoute('Syllabus_ClassData_CourseSection', 'id');
         $returnArray = [];
-        if ($courseSection && $courseSection->syllabus && $courseSection->syllabus->getShareLevel() === 'all') {
+        if ($courseSection && $courseSection->syllabus && $courseSection->syllabus->getShareLevel() === 'all') 
+        {
             $returnArray['exists'] = true;
             $returnArray['url'] = $this->baseUrl('syllabus/' . $courseSection->syllabus->id . '/view');
             $returnArray['edited'] = true;
             $returnArray['visible'] = true;
-        } else {
+        } 
+        else 
+        {
             $returnArray['exists'] = false;
         }
 
