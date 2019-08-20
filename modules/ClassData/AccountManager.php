@@ -20,6 +20,11 @@ class Syllabus_ClassData_AccountManager
         return $schema->findOne($schema->userId->equals($identity->getProperty('username')));
     }
 
+    public function hasClassData ($identity)
+    {
+        return $this->getSchema('Syllabus_ClassData_User')->get($identity->getProperty('username'));
+    }
+
     public function createUserAccount ($identity)
     {
         $accounts = $this->getSchema('Bss_AuthN_Account');
