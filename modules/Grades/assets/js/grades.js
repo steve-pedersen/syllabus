@@ -58,9 +58,8 @@
       });
     });
 
-    if ($('#columns3').is(':checked')) {
-      // $('#columns3').click();
-      $('.collapse').collapse('show');
+    if ($('#gradesSection #columns3').is(':checked')) {
+      $('#gradesSection .collapse').collapse('show');
     }
 
   });

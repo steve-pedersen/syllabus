@@ -63,9 +63,11 @@
       });
     });
 
-    if ($('#columns4').is(':checked')) {
-      // $('#columns4').click();
+
+    if ($('#schedulesSection #columns4').is(':checked')) {
       $('#schedulesSection .collapse').collapse('show');
+    } else if ($('#schedulesSection #columns').is(':checked')) {
+      $('#schedulesSection', '.collapse').collapse('hide');
     }
 
   });
