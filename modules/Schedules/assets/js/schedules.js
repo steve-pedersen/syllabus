@@ -63,5 +63,10 @@
       });
     });
 
+    if ($('#columns4').is(':checked')) {
+      // $('#columns4').click();
+      $('#schedulesSection .collapse').collapse('show');
+    }
+
   });
 })(jQuery);

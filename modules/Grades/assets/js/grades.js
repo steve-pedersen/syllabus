@@ -58,5 +58,10 @@
       });
     });
 
+    if ($('#columns3').is(':checked')) {
+      // $('#columns3').click();
+      $('.collapse').collapse('show');
+    }
+
   });
 })(jQuery);
