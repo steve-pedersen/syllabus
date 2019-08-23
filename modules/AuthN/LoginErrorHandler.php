@@ -71,6 +71,7 @@ class Syllabus_AuthN_LoginErrorHandler extends Syllabus_Master_ErrorHandler
         $this->template->selectedProvider = $providerName;
         $request = $this->getApplication()->request;
         $returnTo = $request->getQueryParameter('returnTo', $request->getRequestedUri());
+        $_SESSION['returnTo'] = $returnTo;
         $this->getApplication()->response->redirect('login?returnTo=' . $returnTo);
         
         call_user_func([$this, $this->selectedHandler['method']], $error);

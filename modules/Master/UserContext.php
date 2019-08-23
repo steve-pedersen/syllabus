@@ -26,8 +26,9 @@ class Syllabus_Master_UserContext extends Bss_Master_UserContext
         $schemaManager = $this->request->getApplication()->schemaManager;
         $roles = $schemaManager->getSchema('Syllabus_AuthN_Role');
         $authZ = $this->getAuthorizationManager();
+        $returnTo = isset($_SESSION['returnTo']) ? $_SESSION['returnTo'] : null;
         
-        if ($return = $this->request->getQueryParameter('returnTo'))
+        if ($return = $this->request->getQueryParameter('returnTo', $returnTo))
         {
             $this->response->redirect($return);
         }
@@ -37,6 +38,7 @@ class Syllabus_Master_UserContext extends Bss_Master_UserContext
         }
         elseif ($account->roles->has($roles->findOne($roles->name->equals('Faculty'))))
         {
+            if ($returnTo) $this->response->redirect($returnTo);
             if ($firstLogin)
             {
                 $this->response->redirect('syllabi?mode=courses');
@@ -45,6 +47,7 @@ class Syllabus_Master_UserContext extends Bss_Master_UserContext
         }
         elseif ($account->roles->has($roles->findOne($roles->name->equals('Student'))))
         {
+            if ($returnTo) $this->response->redirect($returnTo);
             $this->response->redirect('syllabi?mode=overview');
         }
         $this->response->redirect('syllabi');        
