@@ -1,7 +1,32 @@
-<div class="container">
+<div class="container" id="shareContainer">
 <form class="form-horizontal" action="{$smarty.server.REQUEST_URI|escape}" method="post">
     <div class="data-form">
     	<h1>Share Syllabus</h1>
+        <div>
+            <p>To share your syllabus with students, follow these steps:</p>
+            <ol>
+                <li>Change the share status below to 'All enrolled in course'</li>
+                <li>Copy the View syllabus link and paste it wherever you prefer, such as in your iLearn course as a URL resource</li>
+            </ol> 
+            <hr>
+        </div>
+        {if $shareLevel == 'all'}
+        <div class="my-3 pt-4 pb-2 jumbotron">
+            <label class="" for="clickToCopy">
+                Use the following link to share your syllabus with <em>all enrolled in the course</em>:
+            </label>
+            <div class="input-group mb-1">
+              <input form="" class="form-control" type="text" value="{$viewUrl}" id="clickToCopy" />
+              <div class="input-group-append">
+                <button class="btn btn-outline-dark" onClick="copyToClipboard(this)" form="" type="button" id="copyBtn"><i class="far fa-copy mr-1"></i> Copy to clipboard</button>
+              </div>
+            </div>  
+            <div class="text-right w-100 font-w700 text-success" id="copiedAlert" style="opacity:0;">
+                <span class="ml-auto">Link copied!</span>
+            </div>   
+            <input form="" type="hidden" value="{$viewUrl}" name="viewUrl" id="viewUrl">
+        </div>
+        {/if}
         <div class="row pt-3">
             <div class="col-xl-7 col-lg-6 col-md-12">
                 <h2 class=" pb-3">{$syllabusVersion->title}</h2>
@@ -57,5 +82,11 @@
             <a class="btn btn-default" href="syllabi">Cancel</a>
         </div>
     </div>
+    <hr>
+<p class="alert alert-secondary text-right">
+    <a href="https://athelp.sfsu.edu/hc/en-us/articles/360033902033-Making-a-syllabus-available-to-students#linking-ilearn" target="_blank" class="alert-link">
+        Learn how to link your syllabus in iLearn <i class="fas fa-external-link-alt ml-2"></i>
+    </a>
+</p>
 </form>
 </div>

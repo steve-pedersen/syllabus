@@ -1,9 +1,24 @@
 <div class="container-fluid my-syllabi-overview mb-5">
-<h2>My Syllabi: <small class="text-muted">Recently Modified</small></h2>
-<p class="text-muted">
-	Create a new syllabus or access your most recently modified syllabi.
-	{if $syllabi && count($syllabi) > 3} Click "see more" to show more results.{/if}
-</p>
+
+<div class="row">
+	<div class="{if $syllabi}col-8{else}col-12{/if}">
+		<h2>My Syllabi: <small class="text-muted">Recently Modified</small></h2>
+		<p class="text-muted">
+			Create a new syllabus or access your most recently modified syllabi.
+			{if $syllabi && count($syllabi) > 3} Click "see more" to show more results.{/if}
+		</p>
+	</div>
+	{if $syllabi}
+<!-- 	<div class="col-4">
+		<div class="text-right">
+			<span type="buttons" data-placement="bottom" class="btn-link" data-toggle="tooltip" data-html="true" title="To share your syllabus with students, click the <strong>Options</strong> button on a syllabus below and then <strong>Share</strong>">
+			  <i class="far fa-question-circle mr-1"></i> How to share a syllabus with Students?
+			</span>
+		</div>	
+	</div> -->
+	{/if}
+</div>
+
 	<div class="row mb-3">
 		<div class="col-xl-3 col-lg-4 col-md-6 col-sm-12 px-2">
 			<div class="card start-card">
@@ -21,6 +36,7 @@
 	{assign var=btnView value=true}
 	{assign var=cropSize value="13"}
 	{assign var=hasSeeMore value=false}
+	{assign var=overview value=true}
 	
 {foreach $syllabi as $i => $syllabus}
 

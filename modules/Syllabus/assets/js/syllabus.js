@@ -18,6 +18,31 @@
         }
     }
 
+	$('[id^=clickToCopy]').on("focus", function(e) {
+		e.target.select();
+	  $(e.target).one('mouseup', function(e) {
+	    e.preventDefault();
+	  });
+	});
+	
+	$('[id^=copyBtn]').on('click', function (e) {
+		e.preventDefault();
+		e.stopPropagation();
+		const em = $(this).parents().siblings('[id^=clickToCopy]');
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val(em.val()).select();
+        document.execCommand("copy");
+        $temp.remove();
+        $(this).parents(('[id^=copiedAlert]').animate({opacity:1}, 10).animate({opacity:0}, 1000);
+	});
+
+
+	 $('[data-toggle="popover"]').popover();
+
+	// enable tooltips
+	$('[data-toggle="tooltip"]').tooltip();
+
 	$('.section-collapsible').on('hide.bs.collapse', function () {
 		var icon = $(this).parent().find('.section-collapse-link').find('small > i');
 		icon.removeClass('fa-chevron-down').addClass('fa-chevron-right');

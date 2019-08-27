@@ -45,7 +45,21 @@
 			{/if}
 
 			{if $btnEdit}
-			<a class="btn btn-info" href="syllabus/{$syllabus->id}">Edit</a>
+				{if $overview}
+				<div class="btn-group" role="group" aria-label="Edit & View buttons">
+					<a href="{$routeBase}syllabus/{$syllabus->id}" class="btn btn-info">
+						Edit
+					</a>
+					<a href="{$routeBase}syllabus/{$syllabus->id}/view" class="btn btn-outline-dark">
+						View
+					</a>
+				</div>
+
+				{include file="partial:_shareWidget.html.tpl"}
+
+				{else}
+				<a class="btn btn-info" href="syllabus/{$syllabus->id}">Edit</a>
+				{/if}
 			{/if}
 
 			{if $btnView && $btnStart}
@@ -55,7 +69,7 @@
 			{if $btnStartTemplateForCourse}
 				<input class="btn btn-success" type="submit" name="command[start][department][{$syllabus->id}]" value="Start From Template">
 			{/if}
-			{if !$btnStart && !$btnStartTemplateForCourse}
+			{if !$btnStart && !$btnStartTemplateForCourse && !$overview}
 			<div class="dropdown d-inline">
 				<a class="btn btn-dark dropdown-toggle pull-right" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					Options
@@ -93,7 +107,13 @@
 				</div>
 			</div>
 			{/if}
-
 		</div>
+		{if !$btnStart && !$btnStartTemplateForCourse && !$organization && $syllabus->hasCourseSection}
+<!-- 		<div class="text-center">
+			<button type="button" data-placement="bottom" class="btn btn-link" data-toggle="tooltip" data-html="true" title="To share your syllabus with students, click the <strong>Options</strong> button above and then <strong>Share</strong>">
+			  How to share with Students?
+			</button>
+		</div> -->
+		{/if}
 	</div>
 </div>

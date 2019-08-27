@@ -7,6 +7,57 @@ html {
   	height: auto !important;
   }
 }
+
+.position-relative {
+	position: relative !important;
+}
+    // position: absolute;
+    // transform: translate3d(84px, 38px, 0px);
+    // top: 0px;
+    // left: 0px;
+    // will-change: transform;
+.share-dropdown {
+	// width: 352px;
+	// width: 25vw;
+	// left: auto !important;
+    // top: 6px !important;
+    // right: 0 !important;
+    box-shadow: 0 3px 12px rgba(27,31,35,.15);
+	@media (max-width: 992px) and (min-width: 768px) {
+		// right: -145px !important;
+	}
+	@media (max-width: 637px) {
+		// right: calc(100vw / -3) !important;
+		// width: 250px;
+		// right: -30vw !important;
+		// right: calc(150px - 100vw) !important
+	}
+    .widget-link {
+    	&:hover, &:focus {
+    		text-decoration: none;
+    		background-color: $primary;
+    		color: #fff;
+    	}
+    }
+}
+
+// .share-dropdown:before {
+//     left: auto !important;
+//     right: 56px !important;
+//     top: -16px !important;
+// }
+// .share-dropdown:before {
+//     border: 8px solid transparent;
+//     // border-bottom-color: rgba(27,31,35,.15);
+//     border-bottom-color: $dark;
+// }
+// .share-dropdown:after, .share-dropdown:before {
+//     content: "";
+//     display: inline-block;
+//     position: absolute;
+// }
+
+
 .firstcharacter {
   color: $primary;
   float: left;
