@@ -5,6 +5,7 @@
 #require js/ckeditor.js
 #require js/jquery.are-you-sure.js
 #require js/jquery.are-you-sure.ios-support.js
+#require js/bootstrap4-toggle.min.js
 
 // #require js/sidebar.js
 #require js/syllabus.js

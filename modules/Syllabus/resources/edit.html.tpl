@@ -20,7 +20,7 @@
 		{/if}
 
 		<div class="syllabus-editor " id="syllabusEditor">	
-		
+
 		<!-- ADD SECTION FORM -->
 		<form action="{$smarty.server.REQUEST_URI}" method="get" class="form" role="form" id="addSection">
 		</form>
@@ -30,7 +30,7 @@
 			
 			<!-- MAIN CONTROLS - TOP -->			
 			{assign var=position value='Top'}
-			{include file="partial:_controls.html.tpl"}
+			{include file="partial:_controls.html.tpl" share="shareStatusForm"}
 
 			{if $syllabusVersion->inDataSource}
 			<input type="hidden" name="syllabusVersion[id]" value="{$syllabusVersion->id}">

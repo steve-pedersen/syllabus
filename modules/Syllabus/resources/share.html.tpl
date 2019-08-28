@@ -18,7 +18,7 @@
             <div class="input-group mb-1">
               <input form="" class="form-control" type="text" value="{$viewUrl}" id="clickToCopy" />
               <div class="input-group-append">
-                <button class="btn btn-outline-dark" onClick="copyToClipboard(this)" form="" type="button" id="copyBtn"><i class="far fa-copy mr-1"></i> Copy to clipboard</button>
+                <button class="btn btn-outline-dark" form="" type="button" id="copyBtn"><i class="far fa-copy mr-1"></i> Copy to clipboard</button>
               </div>
             </div>  
             <div class="text-right w-100 font-w700 text-success" id="copiedAlert" style="opacity:0;">

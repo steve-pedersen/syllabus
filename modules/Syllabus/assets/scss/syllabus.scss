@@ -40,6 +40,36 @@ html {
     	}
     }
 }
+#shareBtn {
+	&:hover, &:focus {
+		background-color: $alert-success-bg-color;
+		color: #000;
+	}
+}
+#unshareBtn {
+	&:hover, &:focus {
+		background-color: $alert-warning-bg-color;
+		color: #000;
+	}
+}
+#copyWidget {
+	// background-color: #fff;
+	border-color: #888;
+	&.shared {
+		&:hover, &:focus {
+			background-color: $alert-dark-bg-color;
+		}
+	}
+}
+
+#shareSyllabusWidget {
+	div[id^="shareWidget"] {
+		input {
+			font-family: monospace;
+		}
+	}
+}
+
 
 // .share-dropdown:before {
 //     left: auto !important;

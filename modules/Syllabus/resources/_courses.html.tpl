@@ -1,5 +1,5 @@
 
-<form method="post" action="{$smarty.server.REQUEST_URI|escape}">
+<!-- <form method="post" action="{$smarty.server.REQUEST_URI|escape}" id="coursesPageForm"> -->
 
 {foreach $allCourses as $term => $myCourses}
 <div class="bg-secondary pt-1 mb-3 rounded">
@@ -17,7 +17,6 @@
 	{foreach $myCourses as $i => $courseSection}
 			{assign var=syllabus value=$courseSection->courseSyllabus}
 
-			{if $syllabus}<input type="hidden" name="course[{$courseSection->id}][syllabusId]" value="{$syllabus->id}">{/if}
 			<tr class="">
 				<td class="align-middle" style="width:35%;">
 					<div class="p-3">
@@ -56,19 +55,18 @@
 										<span class="float-left"><i class="fas fa-eye"></i></span>
 										View
 									</a>
-									<a style="max-width:200px;" href="syllabus/{$syllabus->id}/share" class="my-3 btn btn-outline-primary d-block">
-										<span class="float-left"><i class="fas fa-share"></i></span>
-										Share
-									</a>
 									<a style="max-width:200px;" href="syllabus/{$syllabus->id}" class="my-3 btn btn-info d-block align-bottom">
 										<span class="float-left"><i class="fas fa-edit"></i></span>
 										Edit
 									</a>
+									<span class="d-block my-3">{include file="partial:_shareWidget.html.tpl"}</span>
 								</div>
 							</div>
 						</div>
 					</div>
 				{else}
+				<form method="post" action="{$smarty.server.REQUEST_URI|escape}" id="coursesPageForm{$i}">
+					{if $syllabus}<input type="hidden" name="course[{$courseSection->id}][syllabusId]" value="{$syllabus->id}">{/if}
 					<p class="border-bottom pb-2">
 						<em>This class currently does not have a syllabus associated with it.</em>
 					</p>
@@ -114,7 +112,8 @@
 						</div>
 						{/if}
 					</div>
-
+					{generate_form_post_key}
+				</form>
 				{/if}
 				</td>
 			</tr>
@@ -131,6 +130,4 @@
 {foreachelse}
 	<p>No courses found for you.</p>
 {/foreach}
-	<div>{generate_form_post_key}</div>
 
-</form>

@@ -1,3 +1,4 @@
+
 <div class="row viewer-main-container">
 
 	<nav class="navbar navbar-expand-lg navbar-dark mobile-anchor-links" id="stickyNavbar">
@@ -56,6 +57,11 @@
 
 	<!-- <main role="main" class="col-lg-10 col-sm-12 col-xs-12 ml-sm-auto mt-0 px-3"> -->
 	<main role="main" class="col-lg-10 col-md-12 col-sm-12 ml-sm-auto mt-0 px-3" id="viewerContainer">
+		{if $instructorView}
+		<div class="row col">
+			{include file="partial:_shareWidget.html.tpl"}
+		</div>
+		{/if}
 		<div class="row m-3">
 			<div class="left col-lg-6 mt-3">
 				{foreach $breadcrumbList as $crumb}
@@ -110,3 +116,15 @@
 	<div class="col-lg-1 col-md-0 spacer"></div>
 
 </div>
+<script>
+    const copyToClipboard = function (e) {
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($('#viewUrl').val()).select();
+        document.execCommand("copy");
+        $temp.remove();
+        $('#copiedAlert').show().removeClass('fade').hide(3500);
+        // var $share = $('#shareContainer');
+        // var $flash = $("<p class='alert alert-success'>")
+    }
+</script>

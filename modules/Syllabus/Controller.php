@@ -17,7 +17,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabi'                   => ['callback' => 'mySyllabi'],
             'syllabus/:id'              => ['callback' => 'edit', ':id' => '[0-9]+|new'],
             'syllabus/:id/view'         => ['callback' => 'view', ':id' => '[0-9]+'],
-            'syllabus/:id/share'        => ['callback' => 'share', ':id' => '[0-9]+'],
+            'syllabus/:id/share'        => ['callback' => 'share', ':id' => '[0-9]+|courses'],
             'syllabus/:id/delete'       => ['callback' => 'delete', ':id' => '[0-9]+'],
             'syllabus/:id/print'        => ['callback' => 'print', ':id' => '[0-9]+'],
             'syllabus/:id/word'         => ['callback' => 'word', ':id' => '[0-9]+'],
@@ -68,7 +68,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 foreach ($myCourses as $i => $courseSection)
                 {
                     $index = $i % 5;
-                    $courseSyllabus = $syllabi->get($courseSection->syllabus_id);
+                    if ($courseSyllabus = $syllabi->get($courseSection->syllabus_id))
+                    {
+                        $courseSyllabus->viewUrl = $this->baseUrl("syllabus/$courseSyllabus->id/view");
+                    }
                     $courseSection->courseSyllabus = $courseSyllabus;
                     $courseSection->createNew = $courseSyllabus ? false : true;
                     $courseSection->pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer);
@@ -84,6 +87,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $courseSection->imageUrl = $imageUrl;
                 }
 
+                $this->template->returnTo = 'syllabi?mode=courses';
+                $this->template->coursesView = true;
                 $this->template->allCourses = $courses;
                 break;
             
@@ -167,6 +172,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                                 break;
                             }                        
                         }
+                        $userSyllabus->viewUrl = $this->baseUrl("syllabus/$userSyllabus->id/view");
                     }
                     $this->template->campusResources = $campusResources->find(
                         $campusResources->deleted->isFalse()->orIf($campusResources->deleted->isNull()),
@@ -188,7 +194,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         if ($this->request->wasPostedByUser())
         {    
             $data = $this->request->getPostParameters();
-
+            
             switch ($this->getPostCommand()) 
             {
                 case 'resourceToSyllabi':
@@ -221,8 +227,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
                 case 'courseClone':
                     $courseSection = $courseSections->get(key($this->getPostCommandData()));
-                    $sid = array_shift($data['course']);
-                    $pastSyllabus = isset($sid['syllabusId']) ? $syllabi->get($sid['syllabusId']) : null;
+                    $sid = $data['courseSyllabus'];
+                    $pastSyllabus = isset($sid) ? $syllabi->get($sid) : null;
   
                     if ($pastSyllabus && $this->hasSyllabusPermission($pastSyllabus, $viewer, 'clone'))
                     {
@@ -746,6 +752,13 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $pathParts = array_filter($pathParts);
                     $this->response->redirect(implode('/', $pathParts));
                     break;
+
+                case 'share':
+                case 'unshare':
+                    $this->forward('syllabus/'.$syllabus->id.'/share', 
+                        ['returnTo' => "syllabus/$syllabus->id"]
+                    );
+                    break;
             }
         }
 
@@ -884,6 +897,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             }
         }
 
+        $syllabus->viewUrl = $this->baseUrl("syllabus/$syllabus->id/view");
         $this->template->sidebarMinimized = true;
         $this->template->hasCourseSection = $hasCourseSection;
         $this->template->title = $title;
@@ -894,12 +908,25 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->userCourses = $currentCourses ?? null;
         $this->template->organization = $organization;
         $this->template->routeBase = $routeBase;
+        $this->template->returnTo = "syllabus/$syllabus->id";
     }
 
     public function share ()
     {
-        $viewer = $this->requireLogin();  
-        $syllabus = $this->requireExists($this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id'));
+        $viewer = $this->requireLogin();
+        $command = null;
+        if ($this->getRouteVariable('id') === 'courses')
+        {
+            $sid = $this->request->getPostParameter('syllabusId');
+            $syllabus = $this->requireExists($this->schema('Syllabus_Syllabus_Syllabus')->get($sid));
+            // $command = $this->request->getPostParameter('command');
+        }
+        else
+        {
+            $syllabus = $this->requireExists(
+                $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id')
+            );
+        }
         $syllabusVersion = $syllabus->latestVersion;
         $publishSchema = $this->schema('Syllabus_Syllabus_PublishedSyllabus');
         $published = $this->getPublishedSyllabus($syllabus);
@@ -913,18 +940,41 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->addBreadcrumb('syllabus/'.$syllabus->id, 'Edit Syllabus');
         $this->addBreadcrumb('syllabus/'.$syllabus->id.'/share', 'Share');
 
-        $sid = $syllabus->id;
-        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
-        $results = $this->getScreenshotUrl($sid, $screenshotter, true);
-        $syllabus->imageUrl = $results->imageUrls->$sid;
-
+        // $command = $command ?? $this->getPostCommand();
         if ($this->request->wasPostedByUser())
         {   
-            $shareLevel = $this->request->getPostParameter('share');
-            $published = $this->publishSyllabus($syllabus, $shareLevel, $published);
+            // echo "<pre>"; var_dump($this->request->getPostParameters(), $this->getPostCommand(), $syllabus->id); die;
+            switch ($this->getPostCommand()) {
+                case 'share':
+                    $returnTo = $this->request->getPostParameter('returnTo') ?? $this->getRouteVariable('returnTo');
+                    $published = $this->publishSyllabus($syllabus, 'all', $published);
 
-            $this->flash('Share level updated!', 'success');
-            $this->response->redirect('syllabus/' . $syllabus->id . '/share');
+                    $this->flash(
+                        'Syllabus has been set to shared. All enrolled students are now able to access it.', 
+                        'success'
+                    );
+                    break;
+
+                case 'unshare':
+                    $returnTo = $this->request->getPostParameter('returnTo') ?? $this->getRouteVariable('returnTo');
+                    $a = $this->getShareLevel($syllabus);
+                    $published = $this->publishSyllabus($syllabus, 'private', $published);
+                    $b = $this->getShareLevel($syllabus);
+                    // echo "<pre>"; var_dump($a, $b); die;
+                    $this->flash(
+                        'Syllabus has been unshared. Only course instructors are able to view it now.', 
+                        'warning'
+                    );   
+                    break;
+            }
+            $this->response->redirect($returnTo);
+        }
+        else
+        {
+            $sid = $syllabus->id;
+            $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
+            $results = $this->getScreenshotUrl($sid, $screenshotter, true);
+            $syllabus->imageUrl = $results->imageUrls->$sid;           
         }
 
         $this->template->syllabus = $syllabus;
@@ -932,6 +982,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->courseInfoSection = $syllabusVersion->getCourseInfoSection();
         $this->template->published = $published;
         $this->template->shareLevel = $this->getShareLevel($syllabus);
+        $this->template->viewUrl = $this->baseUrl("syllabus/$syllabus->id/view");
     }
 
     public function getPublishedSyllabus ($syllabus)
@@ -1230,9 +1281,13 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         else
         { 
             $this->addBreadcrumb('syllabus/'.$syllabus->id, 'Edit');    
-            $this->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);    
+            $this->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);
+            $this->template->instructorView = true;
+            $this->template->shareLevel = $syllabus->getShareLevel();
+            $syllabus->viewUrl = $this->baseUrl("syllabus/$syllabus->id/view");
         }
         
+        $this->template->returnTo = "syllabus/$syllabus->id/view";
         $this->template->editable = $editable;
         $this->template->title = $title;
         $this->template->syllabus = $syllabus;

@@ -8,13 +8,14 @@
 		<base href="{$baseUrl|escape}/">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
 		<!--Import Google Icon Font-->
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<!-- <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> -->
 		<link rel="stylesheet" type="text/css" href="assets/scss/app.scss.css">
 		<!-- <link rel="stylesheet" type="text/css" href="assets/css/fontawesome-all.min.css"> -->
 		<link type="text/css" href="assets/css/all.css" rel="stylesheet">
 		<!-- <script defer src="assets/js/all.js"></script> -->
 		<link rel="stylesheet" href="assets/js/highlight/styles/monokai-sublime.css">
 		<link rel="stylesheet" type="text/css" media="print" href="assets/css/app-print.css">
+		
 		<link href='//fonts.googleapis.com/css?family=Montserrat:400,700|Lato:400,700,900' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" id="Lato-css" href="https://fonts.googleapis.com/css?family=Lato%3A1%2C100%2C300%2C400%2C400italic%2C700&amp;ver=4.9.9" type="text/css" media="all">
 		<link href="https://fonts.googleapis.com/css?family=Vollkorn+SC&display=swap" rel="stylesheet">

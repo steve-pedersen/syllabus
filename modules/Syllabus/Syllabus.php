@@ -163,19 +163,6 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
         
         return $url;
     }
-    
-    public function getViewUrl ($base = '')
-    {
-        $url = '';
-        
-        if ($item = $this->resolveItem())
-        {
-            $url = $item->getModuleItemUrl($base);
-        }
-        
-        return $url;
-    }
-
 
     public function generateCode ()
     {

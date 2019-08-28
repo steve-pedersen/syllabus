@@ -39,24 +39,28 @@
 		{/if}
 	</div>
 	<div class="card-footer">
-		<div class="align-bottom mt-auto">
+		<div class="align-bottom mt-auto px-2 row">
 			{if $btnStart}
 			<a class="btn btn-success" href="syllabus/startwith/{$syllabus->id}">Start From {if $isTemplate}Template{else}Syllabus{/if}</a>
 			{/if}
 
 			{if $btnEdit}
 				{if $overview}
-				<div class="btn-group" role="group" aria-label="Edit & View buttons">
+				<!-- <div class="d-inline"> -->
+				<div class="btn-group my-1" role="group" aria-label="Edit & View buttons">
 					<a href="{$routeBase}syllabus/{$syllabus->id}" class="btn btn-info">
 						Edit
 					</a>
-					<a href="{$routeBase}syllabus/{$syllabus->id}/view" class="btn btn-outline-dark">
+					<a href="{$routeBase}syllabus/{$syllabus->id}/view" class="btn btn-dark">
 						View
 					</a>
 				</div>
-
+			
+				<!-- <form action="syllabus/{$syllabus->id}/share" method="post" class="form" role="form"> -->
 				{include file="partial:_shareWidget.html.tpl"}
+				<!-- </form> -->
 
+				<!-- </div> -->
 				{else}
 				<a class="btn btn-info" href="syllabus/{$syllabus->id}">Edit</a>
 				{/if}

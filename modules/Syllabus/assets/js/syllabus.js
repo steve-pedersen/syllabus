@@ -34,9 +34,10 @@
         $temp.val(em.val()).select();
         document.execCommand("copy");
         $temp.remove();
-        $(this).parents(('[id^=copiedAlert]').animate({opacity:1}, 10).animate({opacity:0}, 1000);
+        $(this).parents().siblings('[id^=copiedAlert]').animate({opacity:1}, 10).animate({opacity:0}, 1000);
 	});
 
+	$('#shareToggler').bootstrapToggle();
 
 	 $('[data-toggle="popover"]').popover();
 
