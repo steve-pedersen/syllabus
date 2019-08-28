@@ -81,7 +81,8 @@
 	</div>
 
 	<button {if !$shared}disabled{/if} id="copyWidget" type="button" class="btn btn-black {if $shared}shared{/if}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-		<i class="fas fa-share"></i>
+		<!-- <i class="fas fa-share"></i> -->
+		<i class="fas fa-chevron-circle-down"></i>
 	</button>
 
 </div>
