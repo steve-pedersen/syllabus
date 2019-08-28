@@ -56,9 +56,9 @@
 					</a>
 				</div>
 			
-				<!-- <form action="syllabus/{$syllabus->id}/share" method="post" class="form" role="form"> -->
-				{include file="partial:_shareWidget.html.tpl"}
-				<!-- </form> -->
+				{if !$organization && $syllabus->hasCourseSection}
+					{include file="partial:_shareWidget.html.tpl"}
+				{/if}
 
 				<!-- </div> -->
 				{else}
