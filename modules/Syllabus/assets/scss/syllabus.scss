@@ -45,6 +45,19 @@ html {
     	}
     }
 }
+.my-syllabi-overview {
+	div[id^="shareSyllabusWidget"] {
+		@media (max-width: 1647px) and (min-width: 991px) {
+			margin-left: 0 !important;
+			margin-right: auto !important;
+		}
+		@media (max-width: 802px) and (min-width: 769px) {
+			margin-left: 0 !important;
+			margin-right: auto !important;
+		}		
+	}
+}
+
 #shareBtn {
 	&:hover, &:focus {
 		background-color: $alert-success-bg-color;
