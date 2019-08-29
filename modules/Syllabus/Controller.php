@@ -582,8 +582,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $toSyllabusVersion->sectionVersions->save();
         // $toSyllabus->versions->add($toSyllabusVersion);
 
+        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
+        $this->getScreenshotUrl($toSyllabus->id, $screenshotter, false);     
+
         $this->flash(
-            'Your Syllabus has been cloned. The new clone has "(Copy)" appended to it\'s metadata title.', 
+            'Your Syllabus has been cloned. The new clone has "(Copy)" appended to it\'s title metadata.', 
             'success'
         );
 

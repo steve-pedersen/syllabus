@@ -5,7 +5,7 @@
 <table class="table table-sm table-striped">
 	<thead class="thead-dark">
 		<tr>
-			<th scope="col" style="width:13%">{$realSection->header1}</th>
+			<th scope="col" style="width:17%">{$realSection->header1}</th>
 			<th scope="col">{$realSection->header2}</th>
 			<th scope="col">{$realSection->header3}</th>
 			{if $realSection->columns == 4}<th scope="col">{$realSection->header4}</th>{/if}
