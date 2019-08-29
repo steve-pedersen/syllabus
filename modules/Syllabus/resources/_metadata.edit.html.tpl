@@ -23,6 +23,7 @@
                 <a href="{$smarty.server.REQUEST_URI}" class="btn btn-outline-dark">Cancel</a>
             </div>
         </div>
+    {if $syllabusVersion && $syllabusVersion->getCourseInfoSection()}
         {assign var=courseInfoSection value=$syllabusVersion->getCourseInfoSection()->resolveSection()}
         {if $courseInfoSection}
         <div class="col">
@@ -32,6 +33,7 @@
             </p>
         </div>
         {/if}
+    {/if}
     </div>
     {if $syllabusVersion->createdDate}
     <div class="card-footer text-muted">
