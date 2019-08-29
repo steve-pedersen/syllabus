@@ -19,10 +19,12 @@
 				id="shareToggler{$sid}" 
 				type="checkbox" {if $shared}checked{/if} 
 				data-toggle="toggle" 
-				data-onstyle="outline-success" 
+				data-onstyle="success" 
 				data-on="Shared" 
 				data-off="Not Shared" 
-				data-style="slow" 	
+				data-style="slow" 
+				data-width="115"
+				data-height="38"
 				name="sid" 
 				value="{$sid}"
 				{if $coursesView}

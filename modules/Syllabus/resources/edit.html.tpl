@@ -43,7 +43,7 @@
 						<span class="mb-0 section-title text-dark">
 							<strong>Syllabus Metadata</strong><small><i class="fas fa-chevron-right text-dark pl-2"></i></small>
 						</span>
-						 - <small class="text-dark">Information about this syllabus that is not displayed inside the syllabus itself.</small>
+						 - <small class="text-dark">Information about this syllabus that is not displayed inside the syllabus itself <span class="ml-3">(Click to hide/show)</span></small>
 					</div>
 				</a>
 				<div class="collapse {if $editMetadata || !$syllabus->inDataSource}show{/if} section-collapsible" id="metadataCollapse">

@@ -582,6 +582,14 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $toSyllabusVersion->sectionVersions->save();
         // $toSyllabus->versions->add($toSyllabusVersion);
 
+        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
+        $this->getScreenshotUrl($toSyllabus->id, $screenshotter, false);     
+
+        $this->flash(
+            'Your Syllabus has been cloned. The new clone has "(Copy)" appended to it\'s title metadata.', 
+            'success'
+        );
+
         if ($return)
         {
             return $toSyllabusVersion->syllabus;
@@ -643,7 +651,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             $this->template->isDetachedSyllabus = true;
         }
-
+        $this->template->activeStudents = $syllabusVersion->getActiveStudentsEstimation($this) ?? 0;
 
         if ($this->request->wasPostedByUser())
         {      
@@ -762,6 +770,12 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             }
         }
 
+        if (!$this->request->wasPostedByUser() && ('metadata' === $this->request->getQueryParameter('edit')))
+        {
+            $this->template->editMetadata = true;
+            $this->template->syllabusVersion = $syllabusVersion;
+        }
+
         // ADD SECTION
         if (!$this->request->wasPostedByUser() && ($realSectionName = $this->request->getQueryParameter('add')))
         {
@@ -831,7 +845,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
 
         // EDIT SECTION
-        if (!$this->request->wasPostedByUser() && ($sectionVersionId = $this->request->getQueryParameter('edit')))
+        if (!$this->request->wasPostedByUser() && ($sectionVersionId = $this->request->getQueryParameter('edit')) && 
+            $this->request->getQueryParameter('edit') !== 'metadata')
         {
             $sectionVersion = $sectionVersions->get($sectionVersionId);
             $genericSection = $sectionVersion->section;

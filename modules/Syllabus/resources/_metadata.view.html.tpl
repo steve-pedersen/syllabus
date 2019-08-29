@@ -6,17 +6,25 @@
         </div>
         <div class="col">
             <p class="lead">{$syllabusVersion->description}</p>
+        {if $syllabusVersion && $syllabusVersion->getCourseInfoSection()}
+            {assign var=courseInfoSection value=$syllabusVersion->getCourseInfoSection()->resolveSection()}
+            {if $courseInfoSection}
+                <p class="">
+                    This syllabus is being used for <strong>{$courseInfoSection->classDataCourseSection->getFullSummary()}</strong>.{if $activeStudents > -1} <br>Approximately {$activeStudents} out of {count($courseInfoSection->classDataCourseSection->enrollments) - 1} students have accessed the syllabus this semester.{/if}
+                </p>
+            {/if}
+        {/if}
         </div>
         <div class="form-group row">
             <label class="col-lg-3 col-form-label form-control-label"></label>
             <div class="col-lg-9 d-flex flex-row-reverse">
-                <input class="btn btn-info" type="submit" name="command[editsyllabus]" value="Edit" />
+                <a class="btn btn-info" href="{$routeBase}syllabus/{$syllabus->id}?edit=metadata">Edit</a>
             </div>
         </div>
     </div>
-    {if $syllabusVersion->dateCreated}
+    {if $syllabusVersion->createdDate}
     <div class="card-footer text-muted">
-        <small class="text-muted">Date modified - {$syllabusVersion->dateCreated->format('Y m, d')}</small>
+        <span class="text-dark">Last modified on {$syllabusVersion->createdDate->format('M j, Y - h:ia')}</span>
     </div>
     {/if}
 </div>
