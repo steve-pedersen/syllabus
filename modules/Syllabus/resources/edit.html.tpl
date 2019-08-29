@@ -33,7 +33,7 @@
 			{include file="partial:_controls.html.tpl" share="shareStatusForm"}
 
 			{if $syllabusVersion->inDataSource}
-			<input type="hidden" name="syllabusVersion[id]" value="{$syllabusVersion->id}">
+			<input type="hidden" name="syllabusVersion[id]" value="{$syllabusVersion->id}" form="viewSections">
 			{/if}
 
 			<div class="editor-metadata">
