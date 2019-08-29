@@ -37,6 +37,11 @@ html {
     		text-decoration: none;
     		background-color: $primary;
     		color: #fff;
+    		&.advanced {
+    			cursor:default;
+    			background-color:#fff;
+    			color: $muted;
+    		}
     	}
     }
 }

@@ -69,14 +69,21 @@
 			Link copied!
 		</div>
 		<div class="row px-3 mt-1" style="font-size:0.85rem;">
-			<div class="col-12 px-0 pb-0 border-top border-right text-center">
+			<div class="col-6 px-0 pb-0 border-top border-right text-center">
 				<a href="https://athelp.sfsu.edu/hc/en-us/articles/360033902033-Making-a-syllabus-available-to-students#linking-ilearn" target="_blank" class="d-block py-2 widget-link font-w700">
 			        How to link in iLearn <i class="fas fa-external-link-alt ml-1"></i>
 			    </a>
 			</div>
-<!-- 			<div class="col-6 px-0 pb-0 border-top text-center">
-				<a href="syllabus/{$sid}/share" class="d-block py-2 widget-link font-w700">Advanced</a>
-			</div> -->
+			<div class="col-6 px-0 pb-0 border-top text-center">
+				<span 
+					href="syllabus/{$sid}/share" 
+					class="d-block py-2 widget-link advanced font-w700 text-muted" 
+					data-toggle="tooltip" 
+					data-placement="bottom" 
+					title="Advanced sharing coming soon">
+					Advanced
+				</span>
+			</div>
 		</div>
 	</div>
 
