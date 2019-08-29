@@ -69,10 +69,10 @@
 						<i class="far fa-eye  mr-3 text-dark"></i> View
 					</a>
 				{if !$organization && $hasCourseSection}
-					<div class="dropdown-divider"></div>
+<!-- 					<div class="dropdown-divider"></div>
 					<a href="syllabus/{$syllabus->id}/share" class="dropdown-item">
 						<i class="fas fa-share-square  mr-3 text-primary"></i> Share
-					</a>
+					</a> -->
 				{/if}
 					<div class="dropdown-divider"></div>
 					<a href="syllabus/{$syllabus->id}/word" class="dropdown-item">
