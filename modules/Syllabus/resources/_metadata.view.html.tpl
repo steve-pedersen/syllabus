@@ -6,12 +6,14 @@
         </div>
         <div class="col">
             <p class="lead">{$syllabusVersion->description}</p>
+        {if $syllabusVersion && $syllabusVersion->getCourseInfoSection()}
             {assign var=courseInfoSection value=$syllabusVersion->getCourseInfoSection()->resolveSection()}
             {if $courseInfoSection}
                 <p class="">
                     This syllabus is being used for <strong>{$courseInfoSection->classDataCourseSection->getFullSummary()}</strong>.{if $activeStudents > -1} <br>Approximately {$activeStudents} out of {count($courseInfoSection->classDataCourseSection->enrollments) - 1} students have accessed the syllabus this semester.{/if}
                 </p>
             {/if}
+        {/if}
         </div>
         <div class="form-group row">
             <label class="col-lg-3 col-form-label form-control-label"></label>

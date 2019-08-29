@@ -648,7 +648,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             $this->template->isDetachedSyllabus = true;
         }
-        $this->template->activeStudents = $syllabusVersion->getActiveStudentsEstimation($this);
+        $this->template->activeStudents = $syllabusVersion->getActiveStudentsEstimation($this) ?? 0;
 
         if ($this->request->wasPostedByUser())
         {      
