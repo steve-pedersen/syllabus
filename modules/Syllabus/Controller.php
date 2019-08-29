@@ -194,7 +194,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         if ($this->request->wasPostedByUser())
         {    
             $data = $this->request->getPostParameters();
-            
+
             switch ($this->getPostCommand()) 
             {
                 case 'resourceToSyllabi':
@@ -2148,7 +2148,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         if ($this->request->wasPostedByUser())
         {    
             $file = $this->schema('Syllabus_Files_File')->createInstance();
-            $failure = $file->createFromRequest($this->request, 'file', false, 'application/octet-stream');
+            $failure = $file->createFromRequest(
+                $this->request, 'file', false, 'application/octet-stream,text/plain'
+            );
             
             if ($failure)
             {
