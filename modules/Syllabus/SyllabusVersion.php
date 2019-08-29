@@ -131,6 +131,35 @@ class Syllabus_Syllabus_SyllabusVersion extends Bss_ActiveRecord_Base
         $this->_assign('description', $description);
     }
 
+    public function getActiveStudentsEstimation ($ctrl)
+    {
+        $count = 0;
+        $schema = $this->getSchema('Syllabus_ClassData_CourseSection');
+        // echo "<pre>"; var_dump($this->syllabus->id); die;
+        if ($courseSection = $schema->findOne($schema->syllabus_id->equals($this->syllabus->id)))
+        {
+            $accounts = $this->getSchema('Bss_AuthN_Account');
+            // echo "<pre>"; var_dump($courseSection->id); die;
+            foreach ($courseSection->enrollments as $user)
+            {
+                // echo "<pre>"; var_dump(count($courseSection->enrollments)); die;
+                if ($courseSection->enrollments->getProperty($user, 'role') !== 'instructor')
+                {
+                    // echo "<pre>"; var_dump($user->id); die;
+                    if ($account = $accounts->findOne($accounts->username->equals($user->id)))
+                    {
+                        if ($account->lastLoginDate > $ctrl->activeSemester->startDate)
+                        {
+                            $count++;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $count;
+    }
+
     public function getNormalizedVersion ()
     {
         return $this->syllabus->getNormalizedVersion($this->id);
