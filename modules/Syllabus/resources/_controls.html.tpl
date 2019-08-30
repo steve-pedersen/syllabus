@@ -49,8 +49,6 @@
 
 			{/foreach}
 			</div>
-
-
 		</div>
 	</div>
 	{/if}
@@ -97,22 +95,6 @@
 
 			<a href="{$routeBase}{if $syllabus->inDataSource}syllabus/{$syllabus->id}{else}{$smarty.server.REQUEST_URI}{/if}" class="btn btn-default my-1">Cancel</a>
 		</div>
-		{if !$organization && $syllabus->inDatasource && $hasCourseSection}
-		<div class="mr-2">
-			{include file="partial:_shareWidget.html.tpl"}
-		</div>
-<!-- 		<div class="">
-            <p class="my-2"><small>
-                <button type="button" data-placement="bottom" class="btn btn-text bg-light" data-toggle="tooltip" data-html="true" title="To share your syllabus with students, click the <strong>Options</strong> button above and then <strong>Share</strong>"><strong class="mr-0">Share Status: </strong></button>
-                {if $syllabus->shareLevel == 'all'}
-                    <i class="fas fa-user-check text-success mr-1"></i> All enrolled in course
-                {else}
-                    <i class="fas fa-user-lock text-warning mr-1"></i> Only course instructors (private)
-                {/if}
-            </small>
-            </p>
-		</div> -->
-		{/if}
 	</div>
 
 </div> <!-- End row -->

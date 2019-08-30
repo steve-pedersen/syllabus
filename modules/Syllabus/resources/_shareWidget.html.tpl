@@ -19,7 +19,7 @@
 				id="shareToggler{$sid}" 
 				type="checkbox" {if $shared}checked{/if} 
 				data-toggle="toggle" 
-				data-onstyle="success" 
+				data-onstyle="outline-success" 
 				data-on="Shared" 
 				data-off="Not Shared" 
 				data-style="slow" 
@@ -58,7 +58,7 @@
 
 			<label class="" for="clickToCopy">Copy URL to clipboard:</label>
             <div class="input-group mb-0">
-              	<input tabindex="0" form="" class="form-control" type="text" value="{$syllabus->viewUrl}" id="clickToCopy{$sid}">
+              	<input tabindex="0" form="" class="form-control" type="text" value="{$syllabus->viewUrl}" id="clickToCopy{$sid}" style="font-family:monospace;">
               	<div class="input-group-append">
                 	<button class="btn btn-outline-white" form="" type="button" id="copyBtn{$sid}"><i class="far fa-copy"></i>
                 	</button>

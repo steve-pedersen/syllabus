@@ -88,6 +88,17 @@ html {
 	}
 }
 
+.edit-page-share {
+	div[id^="shareSyllabusWidget"] {
+		margin-bottom: -2em !important;
+		@media (max-width: 1199px) {
+			margin-bottom: -1em !important;
+		}	
+		@media (max-width: 767px) {
+			margin-bottom: -1.5em !important;
+		}			
+	}	
+}
 
 // .share-dropdown:before {
 //     left: auto !important;

@@ -25,12 +25,18 @@
 		<form action="{$smarty.server.REQUEST_URI}" method="get" class="form" role="form" id="addSection">
 		</form>
 		
+		{if !$organization && $syllabus->inDatasource && $hasCourseSection}
+		<div class="d-flex justify-content-end pb-2 pt-1 pr-2 bg-light edit-page-share">
+			{include file="partial:_shareWidget.html.tpl"}
+		</div>
+		{/if}
+
 		<!-- MAIN FORM -->
 		<form action="{$smarty.server.REQUEST_URI}" method="post" class="form" role="form" id="viewSections">		
 			
 			<!-- MAIN CONTROLS - TOP -->			
 			{assign var=position value='Top'}
-			{include file="partial:_controls.html.tpl" share="shareStatusForm"}
+			{include file="partial:_controls.html.tpl"}
 
 			{if $syllabusVersion->inDataSource}
 			<input type="hidden" name="syllabusVersion[id]" value="{$syllabusVersion->id}" form="viewSections">
