@@ -25,7 +25,7 @@
         </div>
     {if $syllabusVersion && $syllabusVersion->getCourseInfoSection()}
         {assign var=courseInfoSection value=$syllabusVersion->getCourseInfoSection()->resolveSection()}
-        {if $courseInfoSection}
+        {if $courseInfoSection && $courseInfoSection->classDataCourseSection}
         <div class="col">
             <hr>
             <p class="">
