@@ -21,6 +21,7 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
             'createdDate' => ['datetime', 'nativeName' => 'created_date'],
             'modifiedDate' => ['datetime', 'nativeName' => 'modified_date'],
             'templateAuthorizationId' => ['string', 'nativeName' => 'template_authorization_id'],
+            'token' => 'string',
            
             'createdBy' => ['1:1', 'to' => 'Bss_AuthN_Account', 'keyMap' => ['created_by_id' => 'id']],
             'versions' => ['1:N', 'to' => 'Syllabus_Syllabus_SyllabusVersion', 'reverseOf' => 'syllabus', 'orderBy' => ['+createdDate', '+id']],
@@ -59,6 +60,16 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
     {
         $published = $this->getPublishedSyllabus($this);
         return ($published ? $published->shareLevel : 'private');
+    }
+
+    public function generateToken () 
+    {
+        if ($this->_fetch('token') === null)
+        {
+            $this->_assign('token', $this->getApplication()->generateSecretCode(7));
+        }
+
+        return $this->_fetch('token');
     }
 
     public function getOrganization ()

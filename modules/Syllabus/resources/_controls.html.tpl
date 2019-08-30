@@ -57,7 +57,7 @@
 	
 	<div class="{if $syllabus->inDataSource}col-xl-3{else}col-xl-12{/if} text-right d-block">
 		<div class="editor-controls-right d-inline-block py-3 text-center">
-			<button class="btn btn-success  my-1" type="submit" name="command[savesyllabus]" id="globalSave">
+			<button class="btn btn-success  my-1" type="submit" name="command[savesyllabus]" id="globalSave" form="viewSections">
 				Save
 			</button>
 			<div class="dropdown d-inline">

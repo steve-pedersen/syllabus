@@ -1,4 +1,4 @@
-<div class="container" id="shareContainer">
+<div class="container-fluid" id="shareContainer">
 <form class="form-horizontal" action="{$smarty.server.REQUEST_URI|escape}" method="post">
     <div class="data-form">
     	<h1>Share Syllabus</h1>
@@ -16,7 +16,7 @@
                 Use the following link to share your syllabus with <em>all enrolled in the course</em>:
             </label>
             <div class="input-group mb-1">
-              <input form="" class="form-control" type="text" value="{$viewUrl}" id="clickToCopy" />
+              <input style="font-family:monospace;" form="" class="form-control" type="text" value="{$viewUrl}" id="clickToCopy" />
               <div class="input-group-append">
                 <button class="btn btn-outline-dark" form="" type="button" id="copyBtn"><i class="far fa-copy mr-1"></i> Copy to clipboard</button>
               </div>
@@ -81,12 +81,113 @@
             <input class="btn btn-success" type="submit" name="command[share]" value="Save Share Settings" />
             <a class="btn btn-default" href="syllabi">Cancel</a>
         </div>
+        <p class="alert alert-secondary text-right">
+            <a href="https://athelp.sfsu.edu/hc/en-us/articles/360033902033-Making-a-syllabus-available-to-students#linking-ilearn" target="_blank" class="alert-link">
+                Learn how to link your syllabus in iLearn <i class="fas fa-external-link-alt ml-2"></i>
+            </a>
+        </p>
     </div>
-    <hr>
-<p class="alert alert-secondary text-right">
-    <a href="https://athelp.sfsu.edu/hc/en-us/articles/360033902033-Making-a-syllabus-available-to-students#linking-ilearn" target="_blank" class="alert-link">
-        Learn how to link your syllabus in iLearn <i class="fas fa-external-link-alt ml-2"></i>
-    </a>
-</p>
 </form>
+
+    <div class="border-top pt-5 mt-5">
+        <h2>Advanced Sharing</h2>
+        <p>Advanced sharing is the place to create unique public links, grant read and/or edit access to other users, and manage your share settings.</p>
+        <div class="mb-4">
+            <form action="{$smarty.server.REQUEST_URI|escape}" method="post" class="form">
+            <div class="col border rounded px-4 pt-4 pb-1" style="">
+                <h3>Share link - <small>anyone with link can <u>view</u></small></h3>   
+                <div class="form-row p-3">
+                    <input 
+                        id="shareLinkEnabled" 
+                        type="checkbox" {if $shareLinkEnabled}checked{/if} 
+                        data-toggle="toggle" 
+                        data-onstyle="primary" 
+                        data-on="Enabled" 
+                        data-off="Disabled" 
+                        data-style="slow" 
+                        data-width="115"
+                        data-height="38"
+                        name="shareLinkEnabled" 
+                        onChange="this.form.submit()"
+                        aria-describedby="shareLinkEnabledHelpBlock">
+                    <input type="hidden" name="command[toggleshare]">
+                    <label for="shareLinkEnableds" class="pt-2 ml-3">Enable share link?</label>
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                    <span id="shareLinkEnabledHelpBlock" class="form-text text-muted">
+                        When the share link is enabled, your syllabus is <strong>viewable by anyone with the link.</strong> Changing this option to Disabled will prevent all users from accessing your syllabus via the share link.
+                    </span>
+                    </div>
+                </div>
+                {if $shareLinkEnabled}
+                <div class="jumbotron mt-4 pt-5 pb-2" style="background:#EAF2FF;">
+                    <div class="input-group mb-2">
+                        <input style="font-family:monospace;" form="" class="form-control" type="text" value="{$shareLink}" id="clickToCopy2" />
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-dark" form="" type="button" id="copyBtn">
+                                <i class="far fa-copy mr-1"></i> Copy to clipboard
+                            </button>
+                        </div>
+                    </div>  
+                    <div class="text-right w-100 font-w700 text-success" id="copiedAlert" style="opacity:0;">
+                        <span class="ml-auto">Link copied!</span>
+                    </div>   
+                    <input form="" type="hidden" value="{$shareLink}" name="shareLink" id="shareLink">    
+                </div>
+                {/if}
+            </div>
+            {generate_form_post_key}
+            </form>
+        </div>
+<!--         <div class="mb-4">
+            <form action="{$smarty.server.REQUEST_URI|escape}" method="post" class="form">
+            <div class="col border rounded px-4 pt-4 pb-1" style="">
+                <h3>Invite users to edit syllabus</h3>
+                <div class="form-row p-3">
+
+                </div>
+                <div class="form-row">
+                    <div class="col">
+                    <span id="shareLinkEnabledHelpBlock" class="form-text text-muted">
+                        When the share link is enabled, your syllabus is <strong>viewable by anyone with the link.</strong> Changing this option to Disabled will prevent all users from accessing your syllabus via the share link.
+                    </span>
+                    </div>
+                </div>
+            </div>
+            {generate_form_post_key}
+            </form>
+        </div> -->
+
+    </div>
+
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

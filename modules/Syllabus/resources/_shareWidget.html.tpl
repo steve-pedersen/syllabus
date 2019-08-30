@@ -77,14 +77,14 @@
 			    </a>
 			</div>
 			<div class="col-6 px-0 pb-0 border-top text-center">
-				<span 
+				<a 
 					href="syllabus/{$sid}/share" 
-					class="d-block py-2 widget-link advanced font-w700 text-muted" 
+					class="d-block py-2 widget-link font-w700 text-muted" 
 					data-toggle="tooltip" 
 					data-placement="bottom" 
 					title="Advanced sharing coming soon">
 					Advanced
-				</span>
+				</a>
 			</div>
 		</div>
 	</div>

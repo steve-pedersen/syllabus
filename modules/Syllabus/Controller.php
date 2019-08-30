@@ -955,10 +955,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->addBreadcrumb('syllabus/'.$syllabus->id, 'Edit Syllabus');
         $this->addBreadcrumb('syllabus/'.$syllabus->id.'/share', 'Share');
 
-        // $command = $command ?? $this->getPostCommand();
         if ($this->request->wasPostedByUser())
         {   
-            // echo "<pre>"; var_dump($this->request->getPostParameters(), $this->getPostCommand(), $syllabus->id); die;
             switch ($this->getPostCommand()) {
                 case 'share':
                     $returnTo = $this->request->getPostParameter('returnTo') ?? $this->getRouteVariable('returnTo');
@@ -972,14 +970,28 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
                 case 'unshare':
                     $returnTo = $this->request->getPostParameter('returnTo') ?? $this->getRouteVariable('returnTo');
-                    $a = $this->getShareLevel($syllabus);
                     $published = $this->publishSyllabus($syllabus, 'private', $published);
-                    $b = $this->getShareLevel($syllabus);
-                    // echo "<pre>"; var_dump($a, $b); die;
+
                     $this->flash(
                         'Syllabus has been unshared. Only course instructors are able to view it now.', 
                         'warning'
                     );   
+                    break;
+
+                case 'toggleshare':
+                    $returnTo = "syllabus/$syllabus->id/share";
+                    if ($this->request->getPostParameter('shareLinkEnabled') === 'on')
+                    {
+                        $syllabus->token = $syllabus->generateToken();
+                        $syllabus->save();
+                        $this->flash('Share link enabled', 'success');
+                    }
+                    else
+                    {
+                        $syllabus->token = null;
+                        $syllabus->save();
+                        $this->flash('Share link disabled', 'info');
+                    }
                     break;
             }
             $this->response->redirect($returnTo);
@@ -998,6 +1010,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->published = $published;
         $this->template->shareLevel = $this->getShareLevel($syllabus);
         $this->template->viewUrl = $this->baseUrl("syllabus/$syllabus->id/view");
+        $this->template->shareLinkEnabled = $syllabus->token !== null && $syllabus->token !== '';
+        $this->template->shareLink = $this->baseUrl("syllabus/$syllabus->id/view?token=$syllabus->token");
     }
 
     public function getPublishedSyllabus ($syllabus)
@@ -1143,11 +1157,15 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
     public function print ()
     {
-        $viewer = $this->requireLogin();
+        if (!($token = $this->request->getQueryParameter('token')))
+        {
+            $viewer = $this->requireLogin();
+        }
         $syllabus = $this->requireExists($this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id'));
         $syllabusVersion = $syllabus->latestVersion;
 
-        if (!$this->hasPermission('admin') && !$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
+        if (($token !== $syllabus->token) && !$this->hasPermission('admin') && 
+            !$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
         {
             $this->accessDenied("You do not have edit access for this syllabus.");
         }
@@ -1155,15 +1173,21 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->setPageTitle('Print Syllabus');
         $this->addBreadcrumb('syllabi', 'My Syllabi');
 
-        list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
+        if (!$token)
+        {
+            list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
+        }
 
-        if ($type === 'student' && $courseSection)
+        if (!$token && $type === 'student' && $courseSection)
         {
             $this->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $courseSection->title);
         }
         else
         {
-            $this->addBreadcrumb('syllabus/'.$syllabus->id, 'Edit');
+            if (!$token)
+            {
+                $this->addBreadcrumb('syllabus/'.$syllabus->id, 'Edit');
+            }
             $this->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);    
         }
 
@@ -1188,11 +1212,14 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
     public function word ()
     {
-        $viewer = $this->requireLogin();
+        if (!($token = $this->request->getQueryParameter('token')))
+        {
+            $viewer = $this->requireLogin();
+        }
         $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
         $url = $this->getApplication()->siteSettings->getProperty('atoffice-api-url');
         
-        if (!$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
+        if (($token !== $syllabus->token) && !$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
         {
             $this->accessDenied('Nope');
         }
@@ -1246,8 +1273,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     }
 
     public function view ()
-    {
-        $viewer = $this->requireLogin();
+    { 
+        if (!($token = $this->request->getQueryParameter('token')))
+        {
+            $viewer = $this->requireLogin();
+        }
         
         $this->setSyllabusTemplate();
 
@@ -1258,15 +1288,23 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id', ['allowNew' => false]);
         $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
 
-        if (!$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
+        if (($token !== $syllabus->token) && !$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
         {
             $this->accessDenied('Nope');
         }
 
+        $viewUrl = "syllabus/$syllabus->id/view";
         $editable = false;
-        if (($syllabus->createdById === $viewer->id) || $this->hasPermission('admin'))
+        if (!$token)
         {
-            $editable = true;
+            if (($syllabus->createdById === $viewer->id) || $this->hasPermission('admin'))
+            {
+                $editable = true;
+            }            
+        }
+        else
+        {
+            $viewUrl .= "?token=$token";
         }
 
         $title = ($syllabus->inDatasource ? 'Edit' : 'Create') . ' Syllabus';
@@ -1287,22 +1325,29 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $pathParts[] = $this->getRouteVariable('routeBase');
         $pathParts[] = 'syllabus';
 
-        list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
+        if (!$token)
+        {
+            list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
+        }
 
-        if ($type === 'student' && $courseSection)
+        if (!$token && $type === 'student' && $courseSection)
         {
             $this->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $courseSection->title);
         }
         else
         { 
-            $this->addBreadcrumb('syllabus/'.$syllabus->id, 'Edit');    
+            if (!$token)
+            {
+                $this->addBreadcrumb('syllabus/'.$syllabus->id, 'Edit');
+            }  
             $this->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);
-            $this->template->instructorView = true;
+            $this->template->instructorView = !$token ? true : false;
             $this->template->shareLevel = $syllabus->getShareLevel();
-            $syllabus->viewUrl = $this->baseUrl("syllabus/$syllabus->id/view");
+            $syllabus->viewUrl = $this->baseUrl($viewUrl);
         }
         
-        $this->template->returnTo = "syllabus/$syllabus->id/view";
+        $this->template->token = $token;
+        $this->template->returnTo = $viewUrl;
         $this->template->editable = $editable;
         $this->template->title = $title;
         $this->template->syllabus = $syllabus;
