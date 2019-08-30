@@ -6,7 +6,7 @@
         </div>
         <div class="col">
             <p class="lead">{$syllabusVersion->description}</p>
-        {if $syllabusVersion && $syllabusVersion->getCourseInfoSection()}
+        {if $syllabusVersion && $syllabusVersion->getCourseInfoSection() && $syllabusVersion->getCourseInfoSection()->resolveSection()}
             {assign var=courseInfoSection value=$syllabusVersion->getCourseInfoSection()->resolveSection()}
             {if $courseInfoSection}
                 <p class="">
