@@ -1004,6 +1004,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $syllabus->imageUrl = $results->imageUrls->$sid;           
         }
 
+        $syllabus->viewUrl = $this->baseUrl("syllabus/$syllabus->id/view");
         $this->template->syllabus = $syllabus;
         $this->template->syllabusVersion = $syllabusVersion;
         $this->template->courseInfoSection = $syllabusVersion->getCourseInfoSection();
@@ -1012,6 +1013,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->viewUrl = $this->baseUrl("syllabus/$syllabus->id/view");
         $this->template->shareLinkEnabled = $syllabus->token !== null && $syllabus->token !== '';
         $this->template->shareLink = $this->baseUrl("syllabus/$syllabus->id/view?token=$syllabus->token");
+        $this->template->returnTo = "syllabus/$syllabus->id/share";
     }
 
     public function getPublishedSyllabus ($syllabus)

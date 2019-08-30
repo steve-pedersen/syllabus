@@ -19,12 +19,14 @@
 				id="shareToggler{$sid}" 
 				type="checkbox" {if $shared}checked{/if} 
 				data-toggle="toggle" 
-				data-onstyle="outline-success" 
-				data-on="Shared" 
-				data-off="Not Shared" 
+				data-onstyle="{if $sharePage}success{else}outline-success{/if}" 
+				data-on="{if $dataOnText}{$dataOnText}{else}Shared{/if}" 
+				data-off="{if $dataOffText}{$dataOffText}{else}Not Shared{/if}" 
 				data-style="slow" 
+			{if !$sharePage}
 				data-width="115"
 				data-height="38"
+			{/if}
 				name="sid" 
 				value="{$sid}"
 				{if $coursesView}
@@ -77,21 +79,23 @@
 			    </a>
 			</div>
 			<div class="col-6 px-0 pb-0 border-top text-center">
-				<span 
+				{if !$sharePage}
+				<a 
 					href="syllabus/{$sid}/share" 
-					class="d-block py-2 widget-link advanced font-w700 text-muted" 
+					class="d-block py-2 widget-link font-w700 text-muted" 
 					data-toggle="tooltip" 
 					data-placement="bottom" 
 					title="Advanced sharing coming soon">
 					Advanced
-				</span>
+				</a>
+				{/if}
 			</div>
 		</div>
 	</div>
 
-	<button {if !$shared}disabled{/if} id="copyWidget" type="button" class="btn btn-black {if $shared}shared{/if}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	<button {if !$shared}disabled{/if} id="copyWidget" type="button" class="btn btn-black {if $shared}shared{/if} {if $dataOnText && $dataOffText}btn-lg{/if}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		<!-- <i class="fas fa-share"></i> -->
-		<i class="fas fa-chevron-circle-down"></i>
+		<i class="fas fa-chevron-circle-down {if $sharePage}fa-2x {if $shared}text-success{/if}{/if}"></i>
 	</button>
 
 </div>
