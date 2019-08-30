@@ -148,10 +148,14 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
 
         foreach ($viewer->classDataUser->enrollments as $cs)
         {
-            if (!isset($orgs['departments'][$cs->department->id]) && $cs->department->userIsMoreThanMember($viewer))
+            if ($cs->department)
             {
-                $orgs['departments'][$cs->department->id] = $cs->department;
+                if (!isset($orgs['departments'][$cs->department->id]) && $cs->department->userIsMoreThanMember($viewer))
+                {
+                    $orgs['departments'][$cs->department->id] = $cs->department;
+                }                
             }
+
             // if (!isset($orgs['colleges'][$cs->department->college->id]) && $cs->department->college->userIsMoreThanMember($viewer))
             // {
             //     $orgs['colleges'][$cs->department->college->id] = $cs->department->college;
