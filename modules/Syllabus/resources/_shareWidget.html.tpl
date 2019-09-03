@@ -13,31 +13,24 @@
 			{/if}
 			{if $coursesView}
 				<input name="syllabusId" type="hidden" value="{$sid}" form="shareForm{$sid}">
-				<!-- <input name="command" type="hidden" value="{if $shared}unshare{else}share{/if}" form="shareForm{$sid}"> -->
 			{/if}
 			<input 
 				id="shareToggler{$sid}" 
 				type="checkbox" {if $shared}checked{/if} 
+				name="sid" 
+				value="{$sid}"
+				form="shareForm{$sid}" 
+				onChange="this.form.submit()"
 				data-toggle="toggle" 
 				data-onstyle="{if $sharePage}success{else}outline-success{/if}" 
 				data-on="{if $dataOnText}{$dataOnText}{else}Shared{/if}" 
 				data-off="{if $dataOffText}{$dataOffText}{else}Not Shared{/if}" 
 				data-style="slow" 
-			{if !$sharePage}
-				data-width="115"
-				data-height="38"
-			{/if}
-				name="sid" 
-				value="{$sid}"
-				{if $coursesView}
-					form="shareForm{$sid}" 
-					onChange="this.form.submit()" 
-				{else}
-					form="shareForm{$sid}" 
-					onChange="document.getElementById('shareForm'+{$sid}).submit()" 
+				{if !$sharePage}
+					data-width="115"
+					data-height="38"
 				{/if}
 			>
-			<!-- onChange="submitCourseShare({$sid}, {if $shared}'unshare'{else}'share'{/if})"  -->
 			{if $shared}
 				<input type="hidden" name="command[unshare]" value="1" {if $coursesView}form="shareForm{$sid}"{else}form="shareForm{$sid}"{/if}>
 			{else}
@@ -47,7 +40,7 @@
 		</form>
 	</div>
 
-	<div class="dropdown-menu share-dropdown pb-0 pt-1" aria-describedby="tooltip{$sid}" aria-labelledby="tooltip{$sid}" id="shareWidget{$sid}" style="min-width:20vw;">
+	<div class="dropdown-menu share-dropdown pb-0 pt-1" aria-describedby="tooltip{$sid}" aria-labelledby="tooltip{$sid}" id="shareWidget{$sid}" style="{if $sharePage}min-width:25vw;{else}min-width:20vw;{/if}">
 
 		<div class="row px-3 pt-3 pb-1">
 			<div class="col px-3">
@@ -73,12 +66,12 @@
 			Link copied!
 		</div>
 		<div class="row px-3 mt-1" style="font-size:0.85rem;">
-			<div class="col-6 px-0 pb-0 border-top border-right text-center">
+			<div class="col-7 px-0 pb-0 border-top border-right text-center">
 				<a href="https://athelp.sfsu.edu/hc/en-us/articles/360033902033-Making-a-syllabus-available-to-students#linking-ilearn" target="_blank" class="d-block py-2 widget-link font-w700">
 			        How to link in iLearn <i class="fas fa-external-link-alt ml-1"></i>
 			    </a>
 			</div>
-			<div class="col-6 px-0 pb-0 border-top text-center">
+			<div class="col-5 px-0 pb-0 border-top text-center">
 				{if !$sharePage}
 				<a 
 					href="syllabus/{$sid}/share" 
@@ -95,7 +88,7 @@
 
 	<button {if !$shared}disabled{/if} id="copyWidget" type="button" class="btn btn-black {if $shared}shared{/if} {if $dataOnText && $dataOffText}btn-lg{/if}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 		<!-- <i class="fas fa-share"></i> -->
-		<i class="fas fa-chevron-circle-down {if $sharePage}fa-2x {if $shared}text-success{/if}{/if}"></i>
+		<i class="fas fa-chevron-circle-down {if $sharePage}fa-2x {if $shared}text-successs{/if}{/if}"></i>
 	</button>
 
 </div>
