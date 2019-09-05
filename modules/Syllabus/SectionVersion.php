@@ -144,32 +144,6 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
         return count($syllabi);
     }
 
-    public function getParentOrganization ()
-    {
-        $organization = null;
-        foreach ($this->syllabusVersions as $sv)
-        {
-            if ($sv->syllabus->templateAuthorizationId)
-            {
-                list($type, $id) = explode('/', $sv->syllabus->templateAuthorizationId);
-
-                switch ($type)
-                {
-                    case 'departments':
-                        $organization = $this->getSchema('Syllabus_AcademicOrganizations_Department')->get($id);
-                        break;
-                    case 'colleges':
-                        $organization = $this->getSchema('Syllabus_AcademicOrganizations_College')->get($id);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-
-        return $organization;
-    }
-
     public function processEdit ($request, $data=null)
     {
         if ($realSection = $this->resolveSection())
@@ -178,59 +152,174 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
         }
     }
 
+    public function getHierarchyInformation ()
+    {
+        $info = [];
+        foreach ($this->syllabusVersions as $sv)
+        {
+            if ($sv->syllabus->templateAuthorizationId)
+            {
+                $info[$sv->syllabus->id] = [];
+                $info[$sv->syllabus->id]['syllabusId'] = $sv->syllabus->id;
+                $info[$sv->syllabus->id]['sectionVersionId'] = $this->id;
+                $info[$sv->syllabus->id]['templateAuthorizationId'] = $sv->syllabus->templateAuthorizationId;
+            }
+        }
+
+        return $info;
+    }
+
+    public function getOwnerOrganization ()
+    {
+        $organization = null;
+        $allOrganizationOwners = $this->getHierarchyInformation();
+        // ksort($allOrganizationOwners, SORT_NUMERIC);
+        // $allOrganizationOwners = array_reverse($allOrganizationOwners);
+        $owner = array_pop($allOrganizationOwners);
+        
+        if ($owner['templateAuthorizationId'])
+        {
+            list($type, $id) = explode('/', $owner['templateAuthorizationId']);
+
+            switch ($type)
+            {
+                case 'departments':
+                    $organization = $this->getSchema('Syllabus_AcademicOrganizations_Department')->get($id);
+                    break;
+                case 'colleges':
+                    $organization = $this->getSchema('Syllabus_AcademicOrganizations_College')->get($id);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return $organization;
+    }
+
+    // TODO: Re-test this for other types of inheritance (e.g. from user to user)
+    // $organization is set when user is editing an org template
     public function canEdit ($viewer, $syllabusVersion, $organization=null)
     {
         $siteSettings = $this->getApplication()->siteSettings;
-        $userId = $siteSettings->getProperty('university-template-user-id');
-        $sectionParentOrganization = null;
-        if ($this->uniqueSyllabiCount > 1)
-        {
-            $sectionParentOrganization = $this->parentOrganization;
-        }
+        $adminUserId = $siteSettings->getProperty('university-template-user-id');
+        $sectionOwnerOrganization = $this->getOwnerOrganization();
 
-        if ($viewer->id == $userId && $viewer->id === $this->section->createdById)
+        if (!$this->readOnly)
         {
             $this->canEditReadOnly = true;
         }
-        elseif ($this->section->createdById == $userId && $this->section->createdById !== $viewer->id)
-        {
-            $this->canEditReadOnly = !$this->readOnly;
+        // Section is part of Base Template and WAS created by this $viewer
+        elseif ($viewer->id == $adminUserId && $viewer->id === $this->section->createdById)
+        {   
+            $this->canEditReadOnly = true;
         }
+        // Section is part of Base Template and WAS NOT created by this $viewer
+        elseif ($this->section->createdById == $adminUserId && $this->section->createdById !== $viewer->id)
+        {   
+            $this->canEditReadOnly = false;
+        }
+        // Section is part of a Dept or College template and WAS created by this $organization
+        elseif ($organization && (!$sectionOwnerOrganization || 
+                ($organization->templateAuthorizationId === $sectionOwnerOrganization->templateAuthorizationId)))
+        {   
+            $this->canEditReadOnly = $organization->userHasRole($viewer, 'creator') || 
+                $organization->userHasRole($viewer, 'manager');
+        }
+        // Section is part of a Dept or College template and WAS NOT created by this organization or user
+        elseif ($sectionOwnerOrganization)
+        {   
+            $this->canEditReadOnly = false;
+        }
+        // Section is editable if it was created by $viewer
         else
-        {
-            // echo "<pre>"; var_dump($this->readOnly); die;
-            // section is read-only and belongs to this organization (not a parent one) 
-            if (!$this->readOnly)
-            {
-                $this->canEditReadOnly = true;
-            }
-            elseif (($this->readOnly && $organization) || ($this->readOnly && $organization && !$sectionParentOrganization))
-            {
-                $this->canEditReadOnly = $organization->userHasRole($viewer, 'creator') || $organization->userHasRole($viewer, 'manager');
-            }
-            else
-            {
-                // if read only, then you can only edit it if it was created by the one viewing
-                if ($syllabusVersion->templateAuthorizationId)
-                {
-                    $this->canEditReadOnly = $organization->userHasRole($viewer, 'creator') || 
-                        $organization->userHasRole($viewer, 'manager');
-                }
-                else
-                {
-                    if ($this->parentOrganization)
-                    {
-                        $this->canEditReadOnly = !$this->readOnly;
-                    }
-                    else
-                    {
-                        $this->canEditReadOnly = !$this->readOnly || ($this->section->createdById === $viewer->id);
-                    }
-                }
-            }
+        {   
+            $this->canEditReadOnly = $this->section->createdById === $viewer->id;
         }
 
         return $this->canEditReadOnly;
     }
+
+    // public function getOwnerOrganizationOLD ()
+    // {
+    //     $organization = null;
+
+    //     foreach ($this->syllabusVersions as $sv)
+    //     {
+    //         if ($sv->syllabus->templateAuthorizationId)
+    //         {
+    //             list($type, $id) = explode('/', $sv->syllabus->templateAuthorizationId);
+
+    //             switch ($type)
+    //             {
+    //                 case 'departments':
+    //                     $organization = $this->getSchema('Syllabus_AcademicOrganizations_Department')->get($id);
+    //                     break;
+    //                 case 'colleges':
+    //                     $organization = $this->getSchema('Syllabus_AcademicOrganizations_College')->get($id);
+    //                     break;
+    //                 default:
+    //                     break;
+    //             }
+    //         }
+    //     }   
+
+    //     return $organization;
+    // }
+
+    // public function canEditOLD ($viewer, $syllabusVersion, $organization=null)
+    // {
+    //     $siteSettings = $this->getApplication()->siteSettings;
+    //     $userId = $siteSettings->getProperty('university-template-user-id');
+    //     $sectionOwnerOrganization = null;
+    //     if ($this->uniqueSyllabiCount > 1)
+    //     {
+    //         $sectionOwnerOrganization = $this->getOwnerOrganization();
+    //     }
+
+    //     if ($viewer->id == $userId && $viewer->id === $this->section->createdById)
+    //     {
+    //         $this->canEditReadOnly = true;
+    //     }
+    //     elseif ($this->section->createdById == $userId && $this->section->createdById !== $viewer->id)
+    //     {
+    //         $this->canEditReadOnly = !$this->readOnly;
+    //     }
+    //     else
+    //     {
+    //         // echo "<pre>"; var_dump($this->readOnly); die;
+    //         // section is read-only and belongs to this organization (not a parent one) 
+    //         if (!$this->readOnly)
+    //         {
+    //             $this->canEditReadOnly = true;
+    //         }
+    //         elseif (($this->readOnly && $organization) || ($this->readOnly && $organization && !$sectionOwnerOrganization))
+    //         {
+    //             $this->canEditReadOnly = $organization->userHasRole($viewer, 'creator') || $organization->userHasRole($viewer, 'manager');
+    //         }
+    //         else
+    //         {
+    //             // if read only, then you can only edit it if it was created by the one viewing
+    //             if ($syllabusVersion->templateAuthorizationId)
+    //             {
+    //                 $this->canEditReadOnly = $organization->userHasRole($viewer, 'creator') || 
+    //                     $organization->userHasRole($viewer, 'manager');
+    //             }
+    //             else
+    //             {
+    //                 if ($this->parentOrganization)
+    //                 {
+    //                     $this->canEditReadOnly = !$this->readOnly;
+    //                 }
+    //                 else
+    //                 {
+    //                     $this->canEditReadOnly = !$this->readOnly || ($this->section->createdById === $viewer->id);
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     return $this->canEditReadOnly;
+    // }
 }
 

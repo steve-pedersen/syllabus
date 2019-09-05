@@ -7,9 +7,9 @@ class Syllabus_Admin_AdminDashboardItemProvider extends At_Admin_DashboardItemPr
     public function getSections (Bss_Master_UserContext $userContext)
     {
         return [
-            'Site Settings' => [
-                'order' => 2,
-            ],
+            // 'Site Settings' => [
+            //     'order' => 2,
+            // ],
         ];
     }
     

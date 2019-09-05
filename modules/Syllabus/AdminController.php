@@ -8,6 +8,8 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_AdminController
             'admin/templates/university' => ['callback' => 'universityTemplates'],
             'admin/syllabus/resources' => ['callback' => 'campusResources'],
             'admin/syllabus/guidedocs' => ['callback' => 'guideDocs'],
+            'admin/syllabus/roles' => ['callback' => 'listRoles'],
+            'admin/syllabus/roles/:id' => ['callback' => 'syllabusRoles', ':id' => '([0-9]+|new)'],
         ];
     }
 
@@ -16,6 +18,106 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_AdminController
 		parent::beforeCallback($callback);
 		$this->requirePermission('admin');
 	}
+
+    public function listRoles ()
+    {
+        $this->setPageTitle('Syllabus Roles');
+        $roles = $this->schema('Syllabus_Syllabus_Role');
+        $this->template->roleList = $roles->getAll(array('orderBy' => array('+name', '+id')));
+    }
+
+    public function syllabusRoles ()
+    {
+        $this->setPageTitle('Syllabus Roles');
+        $this->addBreadcrumb('admin/syllabus/roles', 'Manage Syllabus Roles');
+
+        $roles = $this->schema('Syllabus_Syllabus_Role');
+        
+        $this->template->roleList = $roles->getAll(array('orderBy' => array('+name', '+id')));
+        
+        $id = $this->request->getQueryParameter('role') ?? $this->getRouteVariable('id');   
+        if ($id == 'new')
+        {
+            $role = $roles->createInstance();
+            $this->setPageTitle('Add new role');
+        }
+        elseif (is_numeric($id))
+        {
+            $role = $roles->get($id);
+            $this->setPageTitle('Edit role &ldquo;' . htmlspecialchars($role->name) . '&rdquo;');
+        }
+        
+        $authZ = $this->getAuthorizationManager();
+        $this->template->taskDefinitionMap = $authZ->getDefinedTasks();
+        
+        if (($postCommand = $this->getPostCommand()))
+        {
+            // Either save or apply.
+            $successful = $this->processSubmission($role, array('name', 'description'));
+            $role->save();
+            $hash = null;
+            
+            // Add a task.
+            $addTask = $this->request->getPostParameter('addTask');
+            $addTarget = $this->request->getPostParameter('addTarget', 'system');
+            
+            if ($addTask && $addTarget)
+            {
+                $authZ->grantPermission($role, $addTask, $addTarget);
+                $hash = 'perms';
+            }
+            
+            // Remove selected tasks.
+            $selTaskMap = (array) $this->request->getPostParameter('task');
+            
+            foreach ($selTaskMap as $task => $entitySet)
+            {
+                if (is_array($entitySet))
+                {
+                    foreach ($entitySet as $entityId => $nonce)
+                    {
+                        if ($entityId != 'system')
+                        {
+                            $entityId = 'at:syllabus:authN/AccessLevel/' . $entityId;
+                        }
+                        
+                        $authZ->revokePermission($role, $task, $entityId);
+                        $hash = 'perms';
+                    }
+                }
+            }
+            
+            if ($postCommand == 'apply' && ($id == 'new' || $hash))
+            {
+                $this->response->redirect('admin/roles/' . $role->id . ($hash ? '#' . $hash : ''));
+            }
+            elseif ($postCommand == 'save')
+            {
+                $this->response->redirect('admin/roles');
+            }
+        }
+        
+        if ($role->inDataSource)
+        {
+            $entityList = array(
+                array('id' => 'system', 'name' => 'System', 'permissionList' => $authZ->getPermissions($role, Bss_AuthZ_Manager::SYSTEM_ENTITY)),
+            );
+            
+            foreach ($accessLevelList as $accessLevel)
+            {
+                $entityList[] = array(
+                    'id' => $accessLevel->id,
+                    'name' => $accessLevel->name . ' access',
+                    'permissionList' => $authZ->getPermissions($role, $accessLevel),
+                );
+            }
+            
+            $this->template->entityList = $entityList;
+            $this->template->authZ = $authZ;
+        }
+        
+        $this->template->role = $role;
+    }
 
     public function universityTemplates ()
     {

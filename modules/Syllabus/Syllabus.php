@@ -8,13 +8,14 @@ require_once Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', 'word', 'l
  * @author      Steve Pedersen (pedersen@sfsu.edu)
  * @copyright   Copyright &copy; San Francisco State University.
  */
-class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
+class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_BaseWithAuthorization implements Bss_AuthZ_IObjectProxy
 {
     public static function SchemaInfo ()
     {
         return [
             '__type' => 'syllabus_syllabus',
             '__pk' => ['id'],
+            '__azidPrefix' => 'at:syllabus:syllabus/Syllabus/',
             
             'id' => 'int',       
             'createdById' => ['int', 'nativeName' => 'created_by_id'],
@@ -24,14 +25,43 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_Base
             'token' => 'string',
            
             'createdBy' => ['1:1', 'to' => 'Bss_AuthN_Account', 'keyMap' => ['created_by_id' => 'id']],
-            'versions' => ['1:N', 'to' => 'Syllabus_Syllabus_SyllabusVersion', 'reverseOf' => 'syllabus', 'orderBy' => ['+createdDate', '+id']],
+            'versions' => ['1:N', 
+                'to' => 'Syllabus_Syllabus_SyllabusVersion', 
+                'reverseOf' => 'syllabus', 
+                'orderBy' => ['+createdDate', '+id']
+            ],
+            'roles' => ['1:N', 
+                'to' => 'Syllabus_Syllabus_Role', 
+                'reverseOf' => 'syllabus', 
+                'orderBy' => ['+createdDate', '+id']
+            ],
         ];
+    }
+
+    public function getAuthorizationId ()
+    {
+        return 'at:syllabus:syllabus/Syllabus/' . $this->id;
     }
 
     public function getLatestVersion ()
     {
         $versions = $this->versions->asArray();
         return array_pop($versions);
+    }
+
+    public function getObjectProxies ()
+    {
+        $objectProxyList = [];
+
+        foreach ($this->roles as $role)
+        {
+            if (!$role->isExpired)
+            {
+                $objectProxyList[] = $role;
+            }
+        }
+        
+        return $objectProxyList;
     }
 
     // $withExt - adds a 'section' property to the section object containing it's extension

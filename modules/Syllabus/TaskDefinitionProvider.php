@@ -7,10 +7,12 @@ class Syllabus_Syllabus_TaskDefinitionProvider extends Bss_AuthZ_TaskDefinitionP
     public function getTaskDefinitions ()
     {
         $tasks =  [
+            'syllabus create' => 'create a syllabus',
             'syllabus list' => 'see in a list - syllabus',
             'syllabus view' => 'view the contents of syllabus',
             'syllabus edit' => 'edit the information for syllabus',
             'syllabus share' => 'share the syllabus with others',
+            'syllabus clone' => 'clone a syllabus',
             'syllabus delete' => 'delete the syllabus',
             'section list' => 'see in a list - section',
             'section view' => 'view the contents of section',

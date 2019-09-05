@@ -1,11 +1,14 @@
+
 #require js/3.3.1/jquery-3.3.1.min.js
+#require js/jquery-migrate-3.0.0.min.js
 #require js/jquery-ui.min.js
 #require js/bootstrap/4.2.1/dist/bootstrap.bundle.min.js
 // #require js/bootstrap/4.2.1/dist/bootstrap.min.js
 #require js/ckeditor.js
 #require js/jquery.are-you-sure.js
 #require js/jquery.are-you-sure.ios-support.js
-#require js/bootstrap4-toggle.min.js
+#require js/autocomplete.js
+#require js/bootstrap4-toggle.js
 
 // #require js/sidebar.js
 #require js/syllabus.js
@@ -20,6 +23,7 @@
 #require js/resources.js
 #require js/schedules.js
 #require js/learningOutcomes.js
+
 
 
 (function ($) {

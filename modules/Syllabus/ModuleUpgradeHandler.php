@@ -151,6 +151,17 @@ class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                 $def->addProperty('token', 'string');
                 $def->save();
                 break;
+
+            case 4:
+                $def = $this->createEntityType('syllabus_roles', $this->getDataSource('Syllabus_Syllabus_Role'));
+                $def->addProperty('id', 'int', ['sequence' => true, 'primaryKey' => true]);
+                $def->addProperty('name', 'string');
+                $def->addProperty('description', 'string');
+                $def->addProperty('syllabus_id', 'int');
+                $def->addProperty('created_date', 'datetime');
+                $def->addProperty('expiry_date', 'datetime');
+                $def->save();
+                break;
         }
     }
 }
