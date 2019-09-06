@@ -168,15 +168,16 @@
             </div>
             <div class="form-row p-3">
                 <div class="col">
-                    <form class="form" action="{$smarty.server.REQUEST_URI}" method="get" id="user-lookup">
+                    <!-- <form class="form" action="{$smarty.server.REQUEST_URI}" method="get" id="user-lookup"> -->
+                    <form class="form" action="{$smarty.server.REQUEST_URI}" method="post" id="addEditor">
                         <div class="form-group ">
                             <label class="" for="query">Search for user by name, SF State ID, or email, then select them to "Add as Editor"</label>
-                            <input class="form-control syllabus-account-autocomplete" id="user-lookup" type="text" name="query" id="query" />
+                            <input class="form-control syllabus-account-autocomplete" id="user-lookup" type="text" name="query[]" id="query" />
                             <input type="hidden" name="record" value="0">
                         </div>        
                         <div class="search-container"></div>
-                    </form>
-                    <form class="form" action="{$smarty.server.REQUEST_URI}" method="post" id="addEditor">
+                    <!-- </form> -->
+                    
                         <div class="form-group">
                             <label for="expiry">This users access will expire:</label>
                             <select name="expiry" id="" class="form-control">

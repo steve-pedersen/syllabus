@@ -4,7 +4,7 @@
 
     var transformAccounts = function (data) {
       var results = [];
-      console.log(data);
+      // console.log(data);
       for (var id in data) {
         var info = data[id];
         results.push({

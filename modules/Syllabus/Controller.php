@@ -880,7 +880,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     break;
 
                 case 'addusers':
-                    $adHocUsers = $this->request->getPostParameter('adhocUsers');
+                    $adHocUsers = $this->request->getPostParameter('adhocUsers', []);
+                    $query = $this->request->getPostParameter('query');
                     $type = $this->request->getPostParameter('type', 'edit');
                     $expiry = $this->request->getPostParameter('expiry');
                     $expiration = null;
@@ -897,7 +898,14 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                         }
                     }
                     $accounts = $this->schema('Bss_AuthN_Account');
-                    if ($adHocUsers && ($users = $accounts->find($accounts->id->inList($adHocUsers))))
+                    
+                    $users = $accounts->find(
+                        $accounts->id->inList($adHocUsers)->orIf(
+                            $accounts->username->inList($query)
+                        )
+                    );
+
+                    if (($adHocUsers || $query) && $users)
                     {
                         $role = $this->schema('Syllabus_Syllabus_Role')->createInstance();
                         $role->name = ucfirst($type);
