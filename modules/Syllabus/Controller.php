@@ -1101,6 +1101,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
     public function print ()
     {
+        $token = null;
         if (!($token = $this->request->getQueryParameter('token')))
         {
             $viewer = $this->requireLogin();
@@ -1135,6 +1136,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $this->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);    
         }
 
+        $this->template->token = $token;
         $this->template->syllabus = $syllabus;
         $this->template->syllabusVersion = $syllabusVersion;
         $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);

@@ -22,7 +22,7 @@
 				<small>Last updated: {$syllabus->modifiedDate->format('F jS, Y - h:i a')}</small>
 			</span>
 			<span class="ml-3 d-inline-block">
-				<a href="{$routeBase}syllabus/{$syllabus->id}/word"><i class="far fa-file-word"></i> Download as Word</a>
+				<a href="{$routeBase}syllabus/{$syllabus->id}/word{if $token}?token={$token}{/if}"><i class="far fa-file-word"></i> Download as Word</a>
 			</span>
 		</div>	
 	</div>
