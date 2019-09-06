@@ -1278,6 +1278,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             }  
             $this->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);
             $this->template->instructorView = !$token ? true : false;
+            $this->template->canChangeShare = !$token && $syllabus->createdById === $viewer->id;
             $this->template->shareLevel = $syllabus->getShareLevel();
             $syllabus->viewUrl = $this->baseUrl($viewUrl);
         }

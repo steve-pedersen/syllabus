@@ -57,7 +57,7 @@
 
 	<!-- <main role="main" class="col-lg-10 col-sm-12 col-xs-12 ml-sm-auto mt-0 px-3"> -->
 	<main role="main" class="col-lg-10 col-md-12 col-sm-12 ml-sm-auto mt-0 px-3" id="viewerContainer">
-		{if $instructorView}
+		{if $instructorView && $canChangeShare}
 		<div class="row col">
 			{include file="partial:_shareWidget.html.tpl"}
 		</div>
