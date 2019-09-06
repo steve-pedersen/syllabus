@@ -73,12 +73,7 @@
 			</div>
 			<div class="col-5 px-0 pb-0 border-top text-center">
 				{if !$sharePage}
-				<a 
-					href="syllabus/{$sid}/share" 
-					class="d-block py-2 widget-link font-w700 text-muted" 
-					data-toggle="tooltip" 
-					data-placement="bottom" 
-					title="Advanced sharing coming soon">
+				<a href="syllabus/{$sid}/share" class="d-block py-2 widget-link font-w700">
 					Advanced
 				</a>
 				{/if}

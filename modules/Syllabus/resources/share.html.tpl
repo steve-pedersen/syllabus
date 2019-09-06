@@ -1,5 +1,5 @@
-<div class="container-fluid p-" id="shareContainer">
-<h1 class="border-bottoms pb-2">Share Syllabus</h1>
+<div class="container-fluid" id="shareContainer">
+<h1 class="pb-2">Share Syllabus</h1>
 <div class="wrap pb-2"><div class="left"></div><div class="right"></div></div>
 <div class="data-form mb-4">	
     <div class="row pt-3">
@@ -67,12 +67,6 @@
             </div>
         </div>
     </div>
-
-<!--     <p class="alert alert-light text-right mt-5">
-        <a href="https://athelp.sfsu.edu/hc/en-us/articles/360033902033-Making-a-syllabus-available-to-students#linking-ilearn" target="_blank" class="alert-link text-dark">
-            Learn how to link your syllabus in iLearn <i class="fas fa-external-link-alt ml-2"></i>
-        </a>
-    </p> -->
 </div>
 
 
@@ -101,7 +95,7 @@
                 <input type="hidden" name="command[toggleshare]">
                 <label for="shareLinkEnableds" class="pt-2 ml-3">Enable share link?</label>
             </div>
-            <div class="form-row">
+            <div class="form-row mb-2">
                 <div class="col">
                 <span id="shareLinkEnabledHelpBlock" class="form-text text-muted">
                     When the share link is enabled, your syllabus is <strong>viewable by anyone with the link.</strong> Changing this option to Disabled will prevent users from accessing your syllabus via the share link.
@@ -109,7 +103,6 @@
                 </div>
             </div>
             {if $shareLinkEnabled}
-            <!-- <div class="jumbotron mt-4 pt-5 pb-2" style="background:#EAF2FF;"> -->
             <div class="jumbotron mt-4 pt-5 pb-2 bg-light" >
                 <div class="input-group mb-2">
                     <input style="font-family:monospace;" form="" class="form-control" type="text" value="{$shareLink}" id="clickToCopy2" />
@@ -154,14 +147,13 @@
                         
                         {if $adHocRole['users']}
                         <li class="ml-5">
-                            
-                            {foreach $adHocRole['users'] as $user}
-                                {if $user}
-                                {$user->fullName} <span class="ml-3">({$user->emailAddress})</span>
-                                <input type="submit" name="command[remove][{$user->id}]" value="X" class="ml-3 text-danger btn btn-link">
-                                <input type="hidden" name="role[{$user->id}][{$adHocRole['role']->id}]" value="{$adHocRole['role']->id}">
-                                {/if}
-                            {/foreach}
+                        {foreach $adHocRole['users'] as $user}
+                            {if $user}
+                            {$user->fullName} <span class="ml-3">({$user->emailAddress})</span>
+                            <input type="submit" name="command[remove][{$user->id}]" value="X" class="ml-3 font-w900 btn btn-danger btn-sm">
+                            <input type="hidden" name="role[{$user->id}][{$adHocRole['role']->id}]" value="{$adHocRole['role']->id}">
+                            {/if}
+                        {/foreach}
                         </li>
                         {/if}
                     {/foreach}
@@ -183,6 +175,16 @@
                         <div class="search-container"></div>
                     </form>
                     <form class="form" action="{$smarty.server.REQUEST_URI}" method="post" id="addEditor">
+                        <div class="form-group">
+                            <label for="expiry">This users access will expire:</label>
+                            <select name="expiry" id="" class="form-control">
+                                <option value="never">Never, I will revoke access manually if necessary</option>
+                                <option value="1 day">In one day</option>
+                                <option value="1 week">In one week</option>
+                                <option value="1 month">In one month</option>
+                                <option value="1 year">In one year</option>
+                            </select>
+                        </div>
                         <div id="addEditorContainer">
                             <button type="submit" name="command[addusers]" class="btn btn-info">Add as Editor</button>
                         </div>

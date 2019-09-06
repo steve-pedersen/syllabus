@@ -882,6 +882,20 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 case 'addusers':
                     $adHocUsers = $this->request->getPostParameter('adhocUsers');
                     $type = $this->request->getPostParameter('type', 'edit');
+                    $expiry = $this->request->getPostParameter('expiry');
+                    $expiration = null;
+                    if ($expiry !== 'never')
+                    {
+                        try 
+                        {
+                            $expiration = new DateTime;
+                            $expiration->modify('+' . $expiry);
+                        }
+                        catch (Exception $e)
+                        {
+                            $expiration = null;
+                        }
+                    }
                     $accounts = $this->schema('Bss_AuthN_Account');
                     if ($adHocUsers && ($users = $accounts->find($accounts->id->inList($adHocUsers))))
                     {
@@ -889,6 +903,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                         $role->name = ucfirst($type);
                         $role->description = "{$role->name} access granted on syllabus with id #{$syllabus->id} and title '{$syllabusVersion->title}'";
                         $role->createdDate = new DateTime;
+                        $role->expiryDate = $expiration;
                         $role->syllabus_id = $syllabus->id;
                         $role->save();
 

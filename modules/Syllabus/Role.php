@@ -33,6 +33,6 @@ class Syllabus_Syllabus_Role extends Bss_ActiveRecord_BaseWithAuthorization
 
     public function getIsExpired ()
     {
-        return $this->expiryDate > new DateTime;
+        return $this->expiryDate < new DateTime;
     }
 }
