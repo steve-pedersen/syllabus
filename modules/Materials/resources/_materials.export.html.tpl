@@ -5,7 +5,7 @@
 	<div class="row {if ($i+1)%2 == 0}even{else}odd{/if}">
 		<h3><em>{$material->title}</em>
 		{if $material->required} 
-			<span class="pl-2 text-danger">(Required)</span>
+			<br><span class="text-danger">(Required)</span>
 		{/if}	
 		</h3>
 		<dl class="row mb-0">

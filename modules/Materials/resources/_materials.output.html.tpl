@@ -6,7 +6,7 @@
 		<dt class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
 			<em>{$material->title}</em>
 			{if $material->required} 
-				<span class="pl-2 text-danger">(Required)</span>
+				<br><span class="text-danger">(Required)</span>
 			{/if}
 		</dt>
 		<dd class="col-xl-9 col-lg-8 col-md-8 col-sm-12">
