@@ -5,27 +5,29 @@
     <div class="row pt-3">
         <div class="col-xl-6 col-lg-6 col-md-12">
             <h2 class=" pb-3">{$syllabusVersion->title}</h2>
-
             <dl class="mb-4">
-            {if $courseInfoSection}
+        {if $syllabusVersion && $syllabusVersion->getCourseInfoSection() && $syllabusVersion->getCourseInfoSection()->resolveSection()}
+                {assign var=courseInfoSection value=$syllabusVersion->getCourseInfoSection()->resolveSection()}
+            
+            {if $courseInfoSection && $courseInfoSection->classDataCourseSection}
                 <dt>{$courseInfoSection->title}</dt>
-                <dd>{$courseInfoSection->resolveSection()->classDataCourseSection->getFullSummary()}</dd>
+                <dd>{$courseInfoSection->classDataCourseSection->getFullSummary()}</dd>
             {/if}
+        {/if}
             {if $syllabusVersion->description}
                 <dt>Syllabus Description</dt>
                 <dd>{$syllabusVersion->description}</dd>
             {/if}
                 <dt>Last Modified</dt>
                 <dd>{$syllabusVersion->createdDate->format('F jS, Y - h:i a')}</dd>
-            {if $syllabusVersion && $syllabusVersion->getCourseInfoSection() && $syllabusVersion->getCourseInfoSection()->resolveSection()}
-                {assign var=courseInfoSection value=$syllabusVersion->getCourseInfoSection()->resolveSection()}
+
                 {if $courseInfoSection && $courseInfoSection->classDataCourseSection && $activeStudents > 0}
                 <dt>Syllabus Activity Estimation</dt>
                 <dd>
                     Approximately {$activeStudents} out of {count($courseInfoSection->classDataCourseSection->enrollments) - 1} students have accessed the syllabus this semester.
                 </dd>
                 {/if}
-            {/if}
+
             </dl>
         </div>
         <div class="col-xl-6 col-lg-6 col-md-12 mb-1">
