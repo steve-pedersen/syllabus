@@ -989,50 +989,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $syllabus->imageUrl = $results->imageUrls->$sid;           
         }
 
-        $authZ = $this->getAuthorizationManager();
-        $adHocRoles = [];
-        $adHocUsersExist = false;
-        foreach ($syllabus->roles as $role)
-        {
-            $now = new DateTime;
-            $role->expiration = $role->expiryDate ? $now->diff($role->expiryDate) : null;
-            if ($role->expiration)
-            {
-                $intervalString = '';
-                if ($role->expiration->y)
-                {
-                    $intervalString .= $role->expiration->format('%y-year');
-                    $intervalString .= $role->expiration->y > 1 ? 's ' : ' ';
-                }
-                if ($role->expiration->m)
-                {
-                    $intervalString .= $role->expiration->format('%m-month');
-                    $intervalString .= $role->expiration->m > 1 ? 's ' : ' ';
-                }
-                if ($role->expiration->d)
-                {
-                    $intervalString .= $role->expiration->format('%d-day');
-                    $intervalString .= $role->expiration->d > 1 ? 's ' : ' ';
-                }
-                if ($role->expiration->h && $intervalString === '')
-                {
-                    $intervalString .= $role->expiration->format('%h-hour');
-                    $intervalString .= $role->expiration->h > 1 ? 's' : '';
-                }
-                $role->expiration = $intervalString;
-            }
-
-            $adHocRoles[$role->id] = ['role' => $role, 'expiration' => $role->expiration];
-            $azids = $authZ->getSubjectsWhoCan('syllabus edit', $role);
-            array_merge($azids, $authZ->getSubjectsWhoCan('syllabus clone', $role));
-            if ($users = $this->schema('Bss_AuthN_Account')->getByAzids($azids))
-            {
-                $adHocRoles[$role->id]['users'] = $users;
-                $adHocUsersExist = true;
-            }
-        }
-
-        $this->template->adHocRoles = $adHocUsersExist ? $adHocRoles : null;
+        $this->template->adHocRoles = $syllabus->getAdHocRoles();
         $syllabus->viewUrl = $this->baseUrl("syllabus/$syllabus->id/view");
         $this->template->syllabus = $syllabus;
         $this->template->syllabusVersion = $syllabusVersion;
@@ -1248,7 +1205,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
     public function view ()
     { 
-        if (!($token = $this->request->getQueryParameter('token')))
+    	$syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id', ['allowNew' => false]);
+        if (!($token = $this->request->getQueryParameter('token')) || !$syllabus->token)
         {
             $viewer = $this->requireLogin();
         }
@@ -1258,11 +1216,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
         $sections = $this->schema('Syllabus_Syllabus_Section');
         $sectionVersions = $this->schema('Syllabus_Syllabus_SectionVersion');
-        
-        $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id', ['allowNew' => false]);
         $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
 
-        if (($token !== $syllabus->token) && !$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
+        if (($token === null || $token !== $syllabus->token) && !$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
         {
             $this->accessDenied('Nope');
         }
@@ -1921,6 +1877,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             // type is instructor if user is an enrolled instructor and student if user is enrolled student
             list($type, $courseSection) = $this->getEnrollmentType($syllabus, $user);
             $authZ = $this->getAuthorizationManager();
+            $hasPermission = false;
             switch ($permission)
             {
                 case 'delete':
@@ -1928,20 +1885,45 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $hasPermission = $syllabus->createdById === $user->id;
                     break;
                 case 'edit':
-                    $hasPermission = $authZ->hasPermission($user, 'syllabus edit', $syllabus);
-                    $hasPermission = $hasPermission || ($courseSection && $type !== '' || $syllabus->createdById === $user->id);
+                	$hasPermission = $authZ->hasPermission($user, 'syllabus edit', $syllabus);
+                    // foreach ($syllabus->roles as $role)
+                    // {
+                    //     $hasPermission = $hasPermission || $authZ->hasPermission($user, 'syllabus edit', $role);    
+                    // }
+                	// echo "<pre>"; var_dump($syllabus->getObjectProxies()); die;
+                    // foreach ($syllabus->getObjectProxies() as $proxy)
+                    // {
+                    //     $hasPermission = $hasPermission || $authZ->hasPermission($user, 'syllabus edit', $proxy);    
+                    // }
+                    $hasPermission = $hasPermission || 
+                    	($courseSection && $type !== '' || $syllabus->createdById === $user->id);
                     break;
                 case 'view':
                     $hasPermission = $authZ->hasPermission($user, 'syllabus view', $syllabus);
-                    $hasPermission = $hasPermission || ($courseSection && $type !== '' || $syllabus->createdById === $user->id);
+                    // foreach ($syllabus->roles as $role)
+                    // {
+                    //     $hasPermission = $hasPermission || $authZ->hasPermission($user, 'syllabus view', $role);    
+                    // }
+                    $hasPermission = $hasPermission || 
+                    	($courseSection && $type !== '' || $syllabus->createdById === $user->id);
                     break;
                 case 'clone':
                     $hasPermission = $authZ->hasPermission($user, 'syllabus clone', $syllabus);
-                    $hasPermission = $hasPermission || ($courseSection && $type !== 'instructor' || $syllabus->createdById === $user->id);
+                    // foreach ($syllabus->roles as $role)
+                    // {
+                    //     $hasPermission = $hasPermission || $authZ->hasPermission($user, 'syllabus clone', $role);    
+                    // }
+                    $hasPermission = $hasPermission || 
+                    	($courseSection && $type !== 'instructor' || $syllabus->createdById === $user->id);
                     break;
                 case 'share':
                     $hasPermission = $authZ->hasPermission($user, 'syllabus share', $syllabus);
-                    $hasPermission = $hasPermission || ($courseSection && $type !== '' || $syllabus->createdById === $user->id);
+                    // foreach ($syllabus->roles as $role)
+                    // {
+                    //     $hasPermission = $hasPermission || $authZ->hasPermission($user, 'syllabus share', $role);    
+                    // }
+                    $hasPermission = $hasPermission || 
+                    	($courseSection && $type !== '' || $syllabus->createdById === $user->id);
                     break;
                 case 'list':
                 default:

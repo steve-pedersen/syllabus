@@ -34,12 +34,6 @@ class Syllabus_Syllabus_AdminDashboardItemProvider extends At_Admin_DashboardIte
                 'href' => 'admin/syllabus/guidedocs',
                 'text' => 'Shared Resources, Guidelines, and Documents',
             ],
-            'syllabus-roles' => [
-                'section' => 'Site Settings',
-                'order' => 4,
-                'href' => 'admin/syllabus/roles',
-                'text' => 'Syllabus Roles',
-            ],
         ];
     }
 }
