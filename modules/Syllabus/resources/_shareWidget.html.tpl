@@ -55,7 +55,7 @@
             <div class="input-group mb-0">
               	<input tabindex="0" form="" class="form-control" type="text" value="{$syllabus->viewUrl}" id="clickToCopy{$sid}" style="font-family:monospace;">
               	<div class="input-group-append">
-                	<button class="btn btn-outline-white" form="" type="button" id="copyBtn{$sid}"><i class="far fa-copy"></i>
+                	<button class="btn btn-outline-white" type="button" id="copyBtn{$sid}"><i class="far fa-copy"></i>
                 	</button>
               	</div>
             </div>  

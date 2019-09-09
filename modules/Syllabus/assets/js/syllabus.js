@@ -26,8 +26,20 @@
 	});
 	
 	$('[id^=copyBtn]').on('click', function (e) {
+		if (window.navigator.userAgent.indexOf("Edge") > -1) {
+			$('body').css({"position": "fixed" });	
+		}
+	
 		e.preventDefault();
 		e.stopPropagation();
+		$(this).animate({"background-color":"#009B84", "color": "#009B84"}, 10)
+			.animate({"background-color":"#ffffff"}, 1000, function () {
+				if (window.navigator.userAgent.indexOf("Edge") > -1) {
+					$('body').css({"position": "unset"});	
+				}
+			})
+			.animate({"color": "#000000"}, 2000);
+		
 		const em = $(this).parents().siblings('[id^=clickToCopy]');
         var $temp = $("<input>");
         $("body").append($temp);

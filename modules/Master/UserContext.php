@@ -34,6 +34,7 @@ class Syllabus_Master_UserContext extends Bss_Master_UserContext
         }
         elseif ($authZ->hasPermission($account, 'admin'))
         {
+            if ($returnTo) $this->response->redirect($returnTo);
             $this->response->redirect('admin');
         }
         elseif ($account->roles->has($roles->findOne($roles->name->equals('Faculty'))))

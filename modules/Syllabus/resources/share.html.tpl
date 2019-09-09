@@ -37,7 +37,7 @@
                     <small class="d-block"><em class="text-muted">This preview is from when the syllabus was last edited.</em></small>
                     <div class="mt-3">
                         <a class="px-3" href="{$routeBase}syllabus/{$syllabus->id}/word"><i class="far fa-file-word"></i> Download as Word</a>
-                        <a class="px-3" href="{$routeBase}syllabus/{$syllabus->id}/print"><i class="fas fa-print"></i></i> Print</a>
+                        <a class="px-3" href="{$routeBase}syllabus/{$syllabus->id}/print"><i class="fas fa-print"></i> Print</a>
                     </div>
                 </div>
             </div>
@@ -140,7 +140,7 @@
                     
                     <div class="px-1 pt-3">
                     {assign var=currentRole value=""}
-                    <ul class="">
+                    <ul class="list-group">
                     {foreach $adHocRoles as $i => $adHocRole}
                         {if $adHocRole['users'] && $adHocRole['role']->name != $currentRole}
                             <p class="ml-0">Users with <strong>{$adHocRole['role']->name}</strong> access:</p>
@@ -148,12 +148,23 @@
                         {/if}
                         
                         {if $adHocRole['users']}
-                        <li class="ml-5">
+                        <li class="ml-3 list-group-item">
                         {foreach $adHocRole['users'] as $user}
                             {if $user}
-                            {$user->fullName} <span class="ml-3">({$user->emailAddress})</span>
-                            <input type="submit" name="command[remove][{$user->id}]" value="X" class="ml-3 font-w900 btn btn-danger btn-sm">
-                            <input type="hidden" name="role[{$user->id}][{$adHocRole['role']->id}]" value="{$adHocRole['role']->id}">
+                        <div class="row ">
+                            <div class="col-9 pt-1">
+                            	{$user->fullName} <span class="ml-3">({$user->emailAddress})</span>
+							{if $adHocRole['expiration']}
+                            	<span class="text-bold mx-3">
+                            		Expires in {$adHocRole['expiration']}
+                            	</span>
+                            {/if}
+                            </div>
+                            <div class="col-2 ">
+                            	<input type="submit" name="command[remove][{$user->id}]" value="Revoke" class="ml-3 btn btn-danger btn-sm">
+                            	<input type="hidden" name="role[{$user->id}][{$adHocRole['role']->id}]" value="{$adHocRole['role']->id}">
+                            </div>
+                        </div>
                             {/if}
                         {/foreach}
                         </li>

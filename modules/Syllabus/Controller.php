@@ -994,7 +994,35 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $adHocUsersExist = false;
         foreach ($syllabus->roles as $role)
         {
-            $adHocRoles[$role->id] = ['role' => $role];
+            $now = new DateTime;
+            $role->expiration = $role->expiryDate ? $now->diff($role->expiryDate) : null;
+            if ($role->expiration)
+            {
+                $intervalString = '';
+                if ($role->expiration->y)
+                {
+                    $intervalString .= $role->expiration->format('%y-year');
+                    $intervalString .= $role->expiration->y > 1 ? 's ' : ' ';
+                }
+                if ($role->expiration->m)
+                {
+                    $intervalString .= $role->expiration->format('%m-month');
+                    $intervalString .= $role->expiration->m > 1 ? 's ' : ' ';
+                }
+                if ($role->expiration->d)
+                {
+                    $intervalString .= $role->expiration->format('%d-day');
+                    $intervalString .= $role->expiration->d > 1 ? 's ' : ' ';
+                }
+                if ($role->expiration->h && $intervalString === '')
+                {
+                    $intervalString .= $role->expiration->format('%h-hour');
+                    $intervalString .= $role->expiration->h > 1 ? 's' : '';
+                }
+                $role->expiration = $intervalString;
+            }
+
+            $adHocRoles[$role->id] = ['role' => $role, 'expiration' => $role->expiration];
             $azids = $authZ->getSubjectsWhoCan('syllabus edit', $role);
             array_merge($azids, $authZ->getSubjectsWhoCan('syllabus clone', $role));
             if ($users = $this->schema('Bss_AuthN_Account')->getByAzids($azids))
