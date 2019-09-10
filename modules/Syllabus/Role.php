@@ -8,6 +8,7 @@
  */
 class Syllabus_Syllabus_Role extends Bss_ActiveRecord_BaseWithAuthorization 
 {
+    private $expiration;
 
     public static function SchemaInfo ()
     {
@@ -33,6 +34,39 @@ class Syllabus_Syllabus_Role extends Bss_ActiveRecord_BaseWithAuthorization
 
     public function getIsExpired ()
     {
-        return $this->expiryDate < new DateTime;
+        return $this->expiryDate && $this->expiryDate < new DateTime;
+    }
+
+    public function getExpiration ()
+    {
+        $now = new DateTime;
+        $this->expiration = $this->expiryDate ? $now->diff($this->expiryDate) : null;
+        if ($this->expiration)
+        {
+            $intervalString = '';
+            if ($this->expiration->y)
+            {
+                $intervalString .= $this->expiration->format('%y-year');
+                $intervalString .= $this->expiration->y > 1 ? 's ' : ' ';
+            }
+            if ($this->expiration->m)
+            {
+                $intervalString .= $this->expiration->format('%m-month');
+                $intervalString .= $this->expiration->m > 1 ? 's ' : ' ';
+            }
+            if ($this->expiration->d)
+            {
+                $intervalString .= $this->expiration->format('%d-day');
+                $intervalString .= $this->expiration->d > 1 ? 's ' : ' ';
+            }
+            if ($this->expiration->h && $intervalString === '')
+            {
+                $intervalString .= $this->expiration->format('%h-hour');
+                $intervalString .= $this->expiration->h > 1 ? 's' : '';
+            }
+            $this->expiration = $intervalString;
+        }
+
+        return $this->expiration;
     }
 }

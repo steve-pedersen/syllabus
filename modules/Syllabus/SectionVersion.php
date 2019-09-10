@@ -204,6 +204,25 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
         $siteSettings = $this->getApplication()->siteSettings;
         $adminUserId = $siteSettings->getProperty('university-template-user-id');
         $sectionOwnerOrganization = $this->getOwnerOrganization();
+        $adHocEditor = false;
+        if ($adHocRoles = $syllabusVersion->syllabus->getAdHocRoles())
+        {
+            foreach ($adHocRoles as $role)
+            {
+                if (isset($role['users']))
+                {
+                    foreach ($role['users'] as $user)
+                    {
+                        if ($user->id === $viewer->id)
+                        {
+                            $adHocEditor = true;
+                            break;
+                        }
+                    }                    
+                }
+                if ($adHocEditor) break;
+            }
+        }
 
         if (!$this->readOnly)
         {
@@ -230,6 +249,11 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
         elseif ($sectionOwnerOrganization)
         {   
             $this->canEditReadOnly = false;
+        }
+        // Allow ad hoc editors to edit 
+        elseif ($adHocEditor)
+        {
+            $this->canEditReadOnly = true;
         }
         // Section is editable if it was created by $viewer
         else

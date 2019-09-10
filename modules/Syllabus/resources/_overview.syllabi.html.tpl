@@ -8,15 +8,6 @@
 			{if $syllabi && count($syllabi) > 3} Click "see more" to show more results.{/if}
 		</p>
 	</div>
-	{if $syllabi}
-<!-- 	<div class="col-4">
-		<div class="text-right">
-			<span type="buttons" data-placement="bottom" class="btn-link" data-toggle="tooltip" data-html="true" title="To share your syllabus with students, click the <strong>Options</strong> button on a syllabus below and then <strong>Share</strong>">
-			  <i class="far fa-question-circle mr-1"></i> How to share a syllabus with Students?
-			</span>
-		</div>	
-	</div> -->
-	{/if}
 </div>
 
 	<div class="row mb-3">
@@ -42,7 +33,7 @@
 
 	{if $i == 3}
 		{assign var=hasSeeMore value=true}
-	<!-- </div> END row1 -->
+	</div> <!-- END row1 -->
 <div class="collapse row px-3" id="seeMoreSyllabi">
 	<!-- <div class="row mb-3"> -->
 	{elseif ($i > 4 && ($i % 4) == 0)}
