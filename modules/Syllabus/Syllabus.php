@@ -10,6 +10,8 @@ require_once Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', 'word', 'l
  */
 class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_BaseWithAuthorization implements Bss_AuthZ_IObjectProxy
 {
+    private $imageUrl;
+
     public static function SchemaInfo ()
     {
         return [
@@ -55,7 +57,6 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_BaseWithAuthorization 
 
         foreach ($this->roles as $role)
         {
-            // echo "<pre>"; var_dump($role->isExpired, $role->id, $role->expiryDate); die;
             if (!$role->isExpired)
             {
                 $objectProxyList[] = $role;
@@ -87,7 +88,6 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_BaseWithAuthorization 
         return $published;        
     }
 
-
     public function getAdHocRoles ()
     {
         $authZ = $this->application->authorizationManager;
@@ -97,7 +97,7 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_BaseWithAuthorization 
         {
             $now = new DateTime;
             $role->expiration = $role->expiryDate ? $now->diff($role->expiryDate) : null;
-            if ($role->expiration)
+            if ($role->expiration && is_object($role->expiration))
             {
                 $intervalString = '';
                 if ($role->expiration->y)
@@ -176,6 +176,16 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_BaseWithAuthorization 
         }
 
         return $organization;
+    }
+
+    public function fetchImageUrl ($ctrl)
+    {
+        $screenshotter = new Syllabus_Services_Screenshotter($this->application);
+        $sid = $this->id;
+        $results = $ctrl->getScreenshotUrl($sid, $screenshotter);
+        $this->imageUrl = $results->imageUrls->$sid;
+
+        return $this->imageUrl;
     }
 
     /**

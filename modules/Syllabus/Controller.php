@@ -180,7 +180,12 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $this->template->syllabi = $userSyllabi;        
                 }
 
-                $this->template->isStudent = $isStudent;           
+                $authZ = $this->getAuthorizationManager();
+                $syllabusRoles = $this->schema('Syllabus_Syllabus_Role');
+                $syllabusAzids = $authZ->getObjectsForWhich($viewer, 'syllabus edit');
+                $this->template->syllabusRoles = $syllabusRoles->getByAzids($syllabusAzids);
+                $this->template->isStudent = $isStudent;   
+                $this->template->ctrl = $this;        
                 break;
         }
 
@@ -821,6 +826,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->routeBase = $routeBase;
         $this->template->returnTo = "syllabus/$syllabus->id";
         $this->template->activeStudents = $syllabusVersion->getActiveStudentsEstimation($this) ?? 0;
+        $this->template->viewer = $viewer;
     }
 
     public function share ()
@@ -1827,7 +1833,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
     private function hasSyllabusPermission ($syllabus, $user=null, $permission='view')
     {
-        // echo "<pre>"; var_dump($permission); die;
         $user = $user ?? $this->requireLogin();
         $hasPermission = true;
         
@@ -1870,7 +1875,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $hasPermission = $organization->userHasRole($user, 'member');
                     break;
             }
-            
         }
         else
         {
@@ -1886,42 +1890,21 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     break;
                 case 'edit':
                 	$hasPermission = $authZ->hasPermission($user, 'syllabus edit', $syllabus);
-                    // foreach ($syllabus->roles as $role)
-                    // {
-                    //     $hasPermission = $hasPermission || $authZ->hasPermission($user, 'syllabus edit', $role);    
-                    // }
-                	// echo "<pre>"; var_dump($syllabus->getObjectProxies()); die;
-                    // foreach ($syllabus->getObjectProxies() as $proxy)
-                    // {
-                    //     $hasPermission = $hasPermission || $authZ->hasPermission($user, 'syllabus edit', $proxy);    
-                    // }
                     $hasPermission = $hasPermission || 
                     	($courseSection && $type !== '' || $syllabus->createdById === $user->id);
                     break;
                 case 'view':
                     $hasPermission = $authZ->hasPermission($user, 'syllabus view', $syllabus);
-                    // foreach ($syllabus->roles as $role)
-                    // {
-                    //     $hasPermission = $hasPermission || $authZ->hasPermission($user, 'syllabus view', $role);    
-                    // }
                     $hasPermission = $hasPermission || 
                     	($courseSection && $type !== '' || $syllabus->createdById === $user->id);
                     break;
                 case 'clone':
                     $hasPermission = $authZ->hasPermission($user, 'syllabus clone', $syllabus);
-                    // foreach ($syllabus->roles as $role)
-                    // {
-                    //     $hasPermission = $hasPermission || $authZ->hasPermission($user, 'syllabus clone', $role);    
-                    // }
                     $hasPermission = $hasPermission || 
                     	($courseSection && $type !== 'instructor' || $syllabus->createdById === $user->id);
                     break;
                 case 'share':
                     $hasPermission = $authZ->hasPermission($user, 'syllabus share', $syllabus);
-                    // foreach ($syllabus->roles as $role)
-                    // {
-                    //     $hasPermission = $hasPermission || $authZ->hasPermission($user, 'syllabus share', $role);    
-                    // }
                     $hasPermission = $hasPermission || 
                     	($courseSection && $type !== '' || $syllabus->createdById === $user->id);
                     break;

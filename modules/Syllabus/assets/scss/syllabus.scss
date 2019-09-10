@@ -8,6 +8,33 @@ html {
   }
 }
 
+.btn-outline-info {
+	color: $info;
+	color: darken($info, 25%) !important;
+	&:hover {
+		color: initial !important;	
+	}
+}
+
+.adhoc-syllabus-card {
+	width: 20rem;
+}
+@media (max-width: 1073px) {
+	.adhoc-syllabus-card {
+		width: 30rem;
+	}
+}
+@media (max-width: 991px) {
+	.adhoc-syllabus-card {
+		width: 30rem;
+	}
+}
+@media (max-width: 567px) {
+	.adhoc-syllabus-card {
+		width: 25rem;
+	}
+}
+
 .position-relative {
 	position: relative !important;
 }

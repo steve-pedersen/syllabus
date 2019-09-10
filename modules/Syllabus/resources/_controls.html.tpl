@@ -15,6 +15,10 @@
 					<span class="text-dark">
 						<strong>[{$organization->name} Template]</strong>
 					</span>
+				{elseif $viewer->id != $syllabus->createdById}
+					<span class="text-dark">
+						<strong>[{$syllabus->createdBy->fullName}'s Syllabus]</strong>
+					</span>				
 				{/if}
 				</div>
 			</div>

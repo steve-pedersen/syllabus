@@ -209,13 +209,16 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
         {
             foreach ($adHocRoles as $role)
             {
-                foreach ($role['users'] as $user)
+                if (isset($role['users']))
                 {
-                    if ($user->id === $viewer->id)
+                    foreach ($role['users'] as $user)
                     {
-                        $adHocEditor = true;
-                        break;
-                    }
+                        if ($user->id === $viewer->id)
+                        {
+                            $adHocEditor = true;
+                            break;
+                        }
+                    }                    
                 }
                 if ($adHocEditor) break;
             }
