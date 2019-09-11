@@ -36,6 +36,27 @@ class Syllabus_Instructors_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseMod
                 $def->save();
 
                 break;
+
+            case 1:
+
+                $def = $this->createEntityType('syllabus_instructors_profiles', $this->getDataSource('Syllabus_Instructors_Profile'));
+                $def->addProperty('id', 'int', ['primaryKey' => true, 'sequence' => true]);
+                $def->addProperty('account_id', 'int');
+                $def->addProperty('name', 'string');
+                $def->addProperty('title', 'string');
+                $def->addProperty('office', 'string');
+                $def->addProperty('office_hours', 'string');
+                $def->addProperty('email', 'string');
+                $def->addProperty('phone', 'string');
+                $def->addProperty('website', 'string');
+                $def->addProperty('zoom_address', 'string');
+                $def->addProperty('credentials', 'string');
+                $def->addProperty('about', 'string');
+                $def->addProperty('image_id', 'int');
+                $def->addProperty('modified_date', 'datetime');
+                $def->save();
+
+                break;
         }
     }
 }

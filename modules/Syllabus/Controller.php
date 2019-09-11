@@ -710,6 +710,17 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
                 if ($realSectionClass === 'Syllabus_Instructors_Instructors')
                 {
+                    $profiles = $this->schema('Syllabus_Instructors_Profile');
+                    $profileData = null;
+                    if ($data = $profiles->createInstance()->findProfileData($viewer))
+                    {
+                        if (!empty($data) && isset($data['instructor']) && (!isset($data['syllabus']) || 
+                            isset($data['syllabus']) && $data['syllabus']->id !== $syllabus->id))
+                        {
+                            $profileData = $data['instructor'];
+                        }
+                    }
+                    $this->template->profileData = $profileData;
                     foreach ($syllabusVersion->sectionVersions as $sv)
                     {
                         if (isset($sv->course_id))
@@ -773,6 +784,24 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 		            $campusResources->deleted->isFalse()->orIf($campusResources->deleted->isNull()),
 		            ['orderBy' => ['sortOrder', 'title']]
 		        );
+            }
+            elseif ($realSectionExtension->getExtensionName() === 'instructors')
+            {
+                $profiles = $this->schema('Syllabus_Instructors_Profile');
+                $profileData = null;
+                if ($profile = $profiles->findOne($profiles->account_id->equals($viewer->id)))
+                {
+                    $profileData = $profile;
+                }
+                elseif ($data = $profiles->createInstance()->findProfileData($viewer))
+                {
+                    if ((!empty($data) && isset($data['instructor']) && isset($data['syllabus']) && 
+                        $data['syllabus']->id !== $syllabus->id))
+                    {
+                        $profileData = $data['instructor'];
+                    }
+                }
+                $this->template->profileData = $profileData;
             }
 
             $upstreamSyllabi = $this->getUpstreamSyllabi($sectionVersion, $syllabus, $viewer);

@@ -4,7 +4,7 @@
  */
 class Syllabus_Instructors_Profile extends Bss_ActiveRecord_BaseWithAuthorization
 {
-    const MAX_PHOTO_SIZE = 2097152; // 2MB
+    const MAX_PHOTO_SIZE = 10000000; // 10MB
     
     public static $PhotoSizeProfileMap = [
         'orig' => [0, 0],
@@ -13,45 +13,116 @@ class Syllabus_Instructors_Profile extends Bss_ActiveRecord_BaseWithAuthorizatio
         'portrait-small' => [30, 40],
     ];
     
-	private $progress;
-	
-	private $filteredLists;
-	
     public static function SchemaInfo ()
     {
         return [
-            '__type' => 'fresca_faculty_profiles',
+            '__type' => 'syllabus_instructors_profiles',
             '__pk' => ['id'],
-            '__azidPrefix' => 'csu:catalog:faculty/Profile/',
+            '__azidPrefix' => 'at:syllabys:instructors/Profile/',
             
             'id' => 'int',
-            'account' => ['1:1', 'to' => 'Bss_AuthN_Account'],
-            'displayName' => ['string', 'nativeName' => 'display_name'],
-            'aboutMe' => ['string', 'nativeName' => 'about_me'],
+            'name' => 'string',
+            'title' => 'string',
             'office' => 'string',
+            'officeHours' => ['string', 'nativeName' => 'office_hours'],
+            'email' => 'string',
             'phone' => 'string',
-            'displayEmail' => ['string', 'nativeName' => 'display_email'],
-            'positionTitle' => ['string', 'nativeName' => 'position_title'],
-
+            'website' => 'string',
+            'zoomAddress' => ['string', 'nativeName' => 'zoom_address'],
+            'credentials' => 'string',
+            'about' => 'string',
             'modifiedDate' => ['datetime', 'nativeName' => 'modified_date'],
+
+            'account' => ['1:1', 'to' => 'Bss_AuthN_Account'],
         ];
     }
     
     public function getAuthorizationId () { return "at:syllabus:instructors/Profile/{$this->id}"; }
     
-    public function getFirstName ()
+    // TODO: get a default profile pic
+    public function getImageSrc ($reload=false)
     {
-        return $this->account->firstName;
+        if (!$this->_imageSrc || $reload)
+        {
+            if (!$this->image)
+            {
+                $this->_imageSrc = 'assets/images/SFState_V_rgb.jpg';
+            }
+            else
+            {
+                $this->_imageSrc = $this->image->imageSrc;
+            }
+        }
+        return $this->_imageSrc;
     }
-    
-    public function getMiddleName ()
+
+    public function findProfileData ($account)
     {
-        return $this->account->middleName;
-    }
-    
-    public function getLastName ()
-    {
-        return $this->account->lastName;
+        $syllabi = $this->getSchema('Syllabus_Syllabus_Syllabus');
+        $profiles = $this->getSchema('Syllabus_Instructors_Profile');
+        $userSyllabi = $syllabi->find($syllabi->createdById->equals($account->id));
+        $mostFieldsFilled = 0;
+        $profileFieldsFilled = 0;
+        $data = [];
+        $fields = ['name','title','office','officeHours','email','phone','website','zoomAddress','credentials','about'];
+
+        if ($userProfile = $profiles->findOne($profiles->account_id->equals($account->id)))
+        {
+            foreach ($fields as $field)
+            {
+                if (isset($userProfile->$field) && $userProfile->$field && $userProfile->$field !== '')
+                {
+                    $profileFieldsFilled++;
+                }
+            }
+        }
+
+        foreach ($userSyllabi as $syllabus)
+        {
+            foreach ($syllabus->latestVersion->sectionVersions as $sv)
+            {
+                if (isset($sv->instructor_id))
+                {
+                    $instructor = null;
+                    $instructorsSection = $sv->resolveSection();
+                    foreach ($instructorsSection->instructors as $sectionInstructor)
+                    {
+                        if ($sectionInstructor->email === $account->emailAddress)
+                        {
+                            $instructor = $sectionInstructor;
+                            break;
+                        }
+                    }
+                    if ($instructor)
+                    {
+                        $fieldsFilled = 0;
+                        foreach ($fields as $field)
+                        {
+                            $fieldsFilled = (isset($instructor->$field) && $instructor->$field !== '') ? 
+                                $fieldsFilled + 1 : $fieldsFilled;
+                        }
+                        
+                        if ($fieldsFilled > $mostFieldsFilled)
+                        {
+                            $mostFieldsFilled = $fieldsFilled;
+                            $data = ['syllabus' => $syllabus];
+                            $data = ['instructor' => $instructor];
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        if ($mostFieldsFilled <= $profileFieldsFilled)
+        {
+            if (isset($data['instructor']))
+            {
+                $data['instructor'] = $userProfile;
+            }
+        }
+
+        return $data;
     }
     
     public function getPhone ()
@@ -98,48 +169,7 @@ class Syllabus_Instructors_Profile extends Bss_ActiveRecord_BaseWithAuthorizatio
         
         $this->_assign('phone', $value);
     }
-    
-    /**
-     * @return string
-     */
-    public function getHref ()
-    {
-        return "faculty/{$this->id}";
-    }
-    
-    /**
-     */
-    public function getEditHref ()
-    {
-        return "faculty/{$this->id}/edit";
-    }
-    
-    public function getNameLink ()
-    {
-        return '<a href="' . $this->getHref() . '">' . htmlspecialchars($this->displayName) . '</a>';
-    }
-    
-    public function getWebsiteAnchorList ()
-    {
-        $anchorList = array();
-        
-        foreach ($this->websiteList as $website)
-        {
-            $anchorList[] = $website->getAnchor(array('newWindow' => true, 'rel' => 'me'));
-        }
-        
-        return $anchorList;
-    }
-
-	public function hasVisible ($type)
-	{
-		return $this->getFilteredList($type, 'isVisible')->count();
-	}
-    
-    public function getHasPhoto ()
-    {
-        return ($this->getPhotoFile('portrait-normal', true) !== null);
-    }
+ 
     
     public function getPhotoFile ($sizeProfile = 'portrait-normal', $checkExists = true)
     {

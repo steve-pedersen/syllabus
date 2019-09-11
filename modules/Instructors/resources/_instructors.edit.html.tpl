@@ -101,6 +101,10 @@
         {assign var=defaultName value="{$defaultInstructor->fullName}"}
         {assign var=defaultEmail value="{$defaultInstructor->emailAddress}"}
     {/if}
+    {if $profileData && (!$defaultName || !$defaultEmail)}
+        {assign var=defaultName value="{$profileData->name}"}
+        {assign var=defaultEmail value="{$profileData->email}"}
+    {/if}
 {/if}
 {assign var=instructorId value="new-{$i}"}
         
@@ -120,35 +124,35 @@
     </div>
     <div class="col-md-3 mb-3 title">
         <label for="title">Title</label>
-        <input type="text" class="form-control" id="title" name="section[real][{$instructorId}][title]" placeholder="e.g. Assistant Professor" value="">
+        <input type="text" class="form-control" id="title" name="section[real][{$instructorId}][title]" placeholder="e.g. Assistant Professor" value="{if $profileData->title}{$profileData->title}{/if}">
     </div>
     <div class="col-md-3 mb-3 credentials">
         <label for="credentials">Credentials</label>
-        <input type="text" class="form-control" name="section[real][{$instructorId}][credentials]" placeholder="e.g. Ph.D., MBA" value="">
+        <input type="text" class="form-control" name="section[real][{$instructorId}][credentials]" placeholder="e.g. Ph.D., MBA" value="{if $profileData->credentials}{$profileData->credentials}{/if}">
     </div>
 </div>
 <div class="form-row px-3 row-2">
     <div class="col-md-4 mb-3 office">
         <label for="office">Office</label>
-        <input type="text" class="form-control" name="section[real][{$instructorId}][office]" placeholder="e.g. LIB 220" value="">
+        <input type="text" class="form-control" name="section[real][{$instructorId}][office]" placeholder="e.g. LIB 220" value="{if $profileData->office}{$profileData->office}{/if}">
     </div>
     <div class="col-md-4 mb-3 website">
         <label for="website">Website</label>
-        <input type="text" class="form-control" name="section[real][{$instructorId}][website]" value="">
+        <input type="text" class="form-control" name="section[real][{$instructorId}][website]" value="{if $profileData->website}{$profileData->website}{/if}">
     </div>
     <div class="col-md-4 mb-3 phone">
         <label for="phone">Phone</label>
-        <input type="text" class="form-control" name="section[real][{$instructorId}][phone]" value="">
+        <input type="text" class="form-control" name="section[real][{$instructorId}][phone]" value="{if $profileData->phone}{$profileData->phone}{/if}">
     </div>
 </div>
 <div class="form-row px-3 row-3">
     <div class="col-md-6 mb-3 office-hours">
         <label for="officeHours">Office Hours</label>
-        <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$instructorId}][officeHours]" rows="3"></textarea>
+        <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$instructorId}][officeHours]" rows="3">{if $profileData->officeHours}{$profileData->officeHours}{/if}</textarea>
     </div>
     <div class="col-md-6 mb-3 about">
         <label for="about">About Me</label>
-        <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$instructorId}][about]" rows="3"></textarea>
+        <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$instructorId}][about]" rows="3">{if $profileData->about}{$profileData->about}{/if}</textarea>
     </div>
 </div>
 </div>  

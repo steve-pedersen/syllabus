@@ -46,9 +46,20 @@
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav ml-auto">
 						{if $viewer}
+							{if !$hasProfile}
 							<li class="nav-item">
 								<span class="navbar-text mr-3">Hello, {$userContext->account->firstName|escape}</span>
 							</li>
+							{else}
+							<li class="nav-item">
+								<a class="nav-link" href="profile/{$viewer->id}">
+									<span class="navbar-text mx-2 d-block">
+										<i class="fas fa-user-cog pr-1 align-middles"></i>
+										{$userContext->account->firstName|escape}
+									</span>
+								</a>
+							</li>
+							{/if}
 							{if $pAdmin}
 							<li class="nav-item">
 								<a class="nav-link" href="admin"><i class="fas fa-cog"></i> Administrate</a>

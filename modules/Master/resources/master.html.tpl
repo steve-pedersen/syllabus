@@ -42,7 +42,12 @@
             </div>
 
 			<ul class="list-unstyled components">
-				<li class="mt-4">
+
+				<li class="mt-3">
+<!-- 					<a class="nav-category mb-2 d-block" href="profile/{$viewer->id}">
+						<i class="far fa-user-circle align-middle" style="font-size:2.5rem;"></i> 
+						<span class="pl-0 sidebar-text profile align-middle">Profile</span>
+					</a> -->
 					<a class="nav-category" href="syllabi" id="sidebarMySyllabi">
 						<img class="my-syllabi" src="assets/icons/menu-my-syllabi.svg" width="44"> <span class="pl-2 sidebar-text">My Syllabi</span>
 					</a>
@@ -130,9 +135,20 @@
 					<div class="collapse navbar-collapse" id="navbarSupportedContent">
 						<ul class="navbar-nav ml-auto">
 						{if $viewer}
+							{if !$hasProfile}
 							<li class="nav-item">
 								<span class="navbar-text mr-3">Hello, {$userContext->account->firstName|escape}</span>
 							</li>
+							{else}
+							<li class="nav-item">
+								<a class="nav-link" href="profile/{$viewer->id}">
+									<span class="navbar-text mx-2 d-block">
+										<i class="fas fa-user-cog pr-1 align-middles"></i>
+										{$userContext->account->firstName|escape}
+									</span>
+								</a>
+							</li>
+							{/if}
 							{if $pAdmin}
 							<li class="nav-item">
 								<a class="nav-link" href="admin"><i class="fas fa-cog"></i> Administrate</a>
