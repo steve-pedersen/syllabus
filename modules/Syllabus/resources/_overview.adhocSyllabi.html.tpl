@@ -1,6 +1,13 @@
 {if $syllabusRoles}
 <div class="container-fluid my-adhoc-syllabi-overview mb-5">
-	<h2>Other Syllabi: <small class="text-muted">Edit Access</small></h2>
+	<h2>
+		{if $isStudent}
+			Faculty Syllabi:
+		{else}
+			Other Syllabi: 
+		{/if}
+		<small class="text-muted">Edit Access</small>
+	</h2>
 	<p class="text-muted">
 		These are other people's syllabi for which you've been granted access to edit.
 	</p>
