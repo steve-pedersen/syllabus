@@ -116,10 +116,7 @@ class Syllabus_Instructors_Profile extends Bss_ActiveRecord_BaseWithAuthorizatio
 
         if ($mostFieldsFilled <= $profileFieldsFilled)
         {
-            if (isset($data['instructor']))
-            {
-                $data['instructor'] = $userProfile;
-            }
+            $data['instructor'] = $userProfile;
         }
 
         return $data;
