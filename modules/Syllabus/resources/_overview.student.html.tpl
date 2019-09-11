@@ -1,5 +1,13 @@
 <div class="container-fluid student-container px-0">
 
+{if $syllabusRoles}
+	{assign var=isStudent value=true}
+	<div class="overview-section my-adhoc-syllabi">
+		{include file="partial:_overview.adhocSyllabi.html.tpl"}
+	</div>
+{/if}
+
+
 <div class="accordion" id="termAccordion">
 
 {foreach $allCourses as $term => $myCourses}
