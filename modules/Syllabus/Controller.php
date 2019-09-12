@@ -94,7 +94,33 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 break;
             
             case 'submissions':            
-                
+                $myCourses = $viewer->classDataUser->getCurrentEnrollments();
+                $courses = [];
+                foreach ($myCourses as $i => $courseSection)
+                {
+                    $index = $i % 5;
+                    if ($courseSyllabus = $syllabi->get($courseSection->syllabus_id))
+                    {
+                        $courseSyllabus->viewUrl = $this->baseUrl("syllabus/$courseSyllabus->id/view");
+                    }
+                    $courseSection->courseSyllabus = $courseSyllabus;
+                    $courseSection->createNew = $courseSyllabus ? false : true;
+                    $courseSection->pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer);
+                    $courses[$courseSection->term][] = $courseSection;
+                    
+                    $imageUrl = "assets/images/testing0$index.jpg";
+                    if ($courseSyllabus)
+                    {
+                        $sid = $courseSyllabus->id;
+                        $results = $this->getScreenshotUrl($sid, $screenshotter);
+                        $imageUrl = $results->imageUrls->$sid;
+                    }
+                    $courseSection->imageUrl = $imageUrl;
+                }
+
+                $this->template->returnTo = 'syllabi?mode=submissions';
+                $this->template->coursesView = true;
+                $this->template->allCourses = $courses;               
                 break;
 
             case 'overview':
