@@ -41,7 +41,11 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
                     break;
             }
         }
-
+        
+        $this->template->fillFromSyllabus = (
+            (!$profile && $data) ||
+            ($profile && $data && isset($data['mostFields']) && $data['mostFields'] === 'syllabus')
+        );
         $this->template->profileData = $data;
         $this->template->profile = $profile;
     }

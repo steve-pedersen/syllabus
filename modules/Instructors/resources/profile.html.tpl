@@ -1,4 +1,4 @@
-{if !$profile && $profileData}
+{if $fillFromSyllabus}
 	{assign var=profile value=$profileData['instructor']}
 {/if}
 <div class="container-fluid">

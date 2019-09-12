@@ -114,9 +114,11 @@ class Syllabus_Instructors_Profile extends Bss_ActiveRecord_BaseWithAuthorizatio
             }
         }
 
+        $data['mostFields'] = 'syllabus';
         if ($mostFieldsFilled <= $profileFieldsFilled)
         {
             $data['instructor'] = $userProfile;
+            $data['mostFields'] = 'profile';
         }
 
         return $data;
