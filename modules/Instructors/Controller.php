@@ -25,7 +25,7 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
         }
 
         $profiles = $this->schema('Syllabus_Instructors_Profile');
-        $profile = $profiles->findOne($profiles->account_id->equals($viewer->id));
+        $profile = $profiles->findOne($profiles->account_id->equals($profileAccount->id));
         $data = $profiles->createInstance()->findProfileData($profileAccount) ?? $profiles->createInstance();
 
         if ($this->request->wasPostedByUser())
