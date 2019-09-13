@@ -1,12 +1,33 @@
 {if $fillFromSyllabus}
 	{assign var=profile value=$profileData['instructor']}
 {/if}
-<div class="container-fluid">
+<div class="container-fluid" id="profileContainer">
 	<h1 class="pb-2">
 		My Profile - <small>{$viewer->fullName}</small>
 	</h1>
 	<div class="wrap pb-2 mb-3"><div class="left"></div><div class="right"></div></div>
-	<form method="post" action="{$smarty.server.REQUEST_URI|escape}">
+	
+<div class="card mb-5 border-0 ml-3" style="max-width: 1000px;">
+  <div class="row no-gutters ">
+    <div class="col-md-4 text-center" id="profileImageContainer">
+        <!-- <span class="d-inline-block"></span> -->
+        <div class="centered text-center">
+        <img src="{$profileImage}" class="card-img mw-100" alt="{if $profile->name}{$profile->name}{else}Placeholder profile image{/if}" id="profileImage" >
+        </div>
+    </div>
+    <div class="col-md-8 pl-md-5 pl-sm-2">
+      {include file="{$ctrl->getDragDropUploadFragment()}" action="profile/{$account->id}/upload" singleFile=true uploadedBy={$viewer->id}}
+        <div class="row mt-4">
+        <div class="col">
+        <p class="text-muted"><strong>Coming soon:</strong> use your profile image in your syllabus!</p>
+        </div>  
+        </div>
+    </div>
+  </div>
+    
+</div>
+
+    <form method="post" action="{$smarty.server.REQUEST_URI|escape}">
     <div class="form-row px-3 row-1">
         <div class="col-md-3 mb-3 name">
             <label for="name">Name</label>

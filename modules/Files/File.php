@@ -47,9 +47,10 @@ class Syllabus_Files_File extends Bss_ActiveRecord_Base
             $isAllowedType = true;
             if ($allowed)
             {
+                $allowed = is_array($allowed) ? $allowed : explode(',', $allowed);
                 $isAllowedType = false;
                 $contentType = $file->getContentType();
-                foreach (explode(',', $allowed) as $mime)
+                foreach ($allowed as $mime)
                 {
                     if ($mime === $contentType)
                     {

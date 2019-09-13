@@ -10,7 +10,7 @@
 #require js/autocomplete.js
 #require js/bootstrap4-toggle.js
 
-// #require js/sidebar.js
+#require js/drag-drop-upload.js
 #require js/syllabus.js
 #require js/courses.js
 #require js/objectives.js

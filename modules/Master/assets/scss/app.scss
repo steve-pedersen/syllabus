@@ -6,7 +6,7 @@
 @import "syllabus";
 @import "jqueryui";
 @import "bootstrap4-toggle";
-
+@import "drag-drop-upload";
 
 
 $theme1: #3b3c3c;
@@ -37,6 +37,27 @@ div.main-content {
 #mainContent {
 	// background-color: $gold_light_5;
 	// min-height: 60em;
+}
+
+#profileContainer {
+
+	#profileImageContainer {
+		text-align: center;
+		white-space: nowrap;
+
+		&:before {
+			content: '';
+			display: inline-block;
+			height: 100%;
+			vertical-align: middle;
+			margin-right: -0.25em; /* Adjusts for spacing */
+		}
+		.centered {
+			display: inline-block;
+			vertical-align: middle;
+			width: 100%;
+		}
+	}
 }
 
 .wrapper {
