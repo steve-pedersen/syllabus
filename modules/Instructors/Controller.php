@@ -68,12 +68,7 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
             $files = $this->schema('Syllabus_Files_File');
             $file = $files->createInstance();
             $file->createFromRequest($this->request, 'file', false, self::$imageTypes);
-            // $file->createFromRequest($this->request, 'file', false);
-        // $results = [
-        //     'message' => 'Your file has been uploaded.',
-        //     'status' => 200,
-        //     'success' => true,
-        // ];          
+     
             if ($file->isValid())
             {
                 $uploadedBy = (int)$this->request->getPostParameter('uploadedBy');
@@ -96,18 +91,10 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
             }
             else
             {
+                $results['status'] = 422;
                 $results['message'] = 'File type must be an image (jpeg/jpg, gif, png, tiff)';
             }
         }
-
-        // $results = [
-        //     'message' => 'Your file has been uploaded.',
-        //     'status' => 200,
-        //     'success' => true,
-        // ];
-
-        echo json_encode($results);
-        exit;   
 
         if ($this->request->getPostParameter('ajax'))
         {
