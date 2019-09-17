@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="col-md-8 pl-md-5 pl-sm-2">
-      {include file="{$ctrl->getDragDropUploadFragment()}" action="profile/{$account->id}/upload" singleFile=true uploadedBy={$viewer->id}}
+      {include file="{$ctrl->getDragDropUploadFragment()}" action="profile/{$account->id}/upload" singleFile=true uploadedBy={$account->id}}
         <div class="row mt-4">
         <div class="col">
         <p class="text-muted"><strong>Coming soon:</strong> use your profile image in your syllabus!</p>
