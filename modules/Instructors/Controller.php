@@ -68,7 +68,7 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
             $files = $this->schema('Syllabus_Files_File');
             $file = $files->createInstance();
             $file->createFromRequest($this->request, 'file', false, self::$imageTypes);
-     
+
             if ($file->isValid())
             {
                 $uploadedBy = (int)$this->request->getPostParameter('uploadedBy');
@@ -91,8 +91,17 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
             }
             else
             {
-                $results['status'] = 422;
-                $results['message'] = 'File type must be an image (jpeg/jpg, gif, png, tiff)';
+                // if ($messages = $file->getValidationMessages('file'))
+                // {
+                //     $messages = is_array($messages) ? implode('. ', $messages) : $messages;
+                // }
+                // else
+                // {
+                //     $messages = 'Incorrect file type or file too large.';
+                // }
+                $messages = 'Incorrect file type or file too large.';
+                $results['status'] = $messages !== '' ? 400 : 422;
+                $results['message'] = $messages;
             }
         }
 
