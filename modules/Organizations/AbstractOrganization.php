@@ -71,7 +71,7 @@ abstract class Syllabus_Organizations_AbstractOrganization extends Bss_ActiveRec
         // 'communicator'          => 'Communicator',
         'creator'               => 'Creator',
         // 'repository_manager'    => 'Repository Manager',
-        // 'moderator'             => 'Moderator',
+        'moderator'             => 'Moderator',
         'manager'               => 'Manager',
     ];
     public static $RoleDefaultHelpText = [
@@ -164,7 +164,7 @@ abstract class Syllabus_Organizations_AbstractOrganization extends Bss_ActiveRec
             // 'communicator' => $authZ->hasPermission($user, self::$RoleDefinitions['communicator'], $this),
             'creator' => $authZ->hasPermission($user, self::$RoleDefinitions['creator'], $this),
             // 'repository_manager' => $authZ->hasPermission($user, self::$RoleDefinitions['repository_manager'], $this),
-            // 'moderator' => $authZ->hasPermission($user, self::$RoleDefinitions['moderator'], $this),
+            'moderator' => $authZ->hasPermission($user, self::$RoleDefinitions['moderator'], $this),
             'manager' => $authZ->hasPermission($user, self::$RoleDefinitions['manager'], $this),
         ];
         if ($display)

@@ -16,7 +16,7 @@
 		{/if}
 		{if $fullAccess || $organization->userHasRole($viewer, 'moderator')}
 			<li class="list-group-item list-group-item-action">
-				<i class="fa-2x mr-3"></i>
+				<i class="fas fa-cloud fa-2x mr-3"></i>
 				<a href="{$organization->routeName}/{$organization->id}/submissions" class="stretched-link">Manage Submissions</a>
 			</li>
 		{/if}

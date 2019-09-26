@@ -14,7 +14,7 @@
 				<a href="{$organization->templateAuthorizationId}/syllabus/{$template->id}" class="btn btn-outline-primary">Edit</a>
 				<a href="{$organization->templateAuthorizationId}/syllabus/startwith/{$template->id}" class="btn btn-outline-primary">Clone</a>
 				
-				<a sr-only="Delete" class="btn btn-danger ml-auto float-right" id="viewFromEditor" href="{$organization->templateAuthorizationId}/syllabus/{$syllabus->id}/delete">
+				<a sr-only="Delete" class="btn btn-danger ml-auto float-right" id="viewFromEditor" href="{$organization->templateAuthorizationId}/syllabus/{$template->id}/delete">
 					<i class="fas fa-trash"></i>
 				</a>
 			</div>

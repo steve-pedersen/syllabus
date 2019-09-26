@@ -46,6 +46,12 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
         ];
     }
 
+    public function getSubmission ()
+    {
+        $schema = $this->getSchema('Syllabus_Syllabus_Submission');
+        return $schema->findOne($schema->course_section_id->equals($this->id));
+    }
+
     public function getTerm ($internal=false)
     {
         $term = $this->getSemester(true) . ' ' . $this->_fetch('year');

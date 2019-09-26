@@ -162,6 +162,39 @@ class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                 $def->addProperty('expiry_date', 'datetime');
                 $def->save();
                 break;
+
+            case 5:
+                $def = $this->createEntityType('syllabus_submissions',
+                    $this->getDataSource('Syllabus_Syllabus_Submission')
+                );
+                $def->addProperty('id', 'int', ['sequence' => true, 'primaryKey' => true]);
+                $def->addProperty('campaign_id', 'int');
+                $def->addProperty('syllabus_id', 'int');
+                $def->addProperty('submitted_by_id', 'int');
+                $def->addProperty('file_id', 'int');
+                $def->addProperty('course_section_id', 'string');
+                $def->addProperty('status', 'string');
+                $def->addProperty('modified_date', 'datetime');
+                $def->addProperty('submitted_date', 'datetime');
+                $def->addProperty('approved_date', 'datetime');
+                $def->addProperty('deleted', 'bool');
+                $def->addProperty('log', 'string');
+                $def->save();
+
+                $def = $this->createEntityType('syllabus_submission_campaigns',
+                    $this->getDataSource('Syllabus_Syllabus_SubmissionCampaign')
+                );
+                $def->addProperty('id', 'int', ['sequence' => true, 'primaryKey' => true]);
+                $def->addProperty('description', 'string');
+                $def->addProperty('semester_id', 'int');
+                $def->addProperty('organization_authorization_id', 'string');
+                $def->addProperty('modified_date', 'datetime');
+                $def->addProperty('due_date', 'datetime');
+                $def->addProperty('required', 'bool');
+                $def->addProperty('log', 'string');
+                $def->save();
+                break;
+
         }
     }
 }
