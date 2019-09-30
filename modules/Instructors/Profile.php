@@ -33,7 +33,8 @@ class Syllabus_Instructors_Profile extends Bss_ActiveRecord_BaseWithAuthorizatio
             'about' => 'string',
             'modifiedDate' => ['datetime', 'nativeName' => 'modified_date'],
 
-            'account' => ['1:1', 'to' => 'Bss_AuthN_Account'],
+            'account' => ['1:1', 'to' => 'Bss_AuthN_Account', 'keyMap' => ['account_id' => 'id']],
+            'image' => ['1:1', 'to' => 'Syllabus_Files_File', 'keyMap' => ['image_id' => 'id']],
         ];
     }
     
@@ -46,7 +47,7 @@ class Syllabus_Instructors_Profile extends Bss_ActiveRecord_BaseWithAuthorizatio
         {
             if (!$this->image)
             {
-                $this->_imageSrc = 'assets/images/SFState_V_rgb.jpg';
+                $this->_imageSrc = 'assets/images/profile-placeholder.png';
             }
             else
             {

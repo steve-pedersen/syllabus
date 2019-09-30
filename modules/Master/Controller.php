@@ -62,6 +62,7 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
 
     protected function afterCallback ($callback)
     {
+        $this->template->ctrl = $this;
         $this->template->pAdmin = $this->hasPermission('admin');
         $this->template->pFaculty = $this->hasPermission('syllabus edit');
         $this->template->pProgramAdmin = $this->hasPermission('program admin');
@@ -268,6 +269,11 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
         $this->template->$key = $vars['fileName'];
         $key = $vars['varKey'];
         $this->template->$key = $vars['vars'];
+    }
+
+    public function getDragDropUploadFragment ()
+    {
+        return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_dragDropUpload.html.tpl');
     }
 
     public function userMessage ($primary, $details = null)

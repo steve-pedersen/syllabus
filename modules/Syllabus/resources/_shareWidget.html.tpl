@@ -22,7 +22,7 @@
 				form="shareForm{$sid}" 
 				onChange="this.form.submit()"
 				data-toggle="toggle" 
-				data-onstyle="{if $sharePage}success{else}outline-success{/if}" 
+				data-onstyle="{if $sharePage}success{else}success{/if}" 
 				data-on="{if $dataOnText}{$dataOnText}{else}Shared{/if}" 
 				data-off="{if $dataOffText}{$dataOffText}{else}Not Shared{/if}" 
 				data-style="slow" 

@@ -9,8 +9,9 @@
 #require js/jquery.are-you-sure.ios-support.js
 #require js/autocomplete.js
 #require js/bootstrap4-toggle.js
+#require js/jquery.fileupload.js
 
-// #require js/sidebar.js
+#require js/drag-drop-upload.js
 #require js/syllabus.js
 #require js/courses.js
 #require js/objectives.js

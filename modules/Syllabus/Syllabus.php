@@ -88,6 +88,13 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_BaseWithAuthorization 
         return $published;        
     }
 
+    public function getShareLevel ()
+    {
+        $published = $this->getPublishedSyllabus($this);
+        return ($published ? $published->shareLevel : 'private');
+    }
+
+    // Ad hoc roles give users permission to edit & view or clone & view other user's syllabi
     public function getAdHocRoles ()
     {
         $authZ = $this->application->authorizationManager;
@@ -100,25 +107,15 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_BaseWithAuthorization 
             if ($role->expiration && is_object($role->expiration))
             {
                 $intervalString = '';
-                if ($role->expiration->y)
+                $units = ['y' => '%y-year', 'm' => '%m-month', 'd' => '%d-day', 'h' => '%h-hour'];
+                foreach ($units as $key => $format)
                 {
-                    $intervalString .= $role->expiration->format('%y-year');
-                    $intervalString .= $role->expiration->y > 1 ? 's ' : ' ';
-                }
-                if ($role->expiration->m)
-                {
-                    $intervalString .= $role->expiration->format('%m-month');
-                    $intervalString .= $role->expiration->m > 1 ? 's ' : ' ';
-                }
-                if ($role->expiration->d)
-                {
-                    $intervalString .= $role->expiration->format('%d-day');
-                    $intervalString .= $role->expiration->d > 1 ? 's ' : ' ';
-                }
-                if ($role->expiration->h && $intervalString === '')
-                {
-                    $intervalString .= $role->expiration->format('%h-hour');
-                    $intervalString .= $role->expiration->h > 1 ? 's' : '';
+                	if (($key === 'h' && $role->expiration->$key && $intervalString === '') || 
+                		($key !== 'h' && $role->expiration->$key))
+                	{
+                		$intervalString .= $role->expiration->format($format);
+                		$intervalString .= $role->expiration->$key > 1 ? 's ' : ' ';
+                	}
                 }
                 $role->expiration = $intervalString;
             }
@@ -134,12 +131,6 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_BaseWithAuthorization 
         }
 
         return $adHocUsersExist ? $adHocRoles : null;
-    }
-
-    public function getShareLevel ()
-    {
-        $published = $this->getPublishedSyllabus($this);
-        return ($published ? $published->shareLevel : 'private');
     }
 
     public function generateToken () 
