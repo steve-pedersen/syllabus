@@ -31,6 +31,7 @@
 			<dl class="mb-0 p-3">
 				<dt>Submission due date</dt>
 				<dd>{$campaign->dueDate->format('F jS, Y - h:i a')}</dd>
+				<dd>{$campaign->dueDateInterval}</dd>
 				<dt>Submission statuses for this campaign</dt>
 					{assign var=stats value=$campaign->statistics}
 				<dd>
@@ -61,11 +62,15 @@
 	</thead>
 	<tbody>
 	{foreach $campaign->submissions as $i => $submission}
-		<tr>
-			<td>[{$submission->courseSection->id}]</td>
-			<td>{$submission->courseSection->getFullDisplayName()}</td>
-			<td>{$submission->status|ucfirst}</td>
-			<td>
+		<tr class="
+			{if $submission->status == 'pending'}submission-required info{/if}
+			{if $submission->status == 'approved'}submission-required success{/if}
+			{if $submission->status == 'denied'}submission-required danger{/if}
+		">
+			<td class="align-middle">[{$submission->courseSection->id}]</td>
+			<td class="align-middle">{$submission->courseSection->getFullDisplayName()}</td>
+			<td class="align-middle">{$submission->status|ucfirst}</td>
+			<td class="align-middle">
 				{if $submission->status == 'open'}
 					<button class="btn btn-primary btn-sm">Disable</button>
 				{elseif $submission->status == 'pending'}

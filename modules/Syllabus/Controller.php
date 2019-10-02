@@ -24,12 +24,170 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/:id/export'       => ['callback' => 'export', ':id' => '[0-9]+'],
             'syllabus/:id/screenshot'   => ['callback' => 'screenshot', ':id' => '[0-9]+'],
             'syllabus/:id/ping'         => ['callback' => 'ping'],
+            'syllabus/submissions/file' => ['callback' => 'fileSubmission'],
+            'syllabus/submissions'      => ['callback' => 'submissions'],
+            'syllabus/submissions/:id'  => ['callback' => 'submissions', ':id' => '[0-9]+'],
             'syllabus/courses'          => ['callback' => 'courseLookup'],
             'syllabus/start'            => ['callback' => 'start'],
             'syllabus/startwith/:id'    => ['callback' => 'startWith', ':id' => '[0-9]+'],
             'syllabus/migrate'          => ['callback' => 'migrate'],
             'syllabus/autocomplete'     => ['callback' => 'autocompleteAccounts'],
         ];
+    }
+
+    public function submissions ()
+    {
+        $viewer = $this->requireLogin();
+        $submissionId = $this->getRouteVariable('id');
+
+        if (!$this->request->wasPostedByUser())
+        {
+            $this->addBreadcrumb('syllabi', 'Home');
+            $this->addBreadcrumb('syllabi?mode=submissions', 'Submissions');
+
+            $submission = $this->requireExists(
+                $this->schema('Syllabus_Syllabus_Submission')->get($submissionId)
+            );
+            $this->addBreadcrumb('syllabus/submissions/' . $submission->id, 'Review Submission');
+
+            if ($submission->syllabus_id)
+            {
+                $sid = $submission->syllabus_id;
+                $results = $this->getScreenshotUrl($sid);
+                $submission->syllabus->imageUrl = $results->imageUrls->$sid;
+            }
+            $this->template->courseSection = $submission->courseSection;
+            $this->template->submission = $submission;
+            $this->template->account = $viewer;
+        }
+
+        if ($this->request->wasPostedByUser())
+        {
+            $data = $this->request->getPostParameters();
+            $syllabusId = key($this->getPostCommandData());
+            $syllabus = $this->schema('Syllabus_Syllabus_Syllabus')->get($syllabusId);
+            $submissions = $this->schema('Syllabus_Syllabus_Submission');
+            $submission = $submissions->findOne(
+                $submissions->course_section_id->equals($syllabus->courseSection->id)
+            );
+
+            $submission->syllabus_id = $syllabus->id;
+            // $submission->file_id = null;
+            $submission->submitted_by_id = $viewer->id;
+            $submission->modifiedDate = new DateTime;
+            $submission->submittedDate = new DateTime;
+            $submission->status = 'pending';
+            $submission->log .= 
+            "
+                <br />
+                &nbsp;&mdash;&nbsp;Submitted syllabus #{$syllabus->id} on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+            ";
+            $submission->campaign->log .= 
+            "
+                <br />
+                &nbsp;&mdash;&nbsp;Submission #{$submission->id} set to 'pending' on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+            ";
+            $submission->save();
+            $submission->campaign->save();
+
+            $this->flash('Syllabus submitted!');
+            $this->response->redirect('syllabi?mode=submissions&c=' . $submission->course_section_id);
+        }
+    }
+
+    public function fileSubmission ()
+    {
+        $viewer = $this->requireLogin();
+
+        if (!$this->request->wasPostedByUser() && $this->request->getQueryParameter('upload'))
+        {
+            $this->addBreadcrumb('syllabi', 'Home');
+            $this->addBreadcrumb('syllabi?mode=submissions', 'Submissions');
+
+            // syllabus file upload
+        	$courseSection = $this->requireExists(
+        		$this->schema('Syllabus_ClassData_CourseSection')->get($this->request->getQueryParameter('c'))
+        	);
+            $this->addBreadcrumb('syllabus/submissions?upload=true&c=' . $courseSection->id, 'Submit File');
+
+        	$submissions = $this->schema('Syllabus_Syllabus_Submission');
+        	$submission = $submissions->findOne($submissions->course_section_id->equals($courseSection->id));
+        	// echo "<pre>"; var_dump($submission->file->id); die;
+        	$this->template->fileUpload = true;
+        	$this->template->courseSection = $courseSection;
+        	$this->template->submission = $submission;
+        	$this->template->account = $viewer;
+        }
+        elseif (!$this->request->wasPostedByUser())
+        {
+        	$this->response->redirect('syllabi?mode=submissions');
+        }
+
+        $results = [
+            'message' => 'Server error when uploading.',
+            'status' => 500,
+            'success' => false
+        ];
+
+
+        if ($this->request->wasPostedByUser())
+        {
+            $data = $this->request->getPostParameters();
+
+        	$courseSection = $this->requireExists(
+        		$this->schema('Syllabus_ClassData_CourseSection')->get($this->request->getQueryParameter('c'))
+        	);
+
+            $files = $this->schema('Syllabus_Files_File');
+            $file = $files->createInstance();
+            $file->createFromRequest($this->request, 'file', true, Syllabus_Syllabus_Submission::$SyllabusFileTypes);
+
+            if ($file->isValid())
+            {
+                $uploadedBy = (int)$this->request->getPostParameter('uploadedBy');
+                $file->uploaded_by_id = $uploadedBy;
+                $file->moveToPermanentStorage();
+                $file->save();
+
+	        	$submissions = $this->schema('Syllabus_Syllabus_Submission');
+	        	$submission = $submissions->findOne($submissions->course_section_id->equals($courseSection->id));
+	        	$submission->submitted_by_id = $uploadedBy;
+	        	$submission->file_id = $file->id;
+	        	$submission->status = 'pending';
+	        	$submission->modifiedDate = new DateTime;
+	        	$submission->submittedDate = new DateTime;
+	        	$submission->log .= 
+                "
+                    <br />
+                    &nbsp;&mdash;&nbsp;Submitted as file #{$file->id} on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                ";
+	        	$submission->campaign->log .= 
+                "
+                    <br />
+                    &nbsp;&mdash;&nbsp;Submission #{$submission->id} set to 'pending' on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                ";
+                $submission->save();
+                $submission->campaign->save();
+
+
+                $results = [
+                    'message' => 'Your syllabus has been uploaded.',
+                    'status' => 200,
+                    'success' => true,
+                    'fileSrc' => 'files/' . $file->id . '/download',
+                    'fileName' => $file->remoteName
+                ];
+
+	            echo json_encode($results);
+	            exit;  
+            }
+            else
+            {
+                $messages = 'Incorrect file type or file too large.';
+                $results['status'] = $messages !== '' ? 400 : 422;
+                $results['message'] = $messages;
+            }
+        }
     }
 
     public function mySyllabi ()
@@ -118,8 +276,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $courseSection->imageUrl = $imageUrl;
                 }
 
+                $this->template->submittedCourseId = $this->request->getQueryParameter('c');
                 $this->template->returnTo = 'syllabi?mode=submissions';
-                $this->template->coursesView = true;
+                $this->template->coursesView = false;
                 $this->template->allCourses = $courses;               
                 break;
 

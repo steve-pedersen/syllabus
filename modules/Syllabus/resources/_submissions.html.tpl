@@ -4,7 +4,7 @@
 
 {foreach $allCourses as $term => $myCourses}
 
-	<div class="d-block w-100 p-3 mt-3 bg-secondary ">
+	<div class="d-block w-100 p-3 {if $myCourses@index > 0}mt-3{/if} bg-secondary rounded-top">
 		<a href="#" class="{if $term != $activeSemester->display}collapsed{/if} mt-1 d-block collapse-term" data-toggle="collapse" data-target="#collapse{$myCourses@index}" aria-expanded="true" aria-controls="collapse{$myCourses@index}">
 			<h3 class="text-white">
 				<i class="fas fa-plus mx-2 minimized text-dark"></i>
@@ -19,115 +19,77 @@
 		<thead class="thead-light">
 
 			<tr class="">
-				<th scope="col" class="text-dark border-left-0" style="width:35%;">Course Information</th>
+				<th scope="col" class="text-dark " style="">Course Information</th>
 				<th scope="col" class="text-dark ">Syllabus Details</th>
+				<th scope="col" class="text-dark ">Submission Status</th>
+				<th scope="col" class="text-dark ">Options</th>
 			</tr>
 		</thead>
 		<tbody >
 
-{foreach $myCourses as $i => $course}
+{foreach $myCourses as $i => $courseSection}
 
 	{assign var=syllabus value=$courseSection->courseSyllabus}
+	{assign var=submission value=$courseSection->submission}
 
-	<tr class="">
-		<td class="align-middle" style="width:35%;">
-			<div class="p-3">
-			{if $courseSection->classNumber}<h2 class="">{$courseSection->classNumber}</h2>{/if}
-			{if $courseSection->sectionNumber}Section {$courseSection->sectionNumber}<br>{/if}
-			<strong>{$courseSection->title}</strong><br>
-			<span class="badge badge-secondary">{$term}</span>
-			{if $syllabus}
-            <p class="my-2 pt-3">
-                <strong class="mr-1" style="font-weight:900;">Share Status: <br></strong> 
-                {if $syllabus->shareLevel == 'all'}
-                    <i class="fas fa-user-check text-success mr-1"></i> All enrolled in course
-                {else}
-                    <i class="fas fa-user-lock text-warning mr-1"></i> Only course instructors (private)
-                {/if}
-            </p>
-			{/if}
-			</div>
-				
-		</td>
-		<td style="">
-		{if $syllabus}
-			<p class="border-bottom pb-2">
-				<strong>{$syllabus->title}</strong>
-			</p>
-			<div class="col">
-				<div class="media">
-					<div class="media-body row">
-						<div class="col-xl-3 col-lg-5 col-md-6 col-sm-7 col-xs-8" >
-							<div class=" mb-3">
-							<img src="{if $courseSection->imageUrl}{$courseSection->imageUrl}{else}assets/images/placeholder-4.jpg{/if}" class="img-thumbnail paper paper-bottom" alt="Syllabus thumbnail" style="max-height: 12rem; min-height: 10rem;border:2px solid #efefef;">
-							</div>
-						</div>
-						<div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 col-xs-10 d-block">
-							<a style="max-width:200px;" class="btn btn-dark d-block align-top mt-3" href="syllabus/{$syllabus->id}/view">
-								<span class="float-left"><i class="fas fa-eye"></i></span>
-								View
-							</a>
-							<a style="max-width:200px;" href="syllabus/{$syllabus->id}" class="my-3 btn btn-info d-block align-bottom">
-								<span class="float-left"><i class="fas fa-edit"></i></span>
-								Edit
-							</a>
-							<span class="d-block my-3">{include file="partial:_shareWidget.html.tpl"}</span>
-						</div>
-					</div>
-				</div>
-			</div>
-		{else}
-		<form method="post" action="{$smarty.server.REQUEST_URI|escape}" id="coursesPageForm{$i}">
-			{if $syllabus}<input type="hidden" name="course[{$courseSection->id}][syllabusId]" value="{$syllabus->id}">{/if}
-			<p class="border-bottom pb-2">
-				<em>This class currently does not have a syllabus associated with it.</em>
-			</p>
-			{if $courseSection->pastCourseSyllabi}
-			<!-- <p class="">Duplicate a previous syllabus or start from scratch.</p> -->
-			{/if}
 
-			<div class="row py-3">
-				<div class="col-md-3 d-block-inline">
-					<a class="btn btn-success" href="syllabus/start?course={$courseSection->id}">
-						<span class="mr-3"><i class="fas fa-plus"></i></span> 
-						Create New
-					</a>
-				</div>
-
-				{if $courseSection->pastCourseSyllabi}
-				<div class="col-md-1 divider-div">
-					<div class="row row-divided">
-						<div class="col-xs-6 column-one ">
-						</div>
-						<div class="vertical-divider text-center">OR</div>
-						<div class="col-xs-6 column-two ">
-						</div>
-					</div>
-				</div>
-
-				<div class="col-md-8 form-group mb-3 d-block-inline">
-					<div class="input-group">
-					<select name="courseSyllabus" class="form-control " id="course{$i}SyllabusOption">
-						<option value="off" default>Choose other syllabus to start from...</option>
-					{foreach $courseSection->pastCourseSyllabi as $pastCourse}
-						{if $pastCourse->semester}
-						<option value="{$pastCourse->syllabus->id}">[{$pastCourse->getShortName(true)}] {$pastCourse->syllabus->title}</option>
-						{else}
-						<option value="{$pastCourse->id}">[Non-course syllabus] {$pastCourse->latestVersion->title}</option>
-						{/if}
-					{/foreach}
-					</select>
-					<div class="input-group-append">
-						<input class="btn btn-primary btn-sm" type="submit" name="command[courseClone][{$courseSection->id}]" value="Clone" />
-					</div>
-					</div>
-				</div>
+	<tr class="{if $submittedCourseId && $courseSection->id == $submittedCourseId}submission-required success{/if}">
+		<td class="align-middle">{$courseSection->getFullDisplayName()} [{$courseSection->id}]</td>
+		<td class="align-middle {if !$syllabus && !$submission->file}submission-required warning{else}{/if}" style="height: 6rem;">
+			{if $syllabus && !$submission->file}
+				<a href="syllabus/{$syllabus->id}">
+					<img src="{if $courseSection->imageUrl}{$courseSection->imageUrl}{else}assets/images/placeholder-4.jpg{/if}" class="img-thumbnail mr-2" alt="Syllabus thumbnail" style="max-height: 6rem; min-height: 5rem;border:5px solid #efefef;">
+					{$syllabus->title}
+				</a>
+				{if $submittedCourseId && $courseSection->id == $submittedCourseId}
+					<strong class="text-success ml-3">Submitted!</strong>
 				{/if}
-			</div>
-			{generate_form_post_key}
-		</form>
+			{elseif !$syllabus && $submission->file_id}
+				Syllabus uploaded as file: <a href="{$submission->file->getFileSrc(true)}">{$submission->file->remoteName}</a>
+			{elseif $syllabus && $submission->file_id}
+				Syllabus uploaded as file: 
+					<a href="{$submission->file->getFileSrc(true)}">{$submission->file->remoteName}</a>.<br />
+				Syllabus with title 
+					<a href="syllabus/{$syllabus->id}">{$syllabus->latestVersion->title}</a> available to be submitted as well.
+			{else}
+				<em>No syllabus associated with this course. Use the <a href="syllabi?mode=courses">Courses</a> tab to create a new syllabus.</em>
+			{/if}
+		</td>
+		<td class="align-middle text-center">
+		{if $submission && $syllabus}
+			<span data-toggle="tooltip" data-placement="top" title="{$submission->getStatusHelpText($submission->status)}">
+				<u class="text-dark">{$submission->status|ucfirst}</u>
+			</span>
+		{elseif $submission}
+			<span data-toggle="tooltip" data-placement="top" title="{$submission->getStatusHelpText($submission->status)}{if $submission->status == 'open'}. You may create a new syllabus for this course or upload your own.{/if}">
+				<u class="text-dark">{$submission->status|ucfirst}</u>
+			</span>
+		{else}
+			No submission required
 		{/if}
 		</td>
+	<form action="syllabus/submissions" method="post">
+		<td class="text-center align-middle">
+			{if $submission->status == 'open'}
+				{if $syllabus}
+					<input name="command[submit][{$syllabus->id}]" type="submit" class="btn btn-dark btn-sm btn-block mb-3" value="Submit">
+				{/if}
+				<a href="syllabus/submissions/file?upload=true&c={$courseSection->id}" class="d-block mt-3">
+					<i class="fas fa-file-upload mr-2"></i>
+					Upload a Syllabus...
+				</a>
+			{elseif $submission->status == 'pending'}
+				<a href="syllabus/submissions/{$submission->id}" class="btn btn-info btn-sm">Review</a>
+			{elseif $submission->status == 'approved'}
+				<a href="syllabus/submissions/{$submission->id}" class="btn btn-secondary btn-sm">Review</a>
+			{elseif $submission->status == 'denied'}
+				<input name="command[submit][{$syllabus->id}]" type="submit" class="btn btn-dark btn-sm btn-block mb-3" value="Re-Submit">
+			{else}
+				&mdash;&mdash;
+			{/if}
+		</td>
+		{generate_form_post_key}
+	</form>
 	</tr>
 
 {/foreach}

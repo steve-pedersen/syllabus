@@ -19,6 +19,21 @@ class Syllabus_Syllabus_Submission extends Bss_ActiveRecord_Base
         'denied' => 'Your submission has been denied. Please make any necessary corrections and re-submit.'
     ];
 
+    public static $SyllabusFileTypes = [
+        'application/msword', 
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 
+        'application/vnd.ms-powerpoint', 
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'application/vnd.oasis.opendocument.text',
+        'text/html',
+        'image/jpeg',
+        'image/gif',
+        'image/png',
+        'application/pdf',
+        'application/rtf',
+        'text/plain'
+    ];
+
     public static function SchemaInfo ()
     {
         return [
@@ -32,6 +47,7 @@ class Syllabus_Syllabus_Submission extends Bss_ActiveRecord_Base
             'approvedDate' => ['datetime', 'nativeName' => 'approved_date'],
             'deleted' => 'bool',
             'log' => 'string',
+            'feedback' => 'string',
 
             'campaign' => ['1:1', 'to' => 'Syllabus_Syllabus_SubmissionCampaign', 'keyMap' => ['campaign_id' => 'id']],
             'submittedBy' => ['1:1', 'to' => 'Bss_AuthN_Account', 'keyMap' => ['submitted_by_id' => 'id']],
@@ -41,6 +57,11 @@ class Syllabus_Syllabus_Submission extends Bss_ActiveRecord_Base
                 '1:1', 'to' => 'Syllabus_ClassData_CourseSection', 'keyMap' => ['course_section_id' => 'id']
             ],
         ];
+    }
+
+    public function getStatusHelpText ($status)
+    {
+        return self::$StatusCodesHelpText[$status] ?? '';
     }
 
     public function getSyllabus ()
@@ -64,9 +85,6 @@ class Syllabus_Syllabus_Submission extends Bss_ActiveRecord_Base
 
     public function getDueDateInterval ()
     {
-        $now = new DateTime;
-        $interval = $now->diff($this->campaign->dueDate);
-
-        return $interval->format('%R%a days');
+        return $this->campaign->getDueDateInterval();
     }
 }

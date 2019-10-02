@@ -13,6 +13,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
     protected function beforeCallback ($callback)
     {
         parent::beforeCallback($callback);
+        $this->requireLogin();
         if ($this->getRouteVariable('oid'))
         {
             $this->_syllabusId = $this->getRouteVariable('id');
@@ -22,8 +23,11 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
             // $this->addBreadcrumb('organizations', 'My Organizations');
             $this->addBreadcrumb($this->_organization->routeName, ucfirst($this->_organization->routeName));
             $this->template->addBreadcrumb($this->_routeBase, $this->_organization->abbreviation . ' Home');
-            $this->template->pManager = $this->_organization->userHasRole($this->getAccount(), 'manager');
             $this->template->routeBase = $this->_routeBase;
+            if ($this->getAccount())
+            {
+                $this->template->pManager = $this->_organization->userHasRole($this->getAccount(), 'manager');
+            }
         }
     }
 
@@ -179,16 +183,20 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                 $semesters->endDate->after(new DateTime)
             )
         );
-
-        $activeCampaign = $campaigns->findOne($campaigns->semester_id === $activeSemester->id);
+        $cond = $campaigns->allTrue(
+            $campaigns->organizationAuthorizationId->equals($this->_organization->templateAuthorizationId),
+            $campaigns->semester_id->isNotNull(),
+            $campaigns->semester_id->equals($activeSemester->id)
+        );
+        $activeCampaign = $campaigns->findOne($cond);
         $allCampaigns = $campaigns->find(
-            ($campaigns->organization_authorization_id === $this->_organization->authorizationId),
-            ['orderBy' => ['semester_id', 'dueDate']]
+            $campaigns->organizationAuthorizationId->equals($this->_organization->templateAuthorizationId),
+            ['orderBy' => ['-semester_id', '-dueDate']]
         );
 
         $this->template->allCampaigns = $allCampaigns;
         $this->template->activeCampaign = $activeCampaign;
-        $this->template->submissions = [] ?? $activeCampaign->submissions ?? []; // TODO: REMOVE TEMP  BUG FIX
+        // $this->template->submissions = [] ?? $activeCampaign->submissions ?? []; // TODO: REMOVE TEMP  BUG FIX
         $this->template->routeBase = $this->_routeBase;
     }
 
@@ -263,7 +271,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                         }
 
                         $campaign->semester_id = $semester->id;
-                        $campaign->organization_authorization_id = $this->_organization->templateAuthorizationId;
+                        $campaign->organizationAuthorizationId = $this->_organization->templateAuthorizationId;
                         $campaign->description = $data['description'] ?? '';
                         $campaign->required = $data['required'] === '1';
                         $campaign->modifiedDate = new DateTime;

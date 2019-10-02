@@ -145,6 +145,33 @@ html {
 
 .student-container,
 .submissions-container {
+	.submission-required {
+		background-color: $alert-info-bg-color;
+		&.danger {
+			background-color: $alert-danger-bg-color;
+		}
+		&.info {
+			background-color: $alert-info-bg-color;
+		}
+		&.success {
+			background-color: $alert-success-bg-color;
+		}
+		&.primary {
+			background-color: $alert-primary-bg-color;
+		}
+		&.dark {
+			background-color: $alert-dark-bg-color;
+		}
+		&.light {
+			background-color: $alert-light-bg-color;
+		}
+		&.warning {
+			background-color: $alert-warning-bg-color;
+		}
+		&.secondary {
+			background-color: $alert-secondary-bg-color;
+		}
+	}
 	#termAccordion {
 		a.collapse-term {
 			&:hover,

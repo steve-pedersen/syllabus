@@ -4,7 +4,7 @@ $(function() {
 
 	var $form = $('#dragDropUploadForm');
 	var $input = $form.find('input[type="file"]');
-		
+	var uploading = false;
 
 	$form.addClass("has-advanced-upload");
 
@@ -16,9 +16,17 @@ $(function() {
 	    done: function (e, data) {
 	    	var result = JSON.parse(data.result);
 	    	$form.removeClass('is-success is-error');
+	    	uploading = false;
 	    	if (result.status == 200) {
 	    		$form.addClass('is-success');
-	    		$('#profileImage').attr('src',result.imageSrc);
+	    		if ($('#profileImage').length) {
+					$('#profileImage').attr('src',result.imageSrc);
+	    		}
+	    		if ($('#submissionFile').length) {
+					$('#submissionFile').attr('href', result.fileSrc);
+					$('#submissionFile').text(result.fileName);
+	    		}
+	    		$('.box__uploading').hide();
 	   //  	} else if (result.status == 422) {
 	   //  		$form.addClass('is-error');
 				errorMsg.textContent = "";
@@ -26,8 +34,34 @@ $(function() {
 	    		$form.addClass('is-error');
 	    		errorMsg.textContent = result.message;
 	    	}
+	    },
+	    progress: function (e) {
+	    	var activeUploads = $form.fileupload('active');
+	    	uploading = true;
+	    	$('.box__uploading').show();
+	    	setTimeout(checkUpload, 350);
 	    }
 	});
+
+	var $progressBar = $('#uploadProgress .progress-bar');
+	var checkUpload = function () {
+		if (uploading && $progressBar.length) {
+			var current = parseInt($progressBar.attr('aria-valuenow')) + 1;
+			current = current < 100 ? current : 100;
+			$progressBar.attr('aria-valuenow', current);
+			$progressBar.css('width', current + '%');
+			setTimeout(checkUpload2, 350);
+		}
+	}
+	var checkUpload2 = function () {
+		if (uploading && $progressBar.length) {
+			var current = parseInt($progressBar.attr('aria-valuenow')) + 1;
+			current = current < 100 ? current : 100;
+			$progressBar.attr('aria-valuenow', current);
+			$progressBar.css('width', current + '%');
+			setTimeout(checkUpload, 350);
+		}
+	}
 
 	$('.box__restart').on('click', function(e) {
 		e.preventDefault();

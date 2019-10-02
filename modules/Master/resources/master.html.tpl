@@ -68,6 +68,11 @@
 								<span class="sidebar-text">Courses</span>
 							</a>
 						</li>
+						<li class="{if $page == 'submissions'}active{/if}">
+							<a class="sub-link" href="syllabi?mode=submissions">
+								<span class="sidebar-text">Submissions</span>
+							</a>
+						</li>
 						<li class="{if $page == 'migrate'}active{/if}">
 							<a class="sub-link" href="syllabus/migrate">
 								<span class="sidebar-text">Migrate</span>
@@ -176,6 +181,11 @@
 									Courses
 								</a>
 							</li>
+							<li class="nav-item mobile-link {if $page == 'submissions'}active{/if}">
+								<a class="nav-link" href="syllabi?mode=submissions">
+									Submissions
+								</a>
+							</li>
 							{if $privilegedOrganizations || $pAdmin}
 								<li class="nav-item mobile-link border-top">
 									<a class="nav-link" href="organizations" id="sidebarMyOrganizations">
@@ -201,13 +211,13 @@
 							{/if}
 						{/if}
 						{else}
-							<li class="nav-item border-top">
+							<li class="nav-item ">
 								<a class="login-button nav-link" href="{$app->baseUrl('login')}">Login</a>
 							</li>
 						{/if} 
 						</ul>
 					{if $viewer}
-						<form method="post" action="logout" class="form logout-form p-2 border-top">
+						<form method="post" action="logout" class="form logout-form p-2 ">
 							<button class="btn btn-outline-secondary logout " type="submit" name="command[logout]" id="logout-button" value="Logout">Logout</button>
 						</form>
 					{/if}

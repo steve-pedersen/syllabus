@@ -121,9 +121,12 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
             $callback !== 'export' && $callback !== 'ping')
         {
             $studentRole = $roles->findOne($roles->name->equals('Student'));
-            $this->template->isStudent = $this->getAccount()->roles->has($studentRole);
+            if ($this->getAccount())
+            {
+                $this->template->isStudent = $this->getAccount()->roles->has($studentRole);
+                $this->template->privilegedOrganizations = $this->getPrivelegedUserOrganizations();
+            }
             $this->template->activeSemester = $this->getActiveSemester();
-            $this->template->privilegedOrganizations = $this->getPrivelegedUserOrganizations();
         }
         
         if ($viewer = $this->getAccount())

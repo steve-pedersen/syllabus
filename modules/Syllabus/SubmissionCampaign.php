@@ -20,7 +20,7 @@ class Syllabus_Syllabus_SubmissionCampaign extends Bss_ActiveRecord_Base
             'dueDate' => ['datetime', 'nativeName' => 'due_date'],
             'required' => 'bool',
             'log' => 'string',
-            // 'organizationAuthorizationId' => ['string', 'nativeName' => 'organization_authorization_id'],
+            'organizationAuthorizationId' => ['string', 'nativeName' => 'organization_authorization_id'],
 
             'semester' => ['1:1', 'to' => 'Syllabus_Admin_Semester', 'keyMap' => ['semester_id' => 'id']],
             // 'organization' => ['1:1', 'keyMap' => ['organization_authorization_id' => 'id']],
@@ -78,5 +78,13 @@ class Syllabus_Syllabus_SubmissionCampaign extends Bss_ActiveRecord_Base
         }
 
         return $organization;
+    }
+
+    public function getDueDateInterval ()
+    {
+        $now = new DateTime;
+        $interval = $now->diff($this->dueDate);
+
+        return $interval->format('%R%a days');
     }
 }

@@ -179,6 +179,7 @@ class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                 $def->addProperty('approved_date', 'datetime');
                 $def->addProperty('deleted', 'bool');
                 $def->addProperty('log', 'string');
+                $def->addProperty('feedback', 'string');
                 $def->save();
 
                 $def = $this->createEntityType('syllabus_submission_campaigns',
