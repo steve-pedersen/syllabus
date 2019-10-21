@@ -10,13 +10,14 @@ class Syllabus_Syllabus_Submission extends Bss_ActiveRecord_Base
 {
     private $_fileSrc;
 
-    public static $StatusCodes = ['open', 'pending', 'approved', 'denied'];
+    public static $StatusCodes = ['open', 'pending', 'approved', 'denied', 'disabled'];
 
     public static $StatusCodesHelpText = [
         'open' => 'This syllabus is available to be submitted.',
         'pending' => 'Your submission has been received and is pending approval.',
         'approved' => 'Your submission has been approved.',
-        'denied' => 'Your submission has been denied. Please make any necessary corrections and re-submit.'
+        'denied' => 'Your submission has been denied. Please make any necessary corrections and re-submit.',
+        'disabled' => 'Submission requirements have been disabled for this course.',
     ];
 
     public static $SyllabusFileTypes = [
@@ -64,10 +65,10 @@ class Syllabus_Syllabus_Submission extends Bss_ActiveRecord_Base
         return self::$StatusCodesHelpText[$status] ?? '';
     }
 
-    public function getSyllabus ()
-    {
-        return $this->_fetch('syllabus') ?? $this->_fetch('file');
-    }
+    // public function getSyllabus ()
+    // {
+    //     return $this->_fetch('syllabus') ?? $this->_fetch('file');
+    // }
 
     public function getOrganization ()
     {

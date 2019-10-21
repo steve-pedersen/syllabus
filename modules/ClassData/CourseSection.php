@@ -49,7 +49,12 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
     public function getSubmission ()
     {
         $schema = $this->getSchema('Syllabus_Syllabus_Submission');
-        return $schema->findOne($schema->course_section_id->equals($this->id));
+        $condition = $schema->allTrue(
+            $schema->course_section_id->equals($this->id),
+            $schema->deleted->isNull()->orIf($schema->deleted->isFalse())
+        );
+
+        return $schema->findOne($condition, ['orderBy' => 'modifiedDate']);
     }
 
     public function getTerm ($internal=false)

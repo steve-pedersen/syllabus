@@ -77,16 +77,12 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $submission->modifiedDate = new DateTime;
             $submission->submittedDate = new DateTime;
             $submission->status = 'pending';
-            $submission->log .= 
-            "
-                <br />
-                &nbsp;&mdash;&nbsp;Submitted syllabus #{$syllabus->id} on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
-            ";
-            $submission->campaign->log .= 
-            "
-                <br />
-                &nbsp;&mdash;&nbsp;Submission #{$submission->id} set to 'pending' on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
-            ";
+            $submission->log .= "<li>
+                Submitted syllabus #{$syllabus->id} on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+            </li>";
+            $submission->campaign->log .= "<li>
+                Submission #{$submission->id} set to 'pending' on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+            </li>";
             $submission->save();
             $submission->campaign->save();
 
@@ -98,6 +94,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     public function fileSubmission ()
     {
         $viewer = $this->requireLogin();
+        $submissions = $this->schema('Syllabus_Syllabus_Submission');
 
         if (!$this->request->wasPostedByUser() && $this->request->getQueryParameter('upload'))
         {
@@ -110,9 +107,12 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         	);
             $this->addBreadcrumb('syllabus/submissions?upload=true&c=' . $courseSection->id, 'Submit File');
 
-        	$submissions = $this->schema('Syllabus_Syllabus_Submission');
-        	$submission = $submissions->findOne($submissions->course_section_id->equals($courseSection->id));
-        	// echo "<pre>"; var_dump($submission->file->id); die;
+            $condition = $submissions->allTrue(
+                $submissions->course_section_id->equals($courseSection->id),
+                $submissions->deleted->isNull()->orIf($submissions->deleted->isFalse())
+            );
+        	$submission = $submissions->findOne($condition, ['orderBy' => 'modifiedDate']);
+
         	$this->template->fileUpload = true;
         	$this->template->courseSection = $courseSection;
         	$this->template->submission = $submission;
@@ -149,23 +149,22 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 $file->moveToPermanentStorage();
                 $file->save();
 
-	        	$submissions = $this->schema('Syllabus_Syllabus_Submission');
-	        	$submission = $submissions->findOne($submissions->course_section_id->equals($courseSection->id));
+                $condition = $submissions->allTrue(
+                    $submissions->course_section_id->equals($courseSection->id),
+                    $submissions->deleted->isNull()->orIf($submissions->deleted->isFalse())
+                );
+	        	$submission = $submissions->findOne($condition, ['orderBy' => 'modifiedDate']);
 	        	$submission->submitted_by_id = $uploadedBy;
 	        	$submission->file_id = $file->id;
 	        	$submission->status = 'pending';
 	        	$submission->modifiedDate = new DateTime;
 	        	$submission->submittedDate = new DateTime;
-	        	$submission->log .= 
-                "
-                    <br />
-                    &nbsp;&mdash;&nbsp;Submitted as file #{$file->id} on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
-                ";
-	        	$submission->campaign->log .= 
-                "
-                    <br />
-                    &nbsp;&mdash;&nbsp;Submission #{$submission->id} set to 'pending' on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
-                ";
+	        	$submission->log .= "<li>
+                    Submitted as file #{$file->id} on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                </li>";
+	        	$submission->campaign->log .= "<li>
+                    Submission #{$submission->id} set to 'pending' on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                </li>";
                 $submission->save();
                 $submission->campaign->save();
 

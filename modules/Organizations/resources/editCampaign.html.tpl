@@ -9,28 +9,36 @@
 <form action="{$smarty.server.REQUEST_URI|escape}" method="post" class="mt-3">
 	
     <div class="form-row py-3 row-2">
-        <div class="col-md-5 mb-3 office">
+        <div class="col-md-4 mb-3 office">
             <label for="semester">Choose a semester for this campaign</label>
+            
+		{if !$campaign->id}
             <select name="semester" class="form-control">
             	{foreach $semesters as $semester}
 					{assign var=available value=true}
 					{foreach $campaignSemesters as $semesterId}
-						{if $semesterId == $semester->id && !$campaign->id}
+						{if $semesterId == $semester->id}
 							{assign var=available value=false}
 						{/if}
 					{/foreach}
-
 				<option value="{$semester->id}" {if !$available}disabled{/if} {if $semester->id == $activeSemester->id}selected{/if}>
 					{$semester->display}{if !$available} [This semester already being used in a campaign]{/if}
 				</option>
             	{/foreach}
             </select>
+		{else}
+            <select name="semester" class="form-control">
+				<option value="{$campaign->semester->id}" selected>
+					{$campaign->semester->display} [Can't change semesters once campaign is created]
+				</option>
+            </select>			
+		{/if}
         </div>
-        <div class="col-md-5 mb-3 website">
+        <div class="col-md-4 mb-3 website">
             <label for="dueDate">Syllabi submission due date</label>
             <input type="text" class="form-control datepicker" name="dueDate" value="{if $campaign->dueDate}{$campaign->dueDate->format('m/d/Y')}{/if}" placeholder="MM/DD/YYYY">
         </div>
-		<div class="col-md-2 pl-md-4">
+		<div class="col-md-4 pl-md-4">
 			<label for="required">Required?</label>
 			<div class="form-check">
 				<input class="form-check-input" type="radio" name="required" id="required1" value="1" {if $campaign->required || !$campaign->id}checked{/if}>
@@ -44,6 +52,9 @@
 					No
 				</label>
 			</div>
+			<small id="requiredHelpBlock" class="form-text text-muted">
+				When set to <strong>required</strong>, instructors must submit their syllabi to this department.
+			</small>
 		</div>
     </div>
     <div class="form-row py-3 row-3">
@@ -67,7 +78,11 @@
 {if $campaign->log}
 <div class="p-3 mt-3 border-top">
 	<h2>Activity log</h2>
-	<div>{$campaign->log}</div>
+	<div>
+		<ul>
+			{$campaign->log}
+		</ul>
+	</div>
 </div>
 {/if}
 

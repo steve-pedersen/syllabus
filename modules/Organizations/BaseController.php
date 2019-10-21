@@ -194,16 +194,15 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
             ['orderBy' => ['-semester_id', '-dueDate']]
         );
 
+        $this->template->updatedSubmission = $this->request->getQueryParameter('s');
         $this->template->allCampaigns = $allCampaigns;
         $this->template->activeCampaign = $activeCampaign;
-        // $this->template->submissions = [] ?? $activeCampaign->submissions ?? []; // TODO: REMOVE TEMP  BUG FIX
         $this->template->routeBase = $this->_routeBase;
     }
 
     public function editSubmission ()
     {
         $viewer = $this->requireLogin();
-        $organization = $this->getOrganization($this->getRouteVariable('oid'));
         if (!$this->_organization->userHasRole($viewer, 'moderator'))
         {
             $this->_organization->requireRole('manager', $this);
@@ -213,7 +212,78 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         );
         $this->addBreadcrumb($this->_routeBase . '/submissions/' . $submission->id, 'Edit Submission');
 
-        $azid = $this->_organization->authorizationId;
+        $submissions = $this->schema('Syllabus_Syllabus_Submission');
+        
+        if ($this->request->wasPostedByUser())
+        {
+            $submission->modifiedDate = new DateTime;
+            switch ($this->getPostCommand())
+            {
+                case 'disable':
+                    $submission->status = 'disabled';
+                    $submission->modifiedDate = new DateTime;
+                    $submission->log .= "
+                    <li>
+                        Submission disabled for course #{$submission->course_section_id} on 
+                        {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                    </li>";
+                    $submission->campaign->log .= "
+                    <li>
+                        Submission #{$submission->id} disabled on 
+                        {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                    </li>";
+                    break;
+
+                case 'enable':
+                    $submission->status = 'open';
+                    $submission->modifiedDate = new DateTime;
+                    $submission->log .= "
+                    <li>
+                        Submission re-enabled for course #{$submission->course_section_id} on 
+                        {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                    </li>";
+                    $submission->campaign->log .= "
+                    <li>
+                        Submission #{$submission->id} re-enabled and set to 'open' on 
+                        {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                    </li>";
+                    break;
+
+                case 'approve':
+                    $submission->status = 'approved';
+                    $submission->approvedDate = new DateTime;
+                    $submission->feedback = $this->request->getPostParameter('feedback');
+                    $submission->log .= "
+                    <li>
+                        Submission approved on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                    </li>";
+                    $submission->campaign->log .= "
+                    <li>
+                        Submission #{$submission->id} set to 'approved' on 
+                        {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                    </li>";
+                    break;
+
+                case 'deny':
+                    $submission->status = 'denied';
+                    $submission->feedback = $this->request->getPostParameter('feedback');
+                    $submission->log .= "
+                    <li>
+                        Submission denied on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                    </li>";
+                    $submission->campaign->log .= "
+                    <li>
+                        Submission #{$submission->id} set to 'denied' on 
+                        {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                    </li>";
+                    break;
+            }
+            $submission->save();
+            $submission->campaign->save();
+
+            $this->flash('Submission status updated');
+            $this->response->redirect($this->_routeBase . 'submissions?s=' . $submission->id);
+        }
     }
 
     public function editCampaign ()
@@ -228,14 +298,17 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         }
 
         $this->addBreadcrumb($this->_routeBase . 'submissions', 'Submissions');
-        if ($campaign->id)
+        if (isset($campaign->id))
         {
             $this->addBreadcrumb($this->_routeBase . 'campaigns/' . $campaign->id, 'Manage Campaign');
         }
+        else
+        {
+            $this->addBreadcrumb($this->_routeBase . 'campaigns/new', 'New Campaign');
+        }
 
-        
-        $campaignSemesters = $campaigns->findValues('semester_id',
-            ($campaigns->organization_authorization_id === $this->_organization->authorizationId)
+        $campaignSemesters = $campaigns->findValues('semester_id', 
+            $campaigns->organizationAuthorizationId->equals($this->_organization->templateAuthorizationId)
         );
 
         $semesters = $this->schema('Syllabus_Admin_Semester');
@@ -248,11 +321,17 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         if ($this->request->wasPostedByUser())
         {
             $data = $this->request->getPostParameters();
+            $semesterUsed = false;
+            if (($cid !== 'new' && $data['semester'] !== $campaign->semester->id) ||
+                ($cid === 'new' && in_array($data['semester'], $campaignSemesters)))
+            {
+                $semesterUsed = true;
+            }
             switch ($this->getPostCommand())
             {
                 case 'save':
 
-                    if (isset($data['semester']) && ($cid !== 'new' || !in_array($data['semester'], $campaignSemesters)))
+                    if (isset($data['semester']) && !$semesterUsed)
                     {
                         if (!($semester = $semesters->get($data['semester'])))
                         {
@@ -277,12 +356,11 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                         $campaign->modifiedDate = new DateTime;
                         $intro = ($cid === 'new' ? 'New' : 'Edited');
                         $log = $campaign->log !== null && $campaign->log !== '' ? $campaign->log : '';
-                        $log .= 
-                        "
-                            <br />
-                            &nbsp;&mdash;&nbsp;{$intro} campaign on {$campaign->modifiedDate->format('F jS, Y - h:i a')} 
+                        $log .= "
+                        <li>
+                            {$intro} campaign on {$campaign->modifiedDate->format('F jS, Y - h:i a')} 
                             with a due date of {$campaign->dueDate->format('F jS, Y - h:i a')}.
-                        ";
+                        </li>";
                         $campaign->log = $log;
                         $campaign->save();
 
@@ -304,12 +382,15 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                                     $submission->course_section_id = $course->id;
                                     $submission->status = 'open';
                                     $submission->modifiedDate = new DateTime;
-                                    $submission->log = "Submission status opened on {$campaign->modifiedDate->format('F jS, Y - h:i a')}   [campaign id #{$campaign->id}].";
+                                    $submission->log = "<li>Submission status opened on {$campaign->modifiedDate->format('F jS, Y - h:i a')}   [campaign id #{$campaign->id}].</li>";
                                     $submission->save();
                                     $counter++;
                                 }
                             }
-                            $campaign->log .= " Submissions are now open for {$counter} course sections for {$campaign->semester->display}.";
+                            $campaign->log .= "
+                            <li>
+                                Submissions are now open for {$counter} course sections for {$campaign->semester->display}.
+                            </li>";
                             $campaign->save();
                         }
                         $this->flash(
@@ -318,7 +399,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                     }
                     else
                     {
-                        $this->flash('There already exists a campaign for the semester you selected.');
+                        $this->flash('There already exists a campaign for the semester you selected.', 'danger');
                     }
 
                     $this->response->redirect($this->_routeBase . 'submissions');
@@ -328,7 +409,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                     foreach ($campaign->submissions as $submission)
                     {
                         $submission->deleted = true;
-                        $submission->log .= "<br /><br />Campaign #{$campaign->id} deleted.";
+                        $submission->log .= "<li>Campaign #{$campaign->id} deleted.</li>";
                         $submission->save();
                     }
                     $campaign->delete();
@@ -345,6 +426,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         $this->template->semesters = $semesters->getAll(['orderBy' => '-startDate']);
         $this->template->activeSemester = $activeSemester;
         $this->template->campaign = $campaign;
+        $this->template->organization = $this->_organization;
     }
 
     public function manageUsers ()

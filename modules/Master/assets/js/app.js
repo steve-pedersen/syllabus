@@ -24,6 +24,7 @@
 #require js/resources.js
 #require js/schedules.js
 #require js/learningOutcomes.js
+#require js/organizations.js
 
 
 

@@ -28,7 +28,7 @@
 
             {if $submission->feedback}
                 <dt>Submission Feedback</dt>
-                <dd>{$submission->feedback}</dd>
+                <dd class="border rounded p-2"><pre>{$submission->feedback}</pre></dd>
             {/if}
 
             {if $submission->approvedDate}

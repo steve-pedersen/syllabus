@@ -1,4 +1,4 @@
-<div class="container-fluid student-container px-0">
+<div class="container-fluid table-collapse-container px-0">
 
 {if $syllabusRoles}
 	{assign var=isStudent value=true}

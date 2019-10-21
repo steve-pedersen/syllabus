@@ -1,6 +1,6 @@
 <?php
 
-class Syllabus_Syllabus_AdminController extends Syllabus_Master_AdminController
+class Syllabus_Syllabus_AdminController extends Syllabus_Master_Controller
 {
     public static function getRouteMap ()
     {
@@ -19,6 +19,7 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_AdminController
 
     public function universityTemplates ()
     {
+        $this->template->addBreadcrumb('admin', 'Admin');
         $this->template->addBreadcrumb('admin/templates/university', 'University Templates');
         $viewer = $this->requireLogin();
         if (!$this->hasPermission('admin'))
@@ -39,10 +40,17 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_AdminController
 
         if ($userId)
         {
-            $this->template->universityTemplates = $syllabi->find(
+            $universityTemplates = $syllabi->find(
                 $syllabi->createdById->equals($userId),
                 ['orderBy' => ['-modifiedDate', '-createdDate']]
             );
+            foreach ($universityTemplates as $template)
+            {
+                $sid = $template->id;
+                $results = $this->getScreenshotUrl($sid);
+                $template->imageUrl = $results->imageUrls->$sid;
+            }
+            $this->template->universityTemplates = $universityTemplates;
         }
 
         if ($this->request->wasPostedByUser())

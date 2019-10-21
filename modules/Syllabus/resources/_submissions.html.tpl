@@ -1,4 +1,4 @@
-<div class="container-fluid submissions-container px-0">
+<div class="container-fluid table-collapse-container px-0">
 
 <div class="accordion" id="termAccordion">
 
@@ -33,9 +33,9 @@
 	{assign var=submission value=$courseSection->submission}
 
 
-	<tr class="{if $submittedCourseId && $courseSection->id == $submittedCourseId}submission-required success{/if}">
-		<td class="align-middle">{$courseSection->getFullDisplayName()} [{$courseSection->id}]</td>
-		<td class="align-middle {if !$syllabus && !$submission->file}submission-required warning{else}{/if}" style="height: 6rem;">
+	<tr class="{if ($submittedCourseId && $courseSection->id == $submittedCourseId) || $submission->status == 'approved'}bg-context success{/if}">
+		<td class="align-middle">{$courseSection->getFullDisplayName()} [{$courseSection->id}]{$submission->file_id}</td>
+		<td class="align-middle {if !$syllabus && !$submission->file}bg-context warning{else}{/if}" style="height: 6rem;">
 			{if $syllabus && !$submission->file}
 				<a href="syllabus/{$syllabus->id}">
 					<img src="{if $courseSection->imageUrl}{$courseSection->imageUrl}{else}assets/images/placeholder-4.jpg{/if}" class="img-thumbnail mr-2" alt="Syllabus thumbnail" style="max-height: 6rem; min-height: 5rem;border:5px solid #efefef;">
@@ -44,9 +44,9 @@
 				{if $submittedCourseId && $courseSection->id == $submittedCourseId}
 					<strong class="text-success ml-3">Submitted!</strong>
 				{/if}
-			{elseif !$syllabus && $submission->file_id}
+			{elseif !$syllabus && $submission->file->id}
 				Syllabus uploaded as file: <a href="{$submission->file->getFileSrc(true)}">{$submission->file->remoteName}</a>
-			{elseif $syllabus && $submission->file_id}
+			{elseif $syllabus && $submission->file->id}
 				Syllabus uploaded as file: 
 					<a href="{$submission->file->getFileSrc(true)}">{$submission->file->remoteName}</a>.<br />
 				Syllabus with title 
@@ -55,7 +55,7 @@
 				<em>No syllabus associated with this course. Use the <a href="syllabi?mode=courses">Courses</a> tab to create a new syllabus.</em>
 			{/if}
 		</td>
-		<td class="align-middle text-center">
+		<td class="align-middle text-center ">
 		{if $submission && $syllabus}
 			<span data-toggle="tooltip" data-placement="top" title="{$submission->getStatusHelpText($submission->status)}">
 				<u class="text-dark">{$submission->status|ucfirst}</u>
@@ -81,7 +81,7 @@
 			{elseif $submission->status == 'pending'}
 				<a href="syllabus/submissions/{$submission->id}" class="btn btn-info btn-sm">Review</a>
 			{elseif $submission->status == 'approved'}
-				<a href="syllabus/submissions/{$submission->id}" class="btn btn-secondary btn-sm">Review</a>
+				<a href="syllabus/submissions/{$submission->id}" class="btn btn-success btn-sm">Review</a>
 			{elseif $submission->status == 'denied'}
 				<input name="command[submit][{$syllabus->id}]" type="submit" class="btn btn-dark btn-sm btn-block mb-3" value="Re-Submit">
 			{else}

@@ -17,7 +17,7 @@
 {if $universityTemplates}
 <form action="{$smarty.server.REQUEST_URI}" method="post" class="form-inline" role="form" id="templateId">
 	<div class="row mb-3">
-		<div class="col-lg-4 col-md-4 px-2">
+		<div class="col-lg-2 col-md-4 px-2">
 			<div class="card h-100">
 				<a href="syllabus/start" class="text-center align-text-middle text-success h-100">
 				<div class="card-body">
@@ -50,14 +50,19 @@
 						<div class="text-center vertical-align overlay-icon" id="checkIcon{$i}" >
 							<i class="fas fa-check fa-7x text-success"></i>
 						</div>
-						<img src="assets/images/testing0{$i}.jpg" class="card-img-top crop-top crop-top-13" alt="{$syllabus->title}" />
+						{if $syllabus->imageUrl}
+							<img src="{$syllabus->imageUrl}" class="card-img-top crop-top crop-top-13" alt="{$syllabus->title}" />
+						{else}
+							<img src="assets/images/testing0{$i}.jpg" class="card-img-top crop-top crop-top-13" alt="{$syllabus->title}" />
+						{/if}
+						
 					</div>
 					<div class="card-text p-3">
 					<h6 class="mt-3 text-dark">
 						<a href="syllabus/{$syllabus->id}" target="_blank">{$syllabus->title}</a>
 					</h6>
 					<small class="d-block">
-						<p class="card-text">{$syllabus->description}
+						<p class="card-text">{$syllabus->description|truncate:175}
 							<strong class="d-block">Last Modified:</strong> 
 							{$syllabus->modifiedDate->format('F jS, Y - h:i a')}
 						</p>
