@@ -10,11 +10,16 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
 	abstract public function getOrganization ($id=null);
 
-    protected function beforeCallback ($callback)
+    // protected function beforeCallback ($callback)
+    // {
+    //     parent::beforeCallback($callback);
+    // }
+
+    protected function initialize ()
     {
-        parent::beforeCallback($callback);
         $this->requireLogin();
-        if ($this->getRouteVariable('oid'))
+        $oid = $this->getRouteVariable('oid');
+        if ($oid && $oid !== 'new')
         {
             $this->_syllabusId = $this->getRouteVariable('id');
             $this->_organization = $this->getOrganization($this->getRouteVariable('oid'));
@@ -33,12 +38,14 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
     public function dashboard ()
     {
+        $this->initialize();
         $this->buildHeader('partial:_header.html.tpl', 'Dashboard', $this->_organization->name, '');
         $this->template->organization = $this->_organization;
     }
 
     public function start ()
     {
+        $this->initialize();
         $this->forward('syllabus/start', [
             'organization' => $this->_organization, 
             'routeBase' => $this->_routeBase
@@ -47,6 +54,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
     public function edit ()
     {
+        $this->initialize();
         $this->template->addBreadcrumb($this->_routeBase."syllabus/$this->_syllabusId", 'Edit Template');
 
         $this->forward('syllabus/new', [
@@ -58,6 +66,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
     public function view ()
     {
+        $this->initialize();
         $this->forward("syllabus/$this->_syllabusId/view", [
             'id' => $this->_syllabusId,
             'organization' => $this->_organization, 
@@ -68,6 +77,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
     public function delete ()
     {
+        $this->initialize();
         $this->forward("syllabus/$this->_syllabusId/delete", [
             'id' => $this->_syllabusId,
             'organization' => $this->_organization, 
@@ -78,6 +88,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
     public function startWith ()
     {
+        $this->initialize();
         if ($this->_organization && $this->_organization->userHasRole($this->requireLogin(), 'creator'))
         {
             $this->forward("syllabus/startwith/$this->_syllabusId", [
@@ -91,6 +102,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
     public function listTemplates ()
     {
+        $this->initialize();
         $this->buildHeader('partial:_header.html.tpl', 'Templates', $this->_organization->name, '');
         $this->addBreadcrumb($this->_routeBase.'templates', 'View Templates');
         $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
@@ -114,6 +126,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
     public function myOrganizations ()
     {
+        $this->initialize();
         // $this->buildHeader('partial:_header.edit.html.tpl', 'My Organizations', '', '');
         $viewer = $this->requireLogin();
         $departmentSchema = $this->schema('Syllabus_AcademicOrganizations_Department');
@@ -139,6 +152,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
     public function listOrganizations ()
     {
+        $this->initialize();
         // $this->buildHeader('partial:_header.edit.html.tpl', $this->organization->organizationType.'s', '', '');
         $viewer = $this->requireLogin();
         $this->template->clearBreadcrumbs();
@@ -161,12 +175,14 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
     public function manageOrganization ()
     {
+        $this->initialize();
         $viewer = $this->requireLogin();
         $this->_organization->requireRole('manager', $this);
     }
 
     public function manageSubmissions ()
     {
+        $this->initialize();
         $viewer = $this->requireLogin();
         if (!$this->_organization->userHasRole($viewer, 'moderator'))
         {
@@ -202,6 +218,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
     public function editSubmission ()
     {
+        $this->initialize();
         $viewer = $this->requireLogin();
         if (!$this->_organization->userHasRole($viewer, 'moderator'))
         {
@@ -288,6 +305,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
     public function editCampaign ()
     {
+        $this->initialize();
         $viewer = $this->requireLogin();
         $campaigns = $this->schema('Syllabus_Syllabus_SubmissionCampaign');
         $cid = $this->getRouteVariable('cid');
@@ -431,6 +449,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
     public function manageUsers ()
     {
+        $this->initialize();
         $viewer = $this->requireLogin();
         $organization = $this->getOrganization($this->getRouteVariable('oid'));
         $organization->requireRole('manager', $this);
@@ -522,6 +541,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
     public function editUser ()
     {
+        $this->initialize();
         $viewer = $this->requireLogin();
         $organization = $this->getOrganization($this->getRouteVariable('oid'));
         $organization->requireRole('manager', $this);

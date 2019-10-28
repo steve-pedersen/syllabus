@@ -196,6 +196,23 @@ class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                 $def->save();
                 break;
 
+            case 6:
+                $def = $this->createEntityType('syllabus_importable_sections',
+                    $this->getDataSource('Syllabus_Syllabus_ImportableSection')
+                );
+                $def->addProperty('id', 'int', ['sequence' => true, 'primaryKey' => true]);
+                $def->addProperty('title', 'string');
+                $def->addProperty('section_id', 'int');
+                $def->addProperty('organization_id', 'string');
+                $def->addProperty('importable', 'bool');
+                $def->addProperty('sort_order', 'int');
+                $def->addProperty('created_date', 'datetime');
+                $def->addProperty('modified_date', 'datetime');
+                $def->addProperty('external_key', 'string');
+                $def->save();
+
+                break;
+
         }
     }
 }

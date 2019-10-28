@@ -68,7 +68,7 @@
 			{if $submission->status == 'denied'}bg-context danger{/if}
 			{if $submission->status == 'disabled'}bg-context light {/if}
 		">
-			<td class="align-middle">[{$submission->courseSection->id}]</td>
+			<td class="align-middle">{$submission->courseSection->id}</td>
 			<td class="align-middle">{$submission->courseSection->getFullDisplayName()}</td>
 			<td class="align-middle">{$submission->status|ucfirst}</td>
 			<td class="align-middle">
@@ -161,9 +161,10 @@
 				<dd id="subSubmittedDate">N/A</dd>
 				<dt>Date Approved</dt>
 				<dd id="subApprovedDate">N/A</dd>
-				<dt>Submitted Syllabus</dt>
+				<dt>Submitted Online Syllabus</dt>
 				<dd id="subSyllabusView">Syllabus View URL (opens in new tab): <a href="" id="syllabusViewLink" target="_blank"></a></dd>
-				<dt>Submitted File</dt>
+				<dd id="subSyllabusWord"><a href="" id="syllabusWordLink"></a></dd>
+				<dt>Submitted File Syllabus</dt>
 				<dd id="subFileDownload">Syllabus file (click to download): <a href="" id="fileDownloadLink"></a></dd>
 			</dl>
 		</div>

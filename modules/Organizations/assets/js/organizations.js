@@ -13,7 +13,7 @@
         var syllabusTitle = $(e.relatedTarget).siblings('#syllabusTitle').val();
         var fileSrc = $(e.relatedTarget).siblings('#fileSrc').val();
         var fileName = $(e.relatedTarget).siblings('#fileName').val();
-
+        
         $('#editSubmissionForm').attr('action', $('#editSubmissionForm').attr('action') + submissionId);
         $('#submissionTitle').text('Evaluating submission for ' + courseSummary);
         $('#subCourseSection').text(courseSummary);
@@ -23,6 +23,7 @@
         
         if (syllabusId) {
             $('#syllabusViewLink').attr('href', 'syllabus/' + syllabusId + '/view').text(syllabusTitle);
+            $('#syllabusWordLink').attr('href', 'syllabus/' + syllabusId + '/word').text('Download as Word');
             if (!fileSrc) {
                 $('#subFileDownload').text('N/A');
             } else {
@@ -33,6 +34,7 @@
             }
         } else {
             $('#subSyllabusView').text('N/A');
+            $('#syllabusWordLink').text('');
             if (fileSrc) {
                 $('#fileDownloadLink').attr('href', fileSrc).text(fileName);
             }
@@ -43,11 +45,12 @@
         if (status == 'Approved') {
             $('#subStatus').text(status).addClass('text-success font-w900');
             $('#approveButton').hide();
-            $('#denyButton').val('Deny Even Though Already Approved?').attr('name', `command[deny][${submissionId}]`);
+            // $('#denyButton').val('Deny Even Though Already Approved?').attr('name', `command[deny][${submissionId}]`);
+            $('#denyButton').hide();
         } else {
             $('#subStatus').text(status).removeClass('text-success font-w900');
             $('#approveButton').show().attr('name', `command[approve][${submissionId}]`);    
-            $('#denyButton').val('Deny').attr('name', `command[deny][${submissionId}]`);
+            $('#denyButton').show().val('Deny').attr('name', `command[deny][${submissionId}]`);
         }
 
     });

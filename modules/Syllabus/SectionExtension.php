@@ -40,6 +40,12 @@ abstract class Syllabus_Syllabus_SectionExtension extends Bss_Core_NamedExtensio
         return 'assets/icons/sections/' . $this->getExtensionName() . '_light.png';
     }
 
+    public function getImportableSections ()
+    {
+        $importables = $this->getApplication()->schemaManager->getSchema('Syllabus_Syllabus_ImportableSection');
+        return $importables->find($importables->externalKey->equals($this->getExtensionKey()));
+    }
+
     public function initializeRecord (Bss_ActiveRecord_Base $record) {}
 
 }

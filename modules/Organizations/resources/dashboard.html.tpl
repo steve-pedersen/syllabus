@@ -15,6 +15,7 @@
 			<a href="{$organization->routeName}/{$organization->id}/settings" class="stretched-link"><i class="fa-2x mr-3"></i>
 			Settings</a></li> -->
 		{/if}
+	{if !$group}
 		{if $fullAccess || $organization->userHasRole($viewer, 'moderator')}
 			<li class="list-group-item list-group-item-action">
 				<i class="fas fa-cloud fa-2x col-1"></i>
@@ -47,5 +48,11 @@
 				<a href="{$organization->routeName}/{$organization->id}/communications" class="stretched-link">View Communications</a>
 			</li> -->
 		{/if}
+	{else}
+			<li class="list-group-item list-group-item-action">
+				<i class="far fa-folder-open fa-2x col-1"></i>
+				<a href="{$organization->routeName}/{$organization->id}/sections" class="stretched-link col-11">View Sections</a>
+			</li>
+	{/if}
 	</ul>
 </div>

@@ -20,19 +20,25 @@ class Syllabus_Syllabus_AdminDashboardItemProvider extends At_Admin_DashboardIte
                 'section' => 'Site Settings',
                 'order' => 0,
                 'href' => 'admin/templates/university',
-                'text' => 'Manage University Templates',
+                'text' => 'University Templates',
             ],
             'campus-resources' => [
                 'section' => 'Site Settings',
                 'order' => 2,
                 'href' => 'admin/syllabus/resources',
-                'text' => 'Manage Campus Resources',
+                'text' => 'Campus Resources',
             ],
             'guide-docs' => [
                 'section' => 'Site Settings',
                 'order' => 3,
                 'href' => 'admin/syllabus/guidedocs',
                 'text' => 'Shared Resources, Guidelines, and Documents',
+            ],
+            'groups' => [
+                'section' => 'Site Settings',
+                'order' => 3,
+                'href' => 'groups',
+                'text' => 'Groups',
             ],
         ];
     }

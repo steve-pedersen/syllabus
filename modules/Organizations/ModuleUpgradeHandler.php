@@ -25,6 +25,14 @@ class Syllabus_Organizations_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseM
                 $def->save();
 
                 break;
+
+            case 1:
+
+                $def = $this->alterEntityType('syllabus_groups', $this->getDataSource('Syllabus_Organizations_Group'));
+                $def->addProperty('is_system_level', 'string');
+                $def->save();
+
+                break;
         }
     }
 }
