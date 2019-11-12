@@ -155,8 +155,12 @@
     </div>
 </div>  
             
-    <div class="form-group d-flex flex-row mt-4">
-        <small class="alert alert-muted mr-auto mt-3">Note, new material items will be saved <u>only</u> if you fill out information in the fields above.</small>
+{if !$importableSections}
+    <div class="form-group d-flex flex-row-reverse mt-4">
+{else}
+    <div class="form-group d-flex justify-content-between mt-4">
+        {include file="{$sectionExtension->getImportFragment()}"}
+{/if}
         <input class="btn btn-light" id="addMaterialsSectionItemBtn" type="submit" name="command[addsectionitem][{$realSectionClass}]" value="+ Add Another Material" />
     </div>
 

@@ -84,8 +84,12 @@
     </div>
 </div>  
 
-            
+{if !$importableSections}
     <div class="form-group d-flex flex-row-reverse mt-4">
+{else}
+    <div class="form-group d-flex justify-content-between mt-4">
+        {include file="{$sectionExtension->getImportFragment()}"}
+{/if}
         <input class="btn btn-light" id="addSectionItemBtn" type="submit" name="command[addsectionitem][{$realSectionClass}]" value="+ Add Another Objective" />
     </div>
 </div>

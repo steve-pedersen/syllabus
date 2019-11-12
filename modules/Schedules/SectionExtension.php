@@ -26,6 +26,14 @@ class Syllabus_Schedules_SectionExtension extends Syllabus_Syllabus_SectionExten
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_schedules.export.html.tpl');
     }
+    public function getImportFragment ()
+    {
+        return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_import.html.tpl');
+    }
+    public function getPreviewFragment ()
+    {
+        return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_preview.html.tpl');
+    }
     public function getExtensionProperties ()
     {
         return [

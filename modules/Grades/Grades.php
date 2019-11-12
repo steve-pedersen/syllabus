@@ -101,4 +101,29 @@ class Syllabus_Grades_Grades extends Bss_ActiveRecord_Base
         return $errorMsg;
     }
 
+    public function copyImportables ($resolvedImportable)
+    {
+        $ignoredProperties = ['sortOrder', 'id', 'grades'];
+        $sortOrder = count($this->grades);
+        $imported = [];
+
+        foreach ($resolvedImportable->grades as $grade)
+        {
+            $deriv = $this->getSchema('Syllabus_Grades_Grade')->createInstance();
+            foreach ($grade->getData() as $key => $val)
+            {
+                if (!in_array($key, $ignoredProperties))
+                {
+                    $deriv->$key = $val;
+                }
+                $deriv->sortOrder = $sortOrder;
+                $sortOrder++;
+            }
+            $deriv->grades_id = $this->id;
+            $deriv->save();
+            $imported[] = $deriv;
+        }
+
+        return $imported;
+    }
 }

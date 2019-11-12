@@ -66,15 +66,6 @@ class Syllabus_LearningOutcomes_LearningOutcomes extends Bss_ActiveRecord_Base
                     $this->isNotWhiteSpaceOnly($learningOutcome, 'column2') ||
                     $this->isNotWhiteSpaceOnly($learningOutcome, 'column3'))
                 {
-                    // $obj = (!is_numeric($id)) ? $schema->createInstance() : $schema->get($id);
-                    // $save = true;
-                    // if ($obj->inDatasource)
-                    // {
-                    //     if ($obj->id != $id)
-                    //     {
-                    //         $save = false;
-                    //     }
-                    // }
                     $save = true;
                     $obj = $schema->createInstance();
                     if ($save)
@@ -95,5 +86,31 @@ class Syllabus_LearningOutcomes_LearningOutcomes extends Bss_ActiveRecord_Base
         }
 
         return $errorMsg;
+    }
+
+    public function copyImportables ($resolvedImportable)
+    {
+        $ignoredProperties = ['sortOrder', 'id', 'learningOutcomes'];
+        $sortOrder = count($this->learningOutcomes);
+        $imported = [];
+
+        foreach ($resolvedImportable->learningOutcomes as $learningOutcome)
+        {
+            $deriv = $this->getSchema('Syllabus_LearningOutcomes_LearningOutcome')->createInstance();
+            foreach ($learningOutcome->getData() as $key => $val)
+            {
+                if (!in_array($key, $ignoredProperties))
+                {
+                    $deriv->$key = $val;
+                }
+                $deriv->sortOrder = $sortOrder;
+                $sortOrder++;
+            }
+            $deriv->learning_outcomes_id = $this->id;
+            $deriv->save();
+            $imported[] = $deriv;
+        }
+
+        return $imported;
     }
 }

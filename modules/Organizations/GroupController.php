@@ -126,6 +126,7 @@ class Syllabus_Organizations_GroupController extends Syllabus_Organizations_Base
   		$importable = $sectionId ? $importables->get($sectionId) : $importables->createInstance();
   		$type = $this->request->getQueryParameter('type');
   		$realSectionExtension = $sectionVersions->createInstance()->getExtensionByName($type);
+        // echo "<pre>"; var_dump($realSectionExtension->getDisplayName()); die;
   		$realSectionClass = $realSectionExtension->getRecordClass();
   		$realSection = !$importable->inDataSource ? 
   			$this->schema($realSectionClass)->createInstance() : $importable->section->latestVersion->resolveSection();
@@ -136,6 +137,7 @@ class Syllabus_Organizations_GroupController extends Syllabus_Organizations_Base
   			switch ($this->getPostCommand())
   			{
   				case 'savesection':
+                    // echo "<pre>"; var_dump($data['importable']); die;
   					$errorMsg = $realSection->processEdit($this->request, $data);
   					if ($errorMsg === '')
   					{
@@ -157,7 +159,7 @@ class Syllabus_Organizations_GroupController extends Syllabus_Organizations_Base
 						$importable->organizationId = 'groups/' . $this->_organization->id;
 						$importable->createdDate = $importable->createdDate ?? new DateTime;
 						$importable->modifiedDate = new DateTime;
-						$importable->importable = $data['importable'];
+						$importable->importable = $data['importable'] && $data['importable'] === '1';
 						$importable->externalKey = $realSectionExtension->getExtensionKey();
 						$importable->section_id = $section->id;
 						$importable->save();

@@ -757,10 +757,47 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $realSection = $this->schema($realSectionClass)->createInstance();
                     $realSectionExtension = $sectionVersions->createInstance()->getExtensionByRecord($realSectionClass);
                     $extKey = $realSectionExtension->getExtensionKey();
-       
+
 					list($syllabusVersion, $newSectionVersionId) = $this->saveSection($syllabus, $syllabusVersion, $extKey, $organization);
 
                     $pathParts[] = $syllabusVersion->syllabus->id . '?edit=' . $newSectionVersionId;
+                    $pathParts = array_filter($pathParts);
+                    
+                    $this->flash($realSectionExtension->getDisplayName() . ' added.');
+                    $this->response->redirect(implode('/', $pathParts));
+                    break;
+
+                case 'importsection':
+
+                    $importables = $this->schema('Syllabus_Syllabus_ImportableSection');
+                    $realSectionClass = key($this->getPostCommandData());
+                    $realSection = $this->schema($realSectionClass)->createInstance();
+                    $realSectionExtension = $sectionVersions->createInstance()->getExtensionByRecord($realSectionClass);
+                    $extKey = $realSectionExtension->getExtensionKey();
+
+                    if (!isset($data['section']['versionId']) || $data['section']['versionId'] === 'new')
+                    {
+                        list($syllabusVersion, $newSectionVersionId) = $this->saveSection($syllabus, $syllabusVersion, $extKey, $organization);
+                        $sectionVersion = $sectionVersions->get($newSectionVersionId);
+                    }
+                    else
+                    {
+                        $sectionVersion = $sectionVersions->get($data['section']['versionId']);
+                    }
+
+                    if (isset($data['section']['real']['importable']))
+                    {
+                        foreach ($data['section']['real']['importable'] as $importableId)
+                        {
+                            $importable = $importables->get($importableId);
+                            $copied = $sectionVersion->resolveSection()->copyImportables(
+                                $importable->section->latestVersion->resolveSection()
+                            );
+                            $sectionVersion->resolveSection()->save();
+                        }
+                    }
+
+                    $pathParts[] = $syllabusVersion->syllabus->id . '?edit=' . $sectionVersion->id;
                     $pathParts = array_filter($pathParts);
                     
                     $this->flash($realSectionExtension->getDisplayName() . ' added.');
@@ -933,6 +970,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 $this->template->realSectionClass = $realSectionClass;
                 $this->template->sectionExtension = $realSectionExtension;
                 $this->template->editUri = '#section' . $realSectionName . 'Edit';
+                $this->template->importableSections = $realSectionExtension->getImportableSections();
             }
             else
             {
@@ -1004,6 +1042,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $this->template->hasDownstreamSection = $this->hasDownstreamSection($sectionVersion, $syllabus, $viewer) &&
                 !$this->isInheritedSection($sectionVersion, $syllabus->templateAuthorizationId);
             $this->template->editUri = '#section' . $realSectionExtension->getExtensionName() . 'Edit';
+            $this->template->importableSections = $realSectionExtension->getImportableSections();
         }
 
 

@@ -43,17 +43,39 @@ class Syllabus_Objectives_Objectives extends Bss_ActiveRecord_Base
             $htmlSanitizer = new Bss_RichText_HtmlSanitizer();
             foreach ($data['section']['real'] as $id => $objective)
             {
-                if ($this->isNotWhiteSpaceOnly($objective, 'description'))
+                if ($id === 'importable')
                 {
-                    // $obj = (!is_numeric($id)) ? $schema->createInstance() : $schema->get($id);
-                    // $save = true;
-                    // if ($obj->inDatasource)
-                    // {
-                    //     if ($obj->objectives_id != $this->id)
-                    //     {
-                    //         $save = false;
-                    //     }
-                    // }
+                    $existingItems = [];
+                    foreach ($data as $otherId => $otherResource)
+                    {
+                        if (is_numeric($otherId))
+                        {
+                            $existingItems[] = $otherResource;
+                        }
+                    }
+                    $sortCounter = count($existingItems);
+                    foreach ($resource as $campusResourceId)
+                    {
+                        $campusResource = $campusResources->get($campusResourceId);
+                        if ($campusResource->inDatasource)
+                        {
+                            $sortCounter++;
+                            $obj = $resources->createInstance();
+                            $obj = $this->copyCampusResource($campusResource, $obj);
+                            $obj->resources_id = $this->id;
+                            $obj->sortOrder = $sortCounter;
+                            $obj->isCustom = false;
+                            $obj->save();
+                        }
+                        else
+                        {
+                            $errorMsg = 'Invalid Campus Resource id was submitted.';
+                        }
+                    }
+                    unset($data['campusResources']);
+                }
+                elseif ($this->isNotWhiteSpaceOnly($objective, 'description'))
+                {
                     $save = true;
                     $obj = $schema->createInstance();
                     if ($save)
@@ -73,5 +95,31 @@ class Syllabus_Objectives_Objectives extends Bss_ActiveRecord_Base
         }
 
         return $errorMsg;
+    }
+
+    public function copyImportables ($resolvedImportable)
+    {
+        $ignoredProperties = ['sortOrder', 'id', 'objectives'];
+        $sortOrder = count($this->objectives);
+        $imported = [];
+
+        foreach ($resolvedImportable->objectives as $objective)
+        {
+            $deriv = $this->getSchema('Syllabus_Objectives_Objective')->createInstance();
+            foreach ($objective->getData() as $key => $val)
+            {
+                if (!in_array($key, $ignoredProperties))
+                {
+                    $deriv->$key = $val;
+                }
+                $deriv->sortOrder = $sortOrder;
+                $sortOrder++;
+            }
+            $deriv->objectives_id = $this->id;
+            $deriv->save();
+            $imported[] = $deriv;
+        }
+
+        return $imported;
     }
 }

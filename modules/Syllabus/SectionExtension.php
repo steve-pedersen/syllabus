@@ -30,7 +30,7 @@ abstract class Syllabus_Syllabus_SectionExtension extends Bss_Core_NamedExtensio
             return $this->getApplication()->schemaManager->getSchema($recordClass);
         }
     }
-
+    
     public function getDarkIcon ()
     {
         return 'assets/icons/sections/' . $this->getExtensionName() . '_dark.png';
@@ -43,7 +43,9 @@ abstract class Syllabus_Syllabus_SectionExtension extends Bss_Core_NamedExtensio
     public function getImportableSections ()
     {
         $importables = $this->getApplication()->schemaManager->getSchema('Syllabus_Syllabus_ImportableSection');
-        return $importables->find($importables->externalKey->equals($this->getExtensionKey()));
+        return $importables->find(
+            $importables->externalKey->equals($this->getExtensionKey())->andIf($importables->importable->isTrue())
+        );
     }
 
     public function initializeRecord (Bss_ActiveRecord_Base $record) {}

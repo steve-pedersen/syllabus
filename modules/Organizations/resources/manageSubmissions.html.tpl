@@ -63,10 +63,10 @@
 	<tbody>
 	{foreach $campaign->submissions as $i => $submission}
 		<tr class="
-			{if $submission->status == 'pending'}bg-context info{/if}
-			{if $submission->status == 'approved'}bg-context success{/if}
-			{if $submission->status == 'denied'}bg-context danger{/if}
-			{if $submission->status == 'disabled'}bg-context light {/if}
+			{if $submission->status == 'pending'}table-info{/if}
+			{if $submission->status == 'approved'}table-success{/if}
+			{if $submission->status == 'denied'}table-danger{/if}
+			{if $submission->status == 'disabled'}table-light {/if}
 		">
 			<td class="align-middle">{$submission->courseSection->id}</td>
 			<td class="align-middle">{$submission->courseSection->getFullDisplayName()}</td>

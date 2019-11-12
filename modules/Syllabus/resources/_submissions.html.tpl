@@ -33,9 +33,15 @@
 	{assign var=submission value=$courseSection->submission}
 
 
-	<tr class="{if ($submittedCourseId && $courseSection->id == $submittedCourseId) || $submission->status == 'approved'}bg-context success{/if}">
-		<td class="align-middle">{$courseSection->getFullDisplayName()} [{$courseSection->id}]{$submission->file_id}</td>
-		<td class="align-middle {if !$syllabus && !$submission->file}bg-context warning{else}{/if}" style="height: 6rem;">
+	<tr class="
+		{if ($submittedCourseId && $courseSection->id == $submittedCourseId) || $submission->status == 'approved'}
+			table-success
+		{elseif !$syllabus && !$submission->file}
+			table-warning
+		{/if}
+	">
+		<td class="align-middle">{$courseSection->getFullDisplayName()}</td>
+		<td class="align-middle {if !$syllabus && !$submission->file}table-warning{else}{/if}" style="height: 6rem;">
 			{if $syllabus && !$submission->file}
 				<a href="syllabus/{$syllabus->id}">
 					<img src="{if $courseSection->imageUrl}{$courseSection->imageUrl}{else}assets/images/placeholder-4.jpg{/if}" class="img-thumbnail mr-2" alt="Syllabus thumbnail" style="max-height: 6rem; min-height: 5rem;border:5px solid #efefef;">
@@ -55,14 +61,24 @@
 				<em>No syllabus associated with this course. Use the <a href="syllabi?mode=courses">Courses</a> tab to create a new syllabus.</em>
 			{/if}
 		</td>
-		<td class="align-middle text-center ">
+		<td class="align-middle text-center">
 		{if $submission && $syllabus}
 			<span data-toggle="tooltip" data-placement="top" title="{$submission->getStatusHelpText($submission->status)}">
-				<u class="text-dark">{$submission->status|ucfirst}</u>
+				<i class="far fa-question-circle mr-1 text-muted"></i>
+				<u class="
+					{if $submission->status == 'pending'}
+						text-info
+					{elseif $submission->status == 'approved'}
+						text-success
+					{elseif $submission->status == 'denied'}
+						text-danger
+					{/if} 
+					text-uppercase">{$submission->status|ucfirst}</u>
 			</span>
 		{elseif $submission}
 			<span data-toggle="tooltip" data-placement="top" title="{$submission->getStatusHelpText($submission->status)}{if $submission->status == 'open'}. You may create a new syllabus for this course or upload your own.{/if}">
-				<u class="text-dark">{$submission->status|ucfirst}</u>
+				<i class="far fa-question-circle mr-1 text-muted"></i>
+				<u class="text-dark text-uppercase">{$submission->status|ucfirst}</u>
 			</span>
 		{else}
 			No submission required

@@ -27,6 +27,14 @@ class Syllabus_Grades_SectionExtension extends Syllabus_Syllabus_SectionExtensio
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_grades.export.html.tpl');
     }
+    public function getImportFragment ()
+    {
+        return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_import.html.tpl');
+    }
+    public function getPreviewFragment ()
+    {
+        return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_preview.html.tpl');
+    }
     public function getExtensionProperties ()
     {
         return [

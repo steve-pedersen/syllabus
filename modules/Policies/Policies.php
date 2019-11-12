@@ -45,15 +45,6 @@ class Syllabus_Policies_Policies extends Bss_ActiveRecord_Base
             {
                 if ($this->isNotWhiteSpaceOnly($policy, 'description'))
                 {
-                    // $obj = (!is_numeric($id)) ? $schema->createInstance() : $schema->get($id);
-                    // $save = true;
-                    // if ($obj->inDatasource)
-                    // {
-                    //     if ($obj->id != $id)
-                    //     {
-                    //         $save = false;
-                    //     }
-                    // }
                     $save = true;
                     $obj = $schema->createInstance();
                     if ($save)
@@ -73,5 +64,31 @@ class Syllabus_Policies_Policies extends Bss_ActiveRecord_Base
         }
 
         return $errorMsg;
+    }
+
+    public function copyImportables ($resolvedImportable)
+    {
+        $ignoredProperties = ['sortOrder', 'id', 'policies'];
+        $sortOrder = count($this->policies);
+        $imported = [];
+
+        foreach ($resolvedImportable->policies as $policy)
+        {
+            $deriv = $this->getSchema('Syllabus_Policies_Policy')->createInstance();
+            foreach ($policy->getData() as $key => $val)
+            {
+                if (!in_array($key, $ignoredProperties))
+                {
+                    $deriv->$key = $val;
+                }
+                $deriv->sortOrder = $sortOrder;
+                $sortOrder++;
+            }
+            $deriv->policies_id = $this->id;
+            $deriv->save();
+            $imported[] = $deriv;
+        }
+
+        return $imported;
     }
 }

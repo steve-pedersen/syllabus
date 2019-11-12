@@ -38,7 +38,14 @@ class Syllabus_Syllabus_ImportableSection extends Bss_ActiveRecord_Base
     {
         $len = strlen($this->externalKey);
         $type = substr($this->externalKey, 0, $len - 3);
-
+        if ($type === 'grading')
+        {
+            return ucfirst('grades');
+        }
+        if ($type === 'schedule')
+        {
+            return ucfirst('schedules');
+        }
         if ($plural)
         {
             return ucfirst($type);

@@ -45,15 +45,6 @@ class Syllabus_Activities_Activities extends Bss_ActiveRecord_Base
             {
                 if ($this->isNotWhiteSpaceOnly($activity, 'name'))
                 {
-                    // $obj = (!is_numeric($id)) ? $schema->createInstance() : $schema->get($id);
-                    // $save = true;
-                    // if ($obj->inDatasource)
-                    // {
-                    //     if ($obj->id != $id)
-                    //     {
-                    //         $save = false;
-                    //     }
-                    // }
                     $save = true;
                     $obj = $schema->createInstance();
                     if ($save)
@@ -74,5 +65,32 @@ class Syllabus_Activities_Activities extends Bss_ActiveRecord_Base
         }
 
         return $errorMsg;
+    }
+
+    public function copyImportables ($resolvedImportable)
+    {
+        $ignoredProperties = ['sortOrder', 'id', 'activities'];
+        $sortOrder = count($this->activities);
+        $imported = [];
+
+        foreach ($resolvedImportable->activities as $activity)
+        {
+            $deriv = $this->getSchema('Syllabus_Activities_Activity')->createInstance();
+            foreach ($activity->getData() as $key => $val)
+            {
+                // echo "<pre>"; var_dump($activity->getData()); die;
+                if (!in_array($key, $ignoredProperties))
+                {
+                    $deriv->$key = $val;
+                }
+                $deriv->sortOrder = $sortOrder;
+                $sortOrder++;
+            }
+            $deriv->activities_id = $this->id;
+            $deriv->save();
+            $imported[] = $deriv;
+        }
+
+        return $imported;
     }
 }

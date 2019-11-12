@@ -22,7 +22,7 @@
 	{foreach $sortedImportableSections as $type => $importableSections}
 		{assign var=extension value=$importableSections[0]->getSectionExtension()}
 	
-	<div class="card border-bottom">
+	<div class="card border-bottom mb-3">
 		<div class="card-header" id="heading{$type}">
 			<button class="btn btn-link pl-0" type="button" data-toggle="collapse" data-target="#collapse{$type}" aria-expanded="true" aria-controls="collapse{$type}">
 				<h4 class="mb-0">
@@ -31,24 +31,24 @@
 			</button>
 		</div>
 
-		<div id="collapse{$type}" class="collapse show {if $expanded}show{/if}" aria-labelledby="heading{$type}" data-parent="#sectionsAccordion">
+		<div id="collapse{$type}" class="collapse show" aria-labelledby="heading{$type}" data-parent="#sectionsAccordion">
 			{assign var=expanded value=false}
 			<div class="card-body-no">
 				
 				<table class="table table-sm ">
 				<thead class="thead-darks">
 					<tr class="">
-						<th scope="col" class="" style="">Title</th>
-						<th scope="col" class="" style="">Modified Date</th>
-						<th scope="col" class=""></th>
+						<th style="width:33%" scope="col" class="">Title</th>
+						<th style="width:33%" scope="col" class="">Modified Date</th>
+						<th style="width:33%" scope="col" class=""></th>
 					</tr>
 				</thead>
 				<tbody>
 			{foreach $importableSections as $importable}
 				<tr class="">
-					<td class="align-middle">{$importable->title}</td>
-					<td class="align-middle">{$importable->modifiedDate->format('F jS, Y - h:i a')}</td>
-					<td class="align-middle text-center">
+					<td style="width:33%" class="align-middle">{$importable->title}</td>
+					<td style="width:33%" class="align-middle">{$importable->modifiedDate->format('F jS, Y - h:i a')}</td>
+					<td style="width:33%" class="align-middle text-center">
 						<a href="groups/{$group->id}/sections/edit?s={$importable->id}&type={$type|lcfirst}" class="btn btn-info btn-sm">
 							Edit
 						</a>
@@ -57,10 +57,9 @@
 			{/foreach}
 				</tbody>
 				</table>
-				</div>
 			</div>
 		</div>
-	</div>		
+	</div>
 
 	{/foreach}
 </div>

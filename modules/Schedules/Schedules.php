@@ -78,15 +78,6 @@ class Syllabus_Schedules_Schedules extends Bss_ActiveRecord_Base
             {
                 if ($this->isNotWhiteSpaceOnly($schedule, 'column1') || $this->isNotWhiteSpaceOnly($schedule, 'column2'))
                 {
-                    // $obj = (!is_numeric($id)) ? $schema->createInstance() : $schema->get($id);
-                    // $save = true;
-                    // if ($obj->inDatasource)
-                    // {
-                    //     if ($obj->id != $id)
-                    //     {
-                    //         $save = false;
-                    //     }
-                    // }
                     $save = true;
                     $obj = $schema->createInstance();
                     if ($save)
@@ -116,5 +107,31 @@ class Syllabus_Schedules_Schedules extends Bss_ActiveRecord_Base
         }
 
         return $errorMsg;
+    }
+
+    public function copyImportables ($resolvedImportable)
+    {
+        $ignoredProperties = ['sortOrder', 'id', 'schedules'];
+        $sortOrder = count($this->schedules);
+        $imported = [];
+        
+        foreach ($resolvedImportable->schedules as $schedule)
+        {
+            $deriv = $this->getSchema('Syllabus_Schedules_Schedule')->createInstance();
+            foreach ($schedule->getData() as $key => $val)
+            {
+                if (!in_array($key, $ignoredProperties))
+                {
+                    $deriv->$key = $val;
+                }
+                $deriv->sortOrder = $sortOrder;
+                $sortOrder++;
+            }
+            $deriv->schedules_id = $this->id;
+            $deriv->save();
+            $imported[] = $deriv;
+        }
+
+        return $imported;
     }
 }
