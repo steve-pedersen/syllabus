@@ -137,7 +137,7 @@ class Syllabus_Organizations_GroupController extends Syllabus_Organizations_Base
   			switch ($this->getPostCommand())
   			{
   				case 'savesection':
-                    // echo "<pre>"; var_dump($data['importable']); die;
+                    echo "<pre>"; var_dump($data); die;
   					$errorMsg = $realSection->processEdit($this->request, $data);
   					if ($errorMsg === '')
   					{
@@ -174,8 +174,12 @@ class Syllabus_Organizations_GroupController extends Syllabus_Organizations_Base
 
   					break;
 
-  				case 'deletesection':
-
+  				case 'deletesectionitem':
+                    $realSectionItemClass = key($this->getPostCommandData());
+                    $deleteId = key($this->getPostCommandData()[$realSectionItemClass]);
+                    $item = $this->schema($realSectionItemClass)->get($deleteId);
+                    $item->delete();
+                    $this->flash('Deleted.');
   					break;
   			}
   		}

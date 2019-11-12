@@ -1,5 +1,13 @@
+{assign var=materials value=$importable->section->latestVersion->resolveSection()->materials}
 <div class="preview-container">
 	<table class="table table-striped table-sm ">
+		<thead class="bg-primary text-white">
+			<tr>
+				<th scope="col">{$materials->header1}</th>
+				<th scope="col">{$materials->header2}</th>
+				<th scope="col">{$materials->header3}</th>
+			</tr>			
+		</thead>
 		<tbody>
 	{foreach $importable->section->latestVersion->resolveSection()->materials as $material}
 		<tr>

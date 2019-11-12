@@ -961,6 +961,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 }
                 if ($realSectionExtension->hasDefaults() && ($defaults = $realSection->getDefaults()))
                 {
+                    echo "<pre>"; var_dump(9); die;
                 	$realSection = $defaults;
                 }
 
