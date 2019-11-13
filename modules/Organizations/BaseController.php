@@ -518,19 +518,30 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                 );
         }
   
-        $totalAccounts = $organization->getRoleUserCount('member', true, $condition);
-        $pageCount = ceil($totalAccounts / $limit);
-        $this->template->pagesAroundCurrent = $this->getPagesAroundCurrent($page, $pageCount, $organization);
+        if ($orgType === 'groups')
+        {
+            $totalAccounts = $accounts->count($condition);
+            $pageCount = ceil($totalAccounts / $limit);
+            
+            $this->template->pagesAroundCurrent = $this->getPagesAroundCurrent($page, $pageCount, $this->_organization);
+            
+            $accountList = $accounts->find($condition, $optionMap);
+        }
+        else
+        {
+            $totalAccounts = $organization->getRoleUserCount('member', true, $condition);
+            $pageCount = ceil($totalAccounts / $limit);
+            $this->template->pagesAroundCurrent = $this->getPagesAroundCurrent($page, $pageCount, $organization);
 
-        // DEBUG override of optionMap
-        $memberList = $organization->getRoleUsers('member', true, $condition, $optionMap);
-        
+            // DEBUG override of optionMap
+            $accountList = $organization->getRoleUsers('member', true, $condition, $optionMap);            
+        }    
 
         $this->template->searchQuery = $searchQuery;
         $this->template->totalAccounts = $totalAccounts;
         $this->template->pageCount = $pageCount;
         $this->template->currentPage = $page;
-        $this->template->accountList = $memberList;
+        $this->template->accountList = $accountList;
         $this->template->sortBy = $sortBy;
         $this->template->dir = $sortDir;
         $this->template->oppositeDir = ($sortDir == 'asc' ? 'desc' : 'asc');

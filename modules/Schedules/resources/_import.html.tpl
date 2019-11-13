@@ -21,7 +21,7 @@
 
         <div class="container-fluid campus-policiess-overview row">
         <p class="lead">
-            Select the content preview to add to your syllabus. You are able to view, edit, or remove the full content once it has been added to your syllabus.
+            <strong>Note, the following content will be added in addition to your current content and will NOT replace any of your work.</strong> Select the content preview to add to your syllabus. You are able to view, edit, or remove the full content once it has been added to your syllabus.
         </p>
 
         {foreach $importableSections as $i => $importable}

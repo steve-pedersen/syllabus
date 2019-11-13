@@ -137,7 +137,7 @@ class Syllabus_Organizations_GroupController extends Syllabus_Organizations_Base
   			switch ($this->getPostCommand())
   			{
   				case 'savesection':
-                    if ($importable && $realSection)
+                    if (!isset($data['importable']) && $importable && $realSection)
                     {
                         $key = $realSectionExtension->getExtensionName();
                         foreach ($importable->section->latestVersion->resolveSection()->$key as $item)

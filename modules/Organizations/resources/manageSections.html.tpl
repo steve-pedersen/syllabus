@@ -1,5 +1,8 @@
 <div class="container-fluid">
 <h1>Manage Sections</h1>
+<p class="lead">
+	<strong>Important!</strong> When faculty import these sections into their syllabi, they are only copying the section items and adding them into their own pre-existing sections. For example, if a user has a materials list with two textbooks and then they import a Materials section which contains lab materials, it will add this lab info to the already existing list.
+</p>
 <form action="groups/{$group->id}/sections/edit" method="get" class="">
 <div class="row">
 	<div class="col p-3 ">
