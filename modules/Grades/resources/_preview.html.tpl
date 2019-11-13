@@ -6,11 +6,11 @@
 			<tr>
 				<th scope="col">{$grades->header1}</th>
 				<th scope="col">{$grades->header2}</th>
-				<th scope="col">{$grades->header3}</th>
+				{if $grades->columns == 3}<th scope="col">{$grades->header3}</th>{/if}
 			</tr>			
 		</thead>
 	<tbody>
-	{foreach $grades as $i => $grade}
+	{foreach $grades->grades as $i => $grade}
 		{if $i < 5}
 		<tr>
 			<td class="font-w700">{$grade->column1|truncate:50}</td>

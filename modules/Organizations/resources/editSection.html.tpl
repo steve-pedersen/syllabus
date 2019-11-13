@@ -1,6 +1,7 @@
 <div class="container-fluid">
 	<h1 class="mb-4">{$sectionExtension->getDisplayName()}</h1>
-	<form action="{$smarty.server.REQUEST_URI}" method="post">
+	<form action="{$smarty.server.REQUEST_URI}" method="post" form="groupForm">
+		{assign var=groupForm value=true}
         <div class="form-group row">
             <label class="col-lg-3 col-form-label form-control-label">Section Name</label>
             <div class="col-lg-9">
