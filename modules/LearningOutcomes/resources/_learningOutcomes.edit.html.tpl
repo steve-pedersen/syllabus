@@ -53,7 +53,13 @@
                 
                 <div class="d-flex justify-content-between">
                     <label class="form-control-label px-2 row-label">Row #{$i + 1}</label>
-                    <button type="submit" aria-label="Delete" class="btn btn-link text-danger my-0 mx-2" name="command[deletesectionitem][Syllabus_LearningOutcomes_LearningOutcome][{$learningOutcomeId}]" id="{$learningOutcomeId}">
+                    <button type="submit" aria-label="Delete" class="btn btn-link text-danger my-0 mx-2" 
+                    {if $groupForm}
+                        name="command[deleteitem][Syllabus_LearningOutcomes_LearningOutcome][{$learningOutcomeId}]" 
+                    {else}
+                        name="command[deletesectionitem][Syllabus_LearningOutcomes_LearningOutcome][{$learningOutcomeId}]" 
+                    {/if}
+                    id="{$activityId}">
                         <i class="fas fa-trash-alt mr-1"></i>Delete
                     </button>
                 </div>

@@ -18,7 +18,13 @@
                 <input type="hidden" name="section[real][{$activityId}][sortOrder]" value="{$sortOrder}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
                 <div class="d-flex justify-content-end">
                     <!-- <label class="form-control-label px-2 row-label">Row #{$i + 1}</label> -->
-                    <button type="submit" aria-label="Delete" class="btn btn-link text-danger my-0 mx-2" name="command[deletesectionitem][Syllabus_Activities_Activity][{$activityId}]" id="{$activityId}">
+                    <button type="submit" aria-label="Delete" class="btn btn-link text-danger my-0 mx-2" 
+                    {if $groupForm}
+                        name="command[deleteitem][Syllabus_Activities_Activity][{activityId}]" 
+                    {else}
+                        name="command[deletesectionitem][Syllabus_Activities_Activity][{activityId}]" 
+                    {/if}
+                    id="{$activityId}">
                         <i class="fas fa-trash-alt mr-1"></i>Delete
                     </button>
                 </div>
