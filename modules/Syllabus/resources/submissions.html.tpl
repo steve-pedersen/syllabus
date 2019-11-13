@@ -20,7 +20,9 @@
                 </dd>
             {else}
                 <dd><a href="{$submission->fileSrc}">{$submission->file->remoteName}</a></dd>
+            {if !$submission->approvedDate}
                 <dd><a href="syllabus/submissions/file?upload=true&c={$courseSection->id}" class="btn btn-info">Upload a Different Syllabus</a></dd>
+            {/if}
             {/if}
 
                 <dt>Submission Status</dt>
@@ -47,7 +49,7 @@
             </dl>
 
             <div class="my-3 py-3">
-            {if $courseSection->syllabus && !$submission->syllabus_id}
+            {if $courseSection->syllabus && !$submission->syllabus_id && $submission->status != 'approved'}
 
                 <form action="syllabus/submissions" method="post">
                     <p>

@@ -207,8 +207,11 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         {
             $this->_organization->requireRole('manager', $this);
         }
+        // $submission = $this->requireExists(
+        //     $this->schema('Syllabus_Syllabus_Submission')->get($this->getRouteVariable('sid'))
+        // );
         $submission = $this->requireExists(
-            $this->schema('Syllabus_Syllabus_Submission')->get($this->getRouteVariable('sid'))
+            $this->schema('Syllabus_Syllabus_Submission')->get($this->request->getQueryParameter('sid'))
         );
         $this->addBreadcrumb($this->_routeBase . '/submissions/' . $submission->id, 'Edit Submission');
 
@@ -250,6 +253,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                     break;
 
                 case 'approve':
+                    echo "<pre>"; var_dump('ok'); die;
                     $submission->status = 'approved';
                     $submission->approvedDate = new DateTime;
                     $submission->feedback = $this->request->getPostParameter('feedback');
@@ -265,6 +269,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                     break;
 
                 case 'deny':
+                    echo "<pre>"; var_dump('ok'); die;
                     $submission->status = 'denied';
                     $submission->feedback = $this->request->getPostParameter('feedback');
                     $submission->log .= "
