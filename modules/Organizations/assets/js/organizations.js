@@ -13,8 +13,9 @@
         var syllabusTitle = $(e.relatedTarget).siblings('#syllabusTitle').val();
         var fileSrc = $(e.relatedTarget).siblings('#fileSrc').val();
         var fileName = $(e.relatedTarget).siblings('#fileName').val();
-        
-        $('#editSubmissionForm').attr('action', $('#editSubmissionForm').attr('action') + submissionId);
+        var action = $('#reviewSubmissionModal #editSubmissionForm').attr('action');
+
+        $('#reviewSubmissionModal #editSubmissionForm').attr('action', action + submissionId);
         $('#submissionTitle').text('Evaluating submission for ' + courseSummary);
         $('#subCourseSection').text(courseSummary);
         $('#subDueDate').text(dueDate);
