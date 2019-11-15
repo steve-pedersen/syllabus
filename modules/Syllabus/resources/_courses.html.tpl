@@ -16,6 +16,7 @@
 
 	{foreach $myCourses as $i => $courseSection}
 			{assign var=syllabus value=$courseSection->courseSyllabus}
+			{assign var=submission value=$courseSection->submission}
 
 			<tr class="">
 				<td class="align-middle" style="width:35%;">
@@ -69,7 +70,11 @@
 					{if $syllabus}<input type="hidden" name="course[{$courseSection->id}][syllabusId]" value="{$syllabus->id}">{/if}
 					<p class="border-bottom pb-2">
 						<em>This class currently does not have a syllabus associated with it.</em>
+						{if $submission->file->id}
+							You have <a href="{$submission->fileSrc}">uploaded a syllabus (download link)</a> for department submission.
+						{/if}
 					</p>
+					
 					{if $courseSection->pastCourseSyllabi}
 					<!-- <p class="">Duplicate a previous syllabus or start from scratch.</p> -->
 					{/if}

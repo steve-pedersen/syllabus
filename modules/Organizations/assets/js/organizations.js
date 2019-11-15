@@ -14,7 +14,7 @@
         var fileSrc = $(e.relatedTarget).siblings('#fileSrc').val();
         var fileName = $(e.relatedTarget).siblings('#fileName').val();
         var action = $('#reviewSubmissionModal #editSubmissionForm').attr('action');
-
+        console.log(action);
         $('#reviewSubmissionModal #editSubmissionForm').attr('action', action + submissionId);
         $('#submissionTitle').text('Evaluating submission for ' + courseSummary);
         $('#subCourseSection').text(courseSummary);
