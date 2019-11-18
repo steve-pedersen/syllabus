@@ -35,9 +35,9 @@
 
 	<tr class="
 		{if ($submittedCourseId && $courseSection->id == $submittedCourseId) || $submission->status == 'approved'}
-			table-success
+			bg-context success
 		{elseif !$syllabus && !$submission->file}
-			table-warning
+			
 		{/if}
 	">
 		<td class="align-middle">{$courseSection->getFullDisplayName()}</td>
