@@ -98,9 +98,9 @@
 							<select name="courseSyllabus" class="form-control " id="course{$i}SyllabusOption">
 								<option value="off" default>Choose other syllabus to start from...</option>
 							{foreach $courseSection->pastCourseSyllabi as $pastCourse}
-								{if $pastCourse->semester}
+								{if $pastCourse->semester && $pastCourse->syllabus->id}
 								<option value="{$pastCourse->syllabus->id}">[{$pastCourse->getShortName(true)}] {$pastCourse->syllabus->title}</option>
-								{else}
+								{elseif $pastCourse->latestVersion->id}
 								<option value="{$pastCourse->id}">[Non-course syllabus] {$pastCourse->latestVersion->title}</option>
 								{/if}
 							{/foreach}
