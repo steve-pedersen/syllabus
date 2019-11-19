@@ -14,7 +14,10 @@
 {else}
 <h1>Unauthorized</h1>
 <p>
-    Sorry, you do not have permission to access the requested resource. If this
-    is a mistake, please contact <a href="help/support">our support team</a>.
+    Sorry, you do not have permission to access the requested resource. <br>
+    If this is a mistake, or you wish to request special access to create syllabi, 
+    please contact our support team at 
+    <a href="mailto:ilearn@sfsu.edu?subject=Syllabus Access Request&body=(Please include your department and position at SF State)">
+    ilearn@sfsu.edu</a>.
 </p>
 {/if}
