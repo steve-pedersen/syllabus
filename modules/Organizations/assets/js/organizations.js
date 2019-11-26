@@ -46,12 +46,12 @@
         if (status == 'Approved') {
             $('#subStatus').text(status).addClass('text-success font-w900');
             $('#approveButton').show().val('Save Feedback');
-            // $('#denyButton').val('Deny Even Though Already Approved?').attr('name', `command[deny][${submissionId}]`);
+            // $('#denyButton').val('Request Revisions Even Though Already Approved?').attr('name', `command[deny][${submissionId}]`);
             $('#denyButton').hide();
         } else {
             $('#subStatus').text(status).removeClass('text-success font-w900');
             $('#approveButton').show().val('Approve').attr('name', `command[approve][${submissionId}]`);    
-            $('#denyButton').show().val('Deny').attr('name', `command[deny][${submissionId}]`);
+            $('#denyButton').show().val('Request Revisions').attr('name', `command[deny][${submissionId}]`);
         }
 
     });

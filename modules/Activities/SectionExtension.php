@@ -10,6 +10,7 @@ class Syllabus_Activities_SectionExtension extends Syllabus_Syllabus_SectionExte
     public function getRecordClass () { return 'Syllabus_Activities_Activities'; }
     public function getSectionTasks () { return []; }
     public function canHaveMultiple () { return true; }
+    public function hasImportableContent () { return true; }
     public function getEditFormFragment ()
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_activities.edit.html.tpl');

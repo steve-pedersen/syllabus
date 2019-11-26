@@ -10,6 +10,7 @@ class Syllabus_TeachingAssistants_SectionExtension extends Syllabus_Syllabus_Sec
     public function getRecordClass () { return 'Syllabus_TeachingAssistants_TeachingAssistants'; }
     public function getSectionTasks () { return []; }
     public function canHaveMultiple () { return false; }
+    public function hasImportableContent () { return true; }
     public function getEditFormFragment ()
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_teachingAssistants.edit.html.tpl');

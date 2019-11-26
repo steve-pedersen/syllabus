@@ -9,6 +9,7 @@ class Syllabus_Policies_SectionExtension extends Syllabus_Syllabus_SectionExtens
     public function getHelpText () { return ''; }
     public function getRecordClass () { return 'Syllabus_Policies_Policies'; }
     public function getSectionTasks () { return []; }
+    public function hasImportableContent () { return true; }
     public function getEditFormFragment ()
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_policies.edit.html.tpl');

@@ -58,7 +58,7 @@
 				Syllabus with title 
 					<a href="syllabus/{$syllabus->id}">{$syllabus->latestVersion->title}</a> available to be submitted as well.
 			{else}
-				<em>No syllabus associated with this course. Use the <a href="syllabi?mode=courses">Courses</a> tab to create a new syllabus.</em>
+				<em>No syllabus associated with this course. Use the <a href="syllabi?mode=courses&f={$courseSection->id}">Courses</a> tab to create a new syllabus.</em>
 			{/if}
 		</td>
 		<td class="align-middle text-center">

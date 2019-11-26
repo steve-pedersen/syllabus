@@ -10,6 +10,7 @@ class Syllabus_Schedules_SectionExtension extends Syllabus_Syllabus_SectionExten
     public function getRecordClass () { return 'Syllabus_Schedules_Schedules'; }
     public function getSectionTasks () { return []; }
     public function hasDefaults () { return true; }
+    public function hasImportableContent () { return true; }
     public function getEditFormFragment ()
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_schedules.edit.html.tpl');

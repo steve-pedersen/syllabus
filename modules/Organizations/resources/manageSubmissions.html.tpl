@@ -26,29 +26,38 @@
 
     <div id="collapse{$campaign@index}" class="collapse px-0 col-12 mt-0 {if $campaign->id == $activeCampaign->id}show{/if}" aria-labelledby="headingOne" data-parent="#termAccordion">
 
-	<div class="px-3 pt-3 bg-light">
-		<div class="d-flex">
-			<dl class="mb-0 p-3">
-				<dt>Submission due date</dt>
-				<dd>{$campaign->dueDate->format('F jS, Y - h:i a')}</dd>
-				<dd>{$campaign->dueDateInterval}</dd>
-				<dt>Submission statuses for this campaign</dt>
-					{assign var=stats value=$campaign->statistics}
-				<dd>
-					{$stats['open']} open, {$stats['pending']} pending (submitted), 
-					{$stats['approved']} approved, {$stats['denied']} denied
-				</dd>
-				<dd>
-					{$stats['total']} total
-				</dd>
-				<dt>Campaign description</dt>
-				<dd>{$campaign->description}</dd>
-			</dl>			
-			<a href="#" class="ml-auto mt-auto pb-4">
-				<i class="mr-2 far fa-file-excel"></i>Download as CSV
-			</a>
+	<div class="col-xl-9 col-lg-10 col-md-12 ">
+		<table class="table table-responsive text-center">
+			<thead>
+				<tr>
+					<th class="text-left">Submission due date <span class="text-muted">{$campaign->dueDateInterval}</span></th>
+					<th>Open</th>
+					<th class="text-center">Pending (submitted)</th>
+					<th>Approved</th>
+					<th>Denied</th>
+					<th>Total</th>
+				</tr>
+			</thead>
+			<tbody>{assign var=stats value=$campaign->statistics}
+				<tr class="border-bottom align-top" style="line-height: 3em;">
+					<td class="text-left">{$campaign->dueDate->format('F jS, Y - h:i a')}</td>
+					<td>{$stats['open']}</td>
+					<td class="text-center">{$stats['pending']}</td>
+					<td>{$stats['approved']}</td>
+					<td>{$stats['denied']}</td>
+					<td>{$stats['total']}</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="col-12 mt-3">
+			<strong>Campaign Description</strong>
+			<div>{$campaign->description}</div>
 		</div>
-
+	</div>
+	<div class="d-flex">		
+		<a href="#" class="ml-auto mt-auto pb-4">
+			<i class="mr-2 far fa-file-excel"></i>Download as CSV
+		</a>
 	</div>
 
 	<table class="table table-sm table-bordered">
@@ -70,28 +79,45 @@
 		">
 			<td class="align-middle">{$submission->courseSection->id}</td>
 			<td class="align-middle">{$submission->courseSection->getFullDisplayName()}</td>
-			<td class="align-middle">{$submission->status|ucfirst}</td>
-			<td class="align-middle">
 				{if $submission->status == 'open'}
+			<td class="align-middle text-center font-w800"><small class="text-uppercase text-primary font-w800 text-center">Open</small></td>
+				<td>
 				<form action="{$routeBase}submissions/{$submission->id}" method="post" id="editSubmissionForm">
 					<input name="command[disable]" type="submit" class="btn btn-primary btn-sm" value="Disable" id="disableButton">
 					{generate_form_post_key}
 				</form>
+			</td>
 				{elseif $submission->status == 'disabled'}
-				<form action="{$routeBase}submissions/{$submission->id}" method="post" id="editSubmissionForm">
-					<input name="command[enable]" type="submit" class="btn btn-secondary btn-sm" value="Re-Enable" id="enableButton">
-					{generate_form_post_key}
-				</form>
+			<td class="align-middle text-center font-w800"><small class="text-light font-w800 text-uppercase">Disabled</small></td>
+				<td>
+					<form action="{$routeBase}submissions/{$submission->id}" method="post" id="editSubmissionForm">
+						<input name="command[enable]" type="submit" class="btn btn-secondary btn-sm" value="Re-Enable" id="enableButton">
+						{generate_form_post_key}
+					</form>
+				</td>
 				{elseif $submission->status == 'pending'}
+				<td class="align-middle text-center"><small class="text-info font-w800 text-uppercase">Pending</small></td>
+				<td>
 					<button id="review{$i}" class="btn btn-info btn-sm" data-toggle="modal" data-target="#reviewSubmissionModal" data-submission="{$submission->id}">
 						Review
 					</button>
+				</td>
 				{elseif $submission->status == 'approved'}
+				<td class="align-middle text-center"><small class="text-success font-w800 text-uppercase">Approved</small></td>
+					<td>
 					<button id="review{$i}" class="btn btn-success btn-sm" data-toggle="modal" data-target="#reviewSubmissionModal" data-submission="{$submission->id}">
 						Approved
 					</button>
+					</td>
 				{elseif $submission->status == 'denied'}
-					<button class="btn btn-warning btn-sm">Disable</button>
+				<td class="align-middle text-center">
+					<small class="text-danger font-w800 text-uppercase">Revisions Requested</small>
+				</td>
+				<td>
+					<button id="review{$i}" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#reviewSubmissionModal" data-submission="{$submission->id}">
+						Review
+					</button>
+				</td>
 				{/if}
 
 				<input type="hidden" id="courseSummary" value="{$submission->courseSection->getFullDisplayName()}">
@@ -112,15 +138,30 @@
 					<input type="hidden" id="syllabusId" value="{$submission->syllabus->id}">
 					<input type="hidden" id="syllabusTitle" value="{$submission->syllabus->title}">
 				{/if}
-			</td>
+			<!-- </td> -->
 		</tr>
 	{/foreach}
 	</tbody>
+	<tfoot>
+		<tr class="table-warning">
+			<td colspan="4">
+				<form action="{$routeBase}submissions" method="post">
+					<div class="text-center">
+						<button name="command[resetall][{$submission->campaign->id}]" type="submit" class="btn btn-info mx-2" id="approveButton">Reset All to Open <i class="fas fa-arrow-up"></i></button>
+						<button name="command[approveall][{$submission->campaign->id}]" type="submit" class="btn btn-success mx-2" id="approveButton">Approve All <i class="fas fa-arrow-up"></i></button>
+					</div>
+					{generate_form_post_key}
+				</form>
+			</td>
+		</tr>
+	</tfoot>
 	</table>
+
 	</div>
 	
 
 {/foreach}
+
 </div>
 
 
@@ -175,7 +216,7 @@
 	</div>
 	<div class="modal-footer">
 		<input name="command[approve][]" type="submit" class="btn btn-success" value="Approve" id="approveButton">
-		<input name="command[deny][]" type="submit" class="btn btn-danger" value="Deny" id="denyButton">
+		<input name="command[deny][]" type="submit" class="btn btn-danger" value="Request Revisions" id="denyButton">
 		<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 	</div>
 	{generate_form_post_key}

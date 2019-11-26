@@ -39,7 +39,7 @@
             <input type="text" class="form-control datepicker" name="dueDate" value="{if $campaign->dueDate}{$campaign->dueDate->format('m/d/Y')}{/if}" placeholder="MM/DD/YYYY">
         </div>
 		<div class="col-md-4 pl-md-4">
-			<label for="required">Required?</label>
+			<label for="required">Approval required?</label>
 			<div class="form-check">
 				<input class="form-check-input" type="radio" name="required" id="required1" value="1" {if $campaign->required || !$campaign->id}checked{/if}>
 				<label class="form-check-label" for="required1">
@@ -53,7 +53,7 @@
 				</label>
 			</div>
 			<small id="requiredHelpBlock" class="form-text text-muted">
-				When set to <strong>required</strong>, instructors must submit their syllabi to this department.
+				When set to <strong>required</strong>, departments must review and approve faculty syllabus submissions. If set to no, then syllabi will automatically be approved on submission.
 			</small>
 		</div>
     </div>

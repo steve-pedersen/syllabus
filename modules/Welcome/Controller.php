@@ -11,7 +11,7 @@ class Syllabus_Welcome_Controller extends Syllabus_Master_Controller
     public static function getRouteMap ()
     {
         return array(
-            // '/' => array('callback' => 'welcome'),
+            '/' => array('callback' => 'welcome'),
             // '/home' => array('callback' => 'welcome'),
         );
     }
@@ -22,6 +22,10 @@ class Syllabus_Welcome_Controller extends Syllabus_Master_Controller
         $siteSettings = $app->siteSettings;
         $moduleManager = $app->moduleManager;
 
+        if ($this->getAccount())
+        {
+            $this->response->redirect('syllabi');
+        }
         // $welcomeHeroPartial = 'partial:_welcomeHero.html.tpl';
         // $this->template->registerResource('partial', new Bss_Template_PartialResource($this));
         // $this->template->headerPartial = $welcomeHeroPartial;

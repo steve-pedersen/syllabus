@@ -8,10 +8,12 @@
 	<div class="col p-3 ">
 		<h3>Create new section:</h3>
 	{foreach $sectionExtensions as $ext}
+		{if $ext->hasImportableContent()}
 		<button class="px-2 mb-2 py-1 btn btn-outline-secondary rounded-pill" type="submit" name="type" value="{$ext->getExtensionName()}">
 		<img src="{$ext->getDarkIcon()}" class="img-fluid mr-1" style="max-height:1.5em;margin-bottom:1px;">
 			<span class="available pr-1">{$ext->getDisplayName()}</span>
 		</button>
+		{/if}
 	{/foreach}
 	</div>
 </div> <!-- End row -->

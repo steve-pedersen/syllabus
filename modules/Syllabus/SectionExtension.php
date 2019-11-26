@@ -22,7 +22,7 @@ abstract class Syllabus_Syllabus_SectionExtension extends Bss_Core_NamedExtensio
     public function canHaveMultiple () { return true; }
     public function hasDefaults () { return false; }
     public function getAddonFormFragment () { return false; }
-
+    public function hasImportableContent () { return false; }
     public function getSchema ()
     {
         if ($recordClass = $this->getRecordClass())

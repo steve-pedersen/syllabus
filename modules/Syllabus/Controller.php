@@ -13,7 +13,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     public static function getRouteMap ()
     {
         return [
-            '/'                         => ['callback' => 'mySyllabi'],
+            // '/'                         => ['callback' => 'mySyllabi'],
             'syllabi'                   => ['callback' => 'mySyllabi'],
             'syllabus/:id'              => ['callback' => 'edit', ':id' => '[0-9]+|new'],
             'syllabus/:id/view'         => ['callback' => 'view', ':id' => '[0-9]+'],
@@ -76,12 +76,12 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $submission->submitted_by_id = $viewer->id;
             $submission->modifiedDate = new DateTime;
             $submission->submittedDate = new DateTime;
-            $submission->status = 'pending';
+            $submission->status = $submission->campaign->required ? 'pending' : 'approved';
             $submission->log .= "<li>
                 Submitted syllabus #{$syllabus->id} on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
             </li>";
             $submission->campaign->log .= "<li>
-                Submission #{$submission->id} set to 'pending' on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                Submission #{$submission->id} set to '{$submission->status}' on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
             </li>";
             $submission->save();
             $submission->campaign->save();
@@ -245,6 +245,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $courseSection->imageUrl = $imageUrl;
                 }
 
+                $focus = $this->request->getQueryParameter('f');
+                $this->template->focus = $focus;
                 $this->template->returnTo = 'syllabi?mode=courses';
                 $this->template->coursesView = true;
                 $this->template->allCourses = $courses;

@@ -12,7 +12,7 @@
                     </div>
 
                     <div class="field-control-wrapper field">
-                        <textarea class="form-control wysiwyg wysiwyg-full wysiwyg-moono-color" name="welcome-text" id="welcome-text">{$welcomeText}</textarea>
+                        <textarea class="form-control wysiwyg wysiwyg-advanced" name="welcome-text" id="welcome-text">{$welcomeText}</textarea>
                     </div>
                 </div>
             </div>

@@ -36,7 +36,7 @@
         <nav id="sidebar" class="bg-dark {if $sidebarMinimized}active{/if}">
             <div class="sidebar-header bg-light navbar">
             	<div class="navbar-brand d-block-inline  d-flex justify-content-between">
-                <a class="" href="{$baseUrl}">
+                <a class="" href="{$baseUrl}{if $viewer}/syllabi{/if}">
 					<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
 				</div>
             </div>
@@ -121,7 +121,7 @@
 				<nav class="navbar navbar-expand-lg navbar-light">
 				{if $viewer}
 					<div class="navbar-brand d-block-inline mr-auto mobile-brand">
-	                	<a class="" href="{$baseUrl}">
+	                	<a class="" href="{$baseUrl}{if $viewer}/syllabi{/if}">
 						<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-2" alt="Syllabus Logo" id="brandLogo"></a>
 					</div>
                     <button type="button" id="mainSidebarCollapse" class="btn btn-secondary ml-2">
@@ -133,7 +133,7 @@
 					</button>
 				{else}
 					<div class="navbar-brand d-block-inline mr-auto">
-	                	<a class="" href="{$baseUrl}">
+	                	<a class="" href="{$baseUrl}{if $viewer}/syllabi{/if}">
 						<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-2" alt="Syllabus Logo" id="brandLogo"> <span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
 					</div>
 				{/if}
@@ -211,7 +211,7 @@
 							{/if}
 						{/if}
 						{else}
-							<li class="nav-item ">
+							<li class="nav-item login">
 								<a class="login-button nav-link" href="{$app->baseUrl('login')}">Login</a>
 							</li>
 						{/if} 
@@ -263,11 +263,11 @@
 
 			{if $headerPartial}
 
-			<main role="main" class="col pr-3 mt-0 mb-3" id="mainContent">
+			<main role="main" class="col mb-3 {if !$viewer}pl-0 pr-0 mt-0{else}pr-3 mt-0{/if}" id="mainContent">
 				{include file=$headerPartial headerVars=$headerVars}
 			{else}
 
-			<main role="main" class="col pr-3 mt-3 mb-3" id="mainContent">
+			<main role="main" class="col mb-3 {if !$viewer}pl-0 pr-0 mt-0{else}pr-3 mt-0{/if}" id="mainContent">
 			{/if}
 
 				{if $flashContent}

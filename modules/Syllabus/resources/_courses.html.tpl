@@ -18,7 +18,7 @@
 			{assign var=syllabus value=$courseSection->courseSyllabus}
 			{assign var=submission value=$courseSection->submission}
 
-			<tr class="">
+			<tr class="{if $focus == $courseSection->id}table-info{/if}">
 				<td class="align-middle" style="width:35%;">
 					<div class="p-3">
 					{if $courseSection->classNumber}<h2 class="">{$courseSection->classNumber}</h2>{/if}

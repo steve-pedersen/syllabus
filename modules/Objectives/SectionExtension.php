@@ -9,6 +9,7 @@ class Syllabus_Objectives_SectionExtension extends Syllabus_Syllabus_SectionExte
     public function getHelpText () { return 'Objectives section type of a syllabus.'; }
     public function getRecordClass () { return 'Syllabus_Objectives_Objectives'; }
     public function getSectionTasks () { return []; }
+    public function hasImportableContent () { return true; }
     public function getEditFormFragment ()
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_objectives.edit.html.tpl');

@@ -9,6 +9,7 @@ class Syllabus_Materials_SectionExtension extends Syllabus_Syllabus_SectionExten
     public function getHelpText () { return 'Add multiple materials at a time in this Materials section type.'; }
     public function getRecordClass () { return 'Syllabus_Materials_Materials'; }
     public function getSectionTasks () { return []; }
+    public function hasImportableContent () { return true; }
     public function getEditFormFragment ()
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_materials.edit.html.tpl');

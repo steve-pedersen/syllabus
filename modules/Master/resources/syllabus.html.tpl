@@ -36,7 +36,7 @@
 				<!-- <div class="container-fluid"> -->
 				<nav class="navbar navbar-expand-lg navbar-light">
 					<div class="navbar-brand d-block-inline mr-auto mobile-brand">
-	                	<a class="" href="{$baseUrl}">
+	                	<a class="" href="{$baseUrl}{if $viewer}/syllabi{/if}">
 						<img src="assets/icons/logo_square_512-01.png" width="48" height="48" class="d-inline-block mr-3" alt="Syllabus Logo" id="brandLogo"><span class="sidebar-text pr-2 brand-text">Syllabus</span></a>
 					</div>
 

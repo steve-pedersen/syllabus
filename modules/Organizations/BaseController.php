@@ -210,6 +210,61 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
             ['orderBy' => ['-semester_id', '-dueDate']]
         );
 
+        if ($this->request->wasPostedByUser())
+        {
+            switch ($this->getPostCommand())
+            {
+                case 'approveall':
+                    $campaign = $this->requireExists($campaigns->get(key($this->getPostCommandData())));
+                    $submissions = $submissions->find($submissions->campaign_id->equals($campaign->id));
+                    foreach ($submissions as $submission)
+                    {
+                        $submission->status = 'approved';
+                        $submission->approvedDate = new DateTime;
+                        $submission->modifiedDate = new DateTime;
+                        $submission->feedback = 'This syllabus has been approved.';
+                        $submission->log .= "
+                        <li>
+                            Submission approved (Approve All) on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                        </li>";
+                        $submission->campaign->log .= "
+                        <li>
+                            Submission #{$submission->id} set to 'approved' on 
+                            {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                        </li>";
+                        $submission->save();
+                        $campaign->save();                  
+                    }
+                    $this->flash('All submissions approved!');
+                    $this->response->redirect($this->_routeBase . 'submissions');
+                    break;
+
+                case 'resetall':
+                    $campaign = $this->requireExists($campaigns->get(key($this->getPostCommandData())));
+                    $submissions = $submissions->find($submissions->campaign_id->equals($campaign->id));
+                    foreach ($submissions as $submission)
+                    {
+                        $submission->status = 'open';
+                        $submission->modifiedDate = new DateTime;
+                        $submission->feedback = '';
+                        $submission->log .= "
+                        <li>
+                            Submission reset to 'open' on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                        </li>";
+                        $submission->campaign->log .= "
+                        <li>
+                            Submission #{$submission->id} reset to 'open' on 
+                            {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                        </li>";
+                        $submission->save();
+                        $campaign->save();                  
+                    }
+                    $this->flash('All submissions reset');
+                    $this->response->redirect($this->_routeBase . 'submissions');
+                    break;
+            }
+        }
+
         $this->template->updatedSubmission = $this->request->getQueryParameter('s');
         $this->template->allCampaigns = $allCampaigns;
         $this->template->activeCampaign = $activeCampaign;
@@ -303,6 +358,52 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         }
     }
 
+    public function approveAll ()
+    {
+        $this->initialize();
+        $viewer = $this->requireLogin();
+        if (!$this->_organization->userHasRole($viewer, 'moderator'))
+        {
+            $this->_organization->requireRole('manager', $this);
+        }
+
+        $campaigns = $this->schema('Syllabus_Syllabus_SubmissionCampaign');
+        $submissions = $this->schema('Syllabus_Syllabus_Submission');
+        
+        if ($this->request->wasPostedByUser())
+        {
+            $campaign = $this->requireExists($campaigns->get(key($this->request->getPostCommandKey())));
+            switch ($this->getPostCommand())
+            {
+                case 'approveall':
+                    foreach ($campaign->submissions as $submission)
+                    {
+                        $submission->status = 'approved';
+                        $submission->approvedDate = new DateTime;
+                        $submission->modifiedDate = new DateTime;
+                        $submission->feedback = 'This syllabus has been approved.';
+                        $submission->log .= "
+                        <li>
+                            Submission approved (Approve All) on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                        </li>";
+                        $submission->campaign->log .= "
+                        <li>
+                            Submission #{$submission->id} set to 'approved' on 
+                            {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                        </li>";
+                        $submission->save();
+                        $submission->campaign->save();                  
+                    }
+
+                    break;
+
+            }
+
+            $this->flash('Submission status updated');
+            $this->response->redirect($this->_routeBase . 'submissions');
+        }
+    }
+
     public function editCampaign ()
     {
         $this->initialize();
@@ -340,7 +441,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         {
             $data = $this->request->getPostParameters();
             $semesterUsed = false;
-            if (($cid !== 'new' && $data['semester'] !== $campaign->semester->id) ||
+            if (($cid !== 'new' && $data['semester'] != $campaign->semester->id) ||
                 ($cid === 'new' && in_array($data['semester'], $campaignSemesters)))
             {
                 $semesterUsed = true;

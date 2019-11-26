@@ -11,6 +11,7 @@ class Syllabus_LearningOutcomes_SectionExtension extends Syllabus_Syllabus_Secti
     public function getSectionTasks () { return []; }
     public function canHaveMultiple () { return false; }
     public function hasDefaults () { return false; }
+    public function hasImportableContent () { return true; }
     public function getEditFormFragment ()
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_learningOutcomes.edit.html.tpl');
