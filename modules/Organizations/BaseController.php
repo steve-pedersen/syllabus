@@ -178,6 +178,74 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         $this->initialize();
         $viewer = $this->requireLogin();
         $this->_organization->requireRole('manager', $this);
+        $this->addBreadcrumb($this->_routeBase . 'settings', 'Settings');
+
+        $siteSettings = $this->getApplication()->siteSettings;
+        $reminderOptions = ['2 weeks', '1 week', '3 days', '2 days', '1 day', '12 hours'];
+        $emails = $this->schema('Syllabus_Admin_Email');
+        $departmentEmail = $emails->findOne($emails->departmentId->equals($this->_organization->id));
+        if (!$departmentEmail && !isset($departmentEmail->id))
+        {
+            $departmentEmail = $emails->createInstance();
+        }
+
+        if ($this->request->wasPostedByUser())
+        {
+            switch ($this->getPostCommand()) {
+
+                case 'save':
+                    $data = $this->request->getPostParameters();
+                    $departmentEmail->contactEmail = $data['defaultAddress'];
+                    $departmentEmail->signature = $data['signature'];
+                    $departmentEmail->reminderTime = $data['dueDateReminderTime'];
+                    $departmentEmail->body = $data['dueDateReminderEmail'];
+                    $departmentEmail->subject = 'Syllabus Submission Reminder for ' . $this->_organization->name;
+                    $departmentEmail->save();
+                    break;
+                    
+                case 'sendtest':
+                    $viewer = $this->getAccount();
+                    $command = $this->request->getPostParameter('command');
+                    $which = array_keys($command['sendtest']);
+                    $which = array_pop($which);
+
+                    if ($which)
+                    {
+                        $emailData = [];
+                        $emailData['user'] = $viewer;
+                        $emailManager = new Syllabus_Admin_EmailManager($this->getApplication(), $this);                   
+
+                        switch ($which) 
+                        {
+                            case 'newAccount':
+                                $emailManager->processEmail('send' . ucfirst($which), $emailData, true);
+                                
+                                $this->template->sendSuccess = 'You should receive a test email momentarily for New-Account template.';
+                                break;
+
+                            case 'dueDateReminder':
+                                $actives = Syllabus_Admin_Semester::GetActiveSemesters($this->getApplication());
+                                $active = array_pop($actives);
+                                $emailData['reminder'] = new stdClass();
+                                $emailData['reminder']->id = 0;
+                                $emailData['reminder']->dueDate = new DateTime;
+                                $emailData['reminder']->departmentName = $this->_organization->name;
+                                $emailData['reminder']->semester = $active ? $active->display : 'Spring 2020';
+                                $emailData['reminder']->description = 'Please submit all your syllabi prior to the start of the semester. This is for our records only. Any questions may be referred to our depratment AOC at aoc@sfsu.edu.';
+                                $emailManager->processEmail('send' . ucfirst($which), $emailData, true);
+
+                                $this->template->sendSuccess = 'You should receive a test email momentarily for Reservation-Reminder template.';  
+                                break;
+                        }
+                    }
+            }
+        }
+
+        $this->template->authZ = $this->getApplication()->authorizationManager;
+        $this->template->testingOnly = $siteSettings->getProperty('email-testing-only', 0);
+        $this->template->testAddress = $siteSettings->getProperty('email-test-address');
+        $this->template->reminderOptions = $reminderOptions;
+        $this->template->emailSettings = $departmentEmail;
     }
 
     public function manageSubmissions ()
@@ -829,10 +897,14 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         return '';
     }
 
+    protected function sendReminderNotification ($email, $campaign, $account)
+    {
+        $emailManager = new Syllabus_Admin_EmailManager($this->getApplication(), $this);
+        $emailData = [];
+        $emailData['campaign'] = $campaign;
+        $emailData['email'] = $email;
+        $emailData['user'] = $account;
+        $emailManager->processEmail('sendDueDateReminder', $emailData);
+    }
+
 }
-
-
-
-
-
-
