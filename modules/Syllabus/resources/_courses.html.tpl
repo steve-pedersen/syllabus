@@ -59,7 +59,13 @@
 										<span class="float-left"><i class="fas fa-edit"></i></span>
 										Edit
 									</a>
+									{if $syllabus->hasCourseSection}
 									<span class="d-block my-3">{include file="partial:_shareWidget.html.tpl"}</span>
+									{else}
+									<span class="d-block my-3">
+										You must add a <strong>Course Information</strong> section to this syllabus before it can be shared.
+									</span>
+									{/if}
 								</div>
 							</div>
 						</div>

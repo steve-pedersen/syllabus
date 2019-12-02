@@ -72,6 +72,15 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     if ($courseSyllabus = $syllabi->get($courseSection->syllabus_id))
                     {
                         $courseSyllabus->viewUrl = $this->baseUrl("syllabus/$courseSyllabus->id/view");
+                        $courseSyllabus->hasCourseSection = false;
+                        foreach ($courseSyllabus->latestVersion->getSectionVersionsWithExt(true) as $sv)
+                        {
+                            if (isset($sv->extension) && $sv->extension->getExtensionKey() === 'course_id' && isset($sv->resolveSection()->externalKey))
+                            {
+                                $courseSyllabus->hasCourseSection = true;
+                                break;
+                            }                        
+                        }         
                     }
                     $courseSection->courseSyllabus = $courseSyllabus;
                     $courseSection->createNew = $courseSyllabus ? false : true;
