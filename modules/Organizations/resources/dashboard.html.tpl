@@ -11,12 +11,14 @@
 				<i class="fas fa-users fa-2x col-1"></i>
 				<a href="{$organization->routeName}/{$organization->id}/users" class="stretched-link col-11">Users</a>
 			</li>
+			{if $organization->hasSettingsPage()}
 			<li class="list-group-item list-group-item-action">
 				<i class="fa-2x col-1 fas fa-cogs"></i>
 				<a href="{$organization->routeName}/{$organization->id}/settings" class="stretched-link col-11">
 					Settings
 				</a>
 			</li>
+			{/if}
 		{/if}
 	{if !$group}
 		{if $fullAccess || $organization->userHasRole($viewer, 'moderator')}

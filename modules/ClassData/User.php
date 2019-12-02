@@ -56,6 +56,11 @@ class Syllabus_ClassData_User extends Bss_ActiveRecord_Base
         return $current;
     }
 
+    public function getFullName ()
+    {
+        return $this->firstName . ' ' . $this->lastName;
+    }
+
     public function getDepartmentsAndTemplates ($ctrl)
     {
         $orgs = [];

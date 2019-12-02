@@ -1,5 +1,5 @@
 {if $welcomeText}
-<div class="container-fluid bg-primary text-white p-4">
+<div class="container-fluid bg-primary text-white p-3">
 	<div class="container">
 		<div class="row px-lg-4 mx-lg-4">
 			<!-- <div class="col " style=""></div> -->
@@ -10,9 +10,10 @@
 </div>
 {/if}
 
-<div class="container text-center my-3">
+<div class="container">
+<div class="container text-center my-5">
 	<h1 class="mb-3">Online Syllabus Tool</h1>
-	<a class="login-button btn btn-primary" href="{$app->baseUrl('login')}">Log into the New Syllabus</a>
+	<a class="login-button btn btn-primary btn-lg" href="{$app->baseUrl('login')}">Log into the New Syllabus</a>
 </div>
 
 <!-- <div class="container-fluid p-xl-5 my-5">
@@ -52,4 +53,5 @@
 			</div>
 		</div>
 	</div>
+</div>
 </div>

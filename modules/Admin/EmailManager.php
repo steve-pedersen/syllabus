@@ -104,6 +104,7 @@ class Syllabus_Admin_EmailManager
 			'|%SUBMISSION_DESCRIPTION%|' => (!$test ? $data['campaign']->description : $data['reminder']->description),
 			'signature' => (!$test ? $data['email']->signature : '<br>--'.$data['reminder']->department),
 			'message_title' => 'Syllabus Submission Reminder',
+			'email' => $data['email'],
 		];
 
 		$body = trim($data['email']->body);
@@ -195,6 +196,9 @@ class Syllabus_Admin_EmailManager
 			$emailLog->attachments = $this->attachments;
 			$emailLog->success = $success;
 			$emailLog->save();
+
+			$params['email']->success = $success;
+			$params['email']->save();
 		}
 	}
 

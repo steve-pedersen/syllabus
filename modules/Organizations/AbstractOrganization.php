@@ -115,6 +115,8 @@ abstract class Syllabus_Organizations_AbstractOrganization extends Bss_ActiveRec
 
     public function getOrganizationSchemaName () { return get_class($this); }
 
+    public function hasSettingsPage () { return true; }
+
     // TODO: Make this text configurable
     public function getRoleHelpText ($role) { return self::$RoleDefaultHelpText[$role]; }
 
@@ -230,6 +232,18 @@ abstract class Syllabus_Organizations_AbstractOrganization extends Bss_ActiveRec
     public function requireRole ($role, $ctrl)
     {
         $ctrl->requirePermission(self::$RoleDefinitions[$role], $this);
+    }
+
+    public function getDefaultReminderEmail ()
+    {
+        return "
+<p>Dear |%FIRST_NAME%|&nbsp;|%LAST_NAME%|,</p>\r
+\r                                                                                                                                              <p>Your syllabus submission is due on&nbsp;|%DUE_DATE%| for the Department of&nbsp;|%DEPARTMENT_NAME%|,&nbsp;|%SEMESTER%| semester. Please visit the <a href='https://syllabus.sfsu.edu'>https://syllabus.sfsu.edu</a>&nbsp;and submit any necessary syllabi.</p>\r
+\r                                                                                                                              
+<p>Instructions for submitting your syllabus are as follows:</p>\r
+\r
+<p>|%SUBMISSION_DESCRIPTION%|</p>\r
+        ";
     }
 
 }

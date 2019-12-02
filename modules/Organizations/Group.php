@@ -24,4 +24,6 @@ class Syllabus_Organizations_Group extends Syllabus_Organizations_AbstractOrgani
             // 'children' => ['1:N', 'to' => 'Syllabus_Organizations_Group', 'reverseOf' => 'parent', 'orderBy' => ['id']],
         ];
     }
+
+    public function hasSettingsPage () { return false; }
 }

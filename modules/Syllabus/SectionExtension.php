@@ -16,7 +16,8 @@ abstract class Syllabus_Syllabus_SectionExtension extends Bss_Core_NamedExtensio
     abstract public function getRecordClass ();
     abstract public function getSectionTasks ();
     abstract public function getEditFormFragment ();
-    abstract public function getViewFragment ();
+    abstract public function getViewFragment (); // NOTE: View Fragment is for view mode while in editor
+    abstract public function getOutputFragment ();
 
     // Does it make sense for a syllabus to have multiple instances of this section type?
     public function canHaveMultiple () { return true; }

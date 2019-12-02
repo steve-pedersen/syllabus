@@ -1,4 +1,4 @@
-<div class="container-fluid table-collapse-container">
+<div class="container-fluid table-collapse-container mt-3">
 <h1 class="">Manage Submissions</h1>
 <div class="wrap pb-2"><div class="left"></div><div class="right"></div></div>
 
@@ -19,9 +19,21 @@
 				{$campaign->semester->display}
 			</h3>
 		</a>
-		<a href="{$routeBase}campaigns/{$campaign->id}" class="ml-auto text-dark btn btn-info pt-2">
-			Edit this campaign
-		</a>
+		<form action="{$routeBase}submissions" method="post" class="ml-auto pt-2">
+			{if $departmentEmail}
+				<button name="command[sendreminder][{$campaign->id}]" type="submit" class="btn btn-dark">
+					<i class="fas fa-paper-plane mr-2"></i> Send Reminder Email
+				</button>
+			{else}
+				<a href="{$routeBase}settings?submissions=true" class="btn btn-dark">
+					<i class="fas fa-paper-plane mr-2"></i> Send Reminder Email
+				</a>
+			{/if}
+			<a href="{$routeBase}campaigns/{$campaign->id}" class="text-dark btn btn-info">
+				<i class="fas fa-edit mr-2"></i> Edit This Campaign
+			</a>
+			{generate_form_post_key}
+		</form>
 	</div>
 
     <div id="collapse{$campaign@index}" class="collapse px-0 col-12 mt-0 {if $campaign->id == $activeCampaign->id}show{/if}" aria-labelledby="headingOne" data-parent="#termAccordion">
@@ -35,6 +47,7 @@
 					<th class="text-center">Pending (submitted)</th>
 					<th>Approved</th>
 					<th>Denied</th>
+					<th>Disabled</th>
 					<th>Total</th>
 				</tr>
 			</thead>
@@ -45,6 +58,7 @@
 					<td class="text-center">{$stats['pending']}</td>
 					<td>{$stats['approved']}</td>
 					<td>{$stats['denied']}</td>
+					<td>{$stats['disabled']}</td>
 					<td>{$stats['total']}</td>
 				</tr>
 			</tbody>
@@ -88,7 +102,7 @@
 				</form>
 			</td>
 				{elseif $submission->status == 'disabled'}
-			<td class="align-middle text-center font-w800"><small class="text-light font-w800 text-uppercase">Disabled</small></td>
+			<td class="align-middle text-center font-w800"><small class="font-w800 text-uppercase">Disabled</small></td>
 				<td>
 					<form action="{$routeBase}submissions/{$submission->id}" method="post" id="editSubmissionForm">
 						<input name="command[enable]" type="submit" class="btn btn-secondary btn-sm" value="Re-Enable" id="enableButton">
@@ -106,7 +120,7 @@
 				<td class="align-middle text-center"><small class="text-success font-w800 text-uppercase">Approved</small></td>
 					<td>
 					<button id="review{$i}" class="btn btn-success btn-sm" data-toggle="modal" data-target="#reviewSubmissionModal" data-submission="{$submission->id}">
-						Approved
+						Review
 					</button>
 					</td>
 				{elseif $submission->status == 'denied'}

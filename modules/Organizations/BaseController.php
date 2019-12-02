@@ -183,7 +183,10 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         $siteSettings = $this->getApplication()->siteSettings;
         $reminderOptions = ['2 weeks', '1 week', '3 days', '2 days', '1 day', '12 hours'];
         $emails = $this->schema('Syllabus_Admin_Email');
-        $departmentEmail = $emails->findOne($emails->departmentId->equals($this->_organization->id));
+        $departmentEmail = $emails->findOne(
+            $emails->departmentId->equals($this->_organization->id),
+            ['orderBy' => ['creationDate', 'id'], 'limit' => 1]
+        );
         if (!$departmentEmail && !isset($departmentEmail->id))
         {
             $departmentEmail = $emails->createInstance();
@@ -195,11 +198,14 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
 
                 case 'save':
                     $data = $this->request->getPostParameters();
+                    $departmentEmail->creationDate = new DateTime;
+                    $departmentEmail->type = 'reminder';
                     $departmentEmail->contactEmail = $data['defaultAddress'];
                     $departmentEmail->signature = $data['signature'];
                     $departmentEmail->reminderTime = $data['dueDateReminderTime'];
                     $departmentEmail->body = $data['dueDateReminderEmail'];
                     $departmentEmail->subject = 'Syllabus Submission Reminder for ' . $this->_organization->name;
+                    $departmentEmail->departmentId = $this->_organization->id;
                     $departmentEmail->save();
                     break;
                     
@@ -246,6 +252,9 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         $this->template->testAddress = $siteSettings->getProperty('email-test-address');
         $this->template->reminderOptions = $reminderOptions;
         $this->template->emailSettings = $departmentEmail;
+        $this->template->organization = $this->_organization;
+        $this->template->routeBase = $this->_routeBase;
+        $this->template->fromSubmissions = $this->request->getQueryParameter('submissions');
     }
 
     public function manageSubmissions ()
@@ -261,6 +270,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         $submissions = $this->schema('Syllabus_Syllabus_Submission');
         $campaigns = $this->schema('Syllabus_Syllabus_SubmissionCampaign');
         $semesters = $this->schema('Syllabus_Admin_Semester');
+        $emails = $this->schema('Syllabus_Admin_Email');
 
         $activeSemester = $semesters->findOne(
             $semesters->startDate->before(new DateTime)->andIf(
@@ -276,6 +286,11 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
         $allCampaigns = $campaigns->find(
             $campaigns->organizationAuthorizationId->equals($this->_organization->templateAuthorizationId),
             ['orderBy' => ['-semester_id', '-dueDate']]
+        );
+        
+        $departmentEmail = $emails->findOne(
+            $emails->departmentId->equals($this->_organization->id),
+            ['orderBy' => ['creationDate', 'id'], 'limit' => 1]
         );
 
         if ($this->request->wasPostedByUser())
@@ -330,9 +345,39 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                     $this->flash('All submissions reset');
                     $this->response->redirect($this->_routeBase . 'submissions');
                     break;
+
+                case 'sendreminder':
+                    $campaign = $this->requireExists($campaigns->get(key($this->getPostCommandData())));
+                    $this->requireExists($departmentEmail);
+                    $recipients = [];
+
+                    foreach ($campaign->submissions as $submission)
+                    {
+                        if ($submission->status === 'open' || $submission->status === 'denied')
+                        {
+                            $instructors = [];
+                            foreach ($submission->courseSection->enrollments as $enrollment)
+                            {
+                                if ($submission->courseSection->enrollments->getProperty($enrollment, 'role') === 'instructor')
+                                {
+                                    $instructors[] = $enrollment;
+                                }
+                            }
+                            foreach ($instructors as $instructor)
+                            {
+                                $this->sendReminderNotification($departmentEmail, $campaign, $instructor);
+                                $recipients[] = $instructor->id;
+                            }
+                        }
+                    }
+                    $departmentEmail->recipients = implode(',', $recipients);
+                    $departmentEmail->save();
+                    $this->flash('A reminder email was sent to '. count($recipients). ' instructors');
+                    break;
             }
         }
 
+        $this->template->departmentEmail = $departmentEmail;
         $this->template->updatedSubmission = $this->request->getQueryParameter('s');
         $this->template->allCampaigns = $allCampaigns;
         $this->template->activeCampaign = $activeCampaign;

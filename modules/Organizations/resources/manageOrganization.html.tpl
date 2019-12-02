@@ -1,15 +1,19 @@
-<div class="container-fluid">
+<div class="container-fluid mt-3">
 	<h1>Department Settings</h1>
 	<div class="wrap pb-2"><div class="left"></div><div class="right"></div></div>
+	{if $sendSuccess}
+	<div class="alert alert-info">
+		<p>{$sendSuccess}</p>
+		<p><strong>If you have made changes to the templates please make sure to save the changes below.</strong></p>
+	</div>
+	{/if}
 
+	{if $fromSubmissions}
+		<p class="alert alert-info mt-2"><strong>You must set up an email template first.</strong> Some default text with context replacement tokens has been provided for you to use as a starting point.</p>
+	{/if}
 	<div class="mt-3 p-3 rounded border">
+
 		<h2 class="">Email</h2>
-		{if $sendSuccess}
-		<div class="alert alert-info">
-			<p>{$sendSuccess}</p>
-			<p><strong>If you have made changes to the templates please make sure to save the changes below.</strong></p>
-		</div>
-		{/if}
 
 		<form action="{$smarty.server.REQUEST_URI}" method="post">
 			{generate_form_post_key}
@@ -36,7 +40,7 @@
 					</div>
 					<div class="form-group">
 						<label class="lead font-w700" for="dueDateReminderEmail">Reservation Reminder Email Content: <span class="email-type-description font-w400">the email body</span></label>
-						<textarea name="dueDateReminderEmail" id="dueDateReminderEmail" class="form-control wysiwyg wysiwyg-syllabus-full" rows="5}">{$emailSettings->body}</textarea>
+						<textarea name="dueDateReminderEmail" id="dueDateReminderEmail" class="form-control wysiwyg wysiwyg-syllabus-full" rows="5}">{if $emailSettings->body}{$emailSettings->body}{else}{$organization->getDefaultReminderEmail()}{/if}</textarea>
 						<span class="help-block">
 							You can use the following tokens for context replacements to fill out the template: 
 							<code>|%FIRST_NAME%|</code>, <code>|%LAST_NAME%|</code>, <code>|%DUE_DATE%|</code>, <code>|%DEPARTMENT_NAME%|</code>, <code>|%SEMESTER%|</code>, <code>|%SUBMISSION_DESCRIPTION%|</code>
