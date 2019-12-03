@@ -90,9 +90,9 @@ class Syllabus_Organizations_GroupController extends Syllabus_Organizations_Base
         $this->addBreadcrumb($this->_routeBase . 'sections', 'Manage Sections');
     	$importables = $this->schema('Syllabus_Syllabus_ImportableSection');
     	$sectionExtensions = $this->schema('Syllabus_Syllabus_SyllabusVersion')->createInstance()->getSectionExtensions();
-    	$importableSections = $importables->find(
-    		$importables->organizationId->equals('groups/' . $this->_organization->id)
-    	);
+        $importableSections = $importables->find(
+            $importables->organizationId == ('groups/' . $this->_organization->id)
+        ) ?? [];
     	$sortedImportables = [];
     	foreach ($importableSections as $importable)
     	{
