@@ -78,6 +78,15 @@
 								<span class="sidebar-text">Migrate</span>
 							</a>
 						</li>
+						{if !$privilegedOrganizations['departments'] && !empty($privilegedOrganizations['groups']) && !$pAdmin}
+						{assign var=groups value=$privilegedOrganizations['groups']}
+						{assign var=addedAsSubLink value=true}
+						<li class="{if $page == 'groups'}active{/if}">
+							<a class="sub-link" href="groups/{$groups->id}">
+								<span class="sidebar-text">{$groups->name}</span>
+							</a>
+						</li>
+						{/if}
 					</ul>
 					{/if}
 				</li>
@@ -102,10 +111,32 @@
 						</li>
 						{/foreach}
 					{/if}
-
+					{assign var=groups value=$privilegedOrganizations['groups']}
+					{if !empty($groups)}
+						<li class="{if $page == 'groups'}active{/if}">
+							<a class="sub-link" href="groups/{$groups->id}">
+								<span class="sidebar-text">
+									{$groups->name}
+								</span>
+							</a>
+						</li>
+					{/if}
 					</ul>
 				</li>
 			</ul>
+			{elseif !empty($privilegedOrganizations['groups']) && !$addedAsSubLink}
+				{assign var=groups value=$privilegedOrganizations['groups']}
+				<ul class="list-unstyled">
+					<li class="">
+						<li class="{if $page == 'groups'}active{/if}">
+							<a class="sub-link" href="groups/{$groups->id}">
+								<span class="sidebar-text">
+									{$groups->name}
+								</span>
+							</a>
+						</li>
+					</li>				
+				</ul>
 			{/if}
 			{/if}
         </nav>
@@ -207,6 +238,14 @@
 										</a>
 									</li>
 									{/foreach}
+								{/if}
+								{assign var=groups value=$privilegedOrganizations['groups']}
+								{if !empty($groups)}
+								<li class="nav-item mobile-link {if $page == 'groups'}active{/if}">
+									<a class="nav-link" href="groups/{$groups->id}">
+										{$groups->name}
+									</a>
+								</li>
 								{/if}
 							{/if}
 						{/if}

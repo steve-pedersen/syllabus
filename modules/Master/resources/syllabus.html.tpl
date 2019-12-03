@@ -134,6 +134,14 @@
 									{/foreach}
 								
 								{/if}
+								{assign var=groups value=$privilegedOrganizations['groups']}
+								{if !empty($groups)}
+									<li class="nav-item mobile-link {if $page == 'groups'}active{/if}">
+										<a class="nav-link" href="groups/{$groups->id}">
+											{$groups->name}
+										</a>
+									</li>
+								{/if}
 							{/if}
 							{/if}
 						{else}
