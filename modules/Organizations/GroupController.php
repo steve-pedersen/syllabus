@@ -126,7 +126,6 @@ class Syllabus_Organizations_GroupController extends Syllabus_Organizations_Base
   		$importable = $sectionId ? $importables->get($sectionId) : $importables->createInstance();
   		$type = $this->request->getQueryParameter('type');
   		$realSectionExtension = $sectionVersions->createInstance()->getExtensionByName($type);
-        // echo "<pre>"; var_dump($realSectionExtension->getDisplayName()); die;
   		$realSectionClass = $realSectionExtension->getRecordClass();
   		$realSection = !$importable->inDataSource ? 
   			$this->schema($realSectionClass)->createInstance() : $importable->section->latestVersion->resolveSection();
@@ -193,6 +192,15 @@ class Syllabus_Organizations_GroupController extends Syllabus_Organizations_Base
                     $item->delete();
                     $this->flash('Deleted.');
   					break;
+
+                case 'deletesection':
+
+                    $this->requireExists($importable);
+                    $importable->section->latestVersion->delete();
+                    $importable->section->delete();
+                    $importable->delete();
+                    $this->flash('Section removed');
+                    $this->response->redirect('groups/' . $this->_organization->id . '/sections');
   			}
   		}
 
