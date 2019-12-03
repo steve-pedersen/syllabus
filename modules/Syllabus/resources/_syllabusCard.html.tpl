@@ -58,6 +58,10 @@
 			
 				{if !$organization && $syllabus->hasCourseSection}
 					{include file="partial:_shareWidget.html.tpl"}
+				{elseif !$organization && !$syllabus->hasCourseSection}
+					<button type="button" class="btn btn-light text-muted d-inline-block ml-auto my-1" data-toggle="tooltip" data-html="true" data-placement="bottom" title="You must add a <strong>Course Information</strong> section to this syllabus before it can be shared.">
+						<i class="fas fa-share"></i>
+					</button>
 				{/if}
 
 				<!-- </div> -->
