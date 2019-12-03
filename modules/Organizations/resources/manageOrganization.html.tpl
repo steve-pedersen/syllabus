@@ -31,7 +31,7 @@
 				<div class="col-xl-8 col-lg-12 col-md-11 col-sm-12">
 					<div class="form-group">
 						<h3 id="dueDateReminderTime" class="toc-header" aria-hidden></h3>
-						<label class="lead font-w700" for="dueDateReminderTime">Reservation Reminder Time: <span class="email-type-description font-w400">choose an amount of time prior to the submission deadline to send a reminder email to faculty</span></label>
+						<label class="lead font-w700" for="dueDateReminderTime">Due Date Reminder Time: <span class="email-type-description font-w400">choose an amount of time prior to the submission deadline to send a reminder email to faculty</span></label>
 						<select class="form-control" name="dueDateReminderTime" id="dueDateReminderTime">
 						{foreach from=$reminderOptions item=opt}
 							<option value="{$opt}" {if $opt == $emailSettings->reminderTime}selected{/if}>{$opt}</option>
@@ -39,7 +39,7 @@
 						</select>
 					</div>
 					<div class="form-group">
-						<label class="lead font-w700" for="dueDateReminderEmail">Reservation Reminder Email Content: <span class="email-type-description font-w400">the email body</span></label>
+						<label class="lead font-w700" for="dueDateReminderEmail">Due Date Reminder Email Content: <span class="email-type-description font-w400">the email body</span></label>
 						<textarea name="dueDateReminderEmail" id="dueDateReminderEmail" class="form-control wysiwyg wysiwyg-syllabus-full" rows="5}">{if $emailSettings->body}{$emailSettings->body}{else}{$organization->getDefaultReminderEmail()}{/if}</textarea>
 						<span class="help-block">
 							You can use the following tokens for context replacements to fill out the template: 
@@ -52,7 +52,7 @@
 				</div>
 
 				<div class="col-xl-4 col-lg-12 col-md-12 col-sm-12 bg-light rounded p-5 h-75">
-					<label id="testreservationreminder" class="lead font-w700">Test Reservation-Reminder Template</label>
+					<label id="testreservationreminder" class="lead font-w700">Test Due Date-Reminder Template</label>
 					<p class="lead">This will send an email to your own account showing how the email will look to you.</p>
 					<button type="submit" name="command[sendtest][dueDateReminder]" aria-describedby="testreservationreminder" class="btn btn-info">Send Test</button>
 				</div>

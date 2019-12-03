@@ -104,10 +104,10 @@ class Syllabus_Admin_EmailManager
 			'|%SUBMISSION_DESCRIPTION%|' => (!$test ? $data['campaign']->description : $data['reminder']->description),
 			'signature' => (!$test ? $data['email']->signature : '<br>--'.$data['reminder']->department),
 			'message_title' => 'Syllabus Submission Reminder',
-			'email' => $data['email'],
+			'email' => (!$test ? $data['email'] : ''),
 		];
 
-		$body = trim($data['email']->body);
+		$body = trim((!$test ? $data['email']->body : $data['reminder']->body));
 		if ($this->hasContent($body))
 		{
 			$this->sendEmail($data['user'], $params, $body);	
@@ -197,8 +197,12 @@ class Syllabus_Admin_EmailManager
 			$emailLog->success = $success;
 			$emailLog->save();
 
-			$params['email']->success = $success;
-			$params['email']->save();
+			if (isset($params['email']) && $params['email'] !== '')
+			{
+				$params['email']->success = $success;
+				$params['email']->save();				
+			}
+
 		}
 	}
 

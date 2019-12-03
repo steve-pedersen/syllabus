@@ -235,12 +235,13 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                                 $emailData['reminder'] = new stdClass();
                                 $emailData['reminder']->id = 0;
                                 $emailData['reminder']->dueDate = new DateTime;
-                                $emailData['reminder']->departmentName = $this->_organization->name;
-                                $emailData['reminder']->semester = $active ? $active->display : 'Spring 2020';
+                                $emailData['reminder']->department = $this->_organization->name;
+                                $emailData['reminder']->semester = $active ? $active : 'Spring 2020';
+                                $emailData['reminder']->body = 'This is only a test';
                                 $emailData['reminder']->description = 'Please submit all your syllabi prior to the start of the semester. This is for our records only. Any questions may be referred to our depratment AOC at aoc@sfsu.edu.';
                                 $emailManager->processEmail('send' . ucfirst($which), $emailData, true);
 
-                                $this->template->sendSuccess = 'You should receive a test email momentarily for Reservation-Reminder template.';  
+                                $this->template->sendSuccess = 'You should receive a test email momentarily for Reminder template.';  
                                 break;
                         }
                     }
