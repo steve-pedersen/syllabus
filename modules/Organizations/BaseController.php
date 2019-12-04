@@ -230,7 +230,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                                 break;
 
                             case 'dueDateReminder':
-                                $actives = Syllabus_Admin_Semester::GetActiveSemesters($this->getApplication());
+                                $actives = Syllabus_Admin_Semester::GetActiveSemesters($this->getApplication(), $this);
                                 $active = array_pop($actives);
                                 $emailData['reminder'] = new stdClass();
                                 $emailData['reminder']->id = 0;
