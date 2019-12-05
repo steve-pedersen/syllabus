@@ -219,7 +219,7 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                     {
                         $emailData = [];
                         $emailData['user'] = $viewer;
-                        $emailManager = new Syllabus_Admin_EmailManager($this->getApplication(), $this);                   
+                        $emailManager = new Syllabus_Admin_EmailManager($this->getApplication());                   
 
                         switch ($which) 
                         {

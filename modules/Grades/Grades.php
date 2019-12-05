@@ -111,7 +111,7 @@ class Syllabus_Grades_Grades extends Bss_ActiveRecord_Base
         if (!isset($this->id)) $this->save();
         foreach ($containerProperties as $prop)
         {
-            if (!isset($this->$prop) || $this->$prop === '')
+            if (!isset($this->$prop) || $this->$prop === '' || ($prop === 'columns' && $this->$prop !== $resolvedImportable->$prop))
             {
                 $this->$prop = $resolvedImportable->$prop;
             }           
