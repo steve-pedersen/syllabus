@@ -20,6 +20,7 @@ class Syllabus_Admin_Email extends Bss_ActiveRecord_Base
             'attachments' => 'string',
             'success' => 'bool',
             'reminderTime' => ['string', 'nativeName' => 'reminder_time'],
+            'reminderSent' => ['bool', 'nativeName' => 'reminder_sent'],
             'departmentId' => ['int', 'nativeName' => 'department_id'],
 
             'department' => ['1:1', 'to' => 'Syllabus_AcademicOrganizations_Department', 'keyMap' => ['department_id' => 'id']],

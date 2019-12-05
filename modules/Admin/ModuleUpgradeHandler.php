@@ -57,7 +57,13 @@ class Syllabus_Admin_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModuleUpg
                 $def->addProperty('department_id', 'int');
                 $def->save();    
 
-                break;         
+                break;
+
+            case 2:
+                $def = $this->alterEntityType('syllabus_emails', $this->getDataSource('Syllabus_Admin_Email'));
+                $def->addProperty('reminder_sent', 'bool');
+                $def->save();
+                break;
         }
     }
 }
