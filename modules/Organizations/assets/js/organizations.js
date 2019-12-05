@@ -3,18 +3,18 @@
 
     $('#reviewSubmissionModal').on('show.bs.modal', function(e) {
         var submissionId = $(e.relatedTarget).attr('data-submission');
-        var status = $(e.relatedTarget).siblings('#status').val();
-        var feedback = $(e.relatedTarget).siblings('#feedback').val();
-        var dueDate = $(e.relatedTarget).siblings('#dueDate').val();
-        var submittedDate = $(e.relatedTarget).siblings('#submittedDate').val();
-        var approvedDate = $(e.relatedTarget).siblings('#approvedDate').val();
-        var courseSummary = $(e.relatedTarget).siblings('#courseSummary').val();
-        var syllabusId = $(e.relatedTarget).siblings('#syllabusId').val();
-        var syllabusTitle = $(e.relatedTarget).siblings('#syllabusTitle').val();
-        var fileSrc = $(e.relatedTarget).siblings('#fileSrc').val();
-        var fileName = $(e.relatedTarget).siblings('#fileName').val();
+        var status = $(e.relatedTarget).parents().siblings('.status').val();
+        var feedback = $(e.relatedTarget).parents().siblings('.feedback').val();
+        var dueDate = $(e.relatedTarget).parents().siblings('.dueDate').val();
+        var submittedDate = $(e.relatedTarget).parents().siblings('.submittedDate').val();
+        var approvedDate = $(e.relatedTarget).parents().siblings('.approvedDate').val();
+        var courseSummary = $(e.relatedTarget).parents().siblings('.courseSummary').val();
+        var syllabusId = $(e.relatedTarget).parents().siblings('.syllabusId').val();
+        var syllabusTitle = $(e.relatedTarget).parents().siblings('.syllabusTitle').val();
+        var fileSrc = $(e.relatedTarget).parents().siblings('.fileSrc').val();
+        var fileName = $(e.relatedTarget).parents().siblings('.fileName').val();
         var action = $('#reviewSubmissionModal #editSubmissionForm').attr('action');
-        console.log(action);
+
         $('#reviewSubmissionModal #editSubmissionForm').attr('action', action + submissionId);
         $('#submissionTitle').text('Evaluating submission for ' + courseSummary);
         $('#subCourseSection').text(courseSummary);

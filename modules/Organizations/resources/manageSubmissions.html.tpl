@@ -134,23 +134,23 @@
 				</td>
 				{/if}
 
-				<input type="hidden" id="courseSummary" value="{$submission->courseSection->getFullDisplayName()}">
-				<input type="hidden" id="status" value="{$submission->status|ucfirst}">
-				<input type="hidden" id="feedback" value="{$submission->feedback}">
-				<input type="hidden" id="dueDate" value="{$campaign->dueDate->format('F jS, Y - h:i a')}">
+				<input type="hidden" class="courseSummary" value="{$submission->courseSection->getFullDisplayName()}">
+				<input type="hidden" class="status" value="{$submission->status|ucfirst}">
+				<input type="hidden" class="feedback" value="{$submission->feedback}">
+				<input type="hidden" class="dueDate" value="{$campaign->dueDate->format('F jS, Y - h:i a')}">
 				{if $submission->submittedDate}
-				<input type="hidden" id="submittedDate" value="{$submission->submittedDate->format('F jS, Y - h:i a')}">
+				<input type="hidden" class="submittedDate" value="{$submission->submittedDate->format('F jS, Y - h:i a')}">
 				{/if}
 				{if $submission->approvedDate}
-				<input type="hidden" id="approvedDate" value="{$submission->approvedDate->format('F jS, Y - h:i a')}">
+				<input type="hidden" class="approvedDate" value="{$submission->approvedDate->format('F jS, Y - h:i a')}">
 				{/if}
 				{if $submission->file->id}
-					<input type="hidden" id="fileSrc" value="{$submission->fileSrc}">
-					<input type="hidden" id="fileName" value="{$submission->file->remoteName}">
+					<input type="hidden" class="fileSrc" value="{$submission->fileSrc}">
+					<input type="hidden" class="fileName" value="{$submission->file->remoteName}">
 				{/if}
 				{if $submission->syllabus->id}
-					<input type="hidden" id="syllabusId" value="{$submission->syllabus->id}">
-					<input type="hidden" id="syllabusTitle" value="{$submission->syllabus->title}">
+					<input type="hidden" class="syllabusId" value="{$submission->syllabus->id}">
+					<input type="hidden" class="syllabusTitle" value="{$submission->syllabus->title}">
 				{/if}
 			<!-- </td> -->
 		</tr>
