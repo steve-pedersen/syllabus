@@ -10,7 +10,7 @@ class Syllabus_Grades_SectionExtension extends Syllabus_Syllabus_SectionExtensio
     public function getRecordClass () { return 'Syllabus_Grades_Grades'; }
     public function getSectionTasks () { return []; }
     public function canHaveMultiple () { return true; }
-    public function hasDefaults () { return true; }
+    public function hasDefaults () { return false; }
     public function hasImportableContent () { return true; }
     public function getEditFormFragment ()
     {

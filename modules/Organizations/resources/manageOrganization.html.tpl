@@ -31,7 +31,7 @@
 				<div class="col-xl-8 col-lg-12 col-md-11 col-sm-12">
 					<div class="form-group">
 						<h3 id="dueDateReminderTime" class="toc-header" aria-hidden></h3>
-						<label class="lead font-w700" for="dueDateReminderTime">Due Date Reminder Time: <span class="email-type-description font-w400">choose an amount of time prior to the submission deadline to send a reminder email to faculty</span></label>
+						<label class="lead font-w700" for="dueDateReminderTime">Due Date Reminder Time: <span class="email-type-description font-w400">choose an amount of time prior to the submission deadline to send a reminder email to faculty.<span class="font-w500"></span> Note, only <strong>one automatic email</strong> will be sent, but you can manually send as many as needed.</span></label>
 						<select class="form-control" name="dueDateReminderTime" id="dueDateReminderTime">
 						{foreach from=$reminderOptions item=opt}
 							<option value="{$opt}" {if $opt == $emailSettings->reminderTime}selected{/if}>{$opt}</option>

@@ -73,6 +73,8 @@ class Syllabus_Activities_Activities extends Bss_ActiveRecord_Base
         $sortOrder = count($this->activities);
         $imported = [];
 
+        if (!isset($this->id)) $this->save();
+
         foreach ($resolvedImportable->activities as $activity)
         {
             $deriv = $this->getSchema('Syllabus_Activities_Activity')->createInstance();

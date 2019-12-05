@@ -112,9 +112,20 @@ class Syllabus_Schedules_Schedules extends Bss_ActiveRecord_Base
     public function copyImportables ($resolvedImportable)
     {
         $ignoredProperties = ['sortOrder', 'id', 'schedules'];
-        $sortOrder = count($this->schedules);
+        $containerProperties = ['columns', 'header1', 'header2', 'header3', 'header4'];
+        $sortOrder = count($this->grades);
         $imported = [];
-        
+
+        if (!isset($this->id)) $this->save();
+        foreach ($containerProperties as $prop)
+        {
+            if (!isset($this->$prop) || $this->$prop === '')
+            {
+                $this->$prop = $resolvedImportable->$prop;
+            }           
+        }
+        $this->save();
+
         foreach ($resolvedImportable->schedules as $schedule)
         {
             $deriv = $this->getSchema('Syllabus_Schedules_Schedule')->createInstance();

@@ -104,8 +104,19 @@ class Syllabus_Grades_Grades extends Bss_ActiveRecord_Base
     public function copyImportables ($resolvedImportable)
     {
         $ignoredProperties = ['sortOrder', 'id', 'grades'];
+        $containerProperties = ['columns', 'header1', 'header2', 'header3'];
         $sortOrder = count($this->grades);
         $imported = [];
+
+        if (!isset($this->id)) $this->save();
+        foreach ($containerProperties as $prop)
+        {
+            if (!isset($this->$prop) || $this->$prop === '')
+            {
+                $this->$prop = $resolvedImportable->$prop;
+            }           
+        }
+        $this->save();
 
         foreach ($resolvedImportable->grades as $grade)
         {

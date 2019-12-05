@@ -77,6 +77,8 @@ class Syllabus_Materials_Materials extends Bss_ActiveRecord_Base
         $sortOrder = count($this->materials);
         $imported = [];
 
+        if (!isset($this->id)) $this->save();
+
         foreach ($resolvedImportable->materials as $material)
         {
             $deriv = $this->getSchema('Syllabus_Materials_Material')->createInstance();
