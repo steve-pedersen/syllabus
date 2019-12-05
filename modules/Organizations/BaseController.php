@@ -348,6 +348,8 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                     break;
 
                 case 'sendreminder':
+                    set_time_limit(0);
+                    ini_set('memory_limit', '-1');
                     $campaign = $this->requireExists($campaigns->get(key($this->getPostCommandData())));
                     $this->requireExists($departmentEmail);
                     $recipients = [];
@@ -356,21 +358,25 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                     {
                         if ($submission->status === 'open' || $submission->status === 'denied')
                         {
-                            $instructors = [];
-                            foreach ($submission->courseSection->enrollments as $enrollment)
-                            {
-                                if ($submission->courseSection->enrollments->getProperty($enrollment, 'role') === 'instructor')
-                                {
-                                    $instructors[] = $enrollment;
-                                }
-                            }
-                            foreach ($instructors as $instructor)
-                            {
-                                $this->sendReminderNotification($departmentEmail, $campaign, $instructor);
-                                $recipients[] = $instructor->id;
-                            }
+                            // $instructors = [];
+                            // foreach ($submission->courseSection->enrollments as $enrollment)
+                            // {
+                            //     if ($submission->courseSection->enrollments->getProperty($enrollment, 'role') === 'instructor')
+                            //     {
+                            //         // $instructors[] = $enrollment;
+
+                            //     }
+                            // }
+                            // $instructors[] = $viewer;
+                            // foreach ($instructors as $instructor)
+                            // {
+                            //     $this->sendReminderNotification($departmentEmail, $campaign, $instructor);
+                            //     $recipients[] = $instructor->id;
+                            // }
                         }
                     }
+                    $recipients[] = $viewer->id;
+                    $this->sendReminderNotification($departmentEmail, $campaign, $viewer);
                     $departmentEmail->recipients = implode(',', $recipients);
                     $departmentEmail->save();
                     $this->flash('A reminder email was sent to '. count($recipients). ' instructors');
