@@ -147,7 +147,7 @@
 {/if}
         <input class="btn btn-light" id="addSectionItemBtn" type="submit" name="command[addsectionitem][{$realSectionClass}]" value="+ Add Row" />
     </div>
-
+{if !$groupEditor}
 <hr class="fancy-line-1">
 
     <div class="form-group row px-3 mt-5">
@@ -156,7 +156,7 @@
             <textarea class="form-control wysiwyg wysiwyg-datepicker" type="text" name="section[real][additionalInformation]" rows="5">{$realSection->additionalInformation}</textarea>
         </div>
     </div>
-
+{/if}
 </div>
 </div> <!-- End Accordion div -->
 </div>

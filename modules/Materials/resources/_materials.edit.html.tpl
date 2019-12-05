@@ -169,13 +169,14 @@
 {/if}
         <input class="btn btn-light" id="addMaterialsSectionItemBtn" type="submit" name="command[addsectionitem][{$realSectionClass}]" value="+ Add Another Material" />
     </div>
-
+{if !$groupEditor}
     <div class="form-group row px-3 mt-5">
         <label class="col-lg-3 col-form-label form-control-label">Additional Information</label>
         <div class="col-lg-9">
             <textarea class="form-control wysiwyg wysiwyg-syllabus-full" type="text" name="section[real][additionalInformation]" rows="5">{$realSection->additionalInformation}</textarea>
         </div>
     </div>
+{/if}
 </div>
 </div>
 <!-- End Materials Section -->

@@ -214,6 +214,7 @@ class Syllabus_Organizations_GroupController extends Syllabus_Organizations_Base
         $this->template->realSectionClass = $realSectionClass;
         $this->template->sectionExtension = $realSectionExtension;
         $this->template->group = $this->_organization;
+        $this->template->groupEditor = true;
     }
 
 

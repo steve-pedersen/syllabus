@@ -21,10 +21,10 @@ class Syllabus_Admin_EmailManager
 	{
 		$this->app = $app;
 		$this->ctrl = $ctrl;	// phasing this out...
-		$this->fromEmail = $app->siteSettings->getProperty('email-default-address', 'ilearn@sfsu.edu');
+		$this->fromEmail = 'ilearn@sfsu.edu';
 		$this->fromName = "Syllabus";
-		$this->testingOnly = $app->siteSettings->getProperty('email-testing-only', false);
-		$this->testEmail = $app->siteSettings->getProperty('email-test-address', '');
+		$this->testingOnly = false;
+		$this->testEmail = 'Test';
 		$this->subjectLine = "Syllabus Submission Reminder";
 		$this->attachments = array();
 		$this->ccRequest = false;

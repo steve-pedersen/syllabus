@@ -41,13 +41,13 @@
 		<div class="col-md-4 pl-md-4">
 			<label for="required">Approval required?</label>
 			<div class="form-check">
-				<input class="form-check-input" type="radio" name="required" id="required1" value="1" {if $campaign->required || !$campaign->id}checked{/if}>
+				<input class="form-check-input" type="radio" name="required" id="required1" value="1" {if $campaign->required && $campaign->id}checked{/if}>
 				<label class="form-check-label" for="required1">
 					Yes
 				</label>
 			</div>
 			<div class="form-check">
-				<input class="form-check-input" type="radio" name="required" id="required2" value="0" {if !$campaign->required && $campaign->id}checked{/if}>
+				<input class="form-check-input" type="radio" name="required" id="required2" value="0" {if !$campaign->required || !$campaign->id}checked{/if}>
 				<label class="form-check-label" for="required2">
 					No
 				</label>
