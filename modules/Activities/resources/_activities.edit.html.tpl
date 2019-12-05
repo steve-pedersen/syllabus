@@ -18,7 +18,13 @@
                 <input type="hidden" name="section[real][{$activityId}][sortOrder]" value="{$sortOrder}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
                 <div class="d-flex justify-content-end">
                     <!-- <label class="form-control-label px-2 row-label">Row #{$i + 1}</label> -->
-                    <button type="submit" aria-label="Delete" class="btn btn-link text-danger my-0 mx-2" name="command[deletesectionitem][Syllabus_Activities_Activity][{$activityId}]" id="{$activityId}">
+                    <button type="submit" aria-label="Delete" class="btn btn-link text-danger my-0 mx-2" 
+                    {if $groupForm}
+                        name="command[deleteitem][Syllabus_Activities_Activity][{$activityId}]" 
+                    {else}
+                        name="command[deletesectionitem][Syllabus_Activities_Activity][{$activityId}]" 
+                    {/if}
+                    id="{$activityId}">
                         <i class="fas fa-trash-alt mr-1"></i>Delete
                     </button>
                 </div>
@@ -50,7 +56,7 @@
                     <div class="col-1 text-truncate"><strong>#{$i+1}</strong></div>
                     <div class="col-3 text-truncate"><strong>{$activity->name|truncate:40}</strong></div>
                     <div class="col-1 text-truncate">{$activity->value|truncate:10}</div>
-                    <div class="col text-truncate"><strong>Description: </strong>{$objective->description|strip_tags:true|truncate:50}</div>
+                    <div class="col text-truncate"><strong>Description: </strong>{$activity->description|strip_tags:true|truncate:50}</div>
                 </div>   
             </div>
         </div>
@@ -100,7 +106,12 @@
 </div>  
 
             
+{if !$importableSections}
     <div class="form-group d-flex flex-row-reverse mt-4">
+{else}
+    <div class="form-group d-flex justify-content-between mt-4">
+        {include file="{$sectionExtension->getImportFragment()}"}
+{/if}
         <input class="btn btn-light" id="addSectionItemBtn" type="submit" name="command[addsectionitem][{$realSectionClass}]" value="+ Add Another Activity" />
     </div>
 </div>
