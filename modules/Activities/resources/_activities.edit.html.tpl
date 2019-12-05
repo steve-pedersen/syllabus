@@ -20,9 +20,9 @@
                     <!-- <label class="form-control-label px-2 row-label">Row #{$i + 1}</label> -->
                     <button type="submit" aria-label="Delete" class="btn btn-link text-danger my-0 mx-2" 
                     {if $groupForm}
-                        name="command[deleteitem][Syllabus_Activities_Activity][{activityId}]" 
+                        name="command[deleteitem][Syllabus_Activities_Activity][{$activityId}]" 
                     {else}
-                        name="command[deletesectionitem][Syllabus_Activities_Activity][{activityId}]" 
+                        name="command[deletesectionitem][Syllabus_Activities_Activity][{$activityId}]" 
                     {/if}
                     id="{$activityId}">
                         <i class="fas fa-trash-alt mr-1"></i>Delete
@@ -56,7 +56,7 @@
                     <div class="col-1 text-truncate"><strong>#{$i+1}</strong></div>
                     <div class="col-3 text-truncate"><strong>{$activity->name|truncate:40}</strong></div>
                     <div class="col-1 text-truncate">{$activity->value|truncate:10}</div>
-                    <div class="col text-truncate"><strong>Description: </strong>{$objective->description|strip_tags:true|truncate:50}</div>
+                    <div class="col text-truncate"><strong>Description: </strong>{$activity->description|strip_tags:true|truncate:50}</div>
                 </div>   
             </div>
         </div>
