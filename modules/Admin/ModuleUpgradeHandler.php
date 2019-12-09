@@ -64,6 +64,11 @@ class Syllabus_Admin_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModuleUpg
                 $def->addProperty('reminder_sent', 'bool');
                 $def->save();
                 break;
+
+            case 3:
+                $settings->defineProperty('email-default-address', 'The default email address from which emails will be sent.', 'string');
+                $settings->defineProperty('email-signature', 'A signature to use for the bottom of every email.', 'string');
+                break;
         }
     }
 }

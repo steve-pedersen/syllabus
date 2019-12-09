@@ -22,6 +22,12 @@ class Syllabus_Admin_AdminDashboardItemProvider extends At_Admin_DashboardItemPr
                 'href' => 'admin/semesters',
                 'text' => 'Set active and visible semesters',
             ],
+            'email-settings' => [
+                'section' => 'Site Settings',
+                'order' => 5,
+                'href' => 'admin/settings/email',
+                'text' => 'Email Settings',
+            ],
         ];
     }
 }

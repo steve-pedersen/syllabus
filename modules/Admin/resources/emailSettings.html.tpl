@@ -1,6 +1,6 @@
 <div class="container-fluid">
 	<h1>Email Settings</h1>
-	<form action="">
+	<form method="post" action="{$smarty.server.REQUEST_URI}">
 		<div class="row email-row testing-row mt-5 border-top py-4 bg-light">
 			<div class="col-lg-7 col-xs-12">
 			<h3 class="">Debug Testing Mode</h3>
@@ -18,6 +18,29 @@
 					<input type="email" class="form-control" name="testAddress" id="testAddress" value="{$testAddress}" placeholder="e.g. testaddress@gmail.com" />				
 				</div>
 			</div>
+	
 		</div>
+	<div class="row">
+			<div class="col-12">
+				<div class="form-group">
+					<label for="defaultAddress">Default email address</label>
+					<input type="email" class="form-control" name="defaultAddress" id="defaultAddress" value="{$defaultAddress}" placeholder="ilearn@sfsu.edu..." />				
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12">
+				<div class="form-group">
+					<label for="signature">Email Signature</label>
+					<textarea name="signature" id="signature" class="wysiwyg wysiwyg-syllabus-full" rows="5" placeholder="  ---<br>Department Name">{$signature}</textarea>		
+				</div>
+			</div>
+		</div>
+
+		<div class="controls">
+			<button type="submit" name="command[save]" class="btn btn-primary">Save</button>
+			<a href="admin" class="btn btn-default pull-right">Cancel</a>
+		</div>
+		{generate_form_post_key}
 	</form>
 </div>

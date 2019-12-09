@@ -407,6 +407,8 @@ class Syllabus_Admin_Controller extends Syllabus_Master_Controller
                     $testingOnly = ((is_null($testing) || $testing === 0) ? 0 : 1);
                     $siteSettings->setProperty('email-testing-only', $testingOnly);
                     $siteSettings->setProperty('email-test-address', $this->request->getPostParameter('testAddress'));
+                    $siteSettings->setProperty('email-default-address', $this->request->getPostParameter('defaultAddress'));
+                    $siteSettings->setProperty('email-signature', $this->request->getPostParameter('signature'));
                     $this->response->redirect('admin/settings/email');
                     exit;
             }
@@ -415,6 +417,8 @@ class Syllabus_Admin_Controller extends Syllabus_Master_Controller
         $this->template->authZ = $this->getApplication()->authorizationManager;
         $this->template->testingOnly = $siteSettings->getProperty('email-testing-only', 0);
         $this->template->testAddress = $siteSettings->getProperty('email-test-address');
+        $this->template->defaultAddress = $siteSettings->getProperty('email-default-address');
+        $this->template->signature = $siteSettings->getProperty('email-signature');
     }
     
     /**
