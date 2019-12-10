@@ -19,21 +19,24 @@
 				{$campaign->semester->display}
 			</h3>
 		</a>
-		<form action="{$routeBase}submissions" method="post" class="ml-auto pt-2">
-			{if $departmentEmail}
-				<button name="command[sendreminder][{$campaign->id}]" type="submit" class="btn btn-dark">
+		
+		{if $departmentEmail}
+			<form action="{$routeBase}submissions" method="post" class="ml-auto pt-1" id="email-reminder-form-{$campaign->id}">
+				<button name="command[sendreminder][{$campaign->id}]" type="submit" class="btn btn-dark btn-email-reminder">
 					<i class="fas fa-paper-plane mr-2"></i> Send Reminder Email
 				</button>
-			{else}
-				<a href="{$routeBase}settings?submissions=true" class="btn btn-dark">
-					<i class="fas fa-paper-plane mr-2"></i> Send Reminder Email
-				</a>
-			{/if}
+				{generate_form_post_key}
+			</form>
+		{else}
+			<a href="{$routeBase}settings?submissions=true" class="btn btn-dark btn-email-reminder">
+				<i class="fas fa-paper-plane mr-2"></i> Send Reminder Email
+			</a>
+		{/if}
+		<div class="pt-1 ml-2">
 			<a href="{$routeBase}campaigns/{$campaign->id}" class="text-dark btn btn-info">
 				<i class="fas fa-edit mr-2"></i> Edit This Campaign
 			</a>
-			{generate_form_post_key}
-		</form>
+		</div>
 	</div>
 
     <div id="collapse{$campaign@index}" class="collapse px-0 col-12 mt-0 {if $campaign->id == $activeCampaign->id}show{/if}" aria-labelledby="headingOne" data-parent="#termAccordion">

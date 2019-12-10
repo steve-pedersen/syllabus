@@ -1,6 +1,13 @@
 (function ($) {
   $(function () {
 
+    $('.btn-email-reminder').on('click', function (e) {
+        if (!confirm('Are you sure you want to email all faculty with incomplete submissions?')) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+
     $('#reviewSubmissionModal').on('show.bs.modal', function(e) {
         var submissionId = $(e.relatedTarget).attr('data-submission');
         var status = $(e.relatedTarget).parents().siblings('.status').val();

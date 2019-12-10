@@ -379,7 +379,9 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                     $this->sendReminderNotification($departmentEmail, $campaign, $viewer);
                     $departmentEmail->recipients = implode(',', $recipients);
                     $departmentEmail->save();
-                    $this->flash('A reminder email was sent to '. count($recipients). ' instructors');
+                    $this->flash(
+                        'A reminder email was sent to '.count($recipients).' instructors for the '.$campaign->semester->display.' semester.'
+                    );
                     break;
             }
         }
