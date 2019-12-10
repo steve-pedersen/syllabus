@@ -63,7 +63,11 @@ class Syllabus_Schedules_Schedules extends Bss_ActiveRecord_Base
             $this->header2 = isset($data['header2']) ? strip_tags(trim($data['header2'])) : '';
             $this->header3 = isset($data['header3']) ? strip_tags(trim($data['header3'])) : '';
             $this->header4 = isset($data['header4']) ? strip_tags(trim($data['header4'])) : '';
-            $this->additionalInformation = $htmlSanitizer->sanitize(trim($data['additionalInformation']));
+            if (isset($data['additionalInformation']) && $data['additionalInformation'] !== '')
+            {
+                $this->additionalInformation = $htmlSanitizer->sanitize(trim($data['additionalInformation']), $options);
+                unset($data['additionalInformation']);
+            }
             $this->save();
 
             unset($data['columns']);
@@ -71,7 +75,6 @@ class Syllabus_Schedules_Schedules extends Bss_ActiveRecord_Base
             unset($data['header2']);
             unset($data['header3']);
             unset($data['header4']);
-            unset($data['additionalInformation']);
 
             $schema = $this->getSchema('Syllabus_Schedules_Schedule');
             foreach ($data as $id => $schedule)
@@ -111,7 +114,7 @@ class Syllabus_Schedules_Schedules extends Bss_ActiveRecord_Base
 
     public function copyImportables ($resolvedImportable)
     {
-        $ignoredProperties = ['sortOrder', 'id', 'schedules'];
+        $ignoredProperties = ['sortOrder', 'id', 'schedules', 'additionalInformation'];
         $containerProperties = ['columns', 'header1', 'header2', 'header3', 'header4'];
         $sortOrder = count($this->grades);
         $imported = [];
@@ -124,7 +127,7 @@ class Syllabus_Schedules_Schedules extends Bss_ActiveRecord_Base
                 $this->$prop = $resolvedImportable->$prop;
             }           
         }
-        $this->save();
+        if (!isset($this->id)) $this->save();
 
         foreach ($resolvedImportable->schedules as $schedule)
         {

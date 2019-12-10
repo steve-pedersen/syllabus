@@ -63,14 +63,17 @@ class Syllabus_Grades_Grades extends Bss_ActiveRecord_Base
             $this->header1 = isset($data['header1']) ? strip_tags(trim($data['header1'])) : '';
             $this->header2 = isset($data['header2']) ? strip_tags(trim($data['header2'])) : '';
             $this->header3 = isset($data['header3']) ? strip_tags(trim($data['header3'])) : '';
-            $this->additionalInformation = $htmlSanitizer->sanitize(trim($data['additionalInformation']), $options);
+            if (isset($data['additionalInformation']) && $data['additionalInformation'] !== '')
+            {
+                $this->additionalInformation = $htmlSanitizer->sanitize(trim($data['additionalInformation']), $options);
+                unset($data['additionalInformation']);
+            }
             $this->save();
 
             unset($data['columns']);
             unset($data['header1']);
             unset($data['header2']);
             unset($data['header3']);
-            unset($data['additionalInformation']);
 
             $schema = $this->getSchema('Syllabus_Grades_Grade');
             foreach ($data as $id => $grade)
@@ -103,7 +106,7 @@ class Syllabus_Grades_Grades extends Bss_ActiveRecord_Base
 
     public function copyImportables ($resolvedImportable)
     {
-        $ignoredProperties = ['sortOrder', 'id', 'grades'];
+        $ignoredProperties = ['sortOrder', 'id', 'grades', 'additionalInformation'];
         $containerProperties = ['columns', 'header1', 'header2', 'header3'];
         $sortOrder = count($this->grades);
         $imported = [];
@@ -116,7 +119,7 @@ class Syllabus_Grades_Grades extends Bss_ActiveRecord_Base
                 $this->$prop = $resolvedImportable->$prop;
             }           
         }
-        $this->save();
+        if (!isset($this->id)) $this->save();
 
         foreach ($resolvedImportable->grades as $grade)
         {
