@@ -8,7 +8,8 @@ class Syllabus_Organizations_CronJob extends Bss_Cron_Job
     
     public function run ($startTime, $lastRun, $timeDelta)
     {
-        if ($timeDelta >= self::PROCESS_ACTIVE_JOBS_EVERY)
+        $testingOnly = $this->getApplication()->siteSettings->getProperty('email-testing-only');
+        if ($timeDelta >= self::PROCESS_ACTIVE_JOBS_EVERY && !$testingOnly)
         {
             set_time_limit(0);
             ini_set('memory_limit', '-1');
