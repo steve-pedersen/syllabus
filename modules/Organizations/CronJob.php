@@ -20,41 +20,50 @@ class Syllabus_Organizations_CronJob extends Bss_Cron_Job
                 $campaigns->dueDate->afterOrEquals(new DateTime)
             );
 
-            foreach ($ongoingCampaigns as $campaign)
+            foreach ($ongoingCampaigns as $ongoingCampaign)
             {
-                $organization = $campaign->getOrganization();
-                list($type, $id) = explode('/', $campaign->organizationAuthorizationId);
+                $organization = $ongoingCampaign->getOrganization();
+                list($type, $id) = explode('/', $ongoingCampaign->organizationAuthorizationId);
 
                 if (lcfirst($type) === 'departments')
                 {
                     if (($departmentEmail = $emails->findOne($emails->departmentId == $id)))
                     {
-                        if ($this->isDue($departmentEmail))
+                        if ($this->isDue($departmentEmail, $ongoingCampaign))
                         {
-                            $recipients = [];
-                            foreach ($campaign->submissions as $submission)
+                            $instructors = [];
+
+                            foreach ($ongoingCampaign->submissions as $submission)
                             {
                                 if ($submission->status === 'open' || $submission->status === 'denied')
                                 {
-                                    $instructors = [];
                                     foreach ($submission->courseSection->enrollments as $enrollment)
                                     {
                                         if ($submission->courseSection->enrollments->getProperty($enrollment, 'role') === 'instructor')
                                         {
-                                            $instructors[] = $enrollment;
+                                            $instructors[$enrollment->id] = $enrollment;
                                         }
-                                    }
-                                    $instructors[] = $viewer;
-                                    foreach ($instructors as $instructor)
-                                    {
-                                        $this->sendReminderNotification($departmentEmail, $campaign, $instructor);
-                                        $recipients[] = $instructor->id;
                                     }
                                 }
                             }
-                            $departmentEmail->reminderSent = true;
-                            $departmentEmail->recipients = implode(',', $recipients);
-                            $departmentEmail->save();
+
+                            $counter = 0;
+                            $length = 40;
+                            do
+                            {
+                                $tempUsers = array_slice($instructors, $counter, $length);
+                                $this->sendReminderNotification($departmentEmail, $ongoingCampaign, $tempUsers);
+                                $counter += $length;
+                            }
+                            while ($counter <= (count($instructors) - 1));
+
+                            $numRecipients = count($instructors);
+                            $ongoingCampaign = $this->requireExists($ongoingCampaigns->get($ongoingCampaignId));
+                            $ongoingCampaign->log .= "
+                            <li>
+                                A reminder email was sent to {$numRecipients} instructors for the {$ongoingCampaign->semester->display} semester.
+                            </li>";
+                            $ongoingCampaign->save();
                         }
                     }
                 }
@@ -64,7 +73,7 @@ class Syllabus_Organizations_CronJob extends Bss_Cron_Job
         }
     }
 
-    protected function isDue ($email)
+    protected function isDue ($email, $campaign)
     {
         if ($email->reminderSent)
         {
@@ -74,8 +83,8 @@ class Syllabus_Organizations_CronJob extends Bss_Cron_Job
         $reminderTime = DateInterval::createFromDateString($email->reminderTime);
         $today = new DateTime;
         $dateFromInterval = $today->add($reminderTime);
-        $interval = $dateFromInterval->diff($email->dueDate);
-        if ($interval->format('%a') == '0')
+        $interval = $dateFromInterval->diff($campaign->dueDate);
+        if ($interval && $interval->format('%a') == '0')
         {
             return true;
         }
