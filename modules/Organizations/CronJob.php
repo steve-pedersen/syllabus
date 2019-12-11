@@ -22,6 +22,7 @@ class Syllabus_Organizations_CronJob extends Bss_Cron_Job
 
             foreach ($ongoingCampaigns as $ongoingCampaign)
             {
+                $ongoingCampaignId = $ongoingCampaign->id;
                 $organization = $ongoingCampaign->getOrganization();
                 list($type, $id) = explode('/', $ongoingCampaign->organizationAuthorizationId);
 
