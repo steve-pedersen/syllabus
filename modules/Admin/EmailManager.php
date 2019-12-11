@@ -23,8 +23,8 @@ class Syllabus_Admin_EmailManager
 		$this->ctrl = $ctrl;	// phasing this out...
 		$this->fromEmail = 'ilearn@sfsu.edu';
 		$this->fromName = "Syllabus";
-		$this->testingOnly = false;
-		$this->testEmail = 'Test';
+		$this->testingOnly = $app->siteSettings->getProperty('email-testing-only');
+		$this->testEmail = $app->siteSettings->getProperty('email-test-address');
 		$this->subjectLine = "Syllabus Submission Reminder";
 		$this->attachments = array();
 		$this->ccRequest = false;
