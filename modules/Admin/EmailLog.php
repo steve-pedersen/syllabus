@@ -17,6 +17,8 @@ class Syllabus_Admin_EmailLog extends Bss_ActiveRecord_Base
             'body' => 'string',
             'attachments' => 'string',
             'success' => 'bool',
+
+            'email' => ['1:1', 'to' => 'Syllabus_Admin_Email', 'keyMap' => ['email_id' => 'id']],
         );
     }
 

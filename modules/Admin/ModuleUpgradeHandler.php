@@ -69,6 +69,12 @@ class Syllabus_Admin_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModuleUpg
                 $settings->defineProperty('email-default-address', 'The default email address from which emails will be sent.', 'string');
                 $settings->defineProperty('email-signature', 'A signature to use for the bottom of every email.', 'string');
                 break;
+
+            case 4:
+                $def = $this->alterEntityType('syllabus_email_log', $this->getDataSource('Syllabus_Admin_EmailLog'));
+                $def->addProperty('email_id', 'int');
+                $def->save();
+                break;
         }
     }
 }

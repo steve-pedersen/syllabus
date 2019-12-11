@@ -350,42 +350,57 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
                 case 'sendreminder':
                     set_time_limit(0);
                     ini_set('memory_limit', '-1');
-                    $campaign = $this->requireExists($campaigns->get(key($this->getPostCommandData())));
+
+                    $campaignId = key($this->getPostCommandData());
+                    $campaign = $this->requireExists($campaigns->get($campaignId));
                     $this->requireExists($departmentEmail);
-                    $recipients = [];
+                    $instructors = [];
 
                     foreach ($campaign->submissions as $submission)
                     {
                         if ($submission->status === 'open' || $submission->status === 'denied')
                         {
-                            // $instructors = [];
-                            // foreach ($submission->courseSection->enrollments as $enrollment)
-                            // {
-                            //     if ($submission->courseSection->enrollments->getProperty($enrollment, 'role') === 'instructor')
-                            //     {
-                            //         // $instructors[] = $enrollment;
-
-                            //     }
-                            // }
-                            // $instructors[] = $viewer;
-                            // foreach ($instructors as $instructor)
-                            // {
-                            //     $this->sendReminderNotification($departmentEmail, $campaign, $instructor);
-                            //     $recipients[] = $instructor->id;
-                            // }
+                            foreach ($submission->courseSection->enrollments as $enrollment)
+                            {
+                                if ($submission->courseSection->enrollments->getProperty($enrollment, 'role') === 'instructor')
+                                {
+                                    $instructors[$enrollment->id] = $enrollment;
+                                }
+                            }
                         }
                     }
-                    $recipients[] = $viewer->id;
-                    $this->sendReminderNotification($departmentEmail, $campaign, $viewer);
-                    $departmentEmail->recipients = implode(',', $recipients);
-                    $departmentEmail->save();
+
+                    $counter = 0;
+                    $length = 40;
+                    do
+                    {
+                        $tempUsers = array_slice($instructors, $counter, $length);
+                        $this->sendReminderNotification($departmentEmail, $campaign, $tempUsers);
+                        $counter += $length;
+                    }
+                    while ($counter <= (count($instructors) - 1));
+
+                    $numRecipients = count($instructors);
+                    $campaign = $this->requireExists($campaigns->get($campaignId));
+                    $campaign->log .= "
+                    <li>
+                        A reminder email was sent to {$numRecipients} instructors for the {$campaign->semester->display} semester.
+                    </li>";
+                    $campaign->save();
                     $this->flash(
-                        'A reminder email was sent to '.count($recipients).' instructors for the '.$campaign->semester->display.' semester.'
+                        'A reminder email was sent to '.count($instructors).' instructors for the '.$campaign->semester->display.' semester.'
                     );
                     break;
             }
         }
 
+        $campaignLatestLogs = [];
+        foreach ($allCampaigns as $campaign)
+        {
+            $campaignLatestLogs[$campaign->id] = $departmentEmail->getLatestLogForCampaign($campaign);
+        }
+
+        $this->template->campaignLogs = $campaignLatestLogs;
         $this->template->departmentEmail = $departmentEmail;
         $this->template->updatedSubmission = $this->request->getQueryParameter('s');
         $this->template->allCampaigns = $allCampaigns;

@@ -71,7 +71,12 @@
 			<div>{$campaign->description}</div>
 		</div>
 	</div>
-	<div class="d-flex">		
+	<div class="d-flex">
+		{if $campaignLogs && $campaignLogs[$campaign->id]}
+			<div class="mr-auto">
+				<p class="text-danger">Reminder email has been sent for this campaign on {$campaignLogs[$campaign->id]->creationDate->format('F jS, Y - h:i a')}</p>
+			</div>
+		{/if}
 		<a href="#" class="ml-auto mt-auto pb-4">
 			<i class="mr-2 far fa-file-excel"></i>Download as CSV
 		</a>

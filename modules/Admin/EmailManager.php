@@ -96,8 +96,6 @@ class Syllabus_Admin_EmailManager
 		$this->fromName = (!$test ? $data['email']->department->name . ' via Syllabus' : 'Syllabus');
 
 		$params = [
-			'|%FIRST_NAME%|' => $data['user']->firstName,
-			'|%LAST_NAME%|' => $data['user']->lastName,
 			'|%DUE_DATE%|' => (!$test ? $data['campaign']->dueDate : $data['reminder']->dueDate)->format('M j, Y g:ia'),
 			'|%DEPARTMENT_NAME%|' => (!$test ? $data['email']->department->name : $data['reminder']->department),
 			'|%SEMESTER%|' => (!$test ? $data['campaign']->semester->display : $data['reminder']->semester),
@@ -142,9 +140,12 @@ class Syllabus_Admin_EmailManager
 				// send to multiple recipients
 				foreach ($user as $recipient)
 				{
-					$recipient = is_array($recipient) ? array_shift($recipient) : $recipient;
-					$mail->AddAddress($recipient->emailAddress, $recipient->fullName);
-					$recipients[] = $recipient->id;
+					if ($recipient->emailAddress && $recipient->emailAddress !== '')
+					{
+						$recipient = is_array($recipient) ? array_shift($recipient) : $recipient;
+						$mail->AddAddress($recipient->emailAddress, $recipient->fullName);
+						$recipients[] = $recipient->id;
+					}
 				}
 			}
 			else
@@ -200,7 +201,9 @@ class Syllabus_Admin_EmailManager
 			if (isset($params['email']) && $params['email'] !== '')
 			{
 				$params['email']->success = $success;
-				$params['email']->save();				
+				$params['email']->save();
+				$emailLog->email_id = $params['email']->id;
+				$emailLog->save();
 			}
 
 		}
