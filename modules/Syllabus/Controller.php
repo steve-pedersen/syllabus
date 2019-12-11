@@ -812,7 +812,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $pathParts = array_filter($pathParts);
                     
                     $this->flash($realSectionExtension->getDisplayName() . ' added.');
-                    $this->response->redirect(implode('/', $pathParts));
+                    $this->response->redirect(implode('/', $pathParts) . '&i=true');
                     break;
 
                 case 'deletesectionitem':
@@ -1090,6 +1090,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->returnTo = "syllabus/$syllabus->id";
         $this->template->activeStudents = $syllabusVersion->getActiveStudentsEstimation($this) ?? 0;
         $this->template->viewer = $viewer;
+        $this->template->justImported = $this->request->getQueryParameter('i', false);
     }
 
     public function share ()

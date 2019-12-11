@@ -94,6 +94,14 @@
 	            </div>
 	        </div>
 	    </div>
+	    {if $justImported}
+			<div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+				<strong>Success!</strong> Your imported content is available below
+				<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+	    {/if}
 		<div class="real-section-editor">{include file="{$sectionExtension->getEditFormFragment()}"}</div>
 	</div>
 
