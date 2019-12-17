@@ -25,7 +25,7 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
         }
 
         $profiles = $this->schema('Syllabus_Instructors_Profile');
-        $profile = $profiles->findOne($profiles->account_id->equals($profileAccount->id));
+        $profile = $profiles->findOne($profiles->account_id->equals($profileAccount->id), ['orderBy' => '-modifiedDate']);
         $data = $profiles->createInstance()->findProfileData($profileAccount) ?? $profiles->createInstance();
 
         if ($this->request->wasPostedByUser())
@@ -33,7 +33,7 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
             switch ($this->getPostCommand())
             {
                 case 'save':
-                    $profile = $profile ?? $profiles->createInstance();
+                    $profile = $profile->id ? $profile : $profiles->createInstance();
                     $profile->absorbData($this->request->getPostParameters());
                     $profile->account_id = $profileAccount->id;
                     $profile->modifiedDate = new DateTime;
