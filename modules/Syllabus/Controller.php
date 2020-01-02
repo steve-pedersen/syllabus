@@ -462,7 +462,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         $roles = $this->schema('Syllabus_AuthN_Role');
         $studentRole = $roles->findOne($roles->name->equals('Student'));
-        if ($viewer->roles->has($studentRole) || !$this->hasPermission('syllabus edit'))
+        $facultyRole = $roles->findOne($roles->name->equals('Faculty'));
+        if (!$viewer->roles->has($facultyRole) && $viewer->roles->has($studentRole) || 
+            !$this->hasPermission('syllabus edit'))
         {
             $this->accessDenied('nope');
         }
