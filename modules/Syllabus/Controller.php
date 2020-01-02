@@ -208,8 +208,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         
         $roles = $this->schema('Syllabus_AuthN_Role');
         $studentRole = $roles->findOne($roles->name->equals('Student'));
+        $facultyRole = $roles->findOne($roles->name->equals('Faculty'));
         $isStudent = false;
-        if ($viewer->roles->has($studentRole))
+        if (!$viewer->roles->has($facultyRole) && $viewer->roles->has($studentRole))
         {
             $isStudent = true;
         }
