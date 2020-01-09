@@ -10,9 +10,9 @@
 			<a class="nav-link mx-md-5 mx-sm-3 {if $mode == 'courses'}active{/if}" id="courses-tab"  href="syllabi?mode=courses" aria-controls="courses" aria-selected="false">
 				Courses
 			</a>
-			<a class="nav-link mx-md-5 mx-sm-3 {if $mode == 'submissions'}active{/if}" id="submissions-tab"  href="syllabi?mode=submissions" aria-controls="submissions" aria-selected="false">
+<!-- 			<a class="nav-link mx-md-5 mx-sm-3 {if $mode == 'submissions'}active{/if}" id="submissions-tab"  href="syllabi?mode=submissions" aria-controls="submissions" aria-selected="false">
 				Submissions
-			</a>
+			</a> -->
 		{if $mode == 'overview' || ($mode != 'courses' && $mode != 'submissions')}
 			<div class="ml-auto d-inline search-container">
 			<form action="{$smarty.server.REQUEST_URI}" method="get" class="form-inline" role="form" id="searchSyllabi">
@@ -49,11 +49,11 @@
 						{include file="partial:_courses.html.tpl"}
 					{/if}
 				</div>
-				<div class="tab-pane {if $mode == 'submissions'}active{/if}" id="submissions" role="tabpanel" aria-labelledby="submissions-tab">
+<!-- 				<div class="tab-pane {if $mode == 'submissions'}active{/if}" id="submissions" role="tabpanel" aria-labelledby="submissions-tab">
 					{if $mode == 'submissions'}
 						{include file="partial:_submissions.html.tpl"}
 					{/if}
-				</div>
+				</div> -->
 			</div>
 		</div>
 	</div>

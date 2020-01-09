@@ -87,11 +87,11 @@
 									Courses
 								</a>
 							</li>
-							<li class="nav-item mobile-link {if $page == 'submissions'}active{/if}">
+<!-- 							<li class="nav-item mobile-link {if $page == 'submissions'}active{/if}">
 								<a class="nav-link" href="syllabi?mode=submissions">
 									Submissions
 								</a>
-							</li>
+							</li> -->
 							{if $privilegedOrganizations || $pAdmin}
 								<li class="nav-item mobile-link border-top">
 									<a class="nav-link" href="organizations" id="sidebarMyOrganizations">

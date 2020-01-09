@@ -80,11 +80,11 @@
 								<span class="sidebar-text">Courses</span>
 							</a>
 						</li>
-						<li class="{if $page == 'submissions'}active{/if}">
+<!-- 						<li class="{if $page == 'submissions'}active{/if}">
 							<a class="sub-link" href="syllabi?mode=submissions">
 								<span class="sidebar-text">Submissions</span>
 							</a>
-						</li>
+						</li> -->
 						<li class="{if $page == 'migrate'}active{/if}">
 							<a class="sub-link" href="syllabus/migrate">
 								<span class="sidebar-text">Migrate</span>
@@ -224,11 +224,11 @@
 									Courses
 								</a>
 							</li>
-							<li class="nav-item mobile-link {if $page == 'submissions'}active{/if}">
+<!-- 							<li class="nav-item mobile-link {if $page == 'submissions'}active{/if}">
 								<a class="nav-link" href="syllabi?mode=submissions">
 									Submissions
 								</a>
-							</li>
+							</li> -->
 							{if $privilegedOrganizations || $pAdmin}
 								<li class="nav-item mobile-link border-top">
 									<a class="nav-link" href="organizations" id="sidebarMyOrganizations">
