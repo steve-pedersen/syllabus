@@ -217,7 +217,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 {
                     $this->response->redirect('syllabi');
                 }
-                $myCourses = $viewer->classDataUser->getCurrentEnrollments();
+                $myCourses = $viewer->classDataUser->getRecentAndCurrentEnrollments();
                 $courses = [];
                 foreach ($myCourses as $i => $courseSection)
                 {
@@ -248,7 +248,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             
             case 'submissions':            
 
-                $myCourses = $viewer->classDataUser->getCurrentEnrollments();
+                $myCourses = $viewer->classDataUser->getRecentAndCurrentEnrollments();
                 $courses = [];
                 foreach ($myCourses as $i => $courseSection)
                 {
@@ -274,7 +274,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
                 if ($isStudent)
                 {
-                    $myCourses = $viewer->classDataUser->getCurrentEnrollments();
+                    $myCourses = $viewer->classDataUser->getRecentAndCurrentEnrollments();
                     $courses = [];
                     foreach ($myCourses as $i => $courseSection)
                     {
