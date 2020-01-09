@@ -24,6 +24,18 @@
 		<link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
 		<!-- <link rel="shortcut icon" type="image/x-icon" href="assets/icons/logo-3-128.png" /> -->
 		<link rel="shortcut icon" type="image/x-icon" href="assets/icons/logo_square_128-01.png"  />
+
+		<meta property="og:title" content="Syllabus Tool at SF State" />
+		<meta property="og:description" content="There is a new way to create and share your syllabus with your students! Users are encouraged to explore the new Syllabus application, build out syllabi, or transfer content from the existing tool into the new one." />
+		<meta name="twitter:title" content="Syllabus Tool at SF State">
+		<meta name="twitter:description" content="There is a new way to create and share your syllabus with your students! Users are encouraged to explore the new Syllabus application, build out syllabi, or transfer content from the existing tool into the new one.">
+
+		<meta property="og:image"
+		      content="assets/icons/logo_square_128-01.png" />
+
+		<meta name="twitter:image:src"
+		      content="assets/icons/logo_square_128-01.png">
+
 		<script>document.write('<link rel="stylesheet" type="text/css" href="assets/css/app-js.css" media="screen">');</script>
 	</head>
 
