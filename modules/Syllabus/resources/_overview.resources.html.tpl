@@ -93,11 +93,7 @@
 							<div class="text-center vertical-align overlay-icon" id="checkIcon{$i}">
 								<i class="fas fa-check fa-7x text-success"></i>
 							</div>
-							{if $syllabus->imageUrl}
-							<img src="{$syllabus->imageUrl}" class="card-img-top crop-top crop-top-13" alt="{$syllabus->title}" />
-							{else}
-							<img src="assets/images/testing0{$i}.jpg" class="card-img-top crop-top crop-top-13" alt="{$syllabus->title}" />
-							{/if}
+							<img src="assets/images/placeholder-4.jpg" data-src="syllabus/{$syllabus->id}/thumbinfo" id="syllabus-{$syllabus->id}-resources" class="card-img-top crop-top crop-top-13" alt="{$syllabus->title}" />
 						</div>
 						<h6 class="mt-3 text-dark">{$syllabus->title}</h6>
 						<small class="d-block">
