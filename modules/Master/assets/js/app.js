@@ -42,7 +42,7 @@
             success: function (o) {
                 switch (o.status) {
                     case 'success':
-                        $('#syllabus-' + o.syllabusId).attr('src', o.imageSrc);
+                        $(`[id^='syllabus-${o.syllabusId}'`).attr('src', o.imageSrc);
                         break;
                     case 'error':
                     default:
