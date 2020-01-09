@@ -35,6 +35,25 @@
       e.preventDefault();
     });
 
+    $('[data-src]').each(function () {
+        var url = $(this).attr('data-src');
+        $.ajax(url, {
+            type: 'get',
+            dataType: 'json',
+            success: function (o) {
+                switch (o.status) {
+                    case 'success':
+                        $('#syllabus-' + o.syllabusId).attr('src', o.imageSrc);
+                        break;
+                    case 'error':
+                    default:
+                        //console.log('unknown error');
+                        break;
+                }
+            }
+        });
+    });
+
     if ($('#printContainer').length) {
         $('.print-button').click();
     }

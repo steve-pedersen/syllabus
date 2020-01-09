@@ -44,7 +44,7 @@
 		<td class="align-middle {if !$syllabus && !$submission->file}table-warning{else}{/if}" style="height: 6rem;">
 			{if $syllabus && !$submission->file}
 				<a href="syllabus/{$syllabus->id}">
-					<img src="{if $courseSection->imageUrl}{$courseSection->imageUrl}{else}assets/images/placeholder-4.jpg{/if}" class="img-thumbnail mr-2" alt="Syllabus thumbnail" style="max-height: 6rem; min-height: 5rem;border:5px solid #efefef;">
+					<img src="assets/images/placeholder-4.jpg" class="img-thumbnail mr-2" alt="{$syllabus->title}" data-src="syllabus/{$syllabus->id}/thumbinfo" id="syllabus-{$syllabus->id}" style="max-height: 6rem; min-height: 5rem;border:5px solid #efefef;">
 					{$syllabus->title}
 				</a>
 				{if $submittedCourseId && $courseSection->id == $submittedCourseId}

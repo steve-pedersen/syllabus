@@ -72,6 +72,16 @@ class Syllabus_Services_Screenshotter
         return $uid;
     }
 
+    public static function GetUid ($key='')
+    {
+        $client = new Predis\Client();
+        if ($uid = $client->get($key))
+        {
+            $client->del($key);
+        }
+        return $uid;
+    }
+
     public function saveUids ($eid, $sids)
     {
         if (!is_array($sids)) $sids = array($sids);

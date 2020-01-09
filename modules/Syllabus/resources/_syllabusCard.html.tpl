@@ -15,11 +15,7 @@
 	</div>
 	{/if}
 	<div class="card-body h-100">
-	{if $syllabus->imageUrl}
-		<img src="{$syllabus->imageUrl}" class="border-bottom card-img-top crop-top crop-top-{if $cropSize}{$cropSize}{else}10{/if}" alt="{$syllabus->title}">
-	{else}
-		<img src="assets/images/testing0{$i}.jpg" class="border-bottom card-img-top crop-top crop-top-{if $cropSize}{$cropSize}{else}10{/if}" alt="{$syllabus->title}">
-	{/if}
+		<img src="assets/images/placeholder-4.jpg" class="border-bottom card-img-top crop-top crop-top-{if $cropSize}{$cropSize}{else}10{/if}" alt="{$syllabus->title}" data-src="syllabus/{$syllabus->id}/thumbinfo" id="syllabus-{$syllabus->id}">
 		<h5 class="mt-3">
 		{if $syllabus->semester}
 			{$syllabus->syllabus->title|truncate:75}
