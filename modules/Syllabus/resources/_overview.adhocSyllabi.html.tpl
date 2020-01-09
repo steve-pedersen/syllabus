@@ -26,7 +26,7 @@
 					</h6>
 				</div>
 				<div class="col-4 pl-0">
-					<img class="img-thumbnail" src="{$syllabus->fetchImageUrl($ctrl)}">
+					<img class="img-thumbnail" src="assets/images/placeholder-4.jpg" data-src="syllabus/{$syllabus->id}/thumbinfo" id="syllabus-{$syllabus->id}">
 				</div>
 				<div class="col-12 mt-2">
 					<p class="card-text text-center">

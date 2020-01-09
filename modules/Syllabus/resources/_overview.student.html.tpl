@@ -37,7 +37,7 @@
 				{if $course->courseSyllabus}
 				<a href="syllabus/{$course->courseSyllabus->id}/view" class="">
 					<div class="paper paper-bottom mb-1">
-					<img src="{$course->imageUrl}" class="img-thumbnail" alt="{$course->title} syllabus preview" style="min-height:120px;border:1px solid #dee2e6;border-radius:0;">
+					<img src="assets/images/placeholder-4.jpg" data-src="syllabus/{$syllabus->id}/thumbinfo" id="syllabus-{$syllabus->id}" class="img-thumbnail" alt="{$course->title} syllabus preview" style="min-height:120px;border:1px solid #dee2e6;border-radius:0;">
 				</div>
 				</a>
 				{else}

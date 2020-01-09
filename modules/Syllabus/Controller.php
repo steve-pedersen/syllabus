@@ -24,12 +24,164 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/:id/export'       => ['callback' => 'export', ':id' => '[0-9]+'],
             'syllabus/:id/screenshot'   => ['callback' => 'screenshot', ':id' => '[0-9]+'],
             'syllabus/:id/ping'         => ['callback' => 'ping'],
+            'syllabus/:id/thumbinfo'    => ['callback' => 'thumbInfo', ':id' => '[0-9]+'],
+            'syllabus/submissions/file' => ['callback' => 'fileSubmission'],
+            'syllabus/submissions'      => ['callback' => 'submissions'],
+            'syllabus/submissions/:id'  => ['callback' => 'submissions', ':id' => '[0-9]+'],
             'syllabus/courses'          => ['callback' => 'courseLookup'],
             'syllabus/start'            => ['callback' => 'start'],
             'syllabus/startwith/:id'    => ['callback' => 'startWith', ':id' => '[0-9]+'],
             'syllabus/migrate'          => ['callback' => 'migrate'],
             'syllabus/autocomplete'     => ['callback' => 'autocompleteAccounts'],
         ];
+    }
+
+    public function submissions ()
+    {
+        $viewer = $this->requireLogin();
+        $submissionId = $this->getRouteVariable('id');
+
+        if (!$this->request->wasPostedByUser())
+        {
+            $this->addBreadcrumb('syllabi', 'Home');
+            $this->addBreadcrumb('syllabi?mode=submissions', 'Submissions');
+
+            $submission = $this->requireExists(
+                $this->schema('Syllabus_Syllabus_Submission')->get($submissionId)
+            );
+            $this->addBreadcrumb('syllabus/submissions/' . $submission->id, 'Review Submission');
+
+            $this->template->courseSection = $submission->courseSection;
+            $this->template->submission = $submission;
+            $this->template->account = $viewer;
+        }
+
+        if ($this->request->wasPostedByUser())
+        {
+            $data = $this->request->getPostParameters();
+            $syllabusId = key($this->getPostCommandData());
+            $syllabus = $this->schema('Syllabus_Syllabus_Syllabus')->get($syllabusId);
+            $submissions = $this->schema('Syllabus_Syllabus_Submission');
+            $submission = $submissions->findOne(
+                $submissions->course_section_id->equals($syllabus->courseSection->id)
+            );
+
+            $submission->syllabus_id = $syllabus->id;
+            // $submission->file_id = null;
+            $submission->submitted_by_id = $viewer->id;
+            $submission->modifiedDate = new DateTime;
+            $submission->submittedDate = new DateTime;
+            $submission->status = $submission->campaign->required ? 'pending' : 'approved';
+            $submission->log .= "<li>
+                Submitted syllabus #{$syllabus->id} on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+            </li>";
+            $submission->campaign->log .= "<li>
+                Submission #{$submission->id} set to '{$submission->status}' on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+            </li>";
+            $submission->save();
+            $submission->campaign->save();
+
+            $this->flash('Syllabus submitted!');
+            $this->response->redirect('syllabi?mode=submissions&c=' . $submission->course_section_id);
+        }
+    }
+
+    public function fileSubmission ()
+    {
+        $viewer = $this->requireLogin();
+        $submissions = $this->schema('Syllabus_Syllabus_Submission');
+
+        if (!$this->request->wasPostedByUser() && $this->request->getQueryParameter('upload'))
+        {
+            $this->addBreadcrumb('syllabi', 'Home');
+            $this->addBreadcrumb('syllabi?mode=submissions', 'Submissions');
+
+            // syllabus file upload
+        	$courseSection = $this->requireExists(
+        		$this->schema('Syllabus_ClassData_CourseSection')->get($this->request->getQueryParameter('c'))
+        	);
+            $this->addBreadcrumb('syllabus/submissions?upload=true&c=' . $courseSection->id, 'Submit File');
+
+            $condition = $submissions->allTrue(
+                $submissions->course_section_id->equals($courseSection->id),
+                $submissions->deleted->isNull()->orIf($submissions->deleted->isFalse())
+            );
+        	$submission = $submissions->findOne($condition, ['orderBy' => 'modifiedDate']);
+
+        	$this->template->fileUpload = true;
+        	$this->template->courseSection = $courseSection;
+        	$this->template->submission = $submission;
+        	$this->template->account = $viewer;
+        }
+        elseif (!$this->request->wasPostedByUser())
+        {
+        	$this->response->redirect('syllabi?mode=submissions');
+        }
+
+        $results = [
+            'message' => 'Server error when uploading.',
+            'status' => 500,
+            'success' => false
+        ];
+
+
+        if ($this->request->wasPostedByUser())
+        {
+            $data = $this->request->getPostParameters();
+
+        	$courseSection = $this->requireExists(
+        		$this->schema('Syllabus_ClassData_CourseSection')->get($this->request->getQueryParameter('c'))
+        	);
+
+            $files = $this->schema('Syllabus_Files_File');
+            $file = $files->createInstance();
+            $file->createFromRequest($this->request, 'file', true, Syllabus_Syllabus_Submission::$SyllabusFileTypes);
+
+            if ($file->isValid())
+            {
+                $uploadedBy = (int)$this->request->getPostParameter('uploadedBy');
+                $file->uploaded_by_id = $uploadedBy;
+                $file->moveToPermanentStorage();
+                $file->save();
+
+                $condition = $submissions->allTrue(
+                    $submissions->course_section_id->equals($courseSection->id),
+                    $submissions->deleted->isNull()->orIf($submissions->deleted->isFalse())
+                );
+	        	$submission = $submissions->findOne($condition, ['orderBy' => 'modifiedDate']);
+	        	$submission->submitted_by_id = $uploadedBy;
+	        	$submission->file_id = $file->id;
+	        	$submission->status = 'pending';
+	        	$submission->modifiedDate = new DateTime;
+	        	$submission->submittedDate = new DateTime;
+	        	$submission->log .= "<li>
+                    Submitted as file #{$file->id} on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                </li>";
+	        	$submission->campaign->log .= "<li>
+                    Submission #{$submission->id} set to 'pending' on {$submission->modifiedDate->format('F jS, Y - h:i a')}.
+                </li>";
+                $submission->save();
+                $submission->campaign->save();
+
+
+                $results = [
+                    'message' => 'Your syllabus has been uploaded.',
+                    'status' => 200,
+                    'success' => true,
+                    'fileSrc' => 'files/' . $file->id . '/download',
+                    'fileName' => $file->remoteName
+                ];
+
+	            echo json_encode($results);
+	            exit;  
+            }
+            else
+            {
+                $messages = 'Incorrect file type or file too large.';
+                $results['status'] = $messages !== '' ? 400 : 422;
+                $results['message'] = $messages;
+            }
+        }
     }
 
     public function mySyllabi ()
@@ -87,15 +239,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     $courseSection->createNew = $courseSyllabus ? false : true;
                     $courseSection->pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer);
                     $courses[$courseSection->term][] = $courseSection;
-                    
-                    $imageUrl = "assets/images/testing0$index.jpg";
-                    if ($courseSyllabus)
-                    {
-                        $sid = $courseSyllabus->id;
-                        $results = $this->getScreenshotUrl($sid, $screenshotter);
-                        $imageUrl = $results->imageUrls->$sid;
-                    }
-                    $courseSection->imageUrl = $imageUrl;
                 }
 
                 $this->template->returnTo = 'syllabi?mode=courses';
@@ -104,7 +247,26 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 break;
             
             case 'submissions':            
-                
+
+                $myCourses = $viewer->classDataUser->getCurrentEnrollments();
+                $courses = [];
+                foreach ($myCourses as $i => $courseSection)
+                {
+                    $index = $i % 5;
+                    if ($courseSyllabus = $syllabi->get($courseSection->syllabus_id))
+                    {
+                        $courseSyllabus->viewUrl = $this->baseUrl("syllabus/$courseSyllabus->id/view");
+                    }
+                    $courseSection->courseSyllabus = $courseSyllabus;
+                    $courseSection->createNew = $courseSyllabus ? false : true;
+                    $courseSection->pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer);
+                    $courses[$courseSection->term][] = $courseSection;
+                }
+
+                $this->template->submittedCourseId = $this->request->getQueryParameter('c');
+                $this->template->returnTo = 'syllabi?mode=submissions';
+                $this->template->coursesView = false;
+                $this->template->allCourses = $courses;               
                 break;
 
             case 'overview':
@@ -122,14 +284,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                             $courseSyllabus : null;
                         $courseSection->createNew = false;
                         $courses[$courseSection->term][] = $courseSection;
-                        $imageUrl = '';
-                        if ($courseSyllabus)
-                        {
-                            $sid = $courseSyllabus->id;
-                            $results = $this->getScreenshotUrl($sid, $screenshotter);
-                            $imageUrl = $results->imageUrls->$sid;
-                        }
-                        $courseSection->imageUrl = $imageUrl;
                     }
                     $this->template->allCourses = $courses;
                 }
@@ -165,9 +319,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                   
                     foreach ($userSyllabi as $userSyllabus)
                     {
-                        $sid = $userSyllabus->id;
-                        $results = $this->getScreenshotUrl($sid, $screenshotter);
-                        $userSyllabus->imageUrl = $results->imageUrls->$sid;
                         $userSyllabus->hasCourseSection = false;
                         foreach ($userSyllabus->latestVersion->getSectionVersionsWithExt(true) as $sv)
                         {
@@ -292,19 +443,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             $courseSection = $courseSections->get($courseSectionId);
             $pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer);
-            foreach ($pastCourseSyllabi as $courseSyllabus)
-            {
-                $sid = !is_string($courseSyllabus->id) ? $courseSyllabus->id : $courseSyllabus->syllabus->id;
-                if ($sid)
-                {
-                    $results = $this->getScreenshotUrl($sid, $screenshotter);
-                    $courseSyllabus->imageUrl = $results->imageUrls->$sid;                    
-                }
-                else
-                {
-                    $courseSyllabus->imageUrl = 'assets/images/placeholder-4.jpg';
-                }
-            }
+
             $this->template->courseSection = $courseSection;
             $this->template->pastCourseSyllabi = $pastCourseSyllabi;
         }
@@ -316,12 +455,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 ['orderBy' => ['-modifiedDate', '-createdDate'], 'limit' => 4]
             );
             $templatesAvailable = $templatesAvailable || !empty($userSyllabi);
-            foreach ($userSyllabi as $userSyllabus)
-            {
-                $sid = $userSyllabus->id;
-                $results = $this->getScreenshotUrl($sid, $screenshotter);
-                $userSyllabus->imageUrl = $results->imageUrls->$sid;
-            }
+
             $this->template->syllabi = $userSyllabi;
         }
 
@@ -1028,13 +1162,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             }
             $this->response->redirect($returnTo);
         }
-        else
-        {
-            $sid = $syllabus->id;
-            $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
-            $results = $this->getScreenshotUrl($sid, $screenshotter, true);
-            $syllabus->imageUrl = $results->imageUrls->$sid;           
-        }
 
         $this->template->adHocRoles = $syllabus->getAdHocRoles();
         $syllabus->viewUrl = $this->baseUrl("syllabus/$syllabus->id/view");
@@ -1075,11 +1202,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $pathParts = [];
         $pathParts[] = $routeBase;
         $pathParts[] = 'syllabus';
-
-        $sid = $syllabus->id;
-        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
-        $results = $this->getScreenshotUrl($sid, $screenshotter, true);
-        $syllabus->imageUrl = $results->imageUrls->$sid;
 
         $hasDownstreamSyllabiSection = false;
         foreach ($syllabusVersion->sectionVersions as $sv)
@@ -1215,7 +1337,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             $title = $syllabus->latestVersion->title;
         }
-        $url = $url ?? 'https://atoffice.test.at.sfsu.edu/api/session';
+        $url = $url ?? 'https://atoffice.at.sfsu.edu/api/session';
         $data = [
             'title' => $title,
             'source' => $this->baseUrl('syllabus/'.$syllabus->id.'/export'),
@@ -2240,6 +2362,35 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         $return_json = json_encode($returnArray);
         echo($return_json);
+        exit;
+    }
+
+    public function thumbInfo ()
+    {
+        $results = [
+            'message' => 'Accepted & Processing',
+            'status' => 'pending',
+            'success' => false
+        ];
+
+        $syllabusId = $this->getRouteVariable('id');
+        $syllabus = $this->schema('Syllabus_Syllabus_Syllabus')->get($syllabusId);
+
+        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
+        $screenshotter->saveUids(sha1($syllabusId), $syllabusId);
+
+        $urls = [$syllabusId => $this->baseUrl("syllabus/{$syllabusId}/screenshot")];
+        $responseData = $screenshotter->concurrentRequests($urls, true, sha1($syllabusId));
+        $data = json_decode($responseData);
+
+        $results = [
+            'status' => 'success',
+            'success' => true,
+            'data' => $data,
+            'imageSrc' => $data->imageUrls->$syllabusId,
+            'syllabusId' => $syllabusId
+        ];
+        echo json_encode($results);
         exit;
     }
 
