@@ -56,9 +56,22 @@ class Syllabus_ClassData_User extends Bss_ActiveRecord_Base
         return $current;
     }
 
-    public function getFullName ()
+    // get all enrollments within last 2 years.
+    public function getRecentAndCurrentEnrollments ()
     {
-        return $this->firstName . ' ' . $this->lastName;
+        $time = strtotime("-2 years", time());
+        $y = date("Y", $time);
+
+        $current = [];
+        foreach ($this->enrollments as $courseSection)
+        {
+            if ($courseSection->year >= $y)
+            {
+                $current[] = $courseSection;
+            }
+        }
+
+        return $current;
     }
 
     public function getDepartmentsAndTemplates ($ctrl)
