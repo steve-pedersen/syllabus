@@ -57,10 +57,42 @@
         container.detach();
       });
     });
-
-    if ($('#gradesSection #columns3').is(':checked')) {
-      $('#gradesSection .collapse').collapse('show');
+    
+    if ($('#columns2').is(':checked')) {
+      $('#gradesSection .collapse').each(function () {
+        $(this).removeClass('show');
+      })
+    } else if ($('#columns3').is(':checked')) {
+      $('#gradesSection .collapse').each(function () {
+        $(this).addClass('show');
+      })
     }
+
+    $('#columnAccordion').on('show.bs.collapse', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleAccordion();
+    });
+    $('#columnAccordion').on('hide.bs.collapse', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleAccordion();
+    });
+
+    var toggleAccordion = function () {
+      var col2 = $('#columns2');
+      var col3 = $('#columns3');
+      
+      if (col2.is(':checked')) {
+        $('#gradesSection .collapse').each(function () {
+          $(this).removeClass('show');
+        })
+      } else if (col3.is(':checked')) {
+        $('#gradesSection .collapse').each(function () {
+          $(this).addClass('show');
+        })
+      }
+    };
 
   });
 })(jQuery);

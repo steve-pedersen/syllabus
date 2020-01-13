@@ -58,5 +58,41 @@
       });
     });
 
+    if ($('#columns3').is(':checked')) {
+      $('#learningOutcomesSection .collapse').each(function () {
+        $(this).removeClass('show');
+      })
+    } else if ($('#columns4').is(':checked')) {
+      $('#learningOutcomesSection .collapse').each(function () {
+        $(this).addClass('show');
+      })
+    }
+
+    $('#columnAccordion').on('show.bs.collapse', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleAccordion();
+    });
+    $('#columnAccordion').on('hide.bs.collapse', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleAccordion();
+    });
+
+    var toggleAccordion = function () {
+      var col3 = $('#columns3');
+      var col4 = $('#columns4');
+      
+      if (col3.is(':checked')) {
+        $('#learningOutcomesSection .collapse').each(function () {
+          $(this).removeClass('show');
+        })
+      } else if (col4.is(':checked')) {
+        $('#learningOutcomesSection .collapse').each(function () {
+          $(this).addClass('show');
+        })
+      }
+    };
+
   });
 })(jQuery);
