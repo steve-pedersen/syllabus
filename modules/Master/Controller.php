@@ -178,11 +178,15 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
             // }
         }
         // echo "<pre>"; var_dump(count($orgs['departments'])); die;
-
+        $totalAccounts = [];
         $group = $this->schema('Syllabus_Organizations_Group')->get(1);
-        $totalAccounts = array_merge(
-            $group->getRoleUsers('creator'), $group->getRoleUsers('moderator'), $group->getRoleUsers('manager')
-        );
+        if ($group)
+        {
+            $totalAccounts = array_merge(
+                $group->getRoleUsers('creator'), $group->getRoleUsers('moderator'), $group->getRoleUsers('manager')
+            );
+        }
+
         foreach ($totalAccounts as $account)
         {
             if ($account->id === $viewer->id || $this->hasPermission('admin'))
