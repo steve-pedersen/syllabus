@@ -117,6 +117,11 @@ class Syllabus_Syllabus_SectionVersion extends Bss_ActiveRecord_Base
         return $this->_sectionExtension;
     }
 
+    public function getThisExtension ()
+    {
+        return $this->getExtensionByRecord(get_class($this->resolveSection()));
+    }
+
     public function getExtensionByName ($name)
     {
         $ext = null;

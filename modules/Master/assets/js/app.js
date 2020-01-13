@@ -95,6 +95,13 @@
                 CKEDITOR.replace(tagId, ckeConfigs[tagId]);
                 $(this).next('.cloned').remove();
             });
+            
+            // auto-save the syllabus after sortable finishes
+            $("<input />").attr("type", "hidden")
+                .attr("name", "sortOrderUpdate")
+                .attr("value", "true")
+                .appendTo("#viewSections");
+            $('#globalSave').click();
         },
         update: function (event, ui) {
             // update sort order

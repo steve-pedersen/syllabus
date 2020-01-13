@@ -833,7 +833,24 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
                 case 'savesection':
                 case 'savesyllabus':
-                    // echo "<pre>"; var_dump($data['section'], $data); die;
+
+                    $returnToEditingSection = false;
+                    $newSection = false;
+                    $now = new DateTime;
+                    if ($this->request->getPostParameter('sortOrderUpdate'))
+                    {
+                        if (($sectionVersionId = $this->request->getQueryParameter('edit')) && 
+                            ($this->request->getQueryParameter('edit') !== 'metadata'))
+                        {
+                            $returnToEditingSection = true;
+                        }
+                        elseif (($realSectionName = $this->request->getQueryParameter('add')))
+                        {
+                            $returnToEditingSection = true;
+                            $newSection = true;
+                        }
+                    }
+
                     if (!$syllabus->templateAuthorizationId)
                     {
                         $syllabus->templateAuthorizationId = $organization ? $organization->templateAuthorizationId : null;
@@ -846,7 +863,30 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     }
                     $pathParts[] = $syllabusVersion->syllabus->id;
                     $pathParts = array_filter($pathParts);
-                    $this->response->redirect(implode('/', $pathParts));
+                    if ($returnToEditingSection)
+                    {
+                        $newSectionVersionId = $sectionVersionId;
+                        foreach ($syllabusVersion->sectionVersions as $sv)
+                        {
+                            if ($newSection && $sv->getThisExtension()->getExtensionName() === $realSectionName && $sv->createdDate >= $now)
+                            {
+                                $newSectionVersionId = $sv->id;
+                                break;                             
+                            }
+                            elseif ($sv->createdDate >= $now)
+                            {
+                                $newSectionVersionId = $sv->id;
+                                break;
+                            }
+                        }
+                        $this->flash('Syllabus section order has been updated.', 'success');
+                        $this->response->redirect(implode('/', $pathParts) . '?edit=' . $newSectionVersionId);
+                    }
+                    else
+                    {
+                        $this->response->redirect(implode('/', $pathParts));    
+                    }
+                    
                     break;
 
                 case 'share':
