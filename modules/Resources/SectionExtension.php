@@ -9,6 +9,7 @@ class Syllabus_Resources_SectionExtension extends Syllabus_Syllabus_SectionExten
     public function getHelpText () { return 'You may choose from preset Campus Resources or create your own custom ones.'; }
     public function getRecordClass () { return 'Syllabus_Resources_Resources'; }
     public function getSectionTasks () { return []; }
+    public function getSectionOrder () { return 9; }
     public function getEditFormFragment ()
     {
         return Bss_Core_PathUtils::path(dirname(__FILE__), 'resources', '_resources.edit.html.tpl');

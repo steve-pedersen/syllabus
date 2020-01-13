@@ -9,6 +9,7 @@ class Syllabus_Schedules_SectionExtension extends Syllabus_Syllabus_SectionExten
     public function getHelpText () { return ''; }
     public function getRecordClass () { return 'Syllabus_Schedules_Schedules'; }
     public function getSectionTasks () { return []; }
+    public function getSectionOrder () { return 5; }
     public function hasDefaults () { return true; }
     public function hasImportableContent () { return true; }
     public function getEditFormFragment ()

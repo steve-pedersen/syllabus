@@ -9,6 +9,7 @@ class Syllabus_TeachingAssistants_SectionExtension extends Syllabus_Syllabus_Sec
     public function getHelpText () { return 'Add multiple Teaching Assistants as needed in this section.'; }
     public function getRecordClass () { return 'Syllabus_TeachingAssistants_TeachingAssistants'; }
     public function getSectionTasks () { return []; }
+    public function getSectionOrder () { return 2; }
     public function canHaveMultiple () { return false; }
     public function hasImportableContent () { return false; }
     public function getEditFormFragment ()

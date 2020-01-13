@@ -211,12 +211,15 @@ class Syllabus_Syllabus_SyllabusVersion extends Bss_ActiveRecord_Base
      */    
     public function getSectionExtensions ()
     {
-        if (empty($this->_sectionExtensions))
+        $this->_sectionExtensions = $this->getSchema('Syllabus_Syllabus_SectionVersion')->getExtensions();
+        $exts = [];
+        foreach ($this->_sectionExtensions as $ext)
         {
-            $this->_sectionExtensions = $this->getSchema('Syllabus_Syllabus_SectionVersion')->getExtensions();
+            $exts[$ext->getSectionOrder()] = $ext;
         }
+        ksort($exts);
 
-        return $this->getSchema('Syllabus_Syllabus_SectionVersion')->getExtensions();
+        return $exts;
     }
 
     public function createDerivative ($clone=false)

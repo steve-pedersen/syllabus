@@ -9,6 +9,7 @@ class Syllabus_LearningOutcomes_SectionExtension extends Syllabus_Syllabus_Secti
     public function getHelpText () { return 'You may use this table builder to construct your Student Learning Outcomes.'; }
     public function getRecordClass () { return 'Syllabus_LearningOutcomes_LearningOutcomes'; }
     public function getSectionTasks () { return []; }
+    public function getSectionOrder () { return 10; }
     public function canHaveMultiple () { return false; }
     public function hasDefaults () { return false; }
     public function hasImportableContent () { return false; }

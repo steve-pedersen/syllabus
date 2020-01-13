@@ -9,6 +9,7 @@ class Syllabus_Objectives_SectionExtension extends Syllabus_Syllabus_SectionExte
     public function getHelpText () { return 'Objectives section type of a syllabus.'; }
     public function getRecordClass () { return 'Syllabus_Objectives_Objectives'; }
     public function getSectionTasks () { return []; }
+    public function getSectionOrder () { return 3; }
     public function hasImportableContent () { return true; }
     public function getEditFormFragment ()
     {

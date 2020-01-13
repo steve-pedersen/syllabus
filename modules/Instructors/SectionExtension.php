@@ -9,6 +9,7 @@ class Syllabus_Instructors_SectionExtension extends Syllabus_Syllabus_SectionExt
     public function getHelpText () { return 'Add multiple instructors at a time in this Instructors section type.'; }
     public function getRecordClass () { return 'Syllabus_Instructors_Instructors'; }
     public function getSectionTasks () { return []; }
+    public function getSectionOrder () { return 1; }
     public function canHaveMultiple () { return false; }
     public function getEditFormFragment ()
     {

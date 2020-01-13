@@ -9,6 +9,7 @@ class Syllabus_Grades_SectionExtension extends Syllabus_Syllabus_SectionExtensio
     public function getHelpText () { return 'The Grades section type is for letter grade tables and grade breakdowns. It is suggested to add a new Grades section for each new table.'; }
     public function getRecordClass () { return 'Syllabus_Grades_Grades'; }
     public function getSectionTasks () { return []; }
+    public function getSectionOrder () { return 7; }
     public function canHaveMultiple () { return true; }
     public function hasDefaults () { return false; }
     public function hasImportableContent () { return true; }

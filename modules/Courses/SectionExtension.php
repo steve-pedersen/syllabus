@@ -9,6 +9,7 @@ class Syllabus_Courses_SectionExtension extends Syllabus_Syllabus_SectionExtensi
     public function getHelpText () { return ''; }
     public function getRecordClass () { return 'Syllabus_Courses_Course'; }
     public function getSectionTasks () { return []; }
+    public function getSectionOrder () { return 0; }
     public function canHaveMultiple () { return false; }
     public function getEditFormFragment ()
     {
