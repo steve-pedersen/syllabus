@@ -59,7 +59,7 @@
                     {else}
                         name="command[deletesectionitem][Syllabus_LearningOutcomes_LearningOutcome][{$learningOutcomeId}]" 
                     {/if}
-                    id="{$activityId}">
+                    id="{$learningOutcomeId}">
                         <i class="fas fa-trash-alt mr-1"></i>Delete
                     </button>
                 </div>

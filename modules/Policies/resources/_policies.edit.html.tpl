@@ -23,7 +23,7 @@
                     {else}
                         name="command[deletesectionitem][Syllabus_Policies_Policy][{$policyId}]" 
                     {/if}
-                    id="{$activityId}">
+                    id="{$policyId}">
                         <i class="fas fa-trash-alt mr-1"></i>Delete
                     </button>
                 </div>

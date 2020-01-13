@@ -23,7 +23,7 @@
                     {else}
                         name="command[deletesectionitem][Syllabus_Materials_Material][{$materialId}]" 
                     {/if}
-                    id="{$activityId}">
+                    id="{$materialId}">
                         <i class="fas fa-trash-alt mr-1"></i>Delete
                     </button>
                 </div>

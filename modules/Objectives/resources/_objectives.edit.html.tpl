@@ -23,7 +23,7 @@
                     {else}
                         name="command[deletesectionitem][Syllabus_Objectives_Objective][{$objectiveId}]" 
                     {/if}
-                    id="{$activityId}">
+                    id="{$objectiveId}" form="viewSections">
                         <i class="fas fa-trash-alt mr-1"></i>Delete
                     </button>
                 </div>
