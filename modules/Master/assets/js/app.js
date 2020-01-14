@@ -76,9 +76,7 @@
             // save each ckeditor config, create ckeditor html's clone
             // destroy ckeditor, hide the textarea and insert the clone to create an illusion that cke is still there
             $('textarea', ui.item).each(function(i){
-                console.log('current id: ', $(this).attr('id'));
                 if (!$(this).attr('id')) {
-                    console.log('need to generate unique id');
                     $(this).attr('id', `ckeditor-${i}-${$(this.attr('name'))}`);   
                 }
                 var tagId = $(this).attr('id');
@@ -95,13 +93,6 @@
                 CKEDITOR.replace(tagId, ckeConfigs[tagId]);
                 $(this).next('.cloned').remove();
             });
-            
-            // auto-save the syllabus after sortable finishes
-            $("<input />").attr("type", "hidden")
-                .attr("name", "sortOrderUpdate")
-                .attr("value", "true")
-                .appendTo("#viewSections");
-            $('#globalSave').click();
         },
         update: function (event, ui) {
             // update sort order
@@ -109,9 +100,37 @@
                 var sortOrder = pad(index+1, 3);
                 $(value).val(sortOrder);
             });
+            
+            // auto-save the syllabus after sortable finishes
+            $("<input />").attr("type", "hidden")
+                .attr("name", "sortOrderUpdate")
+                .attr("value", "true")
+                .appendTo("#viewSections");
+            $('#globalSave').click();
         }
     });
     // $('.sort-container').disableSelection();
+
+    var saveSortOrder = function () {
+        $("#viewSections").submit(function(e) {
+
+            e.preventDefault(); // avoid to execute the actual submit of the form.
+
+            var form = $(this);
+            var url = form.attr('action');
+
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: form.serialize(), // serializes the form's elements.
+                success: function(data) {
+                    // add a flash notice or something
+
+                }
+            });
+
+        });
+    };
 
     // DatePicker 
     $.datepicker.setDefaults(
