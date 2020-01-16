@@ -102,22 +102,32 @@
             });
             
             // auto-save the syllabus after sortable finishes
-            $("<input />").attr("type", "hidden")
-                .attr("name", "sortOrderUpdate")
-                .attr("value", "true")
-                .appendTo("#viewSections");
-            $('#globalSave').click();
+            saveSortOrder();
         }
     });
     // $('.sort-container').disableSelection();
 
     var saveSortOrder = function () {
-        $("#viewSections").submit(function(e) {
+        if ($('#closeSortAlert').length) {
+            $('#closeSortAlert').click();
+        }
+        $("<input />").attr("type", "hidden")
+            .attr("name", "sortOrderUpdate")
+            .attr("value", "true")
+            .attr("id", "ajaxFormSubmit")
+            .appendTo("#viewSections");
+        $('#globalSave').click();
+        $('#ajaxFormSubmit').remove();
+    };
+    
 
-            e.preventDefault(); // avoid to execute the actual submit of the form.
+    $("#viewSections").on('submit', function(e) {
+
+        if ($('#ajaxFormSubmit').length) {
+            e.preventDefault();
 
             var form = $(this);
-            var url = form.attr('action');
+            var url = form.attr('action') + '/ajax';
 
             $.ajax({
                 type: "POST",
@@ -125,12 +135,19 @@
                 data: form.serialize(), // serializes the form's elements.
                 success: function(data) {
                     // add a flash notice or something
-
+                    $('#syllabusEditor').prepend(
+                        '<div class="alert alert-success">' +
+                            'Sort order has been updated' +
+                            '<button type="button" class="close" data-dismiss="alert" aria-label="Close" id="closeSortAlert">' +
+                                '<span aria-hidden="true">&times;</span>' +
+                            '</button>' +
+                        '</div>'
+                    );
                 }
             });
+        }
 
-        });
-    };
+    });
 
     // DatePicker 
     $.datepicker.setDefaults(

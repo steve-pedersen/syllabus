@@ -16,6 +16,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             // '/'                         => ['callback' => 'mySyllabi'],
             'syllabi'                   => ['callback' => 'mySyllabi'],
             'syllabus/:id'              => ['callback' => 'edit', ':id' => '[0-9]+|new'],
+            'syllabus/:id/ajax'         => ['callback' => 'asyncSubmit', ':id' => '[0-9]+'],
             'syllabus/:id/view'         => ['callback' => 'view', ':id' => '[0-9]+'],
             'syllabus/:id/share'        => ['callback' => 'share', ':id' => '[0-9]+|courses'],
             'syllabus/:id/delete'       => ['callback' => 'delete', ':id' => '[0-9]+'],
@@ -1601,7 +1602,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     /**
      * Bump syllabus and section versions--creating new instances of generic, real, and subsections.
      */  
-    protected function saveSyllabus ($syllabus, $paramData=null)
+    protected function saveSyllabus ($syllabus, $paramData=null, $updateScreenshot=true)
     {
         $viewer = $this->requireLogin();
         $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
@@ -1849,7 +1850,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
 
         // update preview
-        if ($anyChange)
+        if ($anyChange && $updateScreenshot)
         {
             $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
             $this->getScreenshotUrl($syllabus->id, $screenshotter, false);            
@@ -2498,6 +2499,32 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         $this->template->syllabusVersion = $syllabusVersion;
         $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
+    }
+
+    public function asyncSubmit ()
+    {
+        if ($this->request->wasPostedByUser())
+        {
+            $results = [
+                'message' => 'Accepted & Processing',
+                'status' => 'pending',
+                'success' => false
+            ];
+
+            $syllabusId = $this->getRouteVariable('id');
+            $syllabus = $this->schema('Syllabus_Syllabus_Syllabus')->get($syllabusId);
+
+            $data = $this->request->getPostParameters();
+            list($success, $newSyllabusVersion) = $this->saveSyllabus($syllabus, $data, false);
+
+            $results = [
+                'status' => 'success',
+                'success' => true,
+            ];
+
+            echo json_encode($results);
+            exit;
+        }       
     }
 
     protected function sendRequest ($url, $post=false, $postData=[])
