@@ -33,6 +33,8 @@ class Syllabus_Welcome_Controller extends Syllabus_Master_Controller
         if ($welcomeText = $siteSettings->getProperty('welcome-text'))
         {
             $this->template->welcomeText = $welcomeText;
-        }        
+        } 
+        $this->template->welcomeTextBottomColumn1 = $siteSettings->getProperty('welcome-text-bottom-column1');
+        $this->template->welcomeTextBottomColumn2 = $siteSettings->getProperty('welcome-text-bottom-column2');       
     }
 }

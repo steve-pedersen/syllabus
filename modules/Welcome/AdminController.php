@@ -22,10 +22,13 @@ class Syllabus_Welcome_AdminController extends Syllabus_Master_AdminController
         if ($this->getPostCommand() == 'save' && $this->request->wasPostedByUser())
         {        
             $welcomeText = $this->request->getPostParameter('welcome-text');
-            $welcomeText2 = $this->request->getPostParameter('welcome-text2'); 
-            if ($welcomeText || $welcomeText2)
+            $welcomeText1 = $this->request->getPostParameter('welcome-text-bottom-column1'); 
+            $welcomeText2 = $this->request->getPostParameter('welcome-text-bottom-column2'); 
+            if ($welcomeText || $welcomeText1 || $welcomeText2)
             {
                 $siteSettings->setProperty('welcome-text', $welcomeText);
+                $siteSettings->setProperty('welcome-text-bottom-column1', $welcomeText1);
+                $siteSettings->setProperty('welcome-text-bottom-column2', $welcomeText2);
                 $this->flash('The welcome text has been saved.');
                 $this->response->redirect('admin/welcome');
             }
@@ -35,6 +38,8 @@ class Syllabus_Welcome_AdminController extends Syllabus_Master_AdminController
         {
             $this->template->welcomeText = $welcomeText;
         }
+        $this->template->welcomeTextBottomColumn1 = $siteSettings->getProperty('welcome-text-bottom-column1');
+        $this->template->welcomeTextBottomColumn2 = $siteSettings->getProperty('welcome-text-bottom-column2');
         
         $this->template->chosenModuleId = $siteSettings->getProperty('welcome-module');
     }
