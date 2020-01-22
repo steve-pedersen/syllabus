@@ -30,7 +30,7 @@
 			<dl class="row mb-0">
 				<dt class="col-xl-3 col-lg-4 col-md-5 col-sm-12">URL</dt>
 				<dd class="col-xl-9 col-lg-8 col-md-7 col-sm-12">
-					<span class="dont-break-out">{l text=$material->url href=$material->url}</span>
+					<span class="dont-break-out">{l text=$material->url href=$material->url target="{if $material->newWindow}_blank{/if}"}</span>
 				</dd>
 			</dl>
 			{/if}

@@ -39,6 +39,19 @@
                         <input class="form-control" type="text" name="section[real][{$materialId}][url]" value="{$material->url}">
                     </div>
                 </div>
+                <div class="form-group newWindow row px-3">
+                    <label class="col-lg-3 newWindow col-form-label form-control-label">Open link in new window?</label>
+                    <div class="col-lg-9">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="section[real][{$materialId}][newWindow]" id="materialWindow{$i}Yes" value="true" {if $material->newWindow}checked{/if}>
+                            <label class="form-check-label" for="materialWindow{$i}Yes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline ml-3">
+                            <input class="form-check-input" type="radio" name="section[real][{$materialId}][newWindow]" id="materialWindow{$i}No" value="false" {if !$material->newWindow}checked{/if}>
+                            <label class="form-check-label" for="materialWindow{$i}No">No</label>
+                        </div>
+                    </div>
+                </div>
                 <div class="form-group authors row px-3">
                     <label class="col-lg-3 col-form-label form-control-label">Author(s)</label>
                     <div class="col-lg-9">
@@ -126,6 +139,19 @@
         <label class="col-lg-3 url col-form-label form-control-label">URL</label>
         <div class="col-lg-9">
             <input class="form-control" type="text" name="section[real][{$materialId}][url]" value="">
+        </div>
+    </div>
+    <div class="form-group newWindow row">
+        <label class="col-lg-3 newWindow col-form-label form-control-label">Open link in new window?</label>
+        <div class="col-lg-9">
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="section[real][{$materialId}][newWindow]" id="materialWindow{$i}Yes" value="true" {if $material->newWindow}checked{/if}>
+                <label class="form-check-label" for="materialWindow{$i}Yes">Yes</label>
+            </div>
+            <div class="form-check form-check-inline ml-3">
+                <input class="form-check-input" type="radio" name="section[real][{$materialId}][newWindow]" id="materialWindow{$i}No" value="false" {if !$material->newWindow}checked{/if}>
+                <label class="form-check-label" for="materialWindow{$i}No">No</label>
+            </div>
         </div>
     </div>
     <div class="form-group authors row">

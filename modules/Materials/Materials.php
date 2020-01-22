@@ -56,6 +56,7 @@ class Syllabus_Materials_Materials extends Bss_ActiveRecord_Base
                     if ($save)
                     {
                         $obj->absorbData($material);
+                        $obj->newWindow = $material['newWindow'] === 'true';
                         $obj->required = $material['required'] === 'true';
                         $obj->materials_id = $this->id;
                         $obj->save();
