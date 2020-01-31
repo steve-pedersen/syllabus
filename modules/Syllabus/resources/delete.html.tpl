@@ -44,7 +44,7 @@
             </div>
             <div class="col-xl-7 col-lg-6 col-md-12 mb-5">
                 <div class="" style="text-align:center;justify-content: center;">
-                    <img src="assets/images/placeholder-4.jpg" data-src="syllabus/{$syllabus->id}/thumbinfo" id="syllabus-{$syllabus->id}" alt="{$syllabus->title}" class="img-fluid border border-light text-cente" style="border-width:5px !important;width:350px;">
+                    <img src="assets/images/placeholder-4.jpg" data-src="syllabus/{$syllabus->id}/thumbinfo" id="syllabus-{$syllabus->id}" alt="{$syllabus->title}" class="img-fluid border border-light text-center" style="border-width:5px !important;width:350px;">
                     <div class="card-footer bg-white border-0">
                         <small class="d-block"><em class="text-muted">This preview is from when the syllabus was last edited.</em></small>
                         <div class="mt-3">
