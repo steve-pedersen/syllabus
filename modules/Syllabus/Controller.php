@@ -1357,7 +1357,25 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         if (!$token)
         {
+            // check if this syllabus is from a combined course
+            $resolvedSyllabus = $this->resolveCombinedCourseSyllabus($syllabus);
+
+            if ($resolvedSyllabus === null)
+            {
+                $this->requirePermission('admin');
+            }
+            elseif ($resolvedSyllabus->id !== $syllabus->id)
+            {
+                $syllabus = $resolvedSyllabus;
+                $this->response->redirect('syllabus/' . $resolvedSyllabus->id . '/print');
+            }
+
+            // check if viewing as instructor or student and if it is even associated with a course
             list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
+        }
+        elseif ($token !== $syllabus->token && !$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
+        {
+            $this->accessDenied('Nope');
         }
 
         if (!$token && $type === 'student' && $courseSection)
@@ -1470,11 +1488,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $sectionVersions = $this->schema('Syllabus_Syllabus_SectionVersion');
         $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
 
-        if (($token === null || $token !== $syllabus->token) && !$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
-        {
-            $this->accessDenied('Nope');
-        }
-
         $viewUrl = "syllabus/$syllabus->id/view";
         $editable = false;
         if (!$token)
@@ -1509,7 +1522,25 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         if (!$token)
         {
+        	// check if this syllabus is from a combined course
+        	$resolvedSyllabus = $this->resolveCombinedCourseSyllabus($syllabus);
+
+        	if ($resolvedSyllabus === null)
+        	{
+        		$this->requirePermission('admin');
+        	}
+        	elseif ($resolvedSyllabus->id !== $syllabus->id)
+        	{
+                $syllabus = $resolvedSyllabus;
+        		$this->response->redirect('syllabus/' . $resolvedSyllabus->id . '/view');
+        	}
+
+        	// check if viewing as instructor or student and if it is even associated with a course
             list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
+        }
+        elseif ($token !== $syllabus->token && !$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
+        {
+            $this->accessDenied('Nope');
         }
 
         if (!$token && $type === 'student' && $courseSection)
@@ -2404,6 +2435,66 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         return $schema->find($schema->id->inList($result), $options);
     }
 
+   /**
+     *
+     * This will determine if a user is able to view a syllabus if they're in a combined iLearn course
+     * Returns are prioritized like so:
+     *  -   The original syllabus if a combined course exists that has no syllabus of its own
+     *  -   The combined course syllabus if exists
+     *  -   Null if no combined courses exist
+     */
+    public function resolveCombinedCourseSyllabus ($syllabus)
+    {
+        $result = null;
+
+        $viewer = $this->requireLogin();
+        $service = new Syllabus_ClassData_Service($this->getApplication());
+
+        // if user is enrolled in syllabus' course, show it to them and do nothing else.
+        $courseSection = null;
+        if ($sectionVersion = $syllabus->latestVersion->getCourseInfoSection())
+        {
+            if ($courseSection = $sectionVersion->resolveSection()->classDataCourseSection)
+            {
+                if ($courseSection->enrollments->has($viewer->classDataUser))
+                {
+                    // they're enrolled in this syllabus' course
+                    $result = $syllabus;
+                }
+            }
+        }       
+
+        if (!$result && $courseSection)
+        {
+            list($code, $enrollments) = $service->getUserEnrollments($viewer->username, $courseSection->getTerm(true), 'student');
+            if ($code === 200 && !empty($enrollments))
+            {
+                list($code, $combines) = $service->getChannelInfo('ilearn', $courseSection->id);
+                if ($code === 200 && !empty($combines))
+                {
+                    foreach ($enrollments['courses'] as $course)
+                    {
+                        if (in_array($course['id'], $combines['combines']))
+                        {
+                            $combinedCourseSection = $this->schema('Syllabus_ClassData_CourseSection')->get($course['id']);
+                            if ($combinedCourseSection->syllabus)
+                            {
+                                $result = $combinedCourseSection->syllabus;
+                                break;
+                            }
+                            else
+                            {
+                                $result = $syllabus;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
     // type is instructor if user is an enrolled instructor and student if user is enrolled student
     protected function getEnrollmentType ($syllabus, $viewer)
     {
@@ -2450,12 +2541,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
     public function thumbInfo ()
     {
-        $results = [
-            'message' => 'Accepted & Processing',
-            'status' => 'pending',
-            'success' => false
-        ];
-
         $syllabusId = $this->getRouteVariable('id');
         $syllabus = $this->schema('Syllabus_Syllabus_Syllabus')->get($syllabusId);
 
@@ -2467,12 +2552,14 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $data = json_decode($responseData);
 
         $results = [
+            'message' => 'Accepted & Processing',
             'status' => 'success',
             'success' => true,
             'data' => $data,
             'imageSrc' => $data->imageUrls->$syllabusId,
             'syllabusId' => $syllabusId
         ];
+        
         echo json_encode($results);
         exit;
     }

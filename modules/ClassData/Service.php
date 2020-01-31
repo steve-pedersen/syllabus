@@ -156,6 +156,24 @@ class Syllabus_ClassData_Service
         return [$httpCode, $data];
     }
 
+   /**
+     *
+     * Returns info about a course in a channel
+     * e.g. [ 'combines' => [ '2203-1234', '2203-4567', '2203-8976' ] ]
+     * or   [ 'combined with' => [ '2203-4321' ] ]
+     * or   [ ]
+     *3
+     */
+    public function getChannelInfo ($channel, $course)
+    {
+        $paramMap = [];
+
+        $url = $this->signResource("channelinfo/{$channel}/{$course}", $paramMap);
+        list($code, $data) = $this->request($url);
+
+        return [$code, $data];
+    }
+
     // TODO: implement transaction
     public function importOrganizations ()
     {
