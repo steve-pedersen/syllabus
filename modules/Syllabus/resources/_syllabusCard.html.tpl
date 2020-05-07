@@ -15,21 +15,27 @@
 	</div>
 	{/if}
 	<div class="card-body h-100">
-		<img src="assets/images/placeholder-4.jpg" class="border-bottom card-img-top crop-top crop-top-{if $cropSize}{$cropSize}{else}10{/if}" alt="{$syllabus->title}" data-src="syllabus/{$syllabus->id}/thumbinfo" id="syllabus-{$syllabus->id}">
-		<h5 class="mt-3">
-		{if $syllabus->semester}
-			{$syllabus->syllabus->title|truncate:75}
+		{if $syllabus->file}
+		<div class="text-center"><i class="fas fa-file fa-5x text-center"></i></div>
 		{else}
-			{$syllabus->title|truncate:75}
+		<img src="assets/images/placeholder-4.jpg" class="border-bottom card-img-top crop-top crop-top-{if $cropSize}{$cropSize}{else}10{/if}" alt="{$syllabus->title}" data-src="syllabus/{$syllabus->id}/thumbinfo" id="syllabus-{$syllabus->id}">
 		{/if}
+		<h5 class="mt-3">
+			{if $syllabus->semester}
+				{$syllabus->syllabus->title|truncate:75}
+			{elseif $syllabus->file}
+				<a href="files/{$syllabus->file->id}/download">{$syllabus->file->remoteName}</a>
+			{else}
+				{$syllabus->title|truncate:75}
+			{/if}
 		</h5>
 		<p class="card-text">
-		{if $syllabus->semester}
-			{$syllabus->syllabus->description|truncate:175}
-		{else}
-			{$syllabus->description|truncate:175}
-		{/if}
-		</p>
+			{if $syllabus->semester}
+				{$syllabus->syllabus->description|truncate:175}
+			{else}
+				{$syllabus->description|truncate:175}
+			{/if}
+			</p>
 		{if !$hideDate && !$syllabus->semester}
 		<small class="d-block"><strong>Last Modified:</strong> {$syllabus->modifiedDate->format('F jS, Y - h:i a')}</small>
 		{/if}

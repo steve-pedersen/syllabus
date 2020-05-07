@@ -26,6 +26,10 @@ $(function() {
 					$('#submissionFile').attr('href', result.fileSrc);
 					$('#submissionFile').text(result.fileName);
 	    		}
+	    		if ($('#uploadedSyllabusFile').length) {
+	    			$('#uploadedSyllabusFile').attr('href', result.fileSrc);
+	    			$('#uploadedSyllabusFile').text(result.fileName);
+	    		}
 	    		$('.box__uploading').hide();
 	   //  	} else if (result.status == 422) {
 	   //  		$form.addClass('is-error');

@@ -48,7 +48,11 @@
 							<div class="media-body row">
 								<div class="col-xl-3 col-lg-5 col-md-6 col-sm-7 col-xs-8" >
 									<div class=" mb-3">
+									{if $syllabus->file}
+									<div class="text-center"><i class="fas fa-file fa-5x text-center"></i></div>
+									{else}
 									<img src="assets/images/placeholder-4.jpg" data-src="syllabus/{$syllabus->id}/thumbinfo" id="syllabus-{$syllabus->id}" class="img-thumbnail paper paper-bottom" alt="Syllabus thumbnail" style="max-height: 12rem; min-height: 10rem;border:2px solid #efefef;">
+									{/if}
 									</div>
 								</div>
 								<div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 col-xs-10 d-block">

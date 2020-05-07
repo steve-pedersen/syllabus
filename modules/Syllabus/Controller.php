@@ -34,7 +34,153 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/startwith/:id'    => ['callback' => 'startWith', ':id' => '[0-9]+'],
             'syllabus/migrate'          => ['callback' => 'migrate'],
             'syllabus/autocomplete'     => ['callback' => 'autocompleteAccounts'],
+            'syllabus/:courseid/ilearn' => ['callback' => 'fromIlearn'],
+            'syllabus/:courseid/start'  => ['callback' => 'ilearnStart'],
+            'syllabus/:courseid/upload' => ['callback' => 'uploadSyllabus'],
         ];
+    }
+
+    public function fromIlearn ()
+    {
+        $courseSection = $this->requireExists(
+            $this->schema('Syllabus_ClassData_CourseSection')->get($this->getRouteVariable('courseid'))
+        );
+        // echo "<pre>"; var_dump($courseSection->id); die;
+        
+        $returnTo = $this->request->getQueryParameter('returnTo', $this->request->getRequestedUri());
+        $_SESSION['ilearnReturnUrl'] = $returnTo;
+        // $_SESSION['ilearnConnect'] = true;
+
+        $this->forward("syllabus/$courseSection->id/start", [
+            'courseSection' => $courseSection
+        ]);
+    }
+
+    public function ilearnStart ()
+    {
+        $viewer = $this->requireLogin();
+        $courseSection = $this->getRouteVariable('courseSection', null);
+        $ilearnReturnUrl = $_SESSION['ilearnReturnUrl'];
+
+        if (!$courseSection->isTaughtByUser($viewer) || $this->hasPermission('admin'))
+        {
+            $this->accessDenied('You are not an instructor of this course.');
+        }
+
+
+
+        if ($this->request->wasPostedByUser())
+        {
+            switch ($this->getPostCommand())
+            {
+                case 'existing':
+                    // select existing syllabus to use for this course
+                    // echo "<pre>"; var_dump('existing', $this->request->getPostParameter('existingSyllabus')); die;
+                    
+                    break;
+
+                case 'start':
+                    // start from base template
+                    $startingPoint = key($this->getPostCommandData());
+                    if ($sid = $this->request->getPostParameter('existingFileSyllabus'))
+                    {
+                        $syllabus = $this->schema('Syllabus_Syllabus_Syllabus')->get($sid);
+                        $syllabus->file->delete();
+                        if ($syllabus->courseSection->syllabus_id == $syllabus->id)
+                        {
+                            $syllabus->courseSection->syllabus_id = null;
+                            $syllabus->courseSection->save();
+                        }
+                        $syllabus->delete();
+                    }
+
+                    $this->forward('syllabus/start');
+                    break;
+            }
+        }
+        // echo "<pre>"; var_dump($this->getDragDropUploadFragment()); die;
+        
+        $this->template->userCameFromIlearn = true;
+        $this->template->courseSection = $courseSection;
+        $this->template->pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer, 3);
+    }
+
+    public function uploadSyllabus ()
+    {
+        if ($this->request->wasPostedByUser())
+        {
+            $courseSection = $this->requireExists(
+                $this->schema('Syllabus_ClassData_CourseSection')->get($this->request->getQueryParameter('c'))
+            );
+
+            // upload syllabus file to be used for this course
+            $results = [
+                'message' => 'Server error when uploading.',
+                'status' => 500,
+                'success' => false
+            ];
+
+
+            $files = $this->schema('Syllabus_Files_File');
+            $file = $files->createInstance();
+            $file->createFromRequest($this->request, 'file', false, Syllabus_Syllabus_Submission::$SyllabusFileTypes);
+        
+            if ($file->isValid())
+            {
+                $uploadedBy = (int)$this->request->getPostParameter('uploadedBy');
+                $file->uploaded_by_id = $uploadedBy;
+                $file->moveToPermanentStorage();
+                $file->save();
+
+                if ($courseSection->syllabus && $courseSection->syllabus->file)
+                {
+                    $syllabus->file->delete();
+                    $syllabus = $courseSection->syllabus;
+                    $syllabus->modifiedDate =  new DateTime;
+                }
+                else
+                {
+                    $syllabus = $this->schema('Syllabus_Syllabus_Syllabus')->createInstance();
+                    $syllabus->createdDate = $syllabus->modifiedDate =  new DateTime;
+                }
+                $syllabus->createdById = $uploadedBy;
+                $syllabus->createdDate = $syllabus->modifiedDate =  new DateTime;
+                $syllabus->file_id = $file->id;
+                $syllabus->course_section_id = $courseSection->id;
+                $syllabus->save();
+
+                $courseSection->syllabus_id = $syllabus->id;
+                $courseSection->save();
+
+                // TODO: update based on iLearn API
+                $ilearnReturnUrl = $_SESSION['ilearnReturnUrl'];
+                $ilearnReturnUrl .= "?url=" . $this->baseUrl('syllabus/' . $syllabus->id . '/view');
+                $_SESSION['ilearnReturnUrl'] = $ilearnReturnUrl;
+
+                $results = [
+                    'message' => 'Your syllabus has been uploaded.',
+                    'status' => 200,
+                    'success' => true,
+                    'fileSrc' => 'files/' . $file->id . '/download',
+                    'fileName' => $file->remoteName,
+                    'ilearnReturnUrl' => $ilearnReturnUrl
+                ];
+
+                $this->flash(
+                    'Your syllabus file has been uploaded for this course section. ' .
+                    "<a href='$ilearnReturnUrl'>Return to iLearn</a>."
+                );
+            }
+            else
+            {
+                $messages = 'Incorrect file type or file too large.';
+                $results['status'] = $messages !== '' ? 400 : 422;
+                $results['message'] = $messages;
+            }
+
+            echo json_encode($results);
+            exit;  
+        }        
     }
 
     public function submissions ()
@@ -226,15 +372,18 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     if ($courseSyllabus = $syllabi->get($courseSection->syllabus_id))
                     {
                         $courseSyllabus->viewUrl = $this->baseUrl("syllabus/$courseSyllabus->id/view");
-                        $courseSyllabus->hasCourseSection = false;
-                        foreach ($courseSyllabus->latestVersion->getSectionVersionsWithExt(true) as $sv)
+                        if (!$courseSyllabus->file)
                         {
-                            if (isset($sv->extension) && $sv->extension->getExtensionKey() === 'course_id' && isset($sv->resolveSection()->externalKey))
+                            $courseSyllabus->hasCourseSection = false;
+                            foreach ($courseSyllabus->latestVersion->getSectionVersionsWithExt(true) as $sv)
                             {
-                                $courseSyllabus->hasCourseSection = true;
-                                break;
-                            }                        
-                        }         
+                                if (isset($sv->extension) && $sv->extension->getExtensionKey() === 'course_id' && isset($sv->resolveSection()->externalKey))
+                                {
+                                    $courseSyllabus->hasCourseSection = true;
+                                    break;
+                                }                        
+                            }                              
+                        }
                     }
                     $courseSection->courseSyllabus = $courseSyllabus;
                     $courseSection->createNew = $courseSyllabus ? false : true;
@@ -322,14 +471,17 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                   
                     foreach ($userSyllabi as $userSyllabus)
                     {
-                        $userSyllabus->hasCourseSection = false;
-                        foreach ($userSyllabus->latestVersion->getSectionVersionsWithExt(true) as $sv)
+                        if (!$userSyllabus->file)
                         {
-                            if (isset($sv->extension) && $sv->extension->getExtensionKey() === 'course_id' && isset($sv->resolveSection()->externalKey))
+                            $userSyllabus->hasCourseSection = false;
+                            foreach ($userSyllabus->latestVersion->getSectionVersionsWithExt(true) as $sv)
                             {
-                                $userSyllabus->hasCourseSection = true;
-                                break;
-                            }                        
+                                if (isset($sv->extension) && $sv->extension->getExtensionKey() === 'course_id' && isset($sv->resolveSection()->externalKey))
+                                {
+                                    $userSyllabus->hasCourseSection = true;
+                                    break;
+                                }                        
+                            }
                         }
                         $userSyllabus->viewUrl = $this->baseUrl("syllabus/$userSyllabus->id/view");
                     }
@@ -408,6 +560,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
     public function start ()
     {
+        // echo "<pre>"; var_dump('k'); die;
+        
         $viewer = $this->requireLogin();
         $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
         $courseSections = $this->schema('Syllabus_ClassData_CourseSection');
@@ -442,7 +596,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $courseSection = null;
 
         // If starting for a particular course, get relevant past syllabi (e.g. same course diff sections)
-        if ($courseSectionId = $this->request->getQueryParameter('course'))
+        $courseSectionId = $this->request->getQueryParameter('course') ?? $this->request->getPostParameter('course');
+        if ($courseSectionId)
         {
             $courseSection = $courseSections->get($courseSectionId);
             $pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer);
@@ -673,6 +828,22 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $this->accessDenied("You do not have edit access for this syllabus.");
         }
 
+        if ($syllabus->file)
+        {
+            list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
+            // if teacher, send to upload. if student, send to download
+            switch ($type)
+            {
+                case 'student':
+                    $this->response->redirect("files/$syllabus->file_id/download/syllabus");
+                case 'instructor':
+                    $this->response->redirect("syllabus/$courseSection->id/ilearn");
+                default:
+                    $this->accessDenied('You do not have permission to download this syllabus.');
+                    break;
+            }
+        }
+
         $data = $this->request->getPostParameters();
         if (isset($data['syllabusVersion']) && isset($data['syllabusVersion']['id']))
         {
@@ -860,7 +1031,15 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     list($updated, $syllabusVersion) = $this->saveSyllabus($syllabus);
                     if ($updated)
                     {
-                        $this->flash('Syllabus saved.', 'success');
+                        if (isset($_SESSION['ilearnReturnUrl']))
+                        {
+                            $url = $_SESSION['ilearnReturnUrl'];
+                            $this->flash("Syllabus saved. <a href='$url'>Return to iLearn.</a>");
+                        } 
+                        else
+                        {
+                            $this->flash('Syllabus saved.', 'success');
+                        }
                     }
                     $pathParts[] = $syllabusVersion->syllabus->id;
                     $pathParts = array_filter($pathParts);
@@ -1304,6 +1483,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
                     if ($this->hasPermission('admin') || $this->hasSyllabusPermission($syllabus, $viewer, 'delete'))
                     {
+                        if ($syllabus->file)
+                        {
+                            $syllabus->file->delete();
+                        }
+
                         $schema = $this->schema('Syllabus_ClassData_CourseSection');
                         $courseSections = $schema->find(
                             $schema->syllabus_id->equals($syllabus->id)
@@ -1480,7 +1664,23 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             $viewer = $this->requireLogin();
         }
-        
+    
+        if ($syllabus->file)
+        {
+            list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
+            // if teacher, send to upload. if student, send to download
+            switch ($type)
+            {
+                case 'student':
+                    $this->response->redirect("files/$syllabus->file_id/download/syllabus");
+                case 'instructor':
+                    $this->response->redirect("syllabus/$courseSection->id/ilearn");
+                default:
+                    $this->accessDenied('You do not have permission to download this syllabus.');
+                    break;
+            }
+        }
+
         $this->setSyllabusTemplate();
 
         $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
@@ -1672,6 +1872,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             }
         }
         $syllabus->save();
+
+        if ($syllabus->file)
+        {
+            $syllabus->file->delete();
+        }
 
         // save section data
         $prevSectionVersion = null;
@@ -2500,19 +2705,25 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     {
         $courseSection = null;
         $type = '';
-        if ($sectionVersion = $syllabus->latestVersion->getCourseInfoSection())
+
+        if ($syllabus->file && $syllabus->courseSection)
+        {
+            $courseSection = $syllabus->courseSection;
+        }
+        elseif ($sectionVersion = $syllabus->latestVersion->getCourseInfoSection())
         {
             $courseSection = $sectionVersion->resolveSection()->classDataCourseSection;
-            if ($courseSection && $courseSection->enrollments->has($viewer->classDataUser))
+        }
+
+        if ($courseSection && $courseSection->enrollments->has($viewer->classDataUser))
+        {
+            $type = 'instructor';
+            $roles = $this->schema('Syllabus_AuthN_Role');
+            $studentRole = $roles->findOne($roles->name->equals('Student'));
+            if ($viewer->roles->has($studentRole))
             {
-                $type = 'instructor';
-                $roles = $this->schema('Syllabus_AuthN_Role');
-                $studentRole = $roles->findOne($roles->name->equals('Student'));
-                if ($viewer->roles->has($studentRole))
-                {
-                    $type = 'student';
-                }                    
-            }
+                $type = 'student';
+            }                    
         }
 
         return [$type, $courseSection];

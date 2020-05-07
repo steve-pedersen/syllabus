@@ -27,6 +27,8 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_BaseWithAuthorization 
             'token' => 'string',
            
             'createdBy' => ['1:1', 'to' => 'Bss_AuthN_Account', 'keyMap' => ['created_by_id' => 'id']],
+            'file' => ['1:1', 'to' => 'Syllabus_Files_File', 'keyMap' => ['file_id' => 'id']],
+            'courseSection' => ['1:1', 'to' => 'Syllabus_ClassData_CourseSection', 'keyMap' => ['course_section_id' => 'id']],
             'versions' => ['1:N', 
                 'to' => 'Syllabus_Syllabus_SyllabusVersion', 
                 'reverseOf' => 'syllabus', 
@@ -204,10 +206,9 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_BaseWithAuthorization 
         return $trueId;
     }
 
-    // TODO: add param for specific versions
     public function getTitle ()
     {
-        return $this->latestVersion->title;
+        return $this->file ? $this->file->remoteName : $this->latestVersion->title;
     }
 
     // TODO: add param for specific versions

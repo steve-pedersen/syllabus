@@ -19,7 +19,7 @@
         </div>
         <div class="box__success">Upload successful! </div>
         <div class="box__error">Error! <span></span>. </div>
-        <div class="box__restart"><button class="btn btn-link font-w800">Try Again</button></div>
+        <!-- <div class="box__restart"><button class="btn btn-link font-w800">Try Again</button></div> -->
         {generate_form_post_key}
         <input type="hidden" name="uploadedBy" value="{$uploadedBy}">
     </form>

@@ -40,6 +40,7 @@
         $.ajax(url, {
             type: 'get',
             dataType: 'json',
+            timeout: 2000,
             success: function (o) {
                 switch (o.status) {
                     case 'success':
@@ -50,7 +51,10 @@
                         //console.log('unknown error');
                         break;
                 }
-            }
+            },
+            error: function (){
+                // console.log('Unable to fetch syllabus preview for', url);
+            },
         });
     });
 

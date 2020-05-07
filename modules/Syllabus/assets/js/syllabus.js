@@ -225,6 +225,36 @@
 		}
 	});
 
+
+	$('#ilearnChooseStartingPoint input').on('click', function() {
+		// console.log('upload clicked', $('#upload').is(':checked'));
+	    if( $('#upload').is(':checked')) {
+	        $("#ilearnUploadSyllabus").show(500);
+	    } else if (!$('#upload').is(':checked')) {
+	        $("#ilearnUploadSyllabus").hide(500);
+	    }
+	    if ($('#base').is(':checked')) {
+	    	$('#ilearnStartBase').show(500);
+	    } else if (!$('#base').is(':checked')) {
+	    	$('#ilearnStartBase').hide(500);
+	    }
+	    if ($('#existing').is(':checked')) {
+	    	$('#ilearnStartExisting').show(500);
+	    } else if (!$('#existing').is(':checked')) {
+	    	$('#ilearnStartExisting').hide(500);
+	    }
+	});
+
+    if( $('#ilearnChooseStartingPoint #upload').is(':checked')) {
+        $("#ilearnUploadSyllabus").show();
+    }
+    if( $('#ilearnChooseStartingPoint #base').is(':checked')) {
+        $("#ilearnStartBase").show();
+    }
+    if( $('#ilearnChooseStartingPoint #existing').is(':checked')) {
+        $("#ilearnStartExisting").show();
+    }
+
 	// // accessibility fix for smooth scrolling links
 	// // Select all links with hashes
 	// $('a[href*="#"]')
