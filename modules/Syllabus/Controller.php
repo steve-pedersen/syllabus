@@ -37,6 +37,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/:courseid/ilearn' => ['callback' => 'fromIlearn'],
             'syllabus/:courseid/start'  => ['callback' => 'ilearnStart'],
             'syllabus/:courseid/upload' => ['callback' => 'uploadSyllabus'],
+            'syllabus/:id/publish'      => ['callback' => 'publishFromIlearn'],
         ];
     }
 
@@ -54,6 +55,30 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->forward("syllabus/$courseSection->id/start", [
             'courseSection' => $courseSection
         ]);
+    }
+
+    public function publishFromIlearn ()
+    {
+        $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
+        $schema = $this->schema('Syllabus_Syllabus_PublishedSyllabus');
+        $published = $schema->fineOne($schema->syllabus_id->equals($syllabus->id));
+        $published = $this->publishSyllabus($syllabus, 'all', $published);
+        $returnArray = [];
+        if ($syllabus && $published) 
+        {
+            $returnArray['exists'] = true;
+            $returnArray['url'] = $this->baseUrl('syllabus/' . $syllabus->id . '/view');
+            $returnArray['edited'] = true;
+            $returnArray['visible'] = true;
+        } 
+        else 
+        {
+            $returnArray['exists'] = false;
+        }
+
+        $return_json = json_encode($returnArray);
+        echo($return_json);
+        exit;      
     }
 
     public function ilearnStart ()
@@ -1466,13 +1491,16 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $pathParts[] = 'syllabus';
 
         $hasDownstreamSyllabiSection = false;
-        foreach ($syllabusVersion->sectionVersions as $sv)
+        if (!$syllabus->file)
         {
-            if ($this->hasDownstreamSection($sv, $syllabus, $viewer))
+            foreach ($syllabusVersion->sectionVersions as $sv)
             {
-                $hasDownstreamSyllabiSection = true;
-                break;
-            }
+                if ($this->hasDownstreamSection($sv, $syllabus, $viewer))
+                {
+                    $hasDownstreamSyllabiSection = true;
+                    break;
+                }
+            }            
         }
 
         if ($this->request->wasPostedByUser())
@@ -1485,22 +1513,33 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     {
                         if ($syllabus->file)
                         {
-                            $syllabus->file->delete();
-                        }
-
-                        $schema = $this->schema('Syllabus_ClassData_CourseSection');
-                        $courseSections = $schema->find(
-                            $schema->syllabus_id->equals($syllabus->id)
-                        );
-                        if ($courseSections)
-                        {
-                            foreach ($courseSections as $courseSection)
+                            $courseSection = $this->schema('Syllabus_ClassData_CourseSection')->get($syllabus->course_section_id);
+                            
+                            if ($courseSection->syllabus_id === $syllabus->id)
                             {
-                                $courseSection->syllabusId = null;
+                                $courseSection->syllabus_id = null;
                                 $courseSection->save();
                             }
+                            $syllabus->file->delete();
+                            $syllabus->delete();
                         }
-                        $syllabus->delete();
+                        else
+                        {
+                            $schema = $this->schema('Syllabus_ClassData_CourseSection');
+                            $courseSections = $schema->find(
+                                $schema->syllabus_id->equals($syllabus->id)
+                            );
+                            if ($courseSections)
+                            {
+                                foreach ($courseSections as $courseSection)
+                                {
+                                    $courseSection->syllabusId = null;
+                                    $courseSection->save();
+                                }
+                            }
+                            $syllabus->delete();                            
+                        }
+
                         $this->flash('Delete successful', 'success');
                     }
                     else

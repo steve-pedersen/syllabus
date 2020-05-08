@@ -18,6 +18,13 @@
     		</div>
     	</div>
         <div class="row pt-3">
+        {if $syllabus->file}
+            <div class="col">
+                <p class="">
+                    Syllabus File: <a href="files/{$syllabus->file->id}/download">{$syllabus->file->remoteName}</a>
+                </p>
+            </div>
+        {else}
             <div class="col-xl-5 col-lg-6 col-md-12">
                 <h2 class=" pb-3">{$syllabusVersion->title}</h2>
             <dl class="mb-4">
@@ -54,6 +61,7 @@
                     </div>
                 </div>
             </div>
+        {/if}
         </div>
 
         <div class="commands pt-5">

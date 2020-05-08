@@ -53,12 +53,18 @@
 					<a href="{$routeBase}syllabus/{$syllabus->id}" class="btn btn-info">
 						Edit
 					</a>
+					{if !$syllabus->file}
 					<a href="{$routeBase}syllabus/{$syllabus->id}/view" class="btn btn-dark">
 						View
 					</a>
+					{else}
+					<a href="{$routeBase}syllabus/{$syllabus->id}/delete" class="btn btn-danger">
+						<i class="far fa-trash-alt"></i>
+					</a>
+					{/if}
 				</div>
 			
-				{if !$organization && $syllabus->hasCourseSection}
+				{if !$organization && $syllabus->hasCourseSection || !$organization && $syllabus->file}
 					{include file="partial:_shareWidget.html.tpl"}
 				{elseif !$organization && !$syllabus->hasCourseSection}
 					<button type="button" class="btn btn-light text-muted d-inline-block ml-auto my-1" data-toggle="tooltip" data-html="true" data-placement="bottom" title="You must add a <strong>Course Information</strong> section to this syllabus before it can be shared.">
@@ -97,10 +103,6 @@
 					<a href="syllabus/{$syllabus->id}/word" class="dropdown-item">
 						<i class="far fa-file-word  mr-3 text-dark"></i> Export
 					</a>
-<!-- 					<div class="dropdown-divider"></div>
-					<a href="syllabus/{$syllabus->id}/print" class="dropdown-item">
-						<i class="fas fa-print  mr-3 "></i> Print
-					</a> -->
 				{/if}
 				{if $btnClone}
 					<div class="dropdown-divider"></div>
@@ -119,11 +121,7 @@
 			{/if}
 		</div>
 		{if !$btnStart && !$btnStartTemplateForCourse && !$organization && $syllabus->hasCourseSection}
-<!-- 		<div class="text-center">
-			<button type="button" data-placement="bottom" class="btn btn-link" data-toggle="tooltip" data-html="true" title="To share your syllabus with students, click the <strong>Options</strong> button above and then <strong>Share</strong>">
-			  How to share with Students?
-			</button>
-		</div> -->
+
 		{/if}
 	</div>
 </div>

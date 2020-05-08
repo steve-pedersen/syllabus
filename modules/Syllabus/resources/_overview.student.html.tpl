@@ -65,11 +65,17 @@
 					</p>
 				{if $course->courseSyllabus}
 			<div class="row text-center">
+				{if $course->courseSyllabus->file}
+					<a href="syllabus/{$course->courseSyllabus->id}/view" class="mb-4 ml-2 btn btn-dark btn-lg btn-block">
+						<i class="fas fa-download mr-3"></i> Download
+					</a>
+				{else}
 				<div class="col-xl-8 offset-xl-2 col-lg-12 offset-lg-0 col-sm-10 offset-sm-1 col-xs-8 offset-xs-2 d-block">
 					<a href="syllabus/{$course->courseSyllabus->id}/view" class="mb-4 btn btn-dark btn-lg btn-block">
 						<i class="far fa-eye  mr-3"></i> View
 					</a>
 				</div>
+				{/if}
 				{if !$course->courseSyllabus->file}
 				<div class="col-xl-8 col-lg-9 col-sm-8 col-xs-12 d-block">
 					<a href="syllabus/{$course->courseSyllabus->id}/word" class="mb-2 btn btn-link btn-blocks">
