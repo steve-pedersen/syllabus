@@ -1801,11 +1801,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         	// check if this syllabus is from a combined course
         	$resolvedSyllabus = $this->resolveCombinedCourseSyllabus($syllabus);
 
-        	if ($resolvedSyllabus === null)
+        	if ($resolvedSyllabus === null && $syllabus->createdById !== $viewer->id)
         	{
         		$this->requirePermission('admin');
         	}
-        	elseif ($resolvedSyllabus->id !== $syllabus->id)
+        	elseif ($resolvedSyllabus && $resolvedSyllabus->id !== $syllabus->id)
         	{
                 $syllabus = $resolvedSyllabus;
         		$this->response->redirect('syllabus/' . $resolvedSyllabus->id . '/view');
