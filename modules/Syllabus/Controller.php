@@ -37,7 +37,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/:courseid/ilearn' => ['callback' => 'fromIlearn'],
             'syllabus/:courseid/start'  => ['callback' => 'ilearnStart'],
             'syllabus/:courseid/upload' => ['callback' => 'uploadSyllabus'],
-            'syllabus/:id/publish'      => ['callback' => 'publishFromIlearn'],
+            'syllabus/:id/publish/:code'=> ['callback' => 'publishFromIlearn'],
+            'syllabus/:courseid/publishreturn'    => ['callback' => 'publishAndReturn'],
         ];
     }
 
@@ -46,11 +47,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $courseSection = $this->requireExists(
             $this->schema('Syllabus_ClassData_CourseSection')->get($this->getRouteVariable('courseid'))
         );
-        // echo "<pre>"; var_dump($courseSection->id); die;
         
-        $returnTo = $this->request->getQueryParameter('returnTo', $this->request->getRequestedUri());
-        $_SESSION['ilearnReturnUrl'] = $returnTo;
-        // $_SESSION['ilearnConnect'] = true;
+        $returnUrl = $this->request->getQueryParameter('returnUrl', $this->request->getRequestedUri());
+        $_SESSION['ilearnReturnUrl'] = $returnUrl;
 
         $this->forward("syllabus/$courseSection->id/start", [
             'courseSection' => $courseSection
@@ -61,19 +60,34 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     {
         $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
         $schema = $this->schema('Syllabus_Syllabus_PublishedSyllabus');
-        $published = $schema->fineOne($schema->syllabus_id->equals($syllabus->id));
+        $published = $schema->findOne($schema->syllabus_id->equals($syllabus->id));
         $published = $this->publishSyllabus($syllabus, 'all', $published);
+        
+        $code = $this->getRouteVariable('code');
+        $app = $this->getApplication();
+        $appKey = $app->getConfiguration()->getProperty('appKey', null);
+        
         $returnArray = [];
-        if ($syllabus && $published) 
+        $returnArray['published'] = false;
+
+        if ($code === $appKey)
         {
-            $returnArray['exists'] = true;
-            $returnArray['url'] = $this->baseUrl('syllabus/' . $syllabus->id . '/view');
-            $returnArray['edited'] = true;
-            $returnArray['visible'] = true;
-        } 
-        else 
+            if ($syllabus && $published) 
+            {
+                $returnArray['exists'] = true;
+                $returnArray['url'] = $this->baseUrl('syllabus/' . $syllabus->id . '/view');
+                $returnArray['edited'] = true;
+                $returnArray['visible'] = true;
+                $returnArray['published'] = true;
+            } 
+            else 
+            {
+                $returnArray['exists'] = false;
+            }            
+        }
+        else
         {
-            $returnArray['exists'] = false;
+            $this->notFound();
         }
 
         $return_json = json_encode($returnArray);
@@ -87,21 +101,22 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $courseSection = $this->getRouteVariable('courseSection', null);
         $ilearnReturnUrl = $_SESSION['ilearnReturnUrl'];
 
-        if (!$courseSection->isTaughtByUser($viewer) || $this->hasPermission('admin'))
+        if (!$courseSection->isTaughtByUser($viewer) && !$this->hasPermission('admin'))
         {
             $this->accessDenied('You are not an instructor of this course.');
         }
 
-
+        if ($courseSection && $courseSection->syllabus && ($courseSection->syllabus->getShareLevel() === 'all')) 
+        {
+            $this->response->redirect($_SESSION['ilearnReturnUrl']);
+        }
 
         if ($this->request->wasPostedByUser())
         {
             switch ($this->getPostCommand())
             {
                 case 'existing':
-                    // select existing syllabus to use for this course
-                    // echo "<pre>"; var_dump('existing', $this->request->getPostParameter('existingSyllabus')); die;
-                    
+                    $this->forward('syllabus/' . $courseSection->id . '/publishreturn');
                     break;
 
                 case 'start':
@@ -123,11 +138,26 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     break;
             }
         }
-        // echo "<pre>"; var_dump($this->getDragDropUploadFragment()); die;
         
         $this->template->userCameFromIlearn = true;
         $this->template->courseSection = $courseSection;
         $this->template->pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer, 3);
+    }
+
+    public function publishAndReturn ()
+    {   
+        if ($this->request->wasPostedByUser())
+        {   
+            $courseSection = $this->requireExists(
+                $this->schema('Syllabus_ClassData_CourseSection')->get($this->getRouteVariable('courseid'))
+            );
+            $syllabus = $courseSection->syllabus;
+            $schema = $this->schema('Syllabus_Syllabus_PublishedSyllabus');
+            $published = $schema->findOne($schema->syllabusId->equals($syllabus->id));
+            $published = $this->publishSyllabus($syllabus, 'all', $published);
+            
+            $this->response->redirect($_SESSION['ilearnReturnUrl']);   
+        }
     }
 
     public function uploadSyllabus ()
@@ -145,11 +175,15 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 'success' => false
             ];
 
-
             $files = $this->schema('Syllabus_Files_File');
+            if ($fid = $this->request->getPostParameter('uploadedFile'))
+            {
+                $file = $files->get($fid);
+                $file->delete();
+            }
             $file = $files->createInstance();
             $file->createFromRequest($this->request, 'file', false, Syllabus_Syllabus_Submission::$SyllabusFileTypes);
-        
+    
             if ($file->isValid())
             {
                 $uploadedBy = (int)$this->request->getPostParameter('uploadedBy');
@@ -179,8 +213,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
                 // TODO: update based on iLearn API
                 $ilearnReturnUrl = $_SESSION['ilearnReturnUrl'];
-                $ilearnReturnUrl .= "?url=" . $this->baseUrl('syllabus/' . $syllabus->id . '/view');
-                $_SESSION['ilearnReturnUrl'] = $ilearnReturnUrl;
 
                 $results = [
                     'message' => 'Your syllabus has been uploaded.',
@@ -188,7 +220,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     'success' => true,
                     'fileSrc' => 'files/' . $file->id . '/download',
                     'fileName' => $file->remoteName,
-                    'ilearnReturnUrl' => $ilearnReturnUrl
+                    'ilearnReturnUrl' => $ilearnReturnUrl,
+                    'sid' => $syllabus->id,
+                    'cid' => $courseSection->id,
+                    'fid' => $file->id,
                 ];
 
                 $this->flash(
@@ -1489,6 +1524,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $pathParts = [];
         $pathParts[] = $routeBase;
         $pathParts[] = 'syllabus';
+        $routeBase = $this->request->getQueryParameter('return', $routeBase);
 
         $hasDownstreamSyllabiSection = false;
         if (!$syllabus->file)
@@ -1557,6 +1593,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->hasDownstreamSyllabiSection = $hasDownstreamSyllabiSection;
         $this->template->organization = $organization;
         $this->template->routeBase = $routeBase;
+        // $this->template->return = $return;
     }
 
     public function print ()
@@ -2772,12 +2809,17 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     {   
         $courseSection = $this->helper('activeRecord')->fromRoute('Syllabus_ClassData_CourseSection', 'id');
         $returnArray = [];
-        if ($courseSection && $courseSection->syllabus && $courseSection->syllabus->getShareLevel() === 'all') 
+        $returnArray['published'] = false;
+        if ($courseSection && $courseSection->syllabus) 
         {
-            $returnArray['exists'] = true;
-            $returnArray['url'] = $this->baseUrl('syllabus/' . $courseSection->syllabus->id . '/view');
-            $returnArray['edited'] = true;
-            $returnArray['visible'] = true;
+            if ($courseSection->syllabus->getShareLevel() === 'all')
+            {
+                $returnArray['exists'] = true;
+                $returnArray['url'] = $this->baseUrl('syllabus/' . $courseSection->syllabus->id . '/view');
+                $returnArray['edited'] = true;
+                $returnArray['visible'] = true;
+                $returnArray['published'] = true;
+            }
         } 
         else 
         {

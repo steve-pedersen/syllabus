@@ -56,6 +56,12 @@
 									</div>
 								</div>
 								<div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 col-xs-10 d-block">
+									{if $syllabus->file}
+									<a style="max-width:200px;" href="syllabus/{$syllabus->courseSection->id}/ilearn" class="my-3 btn btn-info d-block align-bottom">
+										<span class="float-left"><i class="fas fa-edit"></i></span>
+										Edit
+									</a>
+									{else}
 									<a style="max-width:200px;" class="btn btn-dark d-block align-top mt-3" href="syllabus/{$syllabus->id}/view">
 										<span class="float-left"><i class="fas fa-eye"></i></span>
 										View
@@ -64,9 +70,10 @@
 										<span class="float-left"><i class="fas fa-edit"></i></span>
 										Edit
 									</a>
-									{if $syllabus->hasCourseSection}
+									{/if}
+									{if $syllabus->hasCourseSection || $syllabus->file}
 									<span class="d-block my-3">{include file="partial:_shareWidget.html.tpl"}</span>
-									{else}
+									{elseif !$syllabus->file}
 									<span class="d-block my-3">
 										You must add a <strong>Course Information</strong> section to this syllabus before it can be shared.
 									</span>

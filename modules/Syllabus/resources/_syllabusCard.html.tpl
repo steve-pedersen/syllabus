@@ -1,5 +1,5 @@
 <div class="card h-100 mb-sm-2 {if !$organization && $syllabus->hasCourseSection}ribbon-wrapper{/if}">
-	{if !$organization && $syllabus->hasCourseSection}
+	{if !$organization && ($syllabus->hasCourseSection || $syllabus->file)}
 	<div class="ribbon-wrapper-gray">
 		{if $syllabus->getShareLevel() == 'all'}
 		<div class="ribbon ribbon-successs">
@@ -31,9 +31,9 @@
 		</h5>
 		<p class="card-text">
 			{if $syllabus->semester}
-				{$syllabus->syllabus->description|truncate:175}
+				{$syllabus->syllabus->description|truncate:120}
 			{else}
-				{$syllabus->description|truncate:175}
+				{$syllabus->description|truncate:120}
 			{/if}
 			</p>
 		{if !$hideDate && !$syllabus->semester}
@@ -50,14 +50,17 @@
 				{if $overview}
 				<!-- <div class="d-inline"> -->
 				<div class="btn-group my-1" role="group" aria-label="Edit & View buttons">
+					{if !$syllabus->file}
 					<a href="{$routeBase}syllabus/{$syllabus->id}" class="btn btn-info">
 						Edit
 					</a>
-					{if !$syllabus->file}
 					<a href="{$routeBase}syllabus/{$syllabus->id}/view" class="btn btn-dark">
 						View
 					</a>
 					{else}
+					<a href="{$routeBase}syllabus/{$syllabus->courseSection->id}/ilearn" class="btn btn-info">
+						Edit
+					</a>
 					<a href="{$routeBase}syllabus/{$syllabus->id}/delete" class="btn btn-danger">
 						<i class="far fa-trash-alt"></i>
 					</a>
