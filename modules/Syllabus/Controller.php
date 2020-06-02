@@ -1525,15 +1525,15 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         	// check if this syllabus is from a combined course
         	$resolvedSyllabus = $this->resolveCombinedCourseSyllabus($syllabus);
 
-        	if ($resolvedSyllabus === null)
-        	{
-        		$this->requirePermission('admin');
-        	}
-        	elseif ($resolvedSyllabus->id !== $syllabus->id)
-        	{
+            if ($resolvedSyllabus === null && $syllabus->createdById !== $viewer->id)
+            {
+                $this->requirePermission('admin');
+            }
+            elseif ($resolvedSyllabus && $resolvedSyllabus->id !== $syllabus->id)
+            {
                 $syllabus = $resolvedSyllabus;
-        		$this->response->redirect('syllabus/' . $resolvedSyllabus->id . '/view');
-        	}
+                $this->response->redirect('syllabus/' . $resolvedSyllabus->id . '/view');
+            }
 
         	// check if viewing as instructor or student and if it is even associated with a course
             list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
