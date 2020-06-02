@@ -5,9 +5,10 @@ class Syllabus_Files_Controller extends Syllabus_Master_Controller
     public static function GetRouteMap ()
     {
         return array(
-            '/files/:fid/download' => array( 'callback' => 'download', 'fid' => '[0-9]+'),
-            '/files/:fid/imagesrc' => array( 'callback' => 'imageSrc', 'fid' => '[0-9]+'),
-            '/files/check'         => array( 'callback' => 'check'),
+            '/files/:fid/download/syllabus' => ['callback' => 'downloadSyllabus', 'fid' => '[0-9]+'],
+            '/files/:fid/download' => ['callback' => 'download', 'fid' => '[0-9]+'],
+            '/files/:fid/imagesrc' => ['callback' => 'imageSrc', 'fid' => '[0-9]+'],
+            '/files/check'         => ['callback' => 'check'],
         );
     }
 
@@ -60,6 +61,14 @@ class Syllabus_Files_Controller extends Syllabus_Master_Controller
             $this->requirePermission('file download');
         }
         
+        $file->sendFile($this->response);
+    }
+
+    public function downloadSyllabus ()
+    {
+        $account = $this->requireLogin();
+        $fid = $this->getRouteVariable('fid');
+        $file = $this->requireExists($this->schema('Syllabus_Files_File')->get($fid));
         $file->sendFile($this->response);
     }
 

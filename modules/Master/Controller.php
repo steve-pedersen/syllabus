@@ -73,6 +73,7 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
         $this->template->setPageTitle(!empty($this->pageTitle) ? implode(' - ', $this->pageTitle) : '');
 
         $session = $this->request->getSession();
+        $this->template->ilearnReturnUrl = isset($session->ilearnReturnUrl) ? $session->ilearnReturnUrl : null;
         if (isset($session->flashContent))
         {
             $this->template->flashContent = $session->flashContent;

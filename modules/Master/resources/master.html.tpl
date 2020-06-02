@@ -55,11 +55,15 @@
 
 			<ul class="list-unstyled components">
 
+				{if $ilearnReturnUrl}
+				<li class="">
+					<a class="nav-category border-bottom mt-0 d-flex justify-content-center text-dark bg-info" href="{$ilearnReturnUrl}" id="sidebarMySyllabi">
+						<i class="fas fa-external-link-alt pt-2"></i><span class="sidebar-text pl-1"> Return to iLearn</span>
+					</a>
+				</li>
+				{/if}
+
 				<li class="mt-3">
-<!-- 					<a class="nav-category mb-2 d-block" href="profile/{$viewer->id}">
-						<i class="far fa-user-circle align-middle" style="font-size:2.5rem;"></i> 
-						<span class="pl-0 sidebar-text profile align-middle">Profile</span>
-					</a> -->
 					<a class="nav-category" href="syllabi" id="sidebarMySyllabi">
 						<img class="my-syllabi" src="assets/icons/menu-my-syllabi.svg" width="44"> <span class="pl-2 sidebar-text">My Syllabi</span>
 					</a>

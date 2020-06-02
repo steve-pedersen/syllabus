@@ -18,6 +18,7 @@ $(function() {
 	    	$form.removeClass('is-success is-error');
 	    	uploading = false;
 	    	if (result.status == 200) {
+	    		console.log('success');
 	    		$form.addClass('is-success');
 	    		if ($('#profileImage').length) {
 					$('#profileImage').attr('src',result.imageSrc);
@@ -26,11 +27,22 @@ $(function() {
 					$('#submissionFile').attr('href', result.fileSrc);
 					$('#submissionFile').text(result.fileName);
 	    		}
+	    		if ($('#uploadedSyllabusFile').length) {
+	    			$('#uploadedSyllabusFile').attr('href', result.fileSrc);
+	    			$('#uploadedSyllabusFile').text(result.fileName);
+	    			$('#deleteUpload > a').attr('href', 
+	    				`syllabus/${result.sid}/delete?return=syllabus/${result.cid}/ilearn`
+    				);
+	    			$('#deleteUpload').show();
+	    			$('#publishAndReturn').show();
+	    			$('#uploadedFile').attr('value', result.fid);
+	    		}
 	    		$('.box__uploading').hide();
 	   //  	} else if (result.status == 422) {
 	   //  		$form.addClass('is-error');
 				errorMsg.textContent = "";
 	    	} else {
+	    		console.log('no success');
 	    		$form.addClass('is-error');
 	    		errorMsg.textContent = result.message;
 	    	}

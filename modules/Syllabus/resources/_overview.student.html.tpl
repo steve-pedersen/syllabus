@@ -36,9 +36,13 @@
 				<div class="col-xl-4 col-lg-5 col-md-5 col-sm-12 col-xs-12 image-block border-right text-center d-block">
 				{if $course->courseSyllabus}
 				<a href="syllabus/{$course->courseSyllabus->id}/view" class="">
+					{if $course->courseSyllabus->file}
+					<div class="text-center"><i class="fas fa-file fa-5x text-center"></i></div>
+					{else}
 					<div class="paper paper-bottom mb-1">
 					<img src="assets/images/placeholder-4.jpg" data-src="syllabus/{$course->courseSyllabus->id}/thumbinfo" id="syllabus-{$course->courseSyllabus->id}" class="img-thumbnail" alt="{$course->title} syllabus preview" style="min-height:120px;border:1px solid #dee2e6;border-radius:0;">
-				</div>
+					</div>
+					{/if}
 				</a>
 				{else}
 					<span class="text-center d-block h-100  text-muted no-syllabus">
@@ -61,11 +65,18 @@
 					</p>
 				{if $course->courseSyllabus}
 			<div class="row text-center">
+				{if $course->courseSyllabus->file}
+					<a href="syllabus/{$course->courseSyllabus->id}/view" class="mb-4 ml-2 btn btn-dark btn-lg btn-block">
+						<i class="fas fa-download mr-3"></i> Download
+					</a>
+				{else}
 				<div class="col-xl-8 offset-xl-2 col-lg-12 offset-lg-0 col-sm-10 offset-sm-1 col-xs-8 offset-xs-2 d-block">
 					<a href="syllabus/{$course->courseSyllabus->id}/view" class="mb-4 btn btn-dark btn-lg btn-block">
 						<i class="far fa-eye  mr-3"></i> View
 					</a>
 				</div>
+				{/if}
+				{if !$course->courseSyllabus->file}
 				<div class="col-xl-8 col-lg-9 col-sm-8 col-xs-12 d-block">
 					<a href="syllabus/{$course->courseSyllabus->id}/word" class="mb-2 btn btn-link btn-blocks">
 						<i class="far fa-file-word"></i> Download as Word
@@ -76,6 +87,7 @@
 						<i class="fas fa-print"></i> Print
 					</a>
 				</div>
+				{/if}
 			</div>
 				{/if}
 				</div>

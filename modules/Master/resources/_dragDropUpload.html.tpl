@@ -10,7 +10,7 @@
         <label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
         <button class="box__button btn btn-primary" type="submit">Upload</button>
         </div>
-
+        <input name="uploadedFile" id="uploadedFile" type="hidden" value="{$fid}">
         <div class="box__uploading">Uploading and scanning for viruses&hellip;
             <!-- <img src="assets/images/progressbar.gif" class="img-fluid"> -->
 <div class="progress w-100" id="uploadProgress">
@@ -18,9 +18,17 @@
 </div>
         </div>
         <div class="box__success">Upload successful! </div>
+        <div id="publishAndReturn" style="display:none;">
+            <button type="submit" class="btn btn-info" form="publishAndReturnForm">
+                Publish & Return to iLearn
+            </button>
+        </div>
         <div class="box__error">Error! <span></span>. </div>
-        <div class="box__restart"><button class="btn btn-link font-w800">Try Again</button></div>
+        <!-- <div class="box__restart"><button class="btn btn-link font-w800">Try Again</button></div> -->
         {generate_form_post_key}
         <input type="hidden" name="uploadedBy" value="{$uploadedBy}">
+    </form>
+    <form method="post" action="{$publishAction}" id="publishAndReturnForm">
+        {generate_form_post_key}
     </form>
 </div>

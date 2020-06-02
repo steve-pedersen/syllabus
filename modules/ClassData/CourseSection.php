@@ -110,6 +110,22 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
         return $this->getFullDisplayName() .' ['.$this->getTerm().']';
     }
 
+    public function isTaughtByUser ($user)
+    {
+        $isTaughtByUser = false;
+        foreach ($this->enrollments as $enrollment)
+        {
+            if ($enrollment->id === $user->username &&
+                $this->enrollments->getProperty($enrollment, 'role') === 'instructor')
+            {
+                $isTaughtByUser = true;
+                break;
+            }
+        }
+
+        return $isTaughtByUser;
+    }
+
     public function getRelevantPastCoursesWithSyllabi ($user, $limit=-1)
     {
         $pastCourseSections = [];
