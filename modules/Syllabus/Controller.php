@@ -2820,6 +2820,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 $returnArray['visible'] = true;
                 $returnArray['published'] = true;
             }
+            else
+            {
+                $returnArray['sid'] = $courseSection->syllabus->id;
+            }
         } 
         else 
         {
