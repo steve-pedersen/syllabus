@@ -48,7 +48,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $this->schema('Syllabus_ClassData_CourseSection')->get($this->getRouteVariable('courseid'))
         );
         
-        $returnUrl = $this->request->getQueryParameter('returnUrl', $this->request->getRequestedUri());
+        $returnUrl = $this->request->getQueryParameter('returnUrl', '');
         $_SESSION['ilearnReturnUrl'] = $returnUrl;
 
         $this->forward("syllabus/$courseSection->id/start", [
