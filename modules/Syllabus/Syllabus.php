@@ -70,6 +70,10 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_BaseWithAuthorization 
 
     public function getCourseSection ()
     {
+        if ($this->_fetch('courseSection'))
+        {
+            return $this->_fetch('courseSection');
+        }
         $schema = $this->getSchema('Syllabus_ClassData_CourseSection');
         return $schema->findOne($schema->syllabus_id->equals($this->id));
     }

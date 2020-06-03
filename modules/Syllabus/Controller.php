@@ -1752,6 +1752,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 case 'instructor':
                     $this->response->redirect("syllabus/$courseSection->id/ilearn");
                 default:
+                    if ($this->hasPermission('admin'))
+                    {
+                        $this->response->redirect("syllabus/$courseSection->id/ilearn");
+                    }
                     $this->accessDenied('You do not have permission to download this syllabus.');
                     break;
             }
@@ -2733,17 +2737,20 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         // if user is enrolled in syllabus' course, show it to them and do nothing else.
         $courseSection = null;
-        if ($sectionVersion = $syllabus->latestVersion->getCourseInfoSection())
+        if ($syllabus->latestVersion)
         {
-            if ($courseSection = $sectionVersion->resolveSection()->classDataCourseSection)
+            if ($sectionVersion = $syllabus->latestVersion->getCourseInfoSection())
             {
-                if ($courseSection->enrollments->has($viewer->classDataUser))
+                if ($courseSection = $sectionVersion->resolveSection()->classDataCourseSection)
                 {
-                    // they're enrolled in this syllabus' course
-                    $result = $syllabus;
+                    if ($courseSection->enrollments->has($viewer->classDataUser))
+                    {
+                        // they're enrolled in this syllabus' course
+                        $result = $syllabus;
+                    }
                 }
-            }
-        }       
+            }                  
+        }
 
         if (!$result && $courseSection)
         {
@@ -2781,7 +2788,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     {
         $courseSection = null;
         $type = '';
-
+        
         if ($syllabus->file && $syllabus->courseSection)
         {
             $courseSection = $syllabus->courseSection;
