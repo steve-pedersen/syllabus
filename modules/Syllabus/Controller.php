@@ -52,7 +52,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $_SESSION['ilearnReturnUrl'] = $returnUrl;
 
         $this->forward("syllabus/$courseSection->id/start", [
-            'courseSection' => $courseSection
+            'courseSection' => $courseSection,
+            'fromIlearn' => true
         ]);
     }
 
@@ -98,15 +99,18 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     public function ilearnStart ()
     {
         $viewer = $this->requireLogin();
-        $courseSection = $this->getRouteVariable('courseSection', null);
+        $courses = $this->schema('Syllabus_ClassData_CourseSection');
+        $cid = $this->getRouteVariable('courseid');
+        $courseSection = $this->getRouteVariable('courseSection', $courses->get($cid));
+        $fromIlearn = $this->getRouteVariable('fromIlearn', false);
         $ilearnReturnUrl = $_SESSION['ilearnReturnUrl'];
-
+        
         if (!$courseSection->isTaughtByUser($viewer) && !$this->hasPermission('admin'))
         {
             $this->accessDenied('You are not an instructor of this course.');
         }
 
-        if ($courseSection && $courseSection->syllabus && ($courseSection->syllabus->getShareLevel() === 'all')) 
+        if ($courseSection && $courseSection->syllabus && ($courseSection->syllabus->getShareLevel() === 'all') && $fromIlearn) 
         {
             $this->response->redirect($_SESSION['ilearnReturnUrl']);
         }
@@ -897,7 +901,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 case 'student':
                     $this->response->redirect("files/$syllabus->file_id/download/syllabus");
                 case 'instructor':
-                    $this->response->redirect("syllabus/$courseSection->id/ilearn");
+                    $this->forward("syllabus/$courseSection->id/start", ['courseSection' => $courseSection]);
                 default:
                     $this->accessDenied('You do not have permission to download this syllabus.');
                     break;
@@ -1750,11 +1754,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 case 'student':
                     $this->response->redirect("files/$syllabus->file_id/download/syllabus");
                 case 'instructor':
-                    $this->response->redirect("syllabus/$courseSection->id/ilearn");
+                    $this->forward("syllabus/$courseSection->id/start", ['courseSection' => $courseSection]);
                 default:
                     if ($this->hasPermission('admin'))
                     {
-                        $this->response->redirect("syllabus/$courseSection->id/ilearn");
+                        $this->forward("syllabus/$courseSection->id/start", ['courseSection' => $courseSection]);
                     }
                     $this->accessDenied('You do not have permission to download this syllabus.');
                     break;
