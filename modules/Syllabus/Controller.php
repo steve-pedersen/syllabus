@@ -49,6 +49,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         );
         
         $returnUrl = $this->request->getQueryParameter('returnUrl', '');
+        if ($returnUrl === $this->baseUrl(''))
+        {
+            unset($_SESSION['ilearnReturnUrl']);
+        }
         $_SESSION['ilearnReturnUrl'] = $returnUrl;
 
         $this->forward("syllabus/$courseSection->id/start", [
@@ -1554,7 +1558,12 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                         if ($syllabus->file)
                         {
                             $courseSection = $this->schema('Syllabus_ClassData_CourseSection')->get($syllabus->course_section_id);
-                            
+                            $published = $this->schema('Syllabus_Syllabus_PublishedSyllabus');
+                            if ($published = $published->findOne($published->syllabus_id->equals($syllabus->id)))
+                            {
+                                $published->delete();
+                            }
+
                             if ($courseSection->syllabus_id === $syllabus->id)
                             {
                                 $courseSection->syllabus_id = null;

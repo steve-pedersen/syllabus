@@ -57,7 +57,7 @@
 								</div>
 								<div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 col-xs-10 d-block">
 									{if $syllabus->file}
-									<a style="max-width:200px;" href="syllabus/{$syllabus->courseSection->id}/ilearn" class="my-3 btn btn-info d-block align-bottom">
+									<a style="max-width:200px;" href="syllabus/{$syllabus->courseSection->id}/start" class="my-3 btn btn-info d-block align-bottom">
 										<span class="float-left"><i class="fas fa-edit"></i></span>
 										Edit
 									</a>

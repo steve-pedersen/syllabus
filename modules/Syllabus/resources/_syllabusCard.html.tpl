@@ -24,6 +24,7 @@
 			{if $syllabus->semester}
 				{$syllabus->syllabus->title|truncate:75}
 			{elseif $syllabus->file}
+				{$syllabus->courseSection->shortName}: 
 				<a href="files/{$syllabus->file->id}/download">{$syllabus->file->remoteName}</a>
 			{else}
 				{$syllabus->title|truncate:75}
@@ -58,7 +59,7 @@
 						View
 					</a>
 					{else}
-					<a href="{$routeBase}syllabus/{$syllabus->courseSection->id}/ilearn" class="btn btn-info">
+					<a href="{$routeBase}syllabus/{$syllabus->courseSection->id}/start" class="btn btn-info">
 						Edit
 					</a>
 					<a href="{$routeBase}syllabus/{$syllabus->id}/delete" class="btn btn-danger">
