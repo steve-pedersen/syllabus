@@ -18,6 +18,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/:id'              => ['callback' => 'edit', ':id' => '[0-9]+|new'],
             'syllabus/:id/ajax'         => ['callback' => 'asyncSubmit', ':id' => '[0-9]+'],
             'syllabus/:id/view'         => ['callback' => 'view', ':id' => '[0-9]+'],
+            'syllabus/:courseid/view'   => ['callback' => 'courseView'],
             'syllabus/:id/share'        => ['callback' => 'share', ':id' => '[0-9]+|courses'],
             'syllabus/:id/delete'       => ['callback' => 'delete', ':id' => '[0-9]+'],
             'syllabus/:id/print'        => ['callback' => 'print', ':id' => '[0-9]+'],
@@ -1746,6 +1747,13 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         exit;
     }
 
+    public function courseView ()
+    {
+        $courseid = $this->getRouteVariable('courseid');
+        $courseSection = $this->requireExists($this->schema('Syllabus_ClassData_CourseSection')->get($courseid));
+        $this->forward('syllabus/' . $courseSection->syllabus->id . '/view');
+    }
+
     public function view ()
     { 
     	$syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id', ['allowNew' => false]);
@@ -2835,7 +2843,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             if ($courseSection->syllabus->getShareLevel() === 'all')
             {
                 $returnArray['exists'] = true;
-                $returnArray['url'] = $this->baseUrl('syllabus/' . $courseSection->syllabus->id . '/view');
+                $returnArray['url'] = $this->baseUrl('syllabus/' . $courseSection->id . '/view');
                 $returnArray['edited'] = true;
                 $returnArray['visible'] = true;
                 $returnArray['published'] = true;

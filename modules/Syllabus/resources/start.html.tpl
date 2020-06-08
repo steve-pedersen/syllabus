@@ -121,7 +121,8 @@
 						<h2 class="mt-0 mb-1 display-4">Start From Another Syllabus</h2>
 						<p class="lead w-75 ml-1">
 							Create a duplicate from any one of your other syllabi, 
-							such as one from a previous semester or a personal template.
+							such as one from a previous semester or a personal template. 
+							You can choose from your 4 most recently edited syllabi.
 						</p>
 						<!-- <p class="text-warning">TODO: add some logic to fetch relevant, non-course syllabi here</p> -->
 					</div>
