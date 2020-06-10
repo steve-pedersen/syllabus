@@ -1772,20 +1772,24 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
             // if teacher, send to upload. if student, send to download
-            switch ($type)
+            if ($this->hasPermission('admin') || $type === 'student' || $type === 'instructor')
             {
-                case 'student':
-                    $this->response->redirect("files/$syllabus->file_id/download/syllabus");
-                case 'instructor':
-                    $this->forward("syllabus/$courseSection->id/start", ['courseSection' => $courseSection]);
-                default:
-                    if ($this->hasPermission('admin'))
-                    {
-                        $this->forward("syllabus/$courseSection->id/start", ['courseSection' => $courseSection]);
-                    }
-                    $this->accessDenied('You do not have permission to download this syllabus.');
-                    break;
+                $this->response->redirect("files/$syllabus->file_id/download/syllabus");
             }
+            // switch ($type)
+            // {
+            //     case 'student':
+            //         $this->response->redirect("files/$syllabus->file_id/download/syllabus");
+            //     case 'instructor':
+            //         $this->forward("syllabus/$courseSection->id/start", ['courseSection' => $courseSection]);
+            //     default:
+            //         if ($this->hasPermission('admin'))
+            //         {
+            //             $this->forward("syllabus/$courseSection->id/start", ['courseSection' => $courseSection]);
+            //         }
+            //         $this->accessDenied('You do not have permission to download this syllabus.');
+            //         break;
+            // }
         }
 
         $this->setSyllabusTemplate();
