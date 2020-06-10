@@ -71,6 +71,7 @@ class Syllabus_AuthN_LoginErrorHandler extends Syllabus_Master_ErrorHandler
         $this->template->selectedProvider = $providerName;
         $request = $this->getApplication()->request;
         $returnTo = $request->getQueryParameter('returnTo', $request->getRequestedUri());
+        unset($_SESSION['ilearnReturnUrl']);
         if ($returnUrl = $request->getQueryParameter('returnUrl', ''))
         {
             $_SESSION['ilearnReturnUrl'] = $returnUrl;

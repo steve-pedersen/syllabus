@@ -51,13 +51,14 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         );
 
         $returnUrl = $this->request->getQueryParameter('returnUrl', '');
+
         if ($returnUrl === $this->baseUrl(''))
         {
             unset($_SESSION['ilearnReturnUrl']);
         }
-        elseif (!isset($_SESSION['ilearnReturnUrl']))
+        elseif ($returnUrl || !isset($_SESSION['ilearnReturnUrl']))
         {
-            $_SESSION['ilearnReturnUrl'] = $returnUrl;    
+            $_SESSION['ilearnReturnUrl'] = $returnUrl;
         }
         
         $this->forward("syllabus/$courseSection->id/start", [
