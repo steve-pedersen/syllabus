@@ -45,17 +45,21 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
     public function fromIlearn ()
     {
+        $this->requireLogin();
         $courseSection = $this->requireExists(
             $this->schema('Syllabus_ClassData_CourseSection')->get($this->getRouteVariable('courseid'))
         );
-        
+
         $returnUrl = $this->request->getQueryParameter('returnUrl', '');
         if ($returnUrl === $this->baseUrl(''))
         {
             unset($_SESSION['ilearnReturnUrl']);
         }
-        $_SESSION['ilearnReturnUrl'] = $returnUrl;
-
+        elseif (!isset($_SESSION['ilearnReturnUrl']))
+        {
+            $_SESSION['ilearnReturnUrl'] = $returnUrl;    
+        }
+        
         $this->forward("syllabus/$courseSection->id/start", [
             'courseSection' => $courseSection,
             'fromIlearn' => true
@@ -115,9 +119,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $this->accessDenied('You are not an instructor of this course.');
         }
 
-        if ($courseSection && $courseSection->syllabus && ($courseSection->syllabus->getShareLevel() === 'all') && $fromIlearn) 
+        if ($courseSection && $courseSection->syllabus && $fromIlearn && $ilearnReturnUrl &&
+            ($courseSection->syllabus->getShareLevel() === 'all')) 
         {
-            $this->response->redirect($_SESSION['ilearnReturnUrl']);
+            $this->response->redirect($ilearnReturnUrl);
         }
 
         if ($this->request->wasPostedByUser())
