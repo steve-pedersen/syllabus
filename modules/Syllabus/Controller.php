@@ -113,7 +113,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $cid = $this->getRouteVariable('courseid');
         $courseSection = $this->getRouteVariable('courseSection', $courses->get($cid));
         $fromIlearn = $this->getRouteVariable('fromIlearn', false);
-        $ilearnReturnUrl = $_SESSION['ilearnReturnUrl'];
+        $ilearnReturnUrl = isset($_SESSION['ilearnReturnUrl']) ? $_SESSION['ilearnReturnUrl'] : '';
         
         if (!$courseSection->isTaughtByUser($viewer) && !$this->hasPermission('admin'))
         {
