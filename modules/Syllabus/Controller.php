@@ -39,7 +39,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/:courseid/start'  => ['callback' => 'ilearnStart'],
             'syllabus/:courseid/upload' => ['callback' => 'uploadSyllabus'],
             'syllabus/:id/publish/:code'=> ['callback' => 'publishFromIlearn'],
-            'syllabus/:courseid/publishreturn'    => ['callback' => 'publishAndReturn'],
+            'syllabus/:courseid/publishreturn' => ['callback' => 'publishAndReturn'],
+            'syllabus/notfound' => ['callback' => 'syllabusNotFound'],
         ];
     }
 
@@ -1756,8 +1757,19 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     public function courseView ()
     {
         $courseid = $this->getRouteVariable('courseid');
-        $courseSection = $this->requireExists($this->schema('Syllabus_ClassData_CourseSection')->get($courseid));
-        $this->forward('syllabus/' . $courseSection->syllabus->id . '/view');
+        $courseSection = $this->schema('Syllabus_ClassData_CourseSection')->get($courseid);
+        if ($courseSection && $courseSection->syllabus)
+        {
+            $this->forward('syllabus/' . $courseSection->syllabus->id . '/view');
+        }
+        $this->forward('syllabus/notfound', [
+            'courseSection' => $courseSection
+        ]);
+    }
+
+    public function syllabusNotFound ()
+    {
+        $this->template->courseSection = $this->getRouteVariable('courseSection');
     }
 
     public function view ()
@@ -1767,7 +1779,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             $viewer = $this->requireLogin();
         }
-    
+        
         if ($syllabus->file)
         {
             list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
