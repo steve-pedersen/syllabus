@@ -31,6 +31,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/submissions'      => ['callback' => 'submissions'],
             'syllabus/submissions/:id'  => ['callback' => 'submissions', ':id' => '[0-9]+'],
             'syllabus/courses'          => ['callback' => 'courseLookup'],
+            'syllabus/outcomes'         => ['callback' => 'outcomesLookup'],
             'syllabus/start'            => ['callback' => 'start'],
             'syllabus/startwith/:id'    => ['callback' => 'startWith', ':id' => '[0-9]+'],
             'syllabus/migrate'          => ['callback' => 'migrate'],
@@ -1162,11 +1163,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         // ADD SECTION
         if (!$this->request->wasPostedByUser() && ($realSectionName = $this->request->getQueryParameter('add')))
         {
-            if ($realSectionName === 'learning_outcomes')
-            {
-                $this->flash('The Student Learning Outcomes section type is unavailable at this time.', 'danger');
-                $this->response->redirect('syllabus/' . $syllabus->id);
-            }
+            // if ($realSectionName === 'learning_outcomes')
+            // {
+            //     $this->flash('The Student Learning Outcomes section type is unavailable at this time.', 'danger');
+            //     $this->response->redirect('syllabus/' . $syllabus->id);
+            // }
             $realSectionExtension = $sectionVersions->createInstance()->getExtensionByName($realSectionName);
             $canHaveMultiple = true;
             if (!$realSectionExtension->canHaveMultiple())
@@ -1184,7 +1185,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             if ($canHaveMultiple && ($realSectionClass = $realSectionExtension->getRecordClass()))
             {
                 $realSection = $this->schema($realSectionClass)->createInstance();
-                if ($realSectionExtension::getExtensionName() === 'course')
+                if ($realSectionExtension::getExtensionName() === 'course' || $realSectionExtension::getExtensionName() === 'learning_outcomes')
                 {
                     $currentCourses = $viewer->classDataUser->getCurrentEnrollments();
                 }
@@ -1255,7 +1256,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             );
             $realSection = $sectionVersion->resolveSection();
             $realSectionExtension = $sectionVersion->getExtensionByRecord(get_class($realSection));
-            if ($realSectionExtension->getExtensionName() === 'course')
+            if ($realSectionExtension->getExtensionName() === 'course' || $realSectionExtension::getExtensionName() === 'learning_outcomes')
             {
                 $currentCourses = $viewer->classDataUser->getCurrentEnrollments();
             }
@@ -1969,7 +1970,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $anyChange = false;
         $sectionChange = false;
         $sectionDelete = false;
-
+        
         // echo "<pre>"; var_dump($data['section']['properties']); die;
         if ((isset($data['section']) && isset($data['section']['versionId'])))
         {
@@ -1980,7 +1981,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         	$postCommandData = $this->getPostCommandData();
         	$sectionVersionId = ($postCommandData && is_array($postCommandData)) ? key($postCommandData) : null;
         }
-
+        
         // save syllabus metadata
         if ($syllabus->inDataSource)
         {
@@ -2689,6 +2690,37 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             {
                 $results = [
                     'message' => 'No courses found.',
+                    'status' => 'error',
+                    'data' => ''
+                ];
+            }
+
+            echo json_encode($results);
+            exit;
+        }
+    }
+
+    public function outcomesLookup ()
+    {
+        $this->requireLogin();
+        if ($sectionId = $this->request->getQueryParameter('section'))
+        {
+            $service = new Syllabus_ClassData_Service($this->getApplication());
+            list($code, $data) = $service->getSectionOutcomes($sectionId);
+
+            if ($code === 200 && isset($data['outcomes']))
+            {
+                $results = [
+                    'message' => 'Outcomes found.',
+                    'status' => 'success',
+                    'data' => $data['outcomes']
+                ];
+                $results['data']['external_key'] = $sectionId;
+            }
+            else
+            {
+                $results = [
+                    'message' => 'No outcomes found for this course.',
                     'status' => 'error',
                     'data' => ''
                 ];

@@ -22,7 +22,9 @@ class Syllabus_LearningOutcomes_LearningOutcomes extends Bss_ActiveRecord_Base
             'header2' => 'string',
             'header3' => 'string',
             'additionalInformation' => ['string', 'nativeName' => 'additional_information'],
+            'externalKey' => ['string', 'nativeName' => 'external_key'],
 
+            'classDataCourseSection' => ['1:1', 'to' => 'Syllabus_ClassData_CourseSection', 'keyMap' => ['external_key' => 'id']],
             'learningOutcomes' => ['1:N', 'to' => 'Syllabus_LearningOutcomes_LearningOutcome', 'reverseOf' => 'parent', 'orderBy' => ['+sortOrder']],
         ];
     }
@@ -51,6 +53,7 @@ class Syllabus_LearningOutcomes_LearningOutcomes extends Bss_ActiveRecord_Base
             $this->header2 = isset($data['header2']) ? strip_tags(trim($data['header2'])) : '';
             $this->header3 = isset($data['header3']) ? strip_tags(trim($data['header3'])) : '';
             $this->additionalInformation = $htmlSanitizer->sanitize(trim($data['additionalInformation']));
+            $this->externalKey = isset($data['external_key']) ? $data['external_key'] : '';
             $this->save();
 
             unset($data['columns']);
@@ -71,9 +74,12 @@ class Syllabus_LearningOutcomes_LearningOutcomes extends Bss_ActiveRecord_Base
                     if ($save)
                     {
                         $obj->absorbData($learningOutcome);
-                        $obj->column1 = $htmlSanitizer->sanitize(trim($learningOutcome['column1']));
-                        $obj->column2 = $htmlSanitizer->sanitize(trim($learningOutcome['column2']));
-                        $obj->column3 = $htmlSanitizer->sanitize(trim($learningOutcome['column3']));
+                        $obj->column1 = isset($learningOutcome['column1']) ? 
+                            $htmlSanitizer->sanitize(trim($learningOutcome['column1'])) : '';
+                        $obj->column2 = isset($learningOutcome['column2']) ? 
+                            $htmlSanitizer->sanitize(trim($learningOutcome['column2'])) : '';
+                        $obj->column3 = isset($learningOutcome['column3']) ? 
+                            $htmlSanitizer->sanitize(trim($learningOutcome['column3'])) : '';
                         $obj->learning_outcomes_id = $this->id;
                         $obj->save();
                     }   

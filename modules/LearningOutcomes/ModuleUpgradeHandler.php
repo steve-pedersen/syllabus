@@ -33,6 +33,12 @@ class Syllabus_LearningOutcomes_ModuleUpgradeHandler extends Bss_ActiveRecord_Ba
                 $def->save();
                
                break;
+
+            case 1:
+                $def = $this->alterEntityType('syllabus_learning_outcomes', $this->getDataSource('Syllabus_LearningOutcomes_LearningOutcomes'));
+                $def->addProperty('external_key', 'string');
+                $def->save();
+                break;
         }
     }
 }

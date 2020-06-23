@@ -2,6 +2,14 @@
 <!-- LearningOutcomes Section - View -->
 <div class="col">
 {if $realSection->learningOutcomes}
+
+{if $realSection->columns == 1}
+<ul>
+	{foreach $realSection->learningOutcomes as $i => $learningOutcome}
+		<li>{$learningOutcome->column1|strip_tags}</li>
+	{/foreach}
+</ul>
+{else}
 <table class="table table-sm table-striped">
 	<thead class="thead-dark">
 		<tr>
@@ -20,6 +28,7 @@
 	{/foreach}
 	</tbody>
 </table>
+{/if}
 {/if}
 
 {if $realSection->additionalInformation}

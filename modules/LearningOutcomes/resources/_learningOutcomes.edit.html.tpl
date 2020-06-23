@@ -1,35 +1,57 @@
 <!-- LearningOutcomes Section -->
-<div class="card card-outline-secondary rounded-0">
+<div class="card card-outline-secondary rounded-0" id="learningOutcomesForm">
+    <input type="hidden" name="section[real][external_key]" value="{$realSection->externalKey}" id="courseExternalKey">
+    
+
     <div class="accordion" id="columnAccordion">
 <div class="card-body sort-container" id="learningOutcomesSection">
 
 
 <div class="form-group row px-3 mt-5">
-    <label class="col-lg-3 col-form-label form-control-label" for="section[real][columns]">Select 2 or 3 Column Table</label>
-    <div class="col-lg-9">
+    <label class="col-lg-3 col-form-label form-control-label" for="section[real][columns]">Choose Display Format</label>
+    <div class="col-lg-9 pt-2">
+        <div class="form-check form-check-inline columns1 px-3">
+            <input class="form-check-input" type="radio" name="section[real][columns]" id="columns1" value=1 {if $realSection->columns != 2 && $realSection->columns != 3}checked{/if}>
+            <label class="form-check-label" for="columns1">
+            Bullet List <small class="ml-1 text-muted">(autofill only)</small>
+            </label>
+        </div>
         <div class="form-check form-check-inline columns2 px-3" data-toggle="collapse" data-target="#collapseColumn" aria-expanded="false" aria-controls="collapseColumn">
-            <input class="form-check-input" type="radio" name="section[real][columns]" id="columns2" value=2 {if $realSection->columns != 3}checked{/if}>
+            <input class="form-check-input" type="radio" name="section[real][columns]" id="columns2" value=2 {if $realSection->columns == 2}checked{/if}>
             <label class="form-check-label" for="columns2">
-            Two Columns
+            Two Column Table
             </label>
         </div>
         <div class="form-check form-check-inline columns3 px-3" data-toggle="collapse" data-target="#collapseColumn" aria-expanded="false" aria-controls="collapseColumn">
             <input class="form-check-input" type="radio" name="section[real][columns]" id="columns3" value=3 {if $realSection->columns == 3}checked{/if}>
             <label class="form-check-label" for="columns3">
-            Three Columns
+            Three Column Table
             </label>
         </div>
     </div>
 </div>
 
+<div id="outcomesList">
+    <ul>
+        {foreach $realSection->learningOutcomes as $i => $learningOutcome}
+            {assign var=learningOutcomeId value="{$learningOutcome->id}"}
+            <li class="learning-outcome-li" id="li-{$learningOutcomeId}">
+                <input type="hidden" name="section[real][{$learningOutcomeId}][column1]" value="{$learningOutcome->column1}">
+                {$learningOutcome->column1|strip_tags}
+            </li>
+        {/foreach}        
+    </ul>
+</div>
+
+<div id="outcomesTable">
 
 <div class="form-group headers row px-3">
     <label class="form-control-label col-12" for="section[real][header]">Define Table Headers</label>
     <div class="col-lg-4 header1">
-        <input class="form-control" type="text" name="section[real][header1]" value="{$realSection->header1}">
+        <input class="form-control" type="text" name="section[real][header1]" value="{if $realSection->header1}{$realSection->header1}{else}Learning Outcomes{/if}">
     </div>
     <div class="col-lg-4 header2">
-        <input class="form-control" type="text" name="section[real][header2]" value="{$realSection->header2}">
+        <input class="form-control" type="text" name="section[real][header2]" value="{$realSection->header2}" placeholder="Relevant course work...">
     </div>
     <div class="col-lg-4 header3 collapse" id="collapseColumn" data-parent="#columnAccordion">
         <input class="form-control" type="text" name="section[real][header3]" value="{$realSection->header3}">
@@ -66,7 +88,7 @@
                 
                 <div class="form-group learning-outcome-row row px-2">
                     <div class="col-lg-4 column1">
-                        <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$learningOutcomeId}][column1]" placeholder="Column 1">{$learningOutcome->column1}</textarea>
+                        <textarea disabled rows="2" id="ckeditor-{$i}-1" class="form-control wysiwyg" name="section[real][{$learningOutcomeId}][column1]">{$learningOutcome->column1}</textarea>
                     </div>
                     <div class="col-lg-4 column2">
                         <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$learningOutcomeId}][column2]" placeholder="Column 2">{$learningOutcome->column2}</textarea>
@@ -115,7 +137,7 @@
         <label class="form-control-label px-2 row-label">Row #{$i + 1}</label>
         <div class="form-group learning-outcome-row row px-2">
             <div class="col-lg-4 column1">
-                <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$learningOutcomeId}][column1]" placeholder="Column 1"></textarea>
+                <textarea disabled rows="2" id="ckeditor-{$i}-1" class="form-control wysiwyg" name="section[real][{$learningOutcomeId}][column1]"></textarea>
             </div>
             <div class="col-lg-4 column2">
                 <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$learningOutcomeId}][column2]" placeholder="Column 2"></textarea>
@@ -128,7 +150,7 @@
         </div>
     </div>  
 
-
+</div>
             
 {if !$importableSections}
     <div class="form-group d-flex flex-row-reverse mt-4">

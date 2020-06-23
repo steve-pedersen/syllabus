@@ -52,22 +52,119 @@
 
     $('#learningOutcomesSection [name^="command[deletesectionitem]"]').on('click', function (e) {
       e.preventDefault();
+      $('#outcomesList').find('#li-' + $(this).attr('id')).detach();
       var container = $('#learningOutcomesSection').find('#learningOutcomeContainer' + $(this).attr('id'));
       container.css({"background-color": "#f8d7da"}).fadeTo(250, 0.1).slideUp(250, function () {
         container.detach();
       });
     });
 
-    if ($('#columns3').is(':checked')) {
+
+    var displayFormat = 'list';
+
+    var showTable = function () {
+      displayFormat = 'table';
+      $('#outcomesList').hide();
+      $('#outcomesTable').show();
+      $('#addSectionItemBtn').show();
+    }
+
+    var showList = function () {
+      displayFormat = 'list';
+      $('#outcomesList').show();
+      $('#outcomesTable').hide();
+      $('#addSectionItemBtn').hide();
+    }
+
+    var toggleAccordion = function () {
+      showTable();
+      var col2 = $('#columns2');
+      var col3 = $('#columns3');
+      
+      if (col2.is(':checked')) {
+        $('#learningOutcomesSection .collapse').each(function () {
+          $(this).removeClass('show');
+        })
+      } else if (col3.is(':checked')) {
+        $('#learningOutcomesSection .collapse').each(function () {
+          $(this).addClass('show');
+        })
+      }
+    };
+
+
+    var autofillLearningOutcomes = function (data) {
+      $('#outcomesLookupError').hide();
+      $('#outcomesLookupSuccess').show();
+      var sloForm = $('#learningOutcomesForm');
+      var addRowBtn = sloForm.find('#addSectionItemBtn');
+      var currentRows = $('.learning-outcome-row');
+      var outcomesList = $('#outcomesList ul');
+      var outcomesListItems = outcomesList.find('li');
+      var sectionId = data['external_key'];
+      delete data['external_key'];
+      sloForm.find('#courseExternalKey').val(sectionId);
+
+      for (let row in data) {
+        if (!currentRows[row]) {
+          addRowBtn.click();
+        }
+        let id = 'ckeditor-' + row + '-1';
+        CKEDITOR.instances[id].setData('<p>' + data[row] + '</p>');
+
+        if (!outcomesListItems[row]) {
+          let input = `<input type="hidden" name="section[real][new-${row}][column1]" value="${data[row]}">`;
+          let li = $(`<li class="learning-outcome-li" id="li-${row}"></li>`).text(data[row]).append(input);
+          outcomesList.append(li);
+        } else {
+          outcomesListItems[row].attr('id', `li-${row}`).text(data[row]);
+          outcomesListItems[row].find(`[name="section[real][${row}][column1]"]`).val(data[row]);
+          console.log('li id: ',outcomesListItems[row].attr('id'));
+        }
+      }
+    }
+
+    var clearLearningOutcomes = function () {
+      $('#outcomesLookupError').show();
+      $('#outcomesLookupSuccess').hide();
+      $('#learningOutcomesForm #courseExternalKey').val('');
+      var outcomesTableCells = $('#learningOutcomesForm .learning-outcome-row');
+      var outcomesListItems = $('#learningOutcomesForm #outcomesList li');
+
+      $.each(outcomesListItems, function (i, li) {
+        li.remove();
+      });
+
+      if (outcomesTableCells.length > 1) {
+        for (let row in outcomesTableCells) {
+          let id = 'ckeditor-' + row + '-1';
+          if (CKEDITOR.instances[id]) {
+            CKEDITOR.instances[id].setData('<p></p>');  
+          }
+        }     
+      } else {
+        $(outcomesTableCells[0]).find('.column1 textarea').text('');
+        // CKEDITOR.instances['ckeditor-0-1'].setData('<p></p>');
+      }
+    }
+
+    if ($('#columns1').is(':checked')) {
+      showList();
+    } else if ($('#columns2').is(':checked')) {
+      showTable();
       $('#learningOutcomesSection .collapse').each(function () {
         $(this).removeClass('show');
       })
-    } else if ($('#columns4').is(':checked')) {
+    } else if ($('#columns3').is(':checked')) {
+      showTable();
       $('#learningOutcomesSection .collapse').each(function () {
         $(this).addClass('show');
       })
     }
 
+    $('#columns1').on('click', function (e) {
+      showList();
+    });
     $('#columnAccordion').on('show.bs.collapse', function (e) {
       e.preventDefault();
       e.stopPropagation();
@@ -79,20 +176,30 @@
       toggleAccordion();
     });
 
-    var toggleAccordion = function () {
-      var col3 = $('#columns3');
-      var col4 = $('#columns4');
-      
-      if (col3.is(':checked')) {
-        $('#learningOutcomesSection .collapse').each(function () {
-          $(this).removeClass('show');
-        })
-      } else if (col4.is(':checked')) {
-        $('#learningOutcomesSection .collapse').each(function () {
-          $(this).addClass('show');
-        })
+
+    $('#courseSelectLookup').on('change', function (e) {
+      if ($(this).val() !== 'off') {
+        var apiUrl = $('base').attr('href') + 'syllabus/outcomes?section='+ $(this).val();
+
+        $.ajax(apiUrl, {
+          type: 'get',
+          dataType: 'json',
+          success: function (o) {
+            switch (o.status) {
+              case 'success':
+                autofillLearningOutcomes(o.data);
+                break;
+              case 'error':
+                clearLearningOutcomes();
+                break;
+              default:
+                console.log('unknown error');
+                break;
+            }
+          }
+        });       
       }
-    };
+    });
 
   });
 })(jQuery);

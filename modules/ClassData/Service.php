@@ -44,7 +44,23 @@ class Syllabus_ClassData_Service
         
         return $url . '&s=' . sha1($this->apiSecret . $url);
     }
+
+    public function getCourseOutcomes ($courseid)
+    {
+        $url = $this->signResource('outcomes', ['course' => $courseid]);
+        list($code, $data) = $this->request($url);
+
+        return [$code, $data];
+    }
     
+    public function getSectionOutcomes ($sectionid)
+    {
+        $url = $this->signResource('outcomes', ['section' => $sectionid]);
+        list($code, $data) = $this->request($url);
+        
+        return [$code, $data];
+    }
+
     // NOTE: This function doesn't seem to be working. The API freezes up
     public function getEnrollments ($semester, $role = null)
     {

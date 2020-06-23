@@ -38,11 +38,11 @@
 					<img src="{$ext->getLightIcon()}" class="img-fluid mr-1" style="max-height:1.5em;margin-bottom:1px;">
 						<span class="text-muted pr-1">{$ext->getDisplayName()}</span>
 					</button>
-				{elseif $ext->getExtensionKey() == 'learning_outcomes_id'}
-					<button class="px-2 mb-2 py-0 btn btn-outline-secondary" data-toggle="modal" data-target="#sloModal" form="">
+				{elseif $ext->getExtensionKey() == 'learning_outcomes_id NO LONGER DISABLED'}
+<!-- 					<button class="px-2 mb-2 py-0 btn btn-outline-secondary" data-toggle="modal" data-target="#sloModal" form="">
 					<img src="{$ext->getDarkIcon()}" class="img-fluid mr-1" style="max-height:1.5em;margin-bottom:1px;">
 						<span class="available pr-1">{$ext->getDisplayName()}</span>
-					</button>
+					</button> -->
 				{else}
 					<button class="px-2 mb-2 py-0 btn {if !$activeSection}btn-outline-secondary{else}btn-secondary text-white{/if}" type="submit" name="add" value="{$ext->getExtensionName()}" form="addSection">
 					<img src="{$ext->getDarkIcon()}" class="img-fluid mr-1" style="max-height:1.5em;margin-bottom:1px;">
