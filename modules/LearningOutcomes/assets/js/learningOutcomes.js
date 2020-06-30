@@ -156,6 +156,32 @@
       }
     }
 
+    var apiFetch = function (lookup) {
+      if ($(lookup).val() !== 'off') {
+        var apiUrl = $('base').attr('href') + 'syllabus/outcomes?section='+ $(lookup).val();
+
+        $.ajax(apiUrl, {
+          type: 'get',
+          dataType: 'json',
+          success: function (o) {
+            switch (o.status) {
+              case 'success':
+                autofillLearningOutcomes(o.data);
+                break;
+              case 'error':
+                clearLearningOutcomes();
+                break;
+              default:
+                console.log('unknown error');
+                break;
+            }
+          }
+        });       
+      } else {
+        clearLearningOutcomes(false);
+      }
+    }
+
     if ($('#columns1').is(':checked')) {
       showList();
     } else if ($('#columns2').is(':checked')) {
@@ -184,31 +210,21 @@
       toggleAccordion();
     });
 
+    if ($('#courseSelectLookup').val() !== 'off') {
+      if ($('#courseInfoDefault').val() === 'true') {
+        apiFetch($('#courseSelectLookup'));
+      }
+    }
 
     $('#courseSelectLookup').on('change', function (e) {
-      if ($(this).val() !== 'off') {
-        var apiUrl = $('base').attr('href') + 'syllabus/outcomes?section='+ $(this).val();
+      apiFetch(this);
+    });
 
-        $.ajax(apiUrl, {
-          type: 'get',
-          dataType: 'json',
-          success: function (o) {
-            switch (o.status) {
-              case 'success':
-                autofillLearningOutcomes(o.data);
-                break;
-              case 'error':
-                clearLearningOutcomes();
-                break;
-              default:
-                console.log('unknown error');
-                break;
-            }
-          }
-        });       
-      } else {
-        clearLearningOutcomes(false);
-      }
+    $('#refreshSLOs').on('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      apiFetch($('#courseSelectLookup'));
+      $('#updatedMessage').show(10).hide(3000);
     });
 
   });

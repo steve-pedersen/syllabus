@@ -1188,6 +1188,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 if ($realSectionExtension::getExtensionName() === 'course' || $realSectionExtension::getExtensionName() === 'learning_outcomes')
                 {
                     $currentCourses = $viewer->classDataUser->getCurrentEnrollments();
+                    if ($syllabusVersion->getCourseInfoSection() && $syllabusVersion->getCourseInfoSection()->resolveSection())
+                    {
+                        $this->template->courseInfoSelected = $syllabusVersion->getCourseInfoSection()->resolveSection();
+                    }
                 }
 
                 if ($realSectionClass === 'Syllabus_Instructors_Instructors')
@@ -1259,6 +1263,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             if ($realSectionExtension->getExtensionName() === 'course' || $realSectionExtension::getExtensionName() === 'learning_outcomes')
             {
                 $currentCourses = $viewer->classDataUser->getCurrentEnrollments();
+                if ($syllabusVersion->getCourseInfoSection() && $syllabusVersion->getCourseInfoSection()->resolveSection())
+                {
+                    $this->template->courseInfoSelected = $syllabusVersion->getCourseInfoSection()->resolveSection();
+                }
             }
             elseif (get_class($realSection) === 'Syllabus_Resources_Resources')
             {
