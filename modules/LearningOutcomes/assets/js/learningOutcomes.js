@@ -18,7 +18,7 @@
       var $textarea = $clone.find('.learning-outcome-row .column1').find('textarea');
       if ($textarea.attr('rows'))
       {
-        var rows = parseInt($textarea.attr('rows'));
+        var rows = parseInt($clone.find('.learning-outcome-row .column2').find('textarea').attr('rows'));
         rowSize = (rows * 2) + 'em';
       }
       var config = {
@@ -28,8 +28,8 @@
       };
 
       $textarea.attr('name',`section[real][new-${i}][column1]`).val('').text('').attr('id', `ckeditor-${i}-1`);
-      $textarea.next('.cke').remove();
-      $textarea.ckeditor(config);
+      // $textarea.next('.cke').remove();
+      // $textarea.ckeditor(config);
       
       $textarea = $clone.find('.learning-outcome-row .column2').find('textarea');
       $textarea.attr('name',`section[real][new-${i}][column2]`).val('').text('').attr('id', `ckeditor-${i}-2`);
@@ -110,23 +110,30 @@
           addRowBtn.click();
         }
         let id = 'ckeditor-' + row + '-1';
-        CKEDITOR.instances[id].setData('<p>' + data[row] + '</p>');
+        // CKEDITOR.instances[id].setData('<p>' + data[row] + '</p>');
+        $('#'+id).val(data[row]);
 
         if (!outcomesListItems[row]) {
           let input = `<input type="hidden" name="section[real][new-${row}][column1]" value="${data[row]}">`;
           let li = $(`<li class="learning-outcome-li" id="li-${row}"></li>`).text(data[row]).append(input);
+          // let li = $(`<li class="learning-outcome-li" id="li-${row}"></li>`).text(data[row]);
           outcomesList.append(li);
         } else {
-          outcomesListItems[row].attr('id', `li-${row}`).text(data[row]);
-          outcomesListItems[row].find(`[name="section[real][${row}][column1]"]`).val(data[row]);
-          console.log('li id: ',outcomesListItems[row].attr('id'));
+          $(outcomesListItems[row]).attr('id', `li-${row}`).text(data[row]);
+          // $(outcomesListItems[row]).find(`[name="section[real][${row}][column1]"]`).val(data[row]);
         }
       }
     }
 
-    var clearLearningOutcomes = function () {
-      $('#outcomesLookupError').show();
-      $('#outcomesLookupSuccess').hide();
+    var clearLearningOutcomes = function (courseSelected = true) {
+      if (courseSelected) {
+        $('#outcomesLookupError').show();
+        $('#outcomesLookupSuccess').hide();
+      } else {
+        $('#outcomesLookupError').hide();
+        $('#outcomesLookupSuccess').hide();        
+      }
+
       $('#learningOutcomesForm #courseExternalKey').val('');
       var outcomesTableCells = $('#learningOutcomesForm .learning-outcome-row');
       var outcomesListItems = $('#learningOutcomesForm #outcomesList li');
@@ -138,12 +145,13 @@
       if (outcomesTableCells.length > 1) {
         for (let row in outcomesTableCells) {
           let id = 'ckeditor-' + row + '-1';
-          if (CKEDITOR.instances[id]) {
-            CKEDITOR.instances[id].setData('<p></p>');  
-          }
+          $('#'+id).val('').text('');
+          // if (CKEDITOR.instances[id]) {
+          //   CKEDITOR.instances[id].setData('<p></p>');  
+          // }
         }     
       } else {
-        $(outcomesTableCells[0]).find('.column1 textarea').text('');
+        $(outcomesTableCells[0]).find('.column1 textarea').text('').val('');
         // CKEDITOR.instances['ckeditor-0-1'].setData('<p></p>');
       }
     }
@@ -198,6 +206,8 @@
             }
           }
         });       
+      } else {
+        clearLearningOutcomes(false);
       }
     });
 

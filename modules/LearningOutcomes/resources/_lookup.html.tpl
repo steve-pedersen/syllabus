@@ -9,11 +9,12 @@
             </option>
         {/foreach}
     </select>
-	<span style="display:none;" id="outcomesLookupError" class="text-danger">
-		No Student Learning Outcomes were found for this course.
+	<span style="display:none;" id="outcomesLookupError">
+		<span class="text-danger">No Student Learning Outcomes were found for this course.</span><br>
+        <span>You may update the official SLOs for this course by <a href="#">following this link</a>. Once approved they will be available for import into your syllabus.</span>
 	</span>  
 	<span style="display:none;" id="outcomesLookupSuccess" class="text-success">
-		Success! The Student Learning Outcomes have been filled in below.
+		The Student Learning Outcomes have been filled in below.
 	</span>  
 </div>   
 {/if}

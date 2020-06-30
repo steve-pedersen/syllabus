@@ -7,7 +7,7 @@
 <div class="card-body sort-container" id="learningOutcomesSection">
 
 
-<div class="form-group row px-3 mt-5">
+<div class="form-group row px-3 mt-2">
     <label class="col-lg-3 col-form-label form-control-label" for="section[real][columns]">Choose Display Format</label>
     <div class="col-lg-9 pt-2">
         <div class="form-check form-check-inline columns1 px-3">
@@ -31,7 +31,9 @@
     </div>
 </div>
 
-<div id="outcomesList">
+<div class="row form-group px-3 mt-3" id="outcomesList">
+    <label class="col-lg-3 col-form-label form-control-label">Learning Outcomes</label>
+    <div class="col-lg-9">
     <ul>
         {foreach $realSection->learningOutcomes as $i => $learningOutcome}
             {assign var=learningOutcomeId value="{$learningOutcome->id}"}
@@ -41,6 +43,7 @@
             </li>
         {/foreach}        
     </ul>
+    </div>
 </div>
 
 <div id="outcomesTable">
@@ -88,7 +91,7 @@
                 
                 <div class="form-group learning-outcome-row row px-2">
                     <div class="col-lg-4 column1">
-                        <textarea disabled rows="2" id="ckeditor-{$i}-1" class="form-control wysiwyg" name="section[real][{$learningOutcomeId}][column1]">{$learningOutcome->column1}</textarea>
+                        <textarea disabled rows="3" id="ckeditor-{$i}-1" class="form-control" name="section[real][{$learningOutcomeId}][column1]">{$learningOutcome->column1}</textarea>
                     </div>
                     <div class="col-lg-4 column2">
                         <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$learningOutcomeId}][column2]" placeholder="Column 2">{$learningOutcome->column2}</textarea>
@@ -137,7 +140,7 @@
         <label class="form-control-label px-2 row-label">Row #{$i + 1}</label>
         <div class="form-group learning-outcome-row row px-2">
             <div class="col-lg-4 column1">
-                <textarea disabled rows="2" id="ckeditor-{$i}-1" class="form-control wysiwyg" name="section[real][{$learningOutcomeId}][column1]"></textarea>
+                <textarea disabled rows="3" id="ckeditor-{$i}-1" class="form-control" name="section[real][{$learningOutcomeId}][column1]"></textarea>
             </div>
             <div class="col-lg-4 column2">
                 <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$learningOutcomeId}][column2]" placeholder="Column 2"></textarea>
