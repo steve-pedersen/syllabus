@@ -637,8 +637,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
     public function start ()
     {
-        // echo "<pre>"; var_dump('k'); die;
-        
         $viewer = $this->requireLogin();
         $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
         $courseSections = $this->schema('Syllabus_ClassData_CourseSection');
@@ -840,9 +838,13 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $viewer = $this->requireLogin();
         if (!$fromSyllabus)
         {
-            $fromSyllabus = $this->requireExists(
-                $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id')
-            );
+        	$id = $this->getRouteVariable('id');
+        	if (!($fromSyllabus = $this->schema('Syllabus_Syllabus_Syllabus')->get($id)))
+        	{
+        		$course = $this->schema('Syllabus_ClassData_CourseSection')->get($id);
+        		$fromSyllabus = $course ? $course->syllabus : null;
+        	}
+            $this->requireExists($fromSyllabus);
         }
         
         if (!$baseTemplate && !$this->hasSyllabusPermission($fromSyllabus, $viewer, 'clone'))
