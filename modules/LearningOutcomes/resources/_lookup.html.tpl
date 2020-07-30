@@ -31,7 +31,7 @@
 	
     <span style="display:none;" id="outcomesLookupError">
 		<span class="text-danger">No Student Learning Outcomes were found for this course.</span><br>
-        <span>You may update the official SLOs for this course by <a href="#">following this link</a>. Once approved they will be available for import into your syllabus.</span>
+        <!-- <span>You may update the official SLOs for this course by <a href="#">following this link</a>. Once approved they will be available for import into your syllabus.</span> -->
 	</span>  
 	<span style="display:none;" id="outcomesLookupSuccess" class="text-success">
 		The Student Learning Outcomes have been filled in below.
