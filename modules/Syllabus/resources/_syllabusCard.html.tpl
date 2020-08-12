@@ -55,11 +55,17 @@
 					<a href="{$routeBase}syllabus/{$syllabus->id}" class="btn btn-info">
 						Edit
 					</a>
-					<a href="{$routeBase}syllabus/{$syllabus->id}/view" class="btn btn-dark">
-						View
-					</a>
+						{if $syllabus->courseSection}
+							<a href="{$routeBase}syllabus/{$syllabus->courseSection->id}/view" class="btn btn-dark">
+								View
+							</a>
+						{else}
+							<a href="{$routeBase}syllabus/{$syllabus->id}/view" class="btn btn-dark">
+								View
+							</a>
+						{/if}
 					{else}
-					<a href="{$routeBase}syllabus/{$syllabus->courseSection->id}/start" class="btn btn-info">
+					<a href="{$routeBase}syllabus/{$syllabus->courseSection->id}/upload" class="btn btn-info">
 						Edit
 					</a>
 					<a href="{$routeBase}syllabus/{$syllabus->id}/delete" class="btn btn-danger">

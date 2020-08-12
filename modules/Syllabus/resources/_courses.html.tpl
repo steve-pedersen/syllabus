@@ -18,7 +18,7 @@
 			{assign var=syllabus value=$courseSection->courseSyllabus}
 			{assign var=submission value=$courseSection->submission}
 
-			<tr class="{if $focus == $courseSection->id}table-info{/if}">
+			<tr class="">
 				<td class="align-middle" style="width:35%;">
 					<div class="p-3">
 					{if $courseSection->classNumber}<h2 class="">{$courseSection->classNumber}</h2>{/if}
@@ -41,7 +41,11 @@
 				<td style="">
 				{if $syllabus}
 					<p class="border-bottom pb-2">
-						<strong>{$syllabus->title}</strong>
+						<strong>{$syllabus->title}
+							{if $focus == $courseSection->id}
+								<i class="fas fa-arrow-left fa-2x ml-2 text-success"></i>
+							{/if}
+						</strong>
 					</p>
 					<div class="col">
 						<div class="media">
@@ -57,12 +61,12 @@
 								</div>
 								<div class="col-xl-6 col-lg-6 col-md-5 col-sm-4 col-xs-10 d-block">
 									{if $syllabus->file}
-									<a style="max-width:200px;" href="syllabus/{$syllabus->courseSection->id}/start" class="my-3 btn btn-info d-block align-bottom">
+									<a style="max-width:200px;" href="syllabus/{$syllabus->courseSection->id}/upload" class="my-3 btn btn-info d-block align-bottom">
 										<span class="float-left"><i class="fas fa-edit"></i></span>
 										Edit
 									</a>
 									{else}
-									<a style="max-width:200px;" class="btn btn-dark d-block align-top mt-3" href="syllabus/{$syllabus->id}/view">
+									<a style="max-width:200px;" class="btn btn-dark d-block align-top mt-3" href="syllabus/{$courseSection->id}/view">
 										<span class="float-left"><i class="fas fa-eye"></i></span>
 										View
 									</a>
@@ -133,6 +137,14 @@
 							</div>
 						</div>
 						{/if}
+					</div>
+					<div class="pt-3">
+						<div class="float-right">
+							<a href="syllabus/{$courseSection->id}/upload">
+								<i class="fas fa-file-upload mr-2"></i>
+								Upload a file syllabus instead
+							</a>
+						</div>
 					</div>
 					{generate_form_post_key}
 				</form>

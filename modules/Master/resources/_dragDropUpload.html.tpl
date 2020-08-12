@@ -11,6 +11,7 @@
         <button class="box__button btn btn-primary" type="submit">Upload</button>
         </div>
         <input name="uploadedFile" id="uploadedFile" type="hidden" value="{$fid}">
+        <input name="sid" id="sid" type="hidden" value="{$sid}">
         <div class="box__uploading">Uploading and scanning for viruses&hellip;
             <!-- <img src="assets/images/progressbar.gif" class="img-fluid"> -->
 <div class="progress w-100" id="uploadProgress">
@@ -18,11 +19,19 @@
 </div>
         </div>
         <div class="box__success">Upload successful! </div>
+        {if $publishAction}
         <div id="publishAndReturn" style="display:none;">
             <button type="submit" class="btn btn-info" form="publishAndReturnForm">
                 Publish & Return to iLearn
             </button>
         </div>
+        {else}
+        <div id="returnToCourses" style="display:none;">
+            <a href="syllabi?mode=courses&f={$courseSection->id}" class="btn btn-info">
+                Return to Courses
+            </a>
+        </div>        
+        {/if}
         <div class="box__error">Error! <span></span>. </div>
         <!-- <div class="box__restart"><button class="btn btn-link font-w800">Try Again</button></div> -->
         {generate_form_post_key}

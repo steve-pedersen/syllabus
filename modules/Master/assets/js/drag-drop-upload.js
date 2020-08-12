@@ -30,12 +30,22 @@ $(function() {
 	    		if ($('#uploadedSyllabusFile').length) {
 	    			$('#uploadedSyllabusFile').attr('href', result.fileSrc);
 	    			$('#uploadedSyllabusFile').text(result.fileName);
-	    			$('#deleteUpload > a').attr('href', 
-	    				`syllabus/${result.sid}/delete?return=syllabus/${result.cid}/ilearn`
-    				);
+    				if ($('#publishAndReturn').length) {
+    					$('#publishAndReturn').show();
+		    			$('#deleteUpload > a').attr('href', 
+		    				`syllabus/${result.sid}/delete?return=syllabus/${result.cid}/ilearn`
+	    				);
+    				} else {
+    					console.log('return to courses...');
+    					$('#returnToCourses').show();
+		    			$('#deleteUpload > a').attr('href', 
+		    				`syllabus/${result.sid}/delete?return=syllabus/${result.cid}/upload`
+	    				);
+    				}
 	    			$('#deleteUpload').show();
-	    			$('#publishAndReturn').show();
+	    			
 	    			$('#uploadedFile').attr('value', result.fid);
+	    			$('#sid').attr('value', result.sid);
 	    		}
 	    		$('.box__uploading').hide();
 	   //  	} else if (result.status == 422) {

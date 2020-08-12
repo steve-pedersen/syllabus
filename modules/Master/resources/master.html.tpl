@@ -89,11 +89,6 @@
 								<span class="sidebar-text">Submissions</span>
 							</a>
 						</li> -->
-						<li class="{if $page == 'migrate'}active{/if}">
-							<a class="sub-link" href="syllabus/migrate">
-								<span class="sidebar-text">Migrate</span>
-							</a>
-						</li>
 						{if !$privilegedOrganizations['departments'] && !empty($privilegedOrganizations['groups']) && !$pAdmin}
 						{assign var=groups value=$privilegedOrganizations['groups']}
 						{assign var=addedAsSubLink value=true}

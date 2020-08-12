@@ -115,13 +115,20 @@
 			{/if}				
 			</div>
 
-		{if true || !$courseSection->syllabus->file}
+
 			<p>
 				Drag and drop or click "Choose File" to begin uploading your syllabus document. <strong>Allowed file types are:
 				docx, doc, or pdf.</strong>
 			</p>
-			{include file="{$ctrl->getDragDropUploadFragment()}" action="syllabus/{$courseSection->id}/upload?c={$courseSection->id}" singleFile=true uploadedBy={$viewer->id} publishAction="syllabus/{$courseSection->id}/publishreturn" fid={$courseSection->syllabus->file->id}}
-		{/if}
+			{include 
+				file="{$ctrl->getDragDropUploadFragment()}" action="syllabus/{$courseSection->id}/upload?c={$courseSection->id}" 
+				singleFile=true 
+				uploadedBy={$viewer->id} 
+				publishAction="syllabus/{$courseSection->id}/publishreturn" 
+				fid={$courseSection->syllabus->file->id}
+				sid={$courseSection->syllabus->id}
+			}
+
 		</div>
 	</div>   
 </div>

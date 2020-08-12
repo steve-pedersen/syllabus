@@ -16,18 +16,18 @@
 </div>
 
 {if $welcomeTextBottomColumn1 || $welcomeTextBottomColumn2}
-<div class="container-fluid mt-4 p-xl-5 p-lg-4 p-3 bg-context light" style="background-color:#f4f6f9;">
+<div id="welcomeTextBottom" class="container-fluid mt-4 p-xl-5 p-lg-4 p-3 bg-context light" style="background-color:#f4f6f9;">
 	<!-- <div class="container"> -->
 		<div class="row">
 			{if $welcomeTextBottomColumn1}
-			<div class="{if $welcomeTextBottomColumn2}col-md-6 border-right{else}col-12{/if}">
+			<div class="{if $welcomeTextBottomColumn2}col-sm-6 border-right{else}col-12{/if}">
 				<div class="container welcome-text-bottom-column-1" id="welcome-text-bottom-column-1">
 					{$welcomeTextBottomColumn1}
 				</div>
 			</div>
 			{/if}
 			{if $welcomeTextBottomColumn2}
-			<div class="col-md-6">
+			<div class="col-sm-6">
 				<div class="container welcome-text-bottom-column-2" id="welcome-text-bottom-column-2">
 					{$welcomeTextBottomColumn2}		
 				</div>

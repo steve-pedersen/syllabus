@@ -21,7 +21,9 @@
         {if $syllabus->file}
             <div class="col">
                 <p class="">
-                    Syllabus File: <a href="files/{$syllabus->file->id}/download">{$syllabus->file->remoteName}</a>
+                    <strong>You will be unsharing your syllabus and students will no longer be able to access it.</strong><br>
+                    Syllabus File: <a href="files/{$syllabus->file->id}/download">{$syllabus->file->remoteName}</a><br>
+                    Course: {$syllabus->courseSection->getFullSummary()}
                 </p>
             </div>
         {else}
