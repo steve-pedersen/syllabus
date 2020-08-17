@@ -729,7 +729,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $orgs = [];
         $templates = [];
         list($orgs, $templates) = $viewer->classDataUser->getDepartmentsAndTemplates($this);
-        $templatesAvailable = $templatesAvailable || !empty(array_shift($templates));
+        $temp = $templates;
+        $templatesAvailable = $templatesAvailable || !empty(array_shift($temp));
         $this->template->organizations = $orgs;
         $this->template->templates = $templates;
 
