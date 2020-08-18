@@ -45,7 +45,8 @@ abstract class Syllabus_Syllabus_SectionExtension extends Bss_Core_NamedExtensio
     {
         $importables = $this->getApplication()->schemaManager->getSchema('Syllabus_Syllabus_ImportableSection');
         return $importables->find(
-            $importables->externalKey->equals($this->getExtensionKey())->andIf($importables->importable->isTrue())
+            $importables->externalKey->equals($this->getExtensionKey())->andIf($importables->importable->isTrue()),
+            ['orderBy' => '-createdDate']
         );
     }
 
