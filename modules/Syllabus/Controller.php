@@ -1824,17 +1824,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             $viewer = $this->requireLogin();
         }
-
-        if (($syllabus->createdById !== $viewer->id) && !$this->hasPermission('admin'))
-        {
-            $courseSection = $syllabus->getCourseSection();
-            $newLog = $this->schema('Syllabus_Syllabus_AccessLog')->createInstance();
-            $newLog->accountId = $viewer->id;
-            $newLog->courseSectionId = $courseSection ? $courseSection->id : null;
-            $newLog->syllabusId = $syllabus->id;
-            $newLog->accessDate = new DateTime;
-            $newLog->save();
-        }
         
         if ($syllabus->file)
         {
@@ -1938,6 +1927,19 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $this->template->shareLevel = $syllabus->getShareLevel();
             $syllabus->viewUrl = $this->baseUrl($viewUrl);
         }
+   
+
+        if (($syllabus->createdById !== $viewer->id) && !$this->hasPermission('admin'))
+        {
+            $courseSection = $syllabus->getCourseSection();
+            $newLog = $this->schema('Syllabus_Syllabus_AccessLog')->createInstance();
+            $newLog->accountId = $viewer->id;
+            $newLog->courseSectionId = $courseSection ? $courseSection->id : null;
+            $newLog->syllabusId = $syllabus->id;
+            $newLog->accessDate = new DateTime;
+            $newLog->save();
+        }
+
         
         $this->template->token = $token;
         $this->template->returnTo = $viewUrl;
