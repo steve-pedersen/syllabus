@@ -1817,6 +1817,21 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->courseSection = $this->getRouteVariable('courseSection');
     }
 
+    protected function saveAccessLog ($viewer, $syllabus)
+    {
+
+        if (($syllabus->createdById !== $viewer->id) && !$this->hasPermission('admin'))
+        {
+            $courseSection = $syllabus->getCourseSection();
+            $newLog = $this->schema('Syllabus_Syllabus_AccessLog')->createInstance();
+            $newLog->accountId = $viewer->id;
+            $newLog->courseSectionId = $courseSection ? $courseSection->id : null;
+            $newLog->syllabusId = $syllabus->id;
+            $newLog->accessDate = new DateTime;
+            $newLog->save();
+        }
+    }
+
     public function view ()
     { 
     	$syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id', ['allowNew' => false]);
@@ -1831,6 +1846,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             // if teacher, send to upload. if student, send to download
             if ($this->hasPermission('admin') || $type === 'student' || $type === 'instructor')
             {
+                $this->saveAccessLog($viewer, $syllabus);
                 $this->response->redirect("files/$syllabus->file_id/download/syllabus");
             }
             // switch ($type)
@@ -1927,20 +1943,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $this->template->shareLevel = $syllabus->getShareLevel();
             $syllabus->viewUrl = $this->baseUrl($viewUrl);
         }
-   
 
-        if (($syllabus->createdById !== $viewer->id) && !$this->hasPermission('admin'))
-        {
-            $courseSection = $syllabus->getCourseSection();
-            $newLog = $this->schema('Syllabus_Syllabus_AccessLog')->createInstance();
-            $newLog->accountId = $viewer->id;
-            $newLog->courseSectionId = $courseSection ? $courseSection->id : null;
-            $newLog->syllabusId = $syllabus->id;
-            $newLog->accessDate = new DateTime;
-            $newLog->save();
-        }
+        $this->saveAccessLog($viewer, $syllabus);
 
-        
         $this->template->token = $token;
         $this->template->returnTo = $viewUrl;
         $this->template->editable = $editable;
