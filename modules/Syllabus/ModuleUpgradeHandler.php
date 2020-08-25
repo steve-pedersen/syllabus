@@ -218,7 +218,17 @@ class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                 $def->addProperty('file_id', 'int');
                 $def->addProperty('course_section_id', 'string');
                 $def->save();
-                break;               
+                break;     
+
+            case 8:
+                $def = $this->createEntityType('syllabus_access_logs', $this->getDataSource('Syllabus_Syllabus_AccessLog'));
+                $def->addProperty('id', 'int', ['primaryKey' => true, 'sequence' => true]);
+                $def->addProperty('course_section_id', 'string');
+                $def->addProperty('syllabus_id', 'int');
+                $def->addProperty('account_id', 'int');
+                $def->addProperty('access_date', 'datetime');
+                $def->save();
+                break;   
 
         }
     }
