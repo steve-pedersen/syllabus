@@ -1860,7 +1860,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $editable = false;
         if (!$token)
         {
-            if (($syllabus->createdById === $viewer->id) || $this->hasPermission('admin'))
+            if (($syllabus->createdById === $viewer->id) || $this->hasSyllabusPermission($syllabus, $viewer, 'edit') || $this->hasPermission('admin'))
             {
                 $editable = true;
             }            
@@ -1893,7 +1893,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         	// check if this syllabus is from a combined course
         	$resolvedSyllabus = $this->resolveCombinedCourseSyllabus($syllabus);
 
-            if ($resolvedSyllabus === null && $syllabus->createdById !== $viewer->id)
+            if ($resolvedSyllabus === null && $syllabus->createdById !== $viewer->id && !$this->hasSyllabusPermission($syllabus, $viewer, 'edit'))
             {
                 $this->requirePermission('admin');
             }
