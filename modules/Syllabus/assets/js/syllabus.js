@@ -1,6 +1,14 @@
 (function ($) {
   $(function () {
 
+	$("div[id^=statistics]").on('shown.bs.collapse', function() {
+		$("#collapseIcon").addClass('fa-minus-square').removeClass('fa-plus-square');
+	});
+
+	$("div[id^=statistics]").on('hidden.bs.collapse', function() {
+		$("#collapseIcon").addClass('fa-plus-square').removeClass('fa-minus-square');
+	});
+
   	// auto-scroll down to section being edited
 	if ($('#editUri').length) {
 		var uri = $('#editUri').val();

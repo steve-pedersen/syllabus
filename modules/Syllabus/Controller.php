@@ -36,6 +36,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/startwith/:id'    => ['callback' => 'startWith', ':id' => '[0-9]+'],
             'syllabus/migrate'          => ['callback' => 'migrate'],
             'syllabus/autocomplete'     => ['callback' => 'autocompleteAccounts'],
+            'syllabus/:courseid/logs'    => ['callback' => 'logs'],
             'syllabus/:courseid/ilearn' => ['callback' => 'fromIlearn'],
             'syllabus/:courseid/start'  => ['callback' => 'ilearnStart'],
             'syllabus/:courseid/upload' => ['callback' => 'uploadSyllabus'],
@@ -43,6 +44,55 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/:courseid/publishreturn' => ['callback' => 'publishAndReturn'],
             'syllabus/notfound' => ['callback' => 'syllabusNotFound'],
         ];
+    }
+
+    public function logs ()
+    {
+        $viewer = $this->requireLogin();
+        $courseSection = $this->requireExists(
+            $this->schema('Syllabus_ClassData_CourseSection')->get($this->getRouteVariable('courseid'))
+        );
+        $syllabus = $courseSection->syllabus;
+
+        if (($syllabus->createdById !== $viewer->id) && !$this->hasSyllabusPermission($syllabus, $viewer, 'edit') && !$this->hasPermission('admin'))
+        {
+            $this->accessDenied('You are not an instructor of this course.');
+        }
+
+        $this->addBreadcrumb('syllabi?mode=courses', 'My Courses');
+        $this->addBreadcrumb('syllabus/'.$courseSection->id.'/logs/', 'Logs');
+        $logs = $this->schema('Syllabus_Syllabus_AccessLog');
+        $courseLogs = $logs->find(
+            $logs->courseSectionId->equals($courseSection->id), ['orderBy' => ['accountId', '+accessDate']]
+        );
+
+        $logs = [];
+        $users = [];
+        foreach ($courseLogs as $log)
+        {
+            $log->user->lastAccessDate = $log->accessDate;
+            $users[$log->user->lastName . $log->user->username] = $log->user;
+            $logs[$log->user->lastName . $log->user->username][] = $log;
+        }
+        ksort($logs);
+
+        $nonViewUsers = [];
+        foreach ($courseSection->enrollments as $user)
+        {
+            if ($courseSection->enrollments->getProperty($user, 'role') !== 'instructor')
+            {
+                if (!isset($users[$user->lastName . $user->id]))
+                {
+                    $nonViewUsers[$user->lastName . $user->id] = $user;
+                }
+            }
+        }
+        ksort($nonViewUsers);
+
+        $this->template->courseSection = $courseSection;
+        $this->template->logs = $logs;
+        $this->template->users = $users;
+        $this->template->nonViewUsers = $nonViewUsers;
     }
 
     public function fromIlearn ()
@@ -464,6 +514,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 {
                     $this->response->redirect('syllabi');
                 }
+                $logs = $this->schema('Syllabus_Syllabus_AccessLog');
                 $myCourses = $viewer->classDataUser->getRecentAndCurrentEnrollments();
                 $courses = [];
                 foreach ($myCourses as $i => $courseSection)
@@ -485,6 +536,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                             }                              
                         }
                     }
+                    $courseSection->logs = $logs->find(
+                        $logs->courseSectionId->equals($courseSection->id), ['orderBy' => ['accountId', '+accessDate']]
+                    );
                     $courseSection->courseSyllabus = $courseSyllabus;
                     $courseSection->createNew = $courseSyllabus ? false : true;
                     $courseSection->pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer);
@@ -1820,11 +1874,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     protected function saveAccessLog ($viewer, $syllabus)
     {
 
-        if (($syllabus->createdById !== $viewer->id) && !$this->hasPermission('admin'))
+        if ((!$viewer || $syllabus->createdById !== $viewer->id) && !$this->hasPermission('admin'))
         {
             $courseSection = $syllabus->getCourseSection();
             $newLog = $this->schema('Syllabus_Syllabus_AccessLog')->createInstance();
-            $newLog->accountId = $viewer->id;
+            $newLog->accountId = $viewer ? $viewer->id : null;
             $newLog->courseSectionId = $courseSection ? $courseSection->id : null;
             $newLog->syllabusId = $syllabus->id;
             $newLog->accessDate = new DateTime;
@@ -1835,9 +1889,14 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     public function view ()
     { 
     	$syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id', ['allowNew' => false]);
+        // $viewer = null;
         if (!($token = $this->request->getQueryParameter('token')) || !$syllabus->token)
         {
             $viewer = $this->requireLogin();
+        }
+        else
+        {
+            $viewer = $this->getAccount() ?? null;
         }
         
         if ($syllabus->file)
@@ -2937,13 +2996,14 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         if ($courseSection && $courseSection->enrollments->has($viewer->classDataUser))
         {
-            $type = 'instructor';
-            $roles = $this->schema('Syllabus_AuthN_Role');
-            $studentRole = $roles->findOne($roles->name->equals('Student'));
-            if ($viewer->roles->has($studentRole))
-            {
-                $type = 'student';
-            }                    
+            $type = $courseSection->enrollments->getProperty($viewer->classDataUser, 'role');
+            // $type = 'instructor';
+            // $roles = $this->schema('Syllabus_AuthN_Role');
+            // $studentRole = $roles->findOne($roles->name->equals('Student'));
+            // if ($viewer->roles->has($studentRole))
+            // {
+            //     $type = 'student';
+            // }                    
         }
 
         return [$type, $courseSection];

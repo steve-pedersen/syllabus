@@ -83,6 +83,13 @@
 									</span>
 									{/if}
 								</div>
+
+								<div class="col-12 pt-2">
+									<a class="float-right" href="syllabus/{$courseSection->id}/logs">
+										<i class="fas fa-chart-bar mr-2"></i>
+										View access logs
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>
