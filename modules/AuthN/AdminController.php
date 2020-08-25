@@ -94,12 +94,49 @@ class Syllabus_AuthN_AdminController extends Syllabus_Master_Controller
         if (!empty($searchQuery))
         {
             $pattern = '%' . strtolower($searchQuery) . '%';
-            $condition = 
-                $accounts->firstName->lower()->like($pattern)->orIf(
-                    $accounts->lastName->lower()->like($pattern),
-                    $accounts->middleName->lower()->like($pattern),
-                    $accounts->emailAddress->lower()->like($pattern)
+            if (strpos($pattern, ' ') !== false)
+            {
+                $patternParts = explode(' ', $pattern);
+
+                $condition = 
+                    $accounts->firstName->lower()->like($patternParts[0])->orIf(
+                        $accounts->lastName->lower()->like($patternParts[0]),
+                        $accounts->middleName->lower()->like($patternParts[0]),
+                        $accounts->emailAddress->lower()->like($patternParts[0]),
+                        $accounts->username->lower()->like($patternParts[0])
+                    );
+                $condition = $condition->andIf(
+                    $accounts->firstName->lower()->like($patternParts[1])->orIf(
+                        $accounts->lastName->lower()->like($patternParts[1]),
+                        $accounts->middleName->lower()->like($patternParts[1]),
+                        $accounts->emailAddress->lower()->like($patternParts[1]),
+                        $accounts->username->lower()->like($patternParts[1])
+                    )
                 );
+                if (count($patternParts) > 2)
+                {
+                    $condition = $condition->andIf(
+                        $accounts->firstName->lower()->like($patternParts[2])->orIf(
+                            $accounts->lastName->lower()->like($patternParts[2]),
+                            $accounts->middleName->lower()->like($patternParts[2]),
+                            $accounts->emailAddress->lower()->like($patternParts[2]),
+                            $accounts->username->lower()->like($patternParts[2])
+                        )
+                    );                    
+                }
+            }
+            else
+            {
+                $condition = 
+                    $accounts->firstName->lower()->like($pattern)->orIf(
+                        $accounts->lastName->lower()->like($pattern),
+                        $accounts->middleName->lower()->like($pattern),
+                        $accounts->emailAddress->lower()->like($pattern),
+                        $accounts->username->lower()->like($pattern)
+                    );
+            }
+            // $pattern = str_replace(' ', '%', $pattern);
+
         }
         
         $totalAccounts = $accounts->count($condition);
