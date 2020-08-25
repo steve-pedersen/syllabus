@@ -6,7 +6,7 @@
         {include file=$section.template}
     {else}
     <div class="row mb-4">
-        <div class="col card">
+        <div class="col card px-0">
             <h2 class="card-header">{$section.name|escape}</h2>
             <ul class="list-group list-group-flush">
             {foreach item="item" from=$section.itemList}
