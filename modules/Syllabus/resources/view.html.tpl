@@ -79,11 +79,17 @@
 				<span class="text-muted mx-2 d-inline-block">
 					<small>Last updated: {$syllabus->modifiedDate->format('F jS, Y - h:i a')}</small>
 				</span>
+				{assign var=tokenParams value=''}
+				{if $token}
+					{assign var=tokenParams value="?token=$token"}
+				{elseif $tempLink}
+					{assign var=tokenParams value="?temp=true"}
+				{/if}
 				<span class="d-inline-block">
-					<a href="{$routeBase}syllabus/{$syllabus->id}/print{if $token}?token={$token}{/if}"><i class="fas fa-print"></i> Print</a>
+					<a href="{$routeBase}syllabus/{$syllabus->id}/print{$tokenParams}"><i class="fas fa-print"></i> Print</a>
 				</span>
 				<span class="ml-3 d-inline-block">
-					<a href="{$routeBase}syllabus/{$syllabus->id}/word{if $token}?token={$token}{/if}"><i class="far fa-file-word"></i> Download as Word</a>
+					<a href="{$routeBase}syllabus/{$syllabus->id}/word{$tokenParams}"><i class="far fa-file-word"></i> Download as Word</a>
 				</span>
 			</div>	
 		</div>

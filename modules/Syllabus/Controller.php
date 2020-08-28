@@ -42,6 +42,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/:courseid/upload' => ['callback' => 'uploadSyllabus'],
             'syllabus/:id/publish/:code'=> ['callback' => 'publishFromIlearn'],
             'syllabus/:courseid/publishreturn' => ['callback' => 'publishAndReturn'],
+            'syllabus/:courseid/link/:code'=> ['callback' => 'getTemporaryLink'],
             'syllabus/notfound' => ['callback' => 'syllabusNotFound'],
         ];
     }
@@ -264,16 +265,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 $published = null;
                 if ($courseSection->syllabus)
                 {
-                    // double check to make sure file isn't still there
-                    // if ($courseSection->syllabus->file)
-                    // {
-                    //     try {
-                    //         $courseSection->syllabus->file->delete();
-                    //     } catch (Exception $e) {
-
-                    //     }
-                    // }
-                    
                     $published = $courseSection->syllabus->getPublishedSyllabus($courseSection->syllabus);
                     $courseSection->syllabus->delete();
                 }
@@ -1441,6 +1432,35 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->justImported = $this->request->getQueryParameter('i', false);
     }
 
+    public function getTemporaryLink ()
+    {
+        $courseSection = $this->requireExists(
+            $this->schema('Syllabus_ClassData_CourseSection')->get($this->getRouteVariable('courseid'))
+        );
+
+        $code = $this->getRouteVariable('code');
+        $appKey = $this->getApplication()->getConfiguration()->getProperty('appKey', null);
+        
+        $response = [];
+
+        if ($code === $appKey)
+        {
+            $tempLink = $this->schema('Syllabus_Syllabus_TemporaryLink')->createInstance()->generate($courseSection);
+            $response['url'] = $tempLink->getUrl();
+            $response['status'] = 200;
+            $response['message'] = 'One-time view/download link created.';
+        }
+        else
+        {
+            $response['status'] = 403;
+            $response['message'] = 'Invalid API Key';
+        }
+
+        $return_json = json_encode($response);
+        echo($return_json);
+        exit;      
+    }
+
     public function share ()
     {
         $viewer = $this->requireLogin();
@@ -1898,30 +1918,24 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             $viewer = $this->getAccount() ?? null;
         }
-        
+
+        $tempLinks = $this->schema('Syllabus_Syllabus_TemporaryLink');
+        if ($tempLink = $tempLinks->findOne($tempLinks->token->equals($this->request->getQueryParameter('temp'))))
+        {
+            $syllabus = $tempLink->syllabus;
+            $tempLink->delete();
+        }
+
+
         if ($syllabus->file)
         {
             list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
             // if teacher, send to upload. if student, send to download
-            if ($this->hasPermission('admin') || $type === 'student' || $type === 'instructor')
+            if ($this->hasPermission('admin') || $type === 'student' || $type === 'instructor' || $tempLink)
             {
                 $this->saveAccessLog($viewer, $syllabus);
                 $this->response->redirect("files/$syllabus->file_id/download/syllabus");
             }
-            // switch ($type)
-            // {
-            //     case 'student':
-            //         $this->response->redirect("files/$syllabus->file_id/download/syllabus");
-            //     case 'instructor':
-            //         $this->forward("syllabus/$courseSection->id/start", ['courseSection' => $courseSection]);
-            //     default:
-            //         if ($this->hasPermission('admin'))
-            //         {
-            //             $this->forward("syllabus/$courseSection->id/start", ['courseSection' => $courseSection]);
-            //         }
-            //         $this->accessDenied('You do not have permission to download this syllabus.');
-            //         break;
-            // }
         }
 
         $this->setSyllabusTemplate();
@@ -1933,9 +1947,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         $viewUrl = "syllabus/$syllabus->id/view";
         $editable = false;
-        if (!$token)
+        if (!$token && !$tempLink)
         {
-            if (($syllabus->createdById === $viewer->id) || $this->hasSyllabusPermission($syllabus, $viewer, 'edit') || $this->hasPermission('admin'))
+            if (($syllabus->createdById === $viewer->id) || $this->hasSyllabusPermission($syllabus, $viewer, 'edit') || 
+                $this->hasPermission('admin'))
             {
                 $editable = true;
             }            
@@ -1963,12 +1978,13 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $pathParts[] = $this->getRouteVariable('routeBase');
         $pathParts[] = 'syllabus';
 
-        if (!$token)
+        if (!$token && !$tempLink)
         {
         	// check if this syllabus is from a combined course
         	$resolvedSyllabus = $this->resolveCombinedCourseSyllabus($syllabus);
 
-            if ($resolvedSyllabus === null && $syllabus->createdById !== $viewer->id && !$this->hasSyllabusPermission($syllabus, $viewer, 'edit'))
+            if ($resolvedSyllabus === null && $syllabus->createdById !== $viewer->id && 
+                !$this->hasSyllabusPermission($syllabus, $viewer, 'edit'))
             {
                 $this->requirePermission('admin');
             }
@@ -1981,30 +1997,31 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         	// check if viewing as instructor or student and if it is even associated with a course
             list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
         }
-        elseif ($token !== $syllabus->token && !$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
+        elseif (!$tempLink && $token !== $syllabus->token && !$this->hasSyllabusPermission($syllabus, $viewer, 'view'))
         {
             $this->accessDenied('Nope');
         }
 
-        if (!$token && $type === 'student' && $courseSection)
+        if (!$tempLink && !$token && $type === 'student' && $courseSection)
         {
             $this->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $courseSection->title);
         }
         else
         { 
-            if (!$token)
+            if (!$token && !$tempLink)
             {
                 $this->addBreadcrumb($routeBase.'syllabus/'.$syllabus->id, 'Edit');
             }  
             $this->addBreadcrumb($routeBase.'syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);
-            $this->template->instructorView = !$token ? true : false;
-            $this->template->canChangeShare = !$token && $syllabus->createdById === $viewer->id;
+            $this->template->instructorView = !$token && $tempLink ? true : false;
+            $this->template->canChangeShare = !$token && $tempLink && $syllabus->createdById === $viewer->id;
             $this->template->shareLevel = $syllabus->getShareLevel();
             $syllabus->viewUrl = $this->baseUrl($viewUrl);
         }
 
         $this->saveAccessLog($viewer, $syllabus);
 
+        $this->template->tempLink = $tempLink;
         $this->template->token = $token;
         $this->template->returnTo = $viewUrl;
         $this->template->editable = $editable;
