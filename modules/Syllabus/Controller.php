@@ -15,7 +15,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         return [
             // '/'                         => ['callback' => 'mySyllabi'],
             'syllabi'                   => ['callback' => 'mySyllabi'],
-            'syllabus/:id'              => ['callback' => 'edit'],
+            'syllabus/start'            => ['callback' => 'start'],
             'syllabus/:id/ajax'         => ['callback' => 'asyncSubmit', ':id' => '[0-9]+'],
             'syllabus/:id/view'         => ['callback' => 'view', ':id' => '[0-9]+'],
             'syllabus/:courseid/view'   => ['callback' => 'courseView'],
@@ -32,7 +32,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/submissions/:id'  => ['callback' => 'submissions', ':id' => '[0-9]+'],
             'syllabus/courses'          => ['callback' => 'courseLookup'],
             'syllabus/outcomes'         => ['callback' => 'outcomesLookup'],
-            'syllabus/start'            => ['callback' => 'start'],
             'syllabus/startwith/:id'    => ['callback' => 'startWith', ':id' => '[0-9]+'],
             'syllabus/migrate'          => ['callback' => 'migrate'],
             'syllabus/autocomplete'     => ['callback' => 'autocompleteAccounts'],
@@ -44,6 +43,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/:courseid/publishreturn' => ['callback' => 'publishAndReturn'],
             'syllabus/:courseid/link/:code'=> ['callback' => 'getTemporaryLink'],
             'syllabus/notfound' => ['callback' => 'syllabusNotFound'],
+            'syllabus/:id'              => ['callback' => 'edit', ':id' => '[0-9]+|new'],
         ];
     }
 
@@ -977,6 +977,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
         $sections = $this->schema('Syllabus_Syllabus_Section');
         $sectionVersions = $this->schema('Syllabus_Syllabus_SectionVersion');
+
         $syllabi = $this->schema('Syllabus_Syllabus_Syllabus');
 
         $syllabus = @$syllabi->get($this->getRouteVariable('id'));
@@ -985,6 +986,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $courseSection = $this->schema('Syllabus_ClassData_CourseSection')->get($this->getRouteVariable('id'));
             $syllabus = @$courseSection->syllabus ?? $syllabi->createInstance();
         }
+        // $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id', 
+        //     ['allowNew' => $this->hasPermission('admin')]
+        // );
         if (!$this->hasPermission('admin') && !$this->hasSyllabusPermission($syllabus, $viewer, 'edit'))
         {
             $this->accessDenied("You do not have edit access for this syllabus.");
@@ -993,15 +997,13 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         if ($syllabus->file)
         {
             list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
-            
             // if teacher, send to upload. if student, send to download
             switch ($type)
             {
                 case 'student':
                     $this->response->redirect("files/$syllabus->file_id/download/syllabus");
                 case 'instructor':
-                    // $this->forward("syllabus/$courseSection->id/start", ['courseSection' => $courseSection]);
-                    $this->forward("syllabus/$courseSection->id/upload", ['courseSection' => $courseSection]);
+                    $this->forward("syllabus/$courseSection->id/start", ['courseSection' => $courseSection]);
                 default:
                     $this->accessDenied('You do not have permission to download this syllabus.');
                     break;
