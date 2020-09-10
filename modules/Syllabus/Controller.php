@@ -1397,8 +1397,13 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $this->template->currentSectionVersion = $sectionVersion;
             $this->template->upstreamSyllabi = $upstreamSyllabi;
             // $this->template->isUpstreamSection = $this->isUpstreamSection($sectionVersion, $syllabus, $viewer);
-            $this->template->hasDownstreamSection = $this->hasDownstreamSection($sectionVersion, $syllabus, $viewer) &&
-                !$this->isInheritedSection($sectionVersion, $syllabus->templateAuthorizationId);
+            
+            // NOTE: Removed for now
+            // $this->template->hasDownstreamSection = $this->hasDownstreamSection($sectionVersion, $syllabus, $viewer) &&
+            //     !$this->isInheritedSection($sectionVersion, $syllabus->templateAuthorizationId);
+            // NOTE: Replaced with this:
+            $this->template->hasDownstreamSection = false;
+            
             $this->template->editUri = '#section' . $realSectionExtension->getExtensionName() . 'Edit';
             $this->template->importableSections = $realSectionExtension->getImportableSections();
         }
@@ -1674,7 +1679,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             foreach ($syllabusVersion->sectionVersions as $sv)
             {
-                if ($this->hasDownstreamSection($sv, $syllabus, $viewer))
+                // NOTE: Removed for now since query too expensive
+                // if ($this->hasDownstreamSection($sv, $syllabus, $viewer))
+                if (false)
                 {
                     $hasDownstreamSyllabiSection = true;
                     break;
