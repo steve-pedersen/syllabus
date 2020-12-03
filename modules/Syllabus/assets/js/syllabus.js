@@ -115,7 +115,7 @@
 		let text = cardBody.find('#text'+id);
 		$('#resourceTitle').html(title.html());
 		$('#resourceImage').attr('src', img.attr('src')).attr('alt', img.attr('alt'));
-		$('#resourceDescription').text(text.text());
+		$('#resourceDescription').html(text.html());
 		$('#resourceUrl').attr('href', url.text()).text(url.text());
 	});
 	$('#resourceAddModal').on('show.bs.modal', function(e) {
