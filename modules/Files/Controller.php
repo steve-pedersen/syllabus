@@ -31,7 +31,7 @@ class Syllabus_Files_Controller extends Syllabus_Master_Controller
 
     public function imageSrc ()
     {
-        $this->requireLogin();
+        // $this->requireLogin();
         $fid = $this->getRouteVariable('fid');
         $file = $this->requireExists($this->schema('Syllabus_Files_File')->get($fid));
         $file->sendFile($this->response);

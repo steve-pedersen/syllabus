@@ -410,6 +410,21 @@ div.overview-container {
 				text-overflow: ellipsis;
 			}
 		}
+		&.spotlight {
+			> img {
+				max-height: 15em;
+			}
+			.media-body {
+				.card-title {
+					font-size: 1.5rem;
+				}
+				p {
+					font-size: 1rem;
+					overflow: visible;
+					-webkit-line-clamp: unset;
+				}
+			}			
+		}
 	}
 }
 
