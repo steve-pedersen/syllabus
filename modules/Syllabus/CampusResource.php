@@ -27,6 +27,13 @@ class Syllabus_Syllabus_CampusResource extends Bss_ActiveRecord_Base
             'deleted' => 'bool',
 
             'image' => ['1:1', 'to' => 'Syllabus_Files_File', 'keyMap' => ['image_id' => 'id']],
+            'tags' => ['N:M',
+                'to' => 'Syllabus_Resources_Tag',
+                'via' => 'syllabus_campus_resources_tags_map',
+                'fromPrefix' => 'campus_resources',
+                'toPrefix' => 'tags',
+                'orderBy' => ['name']
+            ],
         ];
     }
 

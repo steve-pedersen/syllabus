@@ -54,6 +54,24 @@
 			{/foreach}
 			</select>
 		</div>
+		{if $tags}
+		<div class="col-xs-12 form-group">
+			<label for="tags">Tags</label>
+			{foreach $tags as $tag}
+
+			<div class="form-check">
+				<input class="form-check-input" type="checkbox" value="{$tag->id}" name="tags[{$tag->id}]" id="tags[{$tag->id}]}" {if $resource && $resource->tags->has($tag)}checked{/if}>
+				<label class="form-check-label" for="tags[{$tag->id}]}">
+					{$tag->name}
+				</label>
+			</div>
+			{/foreach}
+		</div>
+		{/if}
+		<div class="col-xs-6 form-group">
+			<label for="tags[new]">Add new tag</label>
+			<input type="text" class="form-control" id="tag" name="tags[new]">
+		</div>
 		<input type="hidden" name="resourceId" value="{$resource->id}">
 	    <div class="form-group mt-5">
 	        <div class="col-xs-12">
@@ -90,6 +108,14 @@
 								</small>
 							</p>
 
+							{if $campusResource->tags}
+							<!-- <span>Tags</span> -->
+							<p class="text-muted">
+								{foreach $campusResource->tags as $tag}
+									<small class="">{$tag->name}{if !$tag@last}, {/if}</small>
+								{/foreach}
+							</p>
+							{/if}
 							<div class="">
 								<!-- <button class="btn btn-info btn-sm" target="_blank" href="{$campusResource->url}">Preview</button> -->
 								<a class="btn btn-info btn-sm" href="admin/syllabus/resources?edit={$campusResource->id}" id="editResource">Edit</a>

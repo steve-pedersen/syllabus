@@ -105,6 +105,29 @@
 		}
 	});
 
+	var filterResources = function (option, showAll) {
+		if (option.value !== '') {
+			$('#removeFilterResources').show();
+		} else {
+			$('#removeFilterResources').hide();
+		}
+		$('.campus-resources .resource').each(function(index, item) {
+			if (!showAll && option.value !== '' && !$(item).hasClass(option.value)) {
+				$(item).hide();
+			} else {
+				$(item).show();
+			}
+		});
+	}
+
+	$('#filterResources').on('change', function(e) {
+		filterResources(e.target, false);
+	});
+
+	$('#removeFilterResources').on('click', function(e) {
+		filterResources(e.target, true);
+		$('#filterResources').val('');
+	});
 
 	$('#resourcePreviewModal').on('show.bs.modal', function(e) {
 		let cardBody = $(e.relatedTarget).parents('.card-body');
@@ -113,10 +136,12 @@
 		let img = cardBody.find('#image'+id);
 		let url = cardBody.find('#url'+id);
 		let text = cardBody.find('#text'+id);
+		let tags = cardBody.find('#tags'+id);
 		$('#resourceTitle').html(title.html());
 		$('#resourceImage').attr('src', img.attr('src')).attr('alt', img.attr('alt'));
 		$('#resourceDescription').html(text.html());
 		$('#resourceUrl').attr('href', url.text()).text(url.text());
+		$('#resourceTags').html(tags.html());
 	});
 	$('#resourceAddModal').on('show.bs.modal', function(e) {
 		let cardBody = $(e.relatedTarget).parents('.card-body');

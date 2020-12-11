@@ -1,0 +1,98 @@
+#resourcesMasterTemplate {
+	@import "separators";
+
+	h1, h2, h3, h4, h5, h6 {
+		color: #464666;
+		// font-family: 'Montserrat', sans-serif;
+		font-family: 'Lato', 'Montserrat', sans-serif;
+	}
+	.at {
+		background-color: $sfstate-blue-1;
+		.navbar {
+			color: #fff;
+			background-color: $sfstate-blue-1;
+			// border-bottom: 8px solid $sfstate-yellow-1;
+			> .navbar-brand {
+
+			    color: #fff;
+			    transition: background-color 0.1s;
+			    text-transform: none;
+			    font-family: 'Montserrat', sans-serif;
+			    font-family: 'Lato', sans-serif;
+			    font-weight: bold !important;
+			    font-size: 1.25rem;
+			    background-color: $sfstate-blue-1;
+			    // line-height: 50px;
+			    letter-spacing: 1px;
+			    padding-left: 0;
+
+			    a {
+			    	color: #fff;
+			    	&:hover {
+			    		// color: $sfstate-yellow-2;
+			    		text-decoration: underline;
+			    	}
+			    }
+			    &:hover {
+			    	// color: $sfstate-yellow-2;
+			    }
+			    #smallLink {
+			    	a {
+			    		color: #BBB;
+			    		font-family: 'Montserrat', sans-serif;
+			    	}
+			    }
+			}
+		}
+	}
+
+	#imagebar {
+		height: 50px;
+		background-color: $sfstate-yellow-1;
+		background: #330033 url("../images/gold-60pct-50pctopacity_0.jpg") repeat-x 50% 0;
+	}
+
+	.sticky-footer .at-footer {
+	    // font-size: 12px;
+	    padding: 0.5rem 0 0.5rem 0;
+	    color: #333;
+	    background-color: #ebebea !important;
+	    a, h2, strong {
+	    	color: #333;
+	    }
+	}
+
+	.wrap .left {
+	    border-bottom: 4px solid $sfstate-red;
+	    &.h1 {
+	    	border-bottom: 10px solid $sfstate-red;
+	    }
+	}
+
+	.spotlight {
+		h2 {
+			// color: #fff;
+			font-weight: 500;
+			font-family: 'Montserrat', sans-serif;
+		}
+		.card-header {
+			// background: repeating-linear-gradient(
+			//   180deg,
+			//   $sfstate-blue-1,
+			//   $sfstate-blue-1 10px,
+			//   $sfstate-blue-2 10px,
+			//   $sfstate-blue-2 20px
+			// );
+		}
+	}
+
+	
+	.spotlight img {
+		@media only screen and (max-width: 768px) {
+			max-height: 10em;
+		}
+		@media only screen and (max-width: 768px) {
+			max-height: 8em;
+		}
+	}
+}

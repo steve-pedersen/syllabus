@@ -161,6 +161,8 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_Controller
         $this->template->addBreadcrumb('admin/syllabus/resources', 'Campus Resources');
         $files = $this->schema('Syllabus_Files_File');
         $campusResources = $this->schema('Syllabus_Syllabus_CampusResource');
+        $tags = $this->schema('Syllabus_Resources_Tag');
+
         $allResources = $campusResources->find(
             $campusResources->deleted->isFalse()->orIf($campusResources->deleted->isNull()),
             ['orderBy' => ['sortOrder', 'title']]
@@ -191,6 +193,9 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_Controller
                     break;
                 
                 case 'save': 
+
+                    // echo "<pre>"; var_dump($data); die;
+                    
                     $resource = (isset($data['resourceId'])&&$data['resourceId']!=='') ? 
                         $campusResources->get($data['resourceId']) : $campusResources->createInstance();
                     $resource->sortOrder = (isset($data['resource']) && isset($data['resource']['sortOrder']) ? 
@@ -202,6 +207,41 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_Controller
                     $resource->url = $data['resource']['url'];
                     $resource->save();
                     
+                    foreach ($resource->tags as $tag)
+                    {
+                        if (!isset($data['tags'][$tag->id]))
+                        {
+                            $resource->tags->remove($tag);
+                            $resource->tags->save();
+                        }
+                    }
+                    foreach ($data['tags'] as $id)
+                    {
+                        if ($id !== 'new')
+                        {
+                            $tag = $tags->get((int)$id);
+                            if ($tag && !$resource->tags->has($tag))
+                            {
+                                $resource->tags->add($tag);
+                                $resource->tags->save();
+                                $resource->save();
+                            }
+                        }
+                    }
+
+                    if ($data['tags']['new'])
+                    {
+                        if (!($tag = $tags->findOne($tags->name->equals($data['tags']['new']))))
+                        {
+                            $tag = $tags->createInstance();
+                            $tag->name = $data['tags']['new'];
+                            $tag->save();
+                        }
+                        $resource->tags->add($tag);
+                        $resource->tags->save();
+                        $resource->save();
+                    }
+
                     $this->flash('Resource saved.');
                     break;
 
@@ -247,6 +287,7 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_Controller
 
         $this->template->bottommostPosition = $bottommostPosition;
         $this->template->campusResources = $allResources;
+        $this->template->tags = $tags->getAll(['orderBy' => 'name']);
         $this->template->files = $files->getAll();
     }
 }

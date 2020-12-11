@@ -33,6 +33,20 @@ class Syllabus_Resources_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModul
                 $def->save();
 
                 break;
+
+            case 1:
+
+                $def = $this->createEntityType('syllabus_campus_resources_tags', $this->getDataSource('Syllabus_Resources_Tag'));
+                $def->addProperty('id', 'int', ['primaryKey' => true, 'sequence' => true]);
+                $def->addProperty('name', 'string');
+                $def->save();
+
+                $def = $this->createEntityType('syllabus_campus_resources_tags_map', $this->getDataSource('Syllabus_Resources_Tag'));
+                $def->addProperty('campus_resources_id', 'int', ['primaryKey' => true]);
+                $def->addProperty('tags_id', 'int', ['primaryKey' => true]);
+                $def->save();
+
+                break;
         }
     }
 }

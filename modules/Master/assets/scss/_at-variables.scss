@@ -117,7 +117,14 @@ $ternary:   #aebee1;
 $salmon: #f47f72;
 // $warning: $salmon;
 
-
+$sfstate-purple-1: #303;
+$sfstate-blue-1: #231161;
+$sfstate-blue-2: #463077;
+$sfstate-blue-3: #004F71;
+$sfstate-green: #787A00;
+$sfstate-red: #9A2250;
+$sfstate-yellow-1: #ffdc70;
+$sfstate-yellow-2: #ffcc00;
 
 $theme-colors: (
   "primary": $primary,
@@ -129,6 +136,14 @@ $theme-colors: (
   "info": $info,
   "light": $light,
   "dark": $dark,
-  "muted": $muted
+  "muted": $muted,
+  "sfstate-purple-1": $sfstate-purple-1,
+  "sfstate-blue-1": $sfstate-blue-1,
+  "sfstate-blue-2": $sfstate-blue-2,
+  "sfstate-blue-3": $sfstate-blue-3,
+  "sfstate-green": $sfstate-green,
+  "sfstate-red": $sfstate-red,
+  "sfstate-yellow-1": $sfstate-yellow-1,
+  "sfstate-yellow-2": $sfstate-yellow-2,
 );
 
