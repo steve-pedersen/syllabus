@@ -14,7 +14,7 @@
 <!-- <div class="scallop-up"></div> -->
 
 <div class="container py-3">
-<div class="row  spotlight">
+<div class="row spotlight">
 	<div class="col-12 my-2">
 		<div class="card h-100 text-center " style="box-shadow:none;">
 			<div class="card-header  text-sfstate-blue-3">
@@ -53,7 +53,6 @@
 <!-- <div class="scallop-down"></div> -->
 
 
-<!-- https://codepen.io/lukeyphills/pen/FjygE -->
 <section class="color ss-style-bigtriangle">
    
 </section>
@@ -62,7 +61,8 @@
     <path d="M0 0 L50 100 L100 0 Z" />
 </svg>
 
-<!-- <section class="ss-style-triangles"> -->
+<div class="">
+
 <div class="container mt-5">
 <div class="row my-3">
 	<div class="col-md-12 col-lg-8">
@@ -72,17 +72,13 @@
 
 {if $tags}
 	<div class="col-md-12 col-lg-4">
-	<!-- <div class="card border-0" style="box-shadow: none;">
-	<div class="card-body"> -->
 	<select class="form-control" id="filterResources">
-		<option value="" default>Select tag to filter...</option>
+		<option value="" default>Select category...</option>
 		{foreach $tags as $tag}
 			<option value="{$tag->name}">{$tag->name}</option>
 		{/foreach}
 	</select>
 	<button class="btn btn-link" id="removeFilterResources" style="display:none;">Remove filter</button>
-	<!-- </div>
-	</div> -->
 	</div>
 {/if}
 
@@ -130,8 +126,8 @@
 
 </div>
 </div>
-<!-- </section> -->
 
+</div>
 
 
 <!-- Preview Modal -->

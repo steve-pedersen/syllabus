@@ -20,7 +20,7 @@
 		<meta name="twitter:description" content="This website compiles together all the various resources that are available to students at SF State.">
 		<meta property="og:image" content="assets/images/resources-icon.png" />
 		<meta name="twitter:image:src" content="assets/images/resources-icon.png">
-		
+
 	</head>
 
 	<body id="resourcesMasterTemplate">
@@ -61,10 +61,10 @@
 				<div class="container">
 					<div class="row">
 						<div id="contact-university" class="col">
-							<a href="http://www.sfsu.edu/"> <img src="assets/images/SFState_H_rgb.jpg" alt="San Francisco State University Logo" height="50" class="logo"></a>
+							<a href="https://sfsu.edu/"> <img src="assets/images/SFState_H_rgb.jpg" alt="San Francisco State University Logo" height="50" class="logo"></a>
 							<ul class="list-unstyled">
-								<li><a href="http://www.sfsu.edu/">San Francisco State University</a></li>
-								<li class="first"><a href="http://www.calstate.edu/">A California State University Campus</a></li>
+								<li><a href="https://sfsu.edu/">San Francisco State University</a></li>
+								<li class="first"><a href="https://www.calstate.edu/">A California State University Campus</a></li>
 							</ul>
 						</div>
 						<div id="contact-local" class="col">
