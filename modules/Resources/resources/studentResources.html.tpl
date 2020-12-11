@@ -1,6 +1,6 @@
 
 
-<div class="campus-resources bg-light">
+<div class="campus-resources">
 <div class="bg-sfstate-blue-3">
 <div class="container pt-3">
 <h1 class="pb-2 mt-0" style="color: #fff">Student Resources at SF State</h1>
