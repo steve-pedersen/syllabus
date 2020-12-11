@@ -1,9 +1,12 @@
 
 
 <div class="campus-resources">
-<div class="bg-sfstate-blue-3">
+<div class="bg-sfstate-blue-3 pb-4">
 <div class="container pt-3">
-<h1 class="pb-2 mt-0" style="color: #fff">Student Resources at SF State</h1>
+<h1 class="mt-0" style="color: #fff">
+	<span class="pb-2">Student Resources at SF State</span>
+	<img src="assets/images/undraw_online_information_4ui6.svg" class="img-responsive ml-4 header-image">
+</h1>
 <div class="wrap pb-2"><div class="left h1"></div><div class="right"></div></div>
 </div>
 	
@@ -60,11 +63,11 @@
 </svg>
 
 <!-- <section class="ss-style-triangles"> -->
-<div class="container">
+<div class="container mt-5">
 <div class="row my-3">
 	<div class="col-md-12 col-lg-8">
 	<h2>All campus resources</h2>
-	<p class="text-muted">Listed below are many of the resources available to students at SF State.</p>
+	<p class="text-muteds">Listed below are many of the resources available to students at SF State.</p>
 	</div>
 
 {if $tags}
@@ -133,7 +136,7 @@
 
 <!-- Preview Modal -->
 <div class="modal fade" id="resourcePreviewModal" tabindex="-1" role="dialog" aria-labelledby="resourceTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg modal-sm" role="document">
+  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
     <div class="modal-content">
 	<div class="modal-header">
 		<h5 class="modal-title" id="resourceTitle"></h5>
@@ -145,9 +148,9 @@
 		<div class="container-fluid">
 			<div class="row mb-3">
 				<div class="col-6 text-center">
-					<img class="img-thumbnail mh-50" id="resourceImage" src="" alt="">
+					<img class="img-thumbnail mh-50 border-0" id="resourceImage" src="" alt="">
 				</div>
-				<div class="col-6 d-block">
+				<div class="col-6 d-block dont-break-out">
 					<span id="resourceDescription"></span>
 					<span class="d-block mt-2 align-bottom">
 						<strong class="d-block">Website: </strong><a target="_blank" href="" id="resourceUrl" style="letter-spacing:0.8px;"></a>

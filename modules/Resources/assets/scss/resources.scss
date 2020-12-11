@@ -1,11 +1,24 @@
 #resourcesMasterTemplate {
 	background-color: $light;
+	background-color: #edf0f1;
 	@import "separators";
 
 	h1, h2, h3, h4, h5, h6 {
 		color: #464666;
 		// font-family: 'Montserrat', sans-serif;
 		font-family: 'Lato', 'Montserrat', sans-serif;
+	}
+	h1 {
+		.header-image {
+			width: 3em;
+			@media only screen and (max-width: 768px) {
+				width: 2em;
+				display: none;
+			}
+			@media only screen and (max-width: 576px) {
+				display: none;
+			}			
+		}
 	}
 	.at {
 		background-color: $sfstate-blue-1;
@@ -57,9 +70,12 @@
 	    // font-size: 12px;
 	    padding: 0.5rem 0 0.5rem 0;
 	    color: #333;
+	    color: #fff;
 	    background-color: #ebebea !important;
+	    background-color: #666666 !important;
 	    a, h2, strong {
 	    	color: #333;
+	    	color: #fff;
 	    }
 	}
 
@@ -92,7 +108,7 @@
 		@media only screen and (max-width: 768px) {
 			max-height: 10em;
 		}
-		@media only screen and (max-width: 768px) {
+		@media only screen and (max-width: 576px) {
 			max-height: 8em;
 		}
 	}
