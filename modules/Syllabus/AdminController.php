@@ -205,6 +205,8 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_Controller
                     $resource->abbreviation = $data['resource']['abbreviation'];
                     $resource->description = $data['resource']['description'];
                     $resource->url = $data['resource']['url'];
+                    $resource->createdDate = $resource->createdDate ?? new DateTime;
+                    $resource->modifiedDate = new DateTime;
                     $resource->save();
                     
                     foreach ($resource->tags as $tag)

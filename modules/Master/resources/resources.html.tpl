@@ -20,7 +20,10 @@
 		<meta name="twitter:description" content="This website compiles together all the various resources that are available to students at SF State.">
 		<meta property="og:image" content="assets/images/resources-icon.png" />
 		<meta name="twitter:image:src" content="assets/images/resources-icon.png">
+<style type="text/css">
 
+
+</style>
 	</head>
 
 	<body id="resourcesMasterTemplate">

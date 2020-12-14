@@ -56,6 +56,13 @@
 			    		font-family: 'Montserrat', sans-serif;
 			    	}
 			    }
+				@media only screen and (max-width: 576px) {
+					font-size: 1rem;
+					#smallLink {
+						display: block;
+						padding-left: 0 !important;
+					}
+				}
 			}
 		}
 	}
@@ -86,6 +93,15 @@
 	    }
 	}
 
+	#topSplash {
+		background-image: linear-gradient(to bottom, rgba(0,79,113, 0.8), rgba(0,79,113, 1)), url(../images/bantersnaps-9o8YdYGTT64-unsplash.jpg);
+	    // height: 65vh;
+	    // background-image: linear-gradient(to right bottom, rgba(126, 213, 111, 0.8), rgba(40, 180, 133, 0.8)), url(../img/hero-small.jpg);
+	    background-size: cover;
+	    position: relative;
+	    background-position: center top;
+	}
+
 	.spotlight {
 		h2 {
 			// color: #fff;
@@ -101,15 +117,67 @@
 			//   $sfstate-blue-2 20px
 			// );
 		}
+		.story {
+		    width: 100%;
+		    box-shadow: rgba(0, 0, 0, 0.1) 0px 3rem 6rem;
+		    background-color: rgba(255, 255, 255, 0.6);
+		    font-size: 1.3rem;
+		    /*transform: skewX(-12deg);*/
+		    margin: 0px auto;
+		    border-radius: 3px;
+		    padding: 2rem 2rem 2rem 2rem;
+		}
+		.story__shape {
+		/*    clip-path: circle(50% at 50% 50%);
+		    shape-outside: circle(50% at 50% 50%);*/
+		}
+
+		.story__shape {
+		    padding-right: 3rem;
+		    float: left;
+		    position: relative;
+		}
+		.story__img {
+		    /*height: 100%;*/
+		    /*transform: translateX(-4rem) scale(1.4);*/
+		    /*backface-visibility: hidden;*/
+		    transition: all 0.5s ease 0s;
+		    max-height: 15rem;
+		}
+		.story__caption {
+		    position: absolute;
+		    top: 50%;
+		    left: 50%;
+		    /*transform: translate(-50%, 20%);*/
+		    color: rgb(255, 255, 255);
+		    text-transform: uppercase;
+		    font-size: 1.7rem;
+		    text-align: center;
+		    opacity: 0;
+		    backface-visibility: hidden;
+		    transition: all 0.5s ease 0s;
+		}
+		.story__text {
+		    /*transform: skewX(12deg);*/
+		}
+		.u-margin-bottom-small {
+		    margin-bottom: 1.5rem !important;
+		}
+
+		.heading-tertiary {
+		    font-size: 1.6rem;
+		    font-weight: 700;
+		    text-transform: uppercase;
+		}	
 	}
 
-	
 	.spotlight img {
+		max-width: 15em;
 		@media only screen and (max-width: 768px) {
-			max-height: 10em;
+			max-width: 10em;
 		}
 		@media only screen and (max-width: 576px) {
-			max-height: 8em;
+			max-width: 8em;
 		}
 	}
 }

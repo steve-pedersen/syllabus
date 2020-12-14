@@ -1,11 +1,11 @@
 
 
 <div class="campus-resources">
-<div class="bg-sfstate-blue-3 pb-4">
+<div class="bg-sfstate-blue-32 pb-4" id="topSplash">
 <div class="container pt-3">
 <h1 class="mt-0" style="color: #fff">
 	<span class="pb-2">Student Resources at SF State</span>
-	<img src="assets/images/undraw_online_information_4ui6.svg" class="img-responsive ml-4 header-image">
+	<!-- <img src="assets/images/undraw_online_information_4ui6.svg" class="img-responsive ml-4 header-image"> -->
 </h1>
 <div class="wrap pb-2"><div class="left h1"></div><div class="right"></div></div>
 </div>
@@ -16,7 +16,35 @@
 <div class="container py-3">
 <div class="row spotlight">
 	<div class="col-12 my-2">
-		<div class="card h-100 text-center " style="box-shadow:none;">
+
+<div class="story dont-break-out">
+    <figure class="story__shape">
+        <img src="{$spotlight->imageSrc}" alt="{$spotlight->title} logo" class="story__img img-responsive">
+        <!-- <figcaption class="story__caption">Mary Smith</figcaption> -->
+    </figure>
+    <div class="story__text">
+        <h3 class="heading-tertiary u-margin-bottom-small">{$spotlight->title}{if $spotlight->abbreviation} <small>({$spotlight->abbreviation})</small>{/if}</h3>
+        <p>
+            {$spotlight->description}
+        </p>
+        <p>
+            <strong class="mr-1">Website: </strong>
+            <a href="{$spotlight->url}">{$spotlight->url}</a>
+        </p>
+        {if $spotlight->tags && $spotlight->tags->count() > 0}
+        <p class="card-text mt-1">
+            <small>
+                <strong class="pr-2">Tags: </strong>
+                {foreach $spotlight->tags as $tag}
+                    {$tag->name}{if !$tag@last}, {/if}
+                {/foreach}
+            </small>
+        </p>
+        {/if}
+    </div>
+</div>
+
+<!-- 		<div class="card h-100 text-center " style="box-shadow:none;">
 			<div class="card-header  text-sfstate-blue-3">
 				<h2 class="card-title mb-0 "><i class="far fa-lightbulb mr-2"></i>Spotlight</h2>
 			</div>
@@ -44,7 +72,7 @@
 					</div>
 				</div>
 			</div>
-		</div>
+		</div> -->
 	</div>
 </div>
 </div>

@@ -240,6 +240,11 @@ class Syllabus_Syllabus_ModuleUpgradeHandler extends Bss_ActiveRecord_BaseModule
                 $def->save();
                 break;   
 
+            case 10:
+                $def = $this->alterEntityType('syllabus_campus_resources', $this->getDataSource('Syllabus_Syllabus_CampusResource'));
+                $def->addProperty('modified_date', 'datetime');
+                $def->save();
+                break;
         }
     }
 }
