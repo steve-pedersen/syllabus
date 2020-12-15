@@ -95,8 +95,6 @@
 
 	#topSplash {
 		background-image: linear-gradient(to bottom, rgba(0,79,113, 0.8), rgba(0,79,113, 1)), url(../images/bantersnaps-9o8YdYGTT64-unsplash.jpg);
-	    // height: 65vh;
-	    // background-image: linear-gradient(to right bottom, rgba(126, 213, 111, 0.8), rgba(40, 180, 133, 0.8)), url(../img/hero-small.jpg);
 	    background-size: cover;
 	    position: relative;
 	    background-position: center top;
@@ -104,18 +102,8 @@
 
 	.spotlight {
 		h2 {
-			// color: #fff;
 			font-weight: 500;
 			font-family: 'Montserrat', sans-serif;
-		}
-		.card-header {
-			// background: repeating-linear-gradient(
-			//   180deg,
-			//   $sfstate-blue-1,
-			//   $sfstate-blue-1 10px,
-			//   $sfstate-blue-2 10px,
-			//   $sfstate-blue-2 20px
-			// );
 		}
 		.story {
 		    width: 100%;
@@ -136,10 +124,6 @@
 		.story__img {
 		    backface-visibility: hidden;
 		    transition: all 0.5s ease 0s;
-		    max-height: 13rem;
-		    float: left; 
-		    // padding-bottom:0.5rem;
-		    padding-right:2rem;
 		}
 		.u-margin-bottom-small {
 		    margin-bottom: 1.5rem !important;
@@ -153,13 +137,13 @@
 	}
 
 	.spotlight .story__img {
-		max-width: 15em;
-		@media only screen and (max-width: 768px) {
-			max-width: 10em;
-			padding-right:1rem;
-		}
-		@media only screen and (max-width: 576px) {
-			max-width: 8em;
-		}
+		// max-width: 13em;
+		// @media only screen and (max-width: 768px) {
+		// 	max-width: 10em;
+		// 	padding-right:1rem;
+		// }
+		// @media only screen and (max-width: 576px) {
+		// 	max-width: 8em;
+		// }
 	}
 }

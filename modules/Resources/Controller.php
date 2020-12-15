@@ -22,13 +22,13 @@ class Syllabus_Resources_Controller extends Syllabus_Master_Controller {
         $schema = $this->schema('Syllabus_Syllabus_CampusResource');
         $tags = $this->schema('Syllabus_Resources_Tag');
         $resources = $schema->find($schema->deleted->isNull()->orIf($schema->deleted->isFalse()), ['orderBy' => 'title']);      
-        
-        $spotlight = $this->request->getQueryParameter('spotlight', null);
-        $spotlight = $spotlight ? $schema->get($spotlight) : $resources[rand(0, count($resources) - 1)];
+        $spotlight = $schema->get($this->request->getQueryParameter('spotlight', null));
+        $spotlight = $spotlight && !$spotlight->deleted ? $spotlight : $resources[rand(0, count($resources) - 1)];
         
         $this->template->resources = $resources;
         $this->template->spotlight = $spotlight;
         $this->template->tags = $tags->getAll(['orderBy' => 'name']);
+        $this->template->filter = $this->request->getQueryParameter('category');
     }
 
     public function rss ()
@@ -60,15 +60,11 @@ class Syllabus_Resources_Controller extends Syllabus_Master_Controller {
             $link = rtrim($item->url);
             $link = $this->baseUrl('resources?spotlight=' . $item->id);
             $src = $this->baseUrl($item->imageSrc);
-            $img = "<img src='$src' alt='$title logo' class='img-responsive' style='width:75px;float:left;padding-right:10px;'>";
-            // $p = "<img src='$src' alt='$title logo' class='img-responsive'><p>$desc</p>";
-            // $p = "<img src='$src' alt='$title logo' class='img-responsive'>$desc";
-            // $p = "<p>$img <div class='text-center'>$desc</div></p>";
-            // $p = "<p>$desc</p>";
+            $img = "<img src='".$src."' alt='$title logo' class='img-responsive' style='width:90px;float:left;padding-right:7px;'>";
 
             echo "<item>";
                 echo "<title>$title</title>";
-                echo "<description><![CDATA[". $desc ."]]></description>";
+                echo "<description><![CDATA[". $img . $desc ."]]></description>";
                 echo "<description>$desc</description>";
                 echo "<pubDate>" . date("D, d M Y H:i:s T", time()) . "</pubDate>";
                 echo "<link>$link</link>";

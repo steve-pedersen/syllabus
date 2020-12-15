@@ -113,21 +113,26 @@
 		}
 		$('.campus-resources .resource').each(function(index, item) {
 			if (!showAll && option.value !== '' && !$(item).hasClass(option.value)) {
-				$(item).hide();
+				$(item).hide(750);
 			} else {
-				$(item).show();
+				$(item).show(500);
 			}
 		});
 	}
 
 	$('#filterResources').on('change', function(e) {
 		filterResources(e.target, false);
+		window.history.replaceState({}, null, '?category=' + e.target.value);
 	});
 
 	$('#removeFilterResources').on('click', function(e) {
 		filterResources(e.target, true);
 		$('#filterResources').val('');
 	});
+
+	if ($('#filterResources').val() !== "") {
+		filterResources($('#filterResources')[0], false);
+	}
 
 	$('#resourcePreviewModal').on('show.bs.modal', function(e) {
 		let cardBody = $(e.relatedTarget).parents('.card-body');
