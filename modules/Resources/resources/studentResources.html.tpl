@@ -1,9 +1,9 @@
 
 
 <div class="campus-resources">
-<div class="bg-sfstate-blue-32 pb-4" id="topSplash">
-<div class="container pt-3">
-<h1 class="mt-0" style="color: #fff">
+<div class="bg-sfstate-blue-32 py-4" id="topSplash">
+<div class="container ">
+<h1 class="mt-1" style="color: #fff">
 	<span class="pb-2">Student Resources at SF State</span>
 </h1>
 <div class="wrap pb-2"><div class="left h1"></div><div class="right"></div></div>
