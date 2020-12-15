@@ -52,8 +52,8 @@ class Syllabus_Resources_Controller extends Syllabus_Master_Controller {
         {
             $item = $resources[$key];
             $title = rtrim($item->title);
-            $end = (strlen($item->description) <= $descLength) ? '' : '...';
-            $end = (strlen($item->description) <= $descLength) ? '' : '';
+            $end = (strlen(strip_tags($item->description)) <= $descLength) ? '' : '...';
+            // $end = (strlen($item->description) <= $descLength) ? '' : '';
             $desc = substr(trim(strip_tags($item->description)), 0, $descLength) . $end;
             // $desc = substr(trim($item->description), 0, $descLength) . $end;
             $desc = str_replace("\"", "'", $desc);
