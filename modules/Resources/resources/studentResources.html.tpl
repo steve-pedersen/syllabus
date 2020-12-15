@@ -18,11 +18,9 @@
 	<div class="col-12 my-2">
 
 <div class="story dont-break-out">
-    <figure class="story__shape">
-        <img src="{$spotlight->imageSrc}" alt="{$spotlight->title} logo" class="story__img img-responsive">
-        <!-- <figcaption class="story__caption">Mary Smith</figcaption> -->
-    </figure>
+
     <div class="story__text">
+    	<img src="{$spotlight->imageSrc}" alt="{$spotlight->title} logo" class="story__img img-responsive">
         <h3 class="heading-tertiary u-margin-bottom-small">{$spotlight->title}{if $spotlight->abbreviation} <small>({$spotlight->abbreviation})</small>{/if}</h3>
         <p>
             {$spotlight->description}
