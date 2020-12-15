@@ -16,7 +16,7 @@
 	    	<div class="row">
 	    		<div class="col-sm-12 col-md-4 col-lg-3 text-center align-middle">
 	    			<span class="d-inline-block align-middle h-100">
-	    			<img src="{$spotlight->imageSrc}" alt="{$spotlight->title} logo" class="story__img img-fluid align-middle mb-3 mt-1" style="">
+	    			<img src="{$spotlight->imageSrc}" alt="{$spotlight->title} logo" class="story__img img-fluid align-middle mb-3 mb-md-0 mt-1" style="">
 	    			</span>
 	    		</div>
 	    		<div class="col-sm-12 col-md-8 col-lg-9">
