@@ -128,6 +128,7 @@
 	$('#removeFilterResources').on('click', function(e) {
 		filterResources(e.target, true);
 		$('#filterResources').val('');
+		window.history.replaceState({}, null, '');
 	});
 
 	if ($('#filterResources').val() !== "") {
