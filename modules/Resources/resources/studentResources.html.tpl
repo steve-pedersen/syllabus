@@ -9,8 +9,7 @@
 <div class="wrap pb-2"><div class="left h1"></div><div class="right"></div></div>
 </div>
 
-<div class="container py-3">
-<div class="row spotlight">
+<div class="container py-3 spotlight">
 	<div class="col-12 my-2 story dont-break-out">
 	    <div class="story__text">
 	    	<div class="row">
@@ -45,7 +44,6 @@
 	    	</div>
 	    </div>
 	</div>
-</div>
 </div>
 
 </div>
