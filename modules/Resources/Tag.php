@@ -22,7 +22,6 @@ class Syllabus_Resources_Tag extends Bss_ActiveRecord_Base
                 'via' => 'syllabus_campus_resources_tags_map',
                 'fromPrefix' => 'tags',
                 'toPrefix' => 'campus_resources',
-                'orderBy' => ['+_map.name']
             ],
         ];
     }

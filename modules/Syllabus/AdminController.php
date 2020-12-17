@@ -142,6 +142,7 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_Controller
                     }
                     $this->flash('Order of campus resources updated.', 'success');
                     break;
+
             }
             $this->response->redirect('admin/syllabus/guidedocs');
         }
@@ -278,6 +279,17 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_Controller
                     }
                     $this->flash('Order of campus resources updated.', 'success');
                     break;
+
+                case 'deletetag':
+                    $tag = $this->requireExists($tags->get($this->getPostCommandData()));
+                    foreach ($tag->resources as $resource)
+                    {
+                        $tag->resources->remove($resource);
+                    }
+                    $tag->delete();
+                    $this->flash('Tag removed');
+                    
+                    break;
             }
             $this->response->redirect('admin/syllabus/resources');
         }
@@ -290,7 +302,7 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_Controller
         $this->template->bottommostPosition = $bottommostPosition;
         $this->template->campusResources = $allResources;
         $this->template->tags = $tags->getAll(['orderBy' => 'name']);
-        $this->template->files = $files->getAll();
+        $this->template->files = $files->getAll(['orderBy' => ['-uploadedDate', 'remoteName']]);
     }
 }
 

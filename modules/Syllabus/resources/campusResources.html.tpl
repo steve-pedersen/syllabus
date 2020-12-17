@@ -37,7 +37,7 @@
 		</div>
 		<div class="form-group">
 			<label for="description">Description</label>
-			<textarea type="text" class="wysiwyg wysiwyg-basic" id="description" name="resource[description]" placeholder="This resource helps students by..." rows="3" value="{$resource->description}">{$resource->description}</textarea>
+			<textarea type="text" class="wysiwyg wysiwyg-basic" id="description" name="resource[description]" placeholder="This resource helps students by..." rows="3">{$resource->description}</textarea>
 		</div>
 		<div class="form-group">
 			<label for="url">Website URL</label>
@@ -59,11 +59,12 @@
 			<label for="tags">Tags</label>
 			{foreach $tags as $tag}
 
-			<div class="form-check">
+			<div class="form-check d-flex border-bottom pt-2">
 				<input class="form-check-input" type="checkbox" value="{$tag->id}" name="tags[{$tag->id}]" id="tags[{$tag->id}]}" {if $resource && $resource->tags->has($tag)}checked{/if}>
-				<label class="form-check-label" for="tags[{$tag->id}]}">
+				<label class="form-check-label d-inline" for="tags[{$tag->id}]}">
 					{$tag->name}
 				</label>
+				<button type="submit" class="ml-auto btn btn-link text-danger p-1" name="command[deletetag]" value="{$tag->id}">X</button>
 			</div>
 			{/foreach}
 		</div>

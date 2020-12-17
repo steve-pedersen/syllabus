@@ -98,7 +98,7 @@
 						<p class="card-text text-muted" id="tags{$i}" style="display:none;">
 							{if $resource->tags->count() > 0}
 							<small>
-								<strong class="pr-1">Tags: </strong>
+								<strong class="pr-1">Categories: </strong>
 								{foreach $resource->tags as $tag}
 									{$tag->name}{if !$tag@last}, {/if}
 								{/foreach}
