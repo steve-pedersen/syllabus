@@ -13,6 +13,7 @@ class Syllabus_Resources_Controller extends Syllabus_Master_Controller {
         return [
             'resources'                 => ['callback' => 'studentResources'],
             'resources/feed'            => ['callback' => 'rss'],
+            'resources/json'            => ['callback' => 'json'],
         ];
     }
 
@@ -54,7 +55,7 @@ class Syllabus_Resources_Controller extends Syllabus_Master_Controller {
             $title = rtrim($item->title);
             $end = (strlen(strip_tags($item->description)) <= $descLength) ? '' : '...';
             // $end = (strlen($item->description) <= $descLength) ? '' : '';
-            $desc = substr(trim(strip_tags($item->description)), 0, $descLength) . $end;
+            $desc = substr(trim(strip_tags(str_replace("\r", '', $item->description))), 0, $descLength) . $end;
             // $desc = substr(trim($item->description), 0, $descLength) . $end;
             $desc = str_replace("\"", "'", $desc);
             $link = rtrim($item->url);
@@ -80,5 +81,39 @@ class Syllabus_Resources_Controller extends Syllabus_Master_Controller {
         exit;
     }
 
+    public function json ()
+    {
+        $resources = $this->schema('Syllabus_Syllabus_CampusResource');
+        $resources = $resources->find($resources->deleted->isNull()->orIf($resources->deleted->isFalse()));
+        $tags = $this->schema('Syllabus_Resources_Tag');
+        $tags = $tags->findValues('name');
 
+        $formatted = [];
+        $formatted['website'] = $this->baseUrl('resources');
+        $formatted['allCategories'] = $tags;
+        $formatted['resources'] = [];
+        foreach ($resources as $resource)
+        {
+        	// $formatted[$resource->id] = [];
+        	$item = [];
+        	$item['resourceId'] = $resource->id;
+        	$item['title'] = rtrim($resource->title);
+        	$item['description'] = trim(strip_tags(str_replace("\r", '', $resource->description)));
+        	$item['url'] = $this->baseUrl('resources?spotlight=' . $resource->id);
+        	$item['image'] = $this->baseUrl($resource->imageSrc);
+        	$item['createdDate'] = $resource->createdDate->format('Y-m-d h:i a');
+        	$item['modifiedDate'] = $resource->modifiedDate ? $resource->modifiedDate->format('Y-m-d h:i a') : $item['createdDate'];
+        	$item['image'] = $this->baseUrl($resource->imageSrc);
+        	$item['categories'] = [];
+        	foreach ($resource->tags as $tag)
+        	{
+        		$item['categories'][] = $tag->name;
+        	}
+
+        	$formatted['resources'][] = $item;
+        }
+
+        echo json_encode($formatted);
+        exit;
+    }
 }

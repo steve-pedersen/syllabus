@@ -144,7 +144,7 @@
 				<div class="col-sm-12 col-md-8 col-lg-6 d-block dont-break-out">
 					<span id="resourceDescription"></span>
 					<span class="d-block mt-2 align-bottom">
-						<strong class="d-block">Website: </strong><a target="_blank" href="" id="resourceUrl" style="letter-spacing:0.8px;"></a>
+						<strong class="d-block">Website: </strong><a target="_blank" href="" id="resourceUrl"></a>
 					</span>
 					<p id="resourceTags" class="mt-2">
 						

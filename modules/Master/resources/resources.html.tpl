@@ -63,14 +63,14 @@
 			<div class="footer-row-2 container-fluid">
 				<div class="container">
 					<div class="row">
-						<div id="contact-university" class="col">
+						<div id="contact-university" class="col-sm-6">
 							<a href="https://sfsu.edu/"> <img src="assets/images/SFState_H_rgb.jpg" alt="San Francisco State University Logo" height="50" class="logo"></a>
 							<ul class="list-unstyled">
 								<li><a href="https://sfsu.edu/">San Francisco State University</a></li>
 								<li class="first"><a href="https://www.calstate.edu/">A California State University Campus</a></li>
 							</ul>
 						</div>
-						<div id="contact-local" class="col">
+						<div id="contact-local" class="col-sm-6">
 							<ul class="list-unstyled">
 								<li><strong><a href="https://at.sfsu.edu">Academic Technology</a></strong></li>
 							</ul>
