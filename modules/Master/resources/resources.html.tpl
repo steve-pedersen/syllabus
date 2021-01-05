@@ -84,11 +84,11 @@
 		{if $gtagId}{literal}
 		<script async src="https://www.googletagmanager.com/gtag/js?id={/literal}{$gtagId}{literal}"></script>
 		<script>
-		  window.dataLayer = window.dataLayer || [];
-		  function gtag(){dataLayer.push(arguments);}
-		  gtag('js', new Date());
-		​
-		  gtag('config', '{/literal}{$gtagId}{literal}');
+			window.dataLayer = window.dataLayer || [];
+			function gtag(){dataLayer.push(arguments);}
+			gtag('js', new Date());
+
+			gtag('config', '{/literal}{$gtagId}{literal}');
 		</script>
 		{/literal}{/if}
 	</body>
