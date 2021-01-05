@@ -70,6 +70,7 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
         $this->template->userMessageList = $this->userMessageList;
         $this->template->includeScripts = $this->includeScriptList;
         $this->template->analyticsCode = $this->getApplication()->configuration->getProperty('analyticsTrackingCode');
+        $this->template->gtagId = $this->getApplication()->configuration->getProperty('gtagId');
         $this->template->setPageTitle(!empty($this->pageTitle) ? implode(' - ', $this->pageTitle) : '');
 
         $session = $this->request->getSession();

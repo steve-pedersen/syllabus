@@ -66,7 +66,7 @@
 						<div id="contact-university" class="col-sm-6">
 							<a href="https://sfsu.edu/"> <img src="assets/images/SFState_H_rgb.jpg" alt="San Francisco State University Logo" height="50" class="logo"></a>
 							<ul class="list-unstyled">
-								<li><a href="https://sfsu.edu/">San Francisco State University</a></li>
+								<li><a href="https://sfsu.edu/">San Francisco State University{$gtagId}</a></li>
 								<li class="first"><a href="https://www.calstate.edu/">A California State University Campus</a></li>
 							</ul>
 						</div>
@@ -81,15 +81,14 @@
 		</nav>
 	</footer>
 		<script src="assets/js/app.js"></script>
-		{if $analyticsCode}{literal}
+		{if $gtagId}{literal}
+		<script async src="https://www.googletagmanager.com/gtag/js?id={/literal}{$gtagId}{literal}"></script>
 		<script>
-		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-		  ga('create', '{/literal}{$analyticsCode}{literal}', 'auto');
-		  ga('send', 'pageview');
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+		​
+		  gtag('config', '{/literal}{$gtagId}{literal}');
 		</script>
 		{/literal}{/if}
 	</body>
