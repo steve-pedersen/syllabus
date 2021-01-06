@@ -131,7 +131,7 @@
 	#imagebar {
 		height: 50px;
 		background-color: $sfstate-yellow-1;
-		background: #330033 url("../images/gold-60pct-50pctopacity_0.jpg") repeat-x 50% 0;
+		background: $sfstate-yellow-1 url("../images/gold-60pct-50pctopacity_0.jpg") repeat-x 50% 0;
 	}
 
 	.sticky-footer .at-footer {
@@ -160,7 +160,7 @@
 	}
 
 	#topSplash {
-		background: rgba(0,79,113, 0.8);
+		background-color: rgba(0,79,113, 0.8);
 		background-image: linear-gradient(to bottom, rgba(0,79,113, 0.8), rgba(0,79,113, 1)), url(../images/bantersnaps-9o8YdYGTT64-unsplash.jpg);
 	    background-size: cover;
 	    position: relative;
