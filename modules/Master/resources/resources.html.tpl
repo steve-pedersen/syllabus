@@ -23,6 +23,7 @@
 	</head>
 
 	<body id="resourcesMasterTemplate">
+		<a href="#mainContent" class="sr-only sr-only-focusable">Skip Navigation</a>
 
     <div class="wrapper" id="viewTemplate">
         <!-- Page Content  -->
