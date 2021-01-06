@@ -79,7 +79,7 @@
 			</div>
 		</nav>
 	</footer>
-		<script src="assets/js/app.js"></script>
+		<script src="assets/js/resourcesApp.js"></script>
 		{if $gtagId}{literal}
 		<script async src="https://www.googletagmanager.com/gtag/js?id={/literal}{$gtagId}{literal}"></script>
 		<script>
