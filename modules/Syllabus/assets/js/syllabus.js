@@ -131,7 +131,7 @@
 		window.history.replaceState({}, null, '');
 	});
 
-	if ($('#filterResources').val() !== "") {
+	if ($('#filterResources').length && $('#filterResources').val() !== "") {
 		filterResources($('#filterResources')[0], false);
 	}
 
