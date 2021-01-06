@@ -1,16 +1,16 @@
 
 
 <div class="campus-resources">
-<div class="bg-sfstate-blue-32 py-4" id="topSplash">
-<div class="container ">
-<h1 class="mt-1" style="color: #fff">
+<div class="bg-sfstate-blue-32 py-4 pt-3" id="topSplash">
+<div class="container header-container">
+<h1 class="mt-1 mt-sm-0" style="color: #fff">
 	<span class="pb-2">Student Resources at SF State</span>
 </h1>
-<div class="wrap pb-2"><div class="left h1"></div><div class="right"></div></div>
+<div class="wrap"><div class="left h1"></div><div class="right"></div></div>
 </div>
 
-<div class="container py-3 spotlight">
-	<div class="col-12 my-2 story dont-break-out">
+<div class="container py-3 py-sm-1 spotlight">
+	<div class="col-12 story dont-break-out">
 	    <div class="story__text">
 	    	<div class="row">
 	    		<div class="col-sm-12 col-md-4 col-lg-3 text-center align-middle">
@@ -67,12 +67,14 @@
 
 {if $tags}
 	<div class="col-md-12 col-lg-4">
-	<select class="form-control" id="filterResources">
+	<label for="filterResources" class="sr-only">Select category</label>
+	<select class="form-control" id="filterResources" title="Select category...">
 		<option value="" default>Select category...</option>
 		{foreach $tags as $tag}
 			<option value="{$tag->name}" {if $filter|ucfirst == $tag->name}selected{/if}>{$tag->name}</option>
 		{/foreach}
 	</select>
+	<!-- <button type="submit" class="sr-only sr-only-focusable" id="submitFilter">Submit</button> -->
 	<button class="btn btn-link" id="removeFilterResources" style="display:none;">Remove filter</button>
 	</div>
 {/if}

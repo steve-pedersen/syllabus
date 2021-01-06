@@ -20,14 +20,9 @@
 		<meta name="twitter:description" content="This website compiles together all the various resources that are available to students at SF State.">
 		<meta property="og:image" content="assets/images/resources-icon.png" />
 		<meta name="twitter:image:src" content="assets/images/resources-icon.png">
-<style type="text/css">
-
-
-</style>
 	</head>
 
 	<body id="resourcesMasterTemplate">
-		<a href="#mainContent" class="sr-only sr-only-focusable">Skip Navigation</a>
 
     <div class="wrapper" id="viewTemplate">
         <!-- Page Content  -->
@@ -39,16 +34,20 @@
 				<div class="container">
 				<nav class="navbar navbar-expand-lg navbar-dark">
 					<div class="navbar-brand d-block-inline mr-auto mobile-brand">
-	                	<a class="" href="https://sfsu.edu">SAN FRANCISCO STATE UNIVERSITY</a>
+	                	<a class="" href="https://sfsu.edu" tabindex="1">SAN FRANCISCO STATE UNIVERSITY</a>
 						<!-- &nbsp;|&nbsp; -->
 						<small id="smallLink" class="pl-2">
-							<a href="resources">Student Resources</a>
+							<a href="resources" tabindex="2">Student Resources</a>
 						</small>
 					</div>
 				</nav>
 		    	</div>
 			</header>	
-			<div id="imagebar"></div>
+			<div id="imagebar">
+				<h1 id="homeLink" class="pl-3" style="display:none;">
+					<a href="resources" tabindex="2">Student Resources</a>
+				</h1>
+			</div>
 
 			<main role="main" class="" id="mainContent"> 
 				<!-- MAIN CONTENT -->

@@ -131,6 +131,13 @@
 		window.history.replaceState({}, null, '');
 	});
 
+	// $('#submitFilter').on('click', function(e) {
+	// 	filterResources($('#filterResources'), false);
+	// });
+	// $('#submitFilter').on('keypress', function(e) {
+	// 	filterResources($('#filterResources'), false);
+	// });
+
 	if ($('#filterResources').length && $('#filterResources').val() !== "") {
 		filterResources($('#filterResources')[0], false);
 	}
