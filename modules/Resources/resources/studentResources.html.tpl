@@ -19,10 +19,10 @@
 	    			</span>
 	    		</div>
 	    		<div class="col-sm-12 col-md-8 col-lg-9">
-			        <h3 class="heading-tertiary u-margin-bottom-small">
+			        <h2 class="heading-tertiary u-margin-bottom-small">
 			        	{$spotlight->title}{if $spotlight->abbreviation} 
 			        	<small>({$spotlight->abbreviation})</small>{/if}
-			        </h3>
+			        </h2>
 			        <p>
 			            {$spotlight->description}
 			        </p>
@@ -91,7 +91,7 @@
 				<div class="media campus-resource">
 					<img class="align-self-center mr-2 ml-0 img-thumbnail" id="image{$i}" src="{$resource->imageSrc}" alt="{$resource->title}" style="max-width:5rem;">
 					<div class="media-body pl-1 d-block">
-						<h5 class="card-title" id="title{$i}">{$resource->title}{if $resource->abbreviation} <small>({$resource->abbreviation})</small>{/if}</h5>
+						<h3 class="card-title" id="title{$i}">{$resource->title}{if $resource->abbreviation} <small>({$resource->abbreviation})</small>{/if}</h3>
 						<div class="wrap pb-2"><div class="left"></div><div class="right"></div></div>
 						<div class="card-text text-muted" id="text{$i}">
 							{$resource->description}
