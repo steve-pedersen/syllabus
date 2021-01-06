@@ -642,7 +642,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     }
                     $this->template->campusResources = $campusResources->find(
                         $campusResources->deleted->isFalse()->orIf($campusResources->deleted->isNull()),
-                        ['orderBy' => ['sortOrder', 'title']]
+                        ['orderBy' => ['title']]
                     );   
                     $this->template->guideDocs = $guideDocs->find(
                         $guideDocs->active->isTrue()->andIf($guideDocs->active->isNotNull()),
@@ -1310,7 +1310,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 			        $campusResources = $this->schema('Syllabus_Syllabus_CampusResource');
                 	$this->template->campusResources = $campusResources->find(
 			            $campusResources->deleted->isFalse()->orIf($campusResources->deleted->isNull()),
-			            ['orderBy' => ['sortOrder', 'title']]
+			            ['orderBy' => ['title']]
 			        );
                 }
                 if ($realSectionExtension->hasDefaults() && ($defaults = $realSection->getDefaults()))
@@ -1362,7 +1362,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 		        $campusResources = $this->schema('Syllabus_Syllabus_CampusResource');
             	$this->template->campusResources = $campusResources->find(
 		            $campusResources->deleted->isFalse()->orIf($campusResources->deleted->isNull()),
-		            ['orderBy' => ['sortOrder', 'title']]
+		            ['orderBy' => ['title']]
 		        );
             }
             elseif ($realSectionExtension->getExtensionName() === 'instructors')

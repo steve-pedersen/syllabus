@@ -166,7 +166,7 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_Controller
 
         $allResources = $campusResources->find(
             $campusResources->deleted->isFalse()->orIf($campusResources->deleted->isNull()),
-            ['orderBy' => ['sortOrder', 'title']]
+            ['orderBy' => ['title']]
         );
         $bottommostPosition = -1;
         if ($allResources)
