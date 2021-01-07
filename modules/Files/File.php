@@ -211,7 +211,7 @@ class Syllabus_Files_File extends Bss_ActiveRecord_Base
                     array(
                         'etag' => $hash,
                         'lastModified' => $mtime,
-                        'expires' => new DateTime('tomorrow'),
+                        'expires' => new DateTime('now +1 year'),
                         'attachmentName' => $this->remoteName,
                     )
                 );
