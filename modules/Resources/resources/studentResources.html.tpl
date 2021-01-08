@@ -27,8 +27,7 @@
 			            {$spotlight->description}
 			        </p>
 			        <p>
-			            <strong class="mr-1">Website: </strong>
-			            <a href="{$spotlight->url}" target="_blank">{$spotlight->url}</a>
+			            <a href="{$spotlight->url}" target="_blank">Visit the {$spotlight->title} website</a>
 			        </p>
 			        {if $spotlight->tags && $spotlight->tags->count() > 0}
 			        <p class="card-text mt-1">
