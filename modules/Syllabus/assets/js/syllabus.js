@@ -148,12 +148,13 @@
 		let title = cardBody.find('#title'+id);
 		let img = cardBody.find('#image'+id);
 		let url = cardBody.find('#url'+id);
-		let text = cardBody.find('#text'+id);
+		let hiddenText = cardBody.find('#hiddenText'+id);
+		let text = hiddenText.length ? hiddenText : cardBody.find('#text'+id);
 		let tags = cardBody.find('#tags'+id);
 		$('#resourceTitle').html(title.html());
-		$('#resourceImage').attr('src', img.attr('src')).attr('alt', img.attr('alt'));
+		$('#resourceImage').attr('src', img.attr('src'));
 		$('#resourceDescription').html(text.html());
-		$('#resourceUrl').attr('href', url.text()).text(url.text());
+		$('#resourceUrl').attr('href', url.text()).text('Visit ' + title.text());
 		$('#resourceTags').html(tags.html());
 	});
 	$('#resourceAddModal').on('show.bs.modal', function(e) {
