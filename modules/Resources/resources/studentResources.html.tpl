@@ -93,7 +93,7 @@
 						<h3 class="card-title" id="title{$i}">{$resource->title}{if $resource->abbreviation} <small>({$resource->abbreviation})</small>{/if}</h3>
 						<div class="wrap pb-2"><div class="left"></div><div class="right"></div></div>
 						<div class="card-text text-muted" id="text{$i}">
-							{$resource->description|truncate:150}
+							{$resource->description|truncate:110}
 						</div>
 						<span aria-hidden="true" style="display:none;" id="hiddenText{$i}">{$resource->description}</span>
 						{if $resource->tags}
