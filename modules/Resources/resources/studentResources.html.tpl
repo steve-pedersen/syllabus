@@ -89,13 +89,14 @@
 			<div class="card-body" id="{$i}">
 				<input type="hidden" value="{$resource->id}" id="campusResourceId{$i}">
 				<div class="media campus-resource">
-					<img class="align-self-center mr-2 ml-0 img-thumbnail" id="image{$i}" src="{$resource->imageSrc}" alt="{$resource->title}" style="max-width:5rem;">
+					<img class="align-self-center mr-2 ml-0 img-thumbnail" id="image{$i}" src="{$resource->imageSrc}" alt="" style="max-width:5rem;">
 					<div class="media-body pl-1 d-block">
 						<h3 class="card-title" id="title{$i}">{$resource->title}{if $resource->abbreviation} <small>({$resource->abbreviation})</small>{/if}</h3>
 						<div class="wrap pb-2"><div class="left"></div><div class="right"></div></div>
 						<div class="card-text text-muted" id="text{$i}">
-							{$resource->description}
+							{$resource->description|truncate:150}
 						</div>
+						<span aria-hidden="true" style="display:none;" id="hiddenText{$i}">{$resource->description}</span>
 						{if $resource->tags}
 						<p class="card-text text-muted" id="tags{$i}" style="display:none;">
 							{if $resource->tags->count() > 0}
@@ -110,7 +111,7 @@
 						{/if}
 						<span id="url{$i}" class="hidden" hidden>{$resource->url}</span>
 						<div class="align-bottom">
-						<button id="preview{$i}" class="btn btn-sfstate-purple-1 btn-sm" data-toggle="modal" data-target="#resourcePreviewModal">
+						<button id="preview{$i}" class="btn btn-sfstate-purple-1 btn-sm" data-toggle="modal" data-target="#resourcePreviewModal" aria-label="{$resource->title} Info">
 							More Info
 						</button>
 						</div>
@@ -146,7 +147,7 @@
 				<div class="col-sm-12 col-md-8 col-lg-6 d-block dont-break-out">
 					<span id="resourceDescription"></span>
 					<span class="d-block mt-2 align-bottom">
-						<strong class="d-block">Website: </strong><a target="_blank" href="" id="resourceUrl"></a>
+						<a target="_blank" href="" id="resourceUrl"></a>
 					</span>
 					<p id="resourceTags" class="mt-2">
 						
