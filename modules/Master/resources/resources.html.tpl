@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {assign var="appName" value="Student Resources at SF State"}
-<html>
+<html lang="en">
 	<head>
 {*may not be needed*}		<meta charset="utf-8">
 {*may not be needed*}    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,7 +23,7 @@
 	</head>
 
 	<body id="resourcesMasterTemplate">
-		<a href="#mainContent" class="sr-only sr-only-focusable">Skip Navigation</a>
+		<a href="#mainContent" class="sr-only sr-only-focusable" tabindex="0">Skip Navigation</a>
 
     <div class="wrapper" id="viewTemplate">
         <!-- Page Content  -->
@@ -35,10 +35,10 @@
 				<div class="container">
 				<nav class="navbar navbar-expand-lg navbar-dark">
 					<div class="navbar-brand d-block-inline mr-auto mobile-brand">
-	                	<a class="" href="https://sfsu.edu" tabindex="1">SAN FRANCISCO STATE UNIVERSITY</a>
+	                	<a class="" href="https://sfsu.edu">SAN FRANCISCO STATE UNIVERSITY</a>
 						<!-- &nbsp;|&nbsp; -->
 						<small id="smallLink" class="pl-2">
-							<a href="resources" tabindex="2">Student Resources</a>
+							<a href="resources">Student Resources</a>
 						</small>
 					</div>
 				</nav>
@@ -46,7 +46,7 @@
 			</header>	
 			<div id="imagebar">
 				<h1 id="homeLink" class="pl-3" style="display:none;">
-					<a href="resources" tabindex="2">Student Resources</a>
+					<a href="resources">Student Resources</a>
 				</h1>
 			</div>
 
