@@ -43,7 +43,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             'syllabus/:courseid/publishreturn' => ['callback' => 'publishAndReturn'],
             'syllabus/:courseid/link/:code'=> ['callback' => 'getTemporaryLink'],
             'syllabus/notfound' => ['callback' => 'syllabusNotFound'],
-            'syllabus/:id'              => ['callback' => 'edit', ':id' => '[0-9]+|new'],
+            'syllabus/:id'              => ['callback' => 'edit'],
         ];
     }
 
