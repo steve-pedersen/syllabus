@@ -61,7 +61,7 @@ class Syllabus_Resources_Controller extends Syllabus_Master_Controller {
             $link = rtrim($item->url);
             $link = $this->baseUrl('resources?spotlight=' . $item->id);
             $src = $this->baseUrl($item->imageSrc);
-            $img = "<img src='".$src."' alt='$title logo' class='img-responsive' style='width:90px;float:left;padding-right:7px;'>";
+            $img = "<img src='".$src."' alt='$title logo' class='img-responsive' style='display:block;'>";
 
             echo "<item>";
                 echo "<title>$title</title>";
