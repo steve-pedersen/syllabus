@@ -18,8 +18,8 @@
 		<meta property="og:description" content="This website compiles together all the various resources that are available to students at SF State." />
 		<meta name="twitter:title" content="Student Resources at SF State">
 		<meta name="twitter:description" content="This website compiles together all the various resources that are available to students at SF State.">
-		<meta property="og:image" content="assets/images/undraw_studying_s3l7.svg" />
-		<meta name="twitter:image:src" content="assets/images/undraw_studying_s3l7.svg">
+		<meta property="og:image" content="assets/images/resources-preview.jpg" />
+		<meta name="twitter:image:src" content="assets/images/resources-preview.jpg">
 	</head>
 
 	<body id="resourcesMasterTemplate">
