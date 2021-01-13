@@ -48,7 +48,7 @@ class Syllabus_Resources_Controller extends Syllabus_Master_Controller {
         echo "<description>This feed shows random resources available on campus to SF State students.</description>";
         echo "<link>$url</link>";
 
-        $descLength = 181;
+        $descLength = 140;
         foreach ($random3 as $key)
         {
             $item = $resources[$key];
