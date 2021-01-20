@@ -126,7 +126,7 @@
     </div>
     <div class="mb-4">
         
-        <div class="col border rounded px-4 py-4 share-card" style="">
+        <div class="col border rounded px-4 py-4 share-card" style="" id="grantEditAccess">
             <h3 class="pb-2">Grant Edit Access</h3> 
             <div class="wrap pb-2"><div class="left"></div><div class="right"></div></div>
             <div class="form-row p-3">

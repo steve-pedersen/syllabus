@@ -86,7 +86,11 @@
 					</a>
 					<div class="dropdown-divider"></div>
 					<a href="{$routeBase}syllabus/startwith/{$syllabus->id}" class="dropdown-item">
-						<i class="far fa-copy  mr-3 text-secondary"></i> Clone
+						<i class="far fa-copy mr-3 text-secondary"></i> Clone
+					</a>
+					<div class="dropdown-divider"></div>
+					<a href="syllabus/{$syllabus->id}/share#grantEditAccess" class="dropdown-item">
+						<i class="fas fa-user-edit mr-3 text-info"></i>Add Editor
 					</a>
 				{if $syllabus->inDataSource}
 					<div class="dropdown-divider"></div>
