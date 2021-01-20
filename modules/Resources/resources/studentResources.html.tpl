@@ -84,7 +84,7 @@
 <div class="row all-resources">
 {foreach $resources as $i => $resource}	
 	<div class="col-lg-4 col-md-6 my-2 resource {foreach $resource->tags as $tag}{$tag->name} {/foreach}">
-		<div class="card" style="min-height:12rem;">
+		<div class="card" style="min-height:11rem;">
 			<div class="card-body" id="{$i}">
 				<input type="hidden" value="{$resource->id}" id="campusResourceId{$i}">
 				<div class="media campus-resource">
