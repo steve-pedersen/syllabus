@@ -122,7 +122,7 @@
 
 	$('#filterResources').on('change', function(e) {
 		filterResources(e.target, false);
-		window.history.replaceState({}, null, '?category=' + e.target.value);
+		window.history.replaceState({}, null, (e.target.value ? '?category=' + e.target.value : ''));
 	});
 
 	$('#removeFilterResources').on('click', function(e) {

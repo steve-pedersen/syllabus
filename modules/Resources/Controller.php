@@ -85,9 +85,13 @@ class Syllabus_Resources_Controller extends Syllabus_Master_Controller {
     {
         $resources = $this->schema('Syllabus_Syllabus_CampusResource');
         $resources = $resources->find($resources->deleted->isNull()->orIf($resources->deleted->isFalse()));
-        $tags = $this->schema('Syllabus_Resources_Tag');
-        $tags = $tags->findValues('name');
-
+        $tagNames = $this->schema('Syllabus_Resources_Tag')->findValues('name');
+        $tags = [];
+        foreach ($tagNames as $name)
+        {
+            $tags[] = ['name' => $name, 'url' => $this->baseUrl('resources?category=' . urlencode($name))];
+        }
+        
         $formatted = [];
         $formatted['website'] = $this->baseUrl('resources');
         $formatted['allCategories'] = $tags;
