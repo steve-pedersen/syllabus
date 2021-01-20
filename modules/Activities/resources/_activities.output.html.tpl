@@ -5,8 +5,8 @@
 		<thead class="thead-dark">
 			<tr>
 				<!-- <th scope="col">#</th> -->
-			<th scope="col" style="min-width:5em;">Name</th>
-			<th scope="col" style="width:8%;min-width:5em;">Contribution to Grade</th>
+			<th scope="col" style="width:17%;">Name</th>
+			<th scope="col" style="width:17%;">Contribution to Grade</th>
 			<th scope="col" style="min-width:40%;">Description</th>
 			</tr>
 		</thead>
