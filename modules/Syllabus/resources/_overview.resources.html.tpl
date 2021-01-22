@@ -22,7 +22,7 @@
 						<h5 class="card-title" id="title{$i}">{$campusResource->title}{if $campusResource->abbreviation} <small>({$campusResource->abbreviation})</small>{/if}</h5>
 						<div class="wrap pb-2"><div class="left"></div><div class="right"></div></div>
 						<div class="card-text text-muted" id="text{$i}">
-							{$campusResource->description}
+							{$campusResource->description|allow_basic_html}
 						</div>
 						<span id="url{$i}" class="hidden" hidden>{$campusResource->url}</span>
 						<div class="">

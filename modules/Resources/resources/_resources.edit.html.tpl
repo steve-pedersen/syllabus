@@ -190,7 +190,7 @@
                         <h5 class="card-title" id="title{$i}">{$campusResource->title|truncate:50}{if $campusResource->abbreviation} <small>({$campusResource->abbreviation})</small>{/if}</h5>
                         <div class="wrap pb-2"><div class="left"></div><div class="right"></div></div>
                         <div class="card-text text-muted" id="text{$i}">
-                            {$campusResource->description|truncate:200}
+                            {$campusResource->description|truncate:200|allow_basic_html}
                         </div>
                         <div class="w-100 d-block dont-break-out">
                             <span id="url{$i} text-truncate">{l text="{$campusResource->url}" href=$campusResource->url}</span>

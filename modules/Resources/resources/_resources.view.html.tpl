@@ -18,7 +18,7 @@
 		    <image style="width:100px;" class="align-self-top mr-3" alt="{$resource->title}" src="{$resource->getImageSrc()}">
 		    {/if}
 		    <div class="media-body">
-		        {$resource->description}
+		        {$resource->description|allow_basic_html}
 		    </div>
 		</div>
 	</div>
