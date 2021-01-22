@@ -140,6 +140,9 @@
 {else}
 	{assign var=relevantSyllabi value=$syllabi}
 {/if}
+{if $courseSection}
+	{assign var=toCourse value=$courseSection->id}
+{/if}
 {if $instructorView}
 	{assign var=btnStartTemplateForCourse value=false}
 	{assign var=isTemplate value=false}

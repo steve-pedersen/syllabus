@@ -44,7 +44,9 @@
 	<div class="card-footer">
 		<div class="align-bottom mt-auto px-2 row">
 			{if $btnStart}
-			<a class="btn btn-success" href="syllabus/startwith/{$syllabus->id}">Start From {if $isTemplate}Template{else}Syllabus{/if}</a>
+			<a class="btn btn-success" href="syllabus/startwith/{$syllabus->id}{if $toCourse}?to={$toCourse}{/if}">
+				Start From {if $isTemplate}Template{else}Syllabus{/if}
+			</a>
 			{/if}
 
 			{if $btnEdit}
