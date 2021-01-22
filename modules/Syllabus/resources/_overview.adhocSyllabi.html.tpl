@@ -32,7 +32,7 @@
 					<p class="card-text text-center">
 						{$syllabus->latestVersion->description|truncate:125}
 						{if $syllabusRole->expiryDate}<br>
-							My edit access expires in:<br><span class="text-primary">{$syllabusRole->expiration}</span>
+							My edit access expires in:<br><span class="text-primary">{$syllabusRole->expiryDate->format('F jS, Y')}</span>
 						{/if}
 					</p>
 					<div class="btn-groups text-center my-1" role="group" aria-label="Edit & View buttons">
@@ -46,7 +46,9 @@
 				</div>
 			</div>
 			<div class="card-footer">
-				<small>Last modified: {$syllabus->modifiedDate->format('F jS, Y - h:i a')}</small>
+				{if $syllabus->modifiedDate}
+					<small>Last modified: {$syllabus->modifiedDate->format('F jS, Y - h:i a')}</small>
+				{/if}
 			</div>
 		</div>
 	</div>
