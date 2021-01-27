@@ -12,7 +12,7 @@
 
 <div class="container text-center my-5">
 	<h1 class="mb-3">Online Syllabus Tool</h1>
-	<a class="login-button btn btn-primary btn-lg" href="{$app->baseUrl('login')}">Log into the New Syllabus</a>
+	<a class="login-button btn btn-primary btn-lg" href="{$app->baseUrl('login')}">Log in to Syllabus</a>
 </div>
 
 {if $welcomeTextBottomColumn1 || $welcomeTextBottomColumn2}
