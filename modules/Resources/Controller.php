@@ -88,7 +88,8 @@ class Syllabus_Resources_Controller extends Syllabus_Master_Controller {
         $tags = $this->schema('Syllabus_Resources_Tag');
 
         $quantity = $this->request->getQueryParameter('quantity', 1);
-
+        $quantity = is_numeric($quantity) ? $quantity : 1;
+        
         $categories = [];
         foreach (explode(',', $this->request->getQueryParameter('categories', null)) as $category)
         {
@@ -115,10 +116,10 @@ class Syllabus_Resources_Controller extends Syllabus_Master_Controller {
         else
         {
             $filteredResources = $resources;
-            
         }
 
-        $temp = array_rand($filteredResources, ($quantity > count($filteredResources) ? count($filteredResources) : $quantity));
+        $quantity = $quantity > count($filteredResources) ? count($filteredResources) : $quantity;
+        $temp = !empty($filteredResources) ? array_rand($filteredResources, $quantity) : [];
         $temp = is_array($temp) ? $temp : [$temp];
         $randomized = [];
         foreach ($temp as $index)
