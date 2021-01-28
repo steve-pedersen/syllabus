@@ -85,7 +85,48 @@ class Syllabus_Resources_Controller extends Syllabus_Master_Controller {
     {
         $resources = $this->schema('Syllabus_Syllabus_CampusResource');
         $resources = $resources->find($resources->deleted->isNull()->orIf($resources->deleted->isFalse()), ['orderBy' => 'title']);
-        $tagNames = $this->schema('Syllabus_Resources_Tag')->findValues('name');
+        $tags = $this->schema('Syllabus_Resources_Tag');
+
+        $quantity = $this->request->getQueryParameter('quantity', 1);
+
+        $categories = [];
+        foreach (explode(',', $this->request->getQueryParameter('categories', null)) as $category)
+        {
+            if ($category)
+            {
+                $categories[] = $tags->findOne($tags->name->equals(ucwords($category)));
+            }
+        }
+
+        $filteredResources = [];
+        if (!empty($categories))
+        {
+            foreach ($categories as $category)
+            {
+                foreach ($resources as $resource)
+                {
+                    if ($resource->tags->has($category) && !in_array($resource, $filteredResources))
+                    {   
+                        $filteredResources[] = $resource;
+                    }
+                }
+            }
+        }
+        else
+        {
+            $filteredResources = $resources;
+            
+        }
+
+        $temp = array_rand($filteredResources, ($quantity > count($filteredResources) ? count($filteredResources) : $quantity));
+        $temp = is_array($temp) ? $temp : [$temp];
+        $randomized = [];
+        foreach ($temp as $index)
+        {
+            $randomized[] = $filteredResources[$index];
+        }
+
+        $tagNames = $tags->findValues('name');
         $tags = [];
         foreach ($tagNames as $name)
         {
@@ -96,25 +137,25 @@ class Syllabus_Resources_Controller extends Syllabus_Master_Controller {
         $formatted['website'] = $this->baseUrl('resources');
         $formatted['allCategories'] = $tags;
         $formatted['resources'] = [];
-        foreach ($resources as $resource)
+        foreach ($randomized as $resource)
         {
-        	// $formatted[$resource->id] = [];
-        	$item = [];
-        	$item['resourceId'] = $resource->id;
-        	$item['title'] = rtrim($resource->title);
-        	$item['description'] = trim(strip_tags(str_replace("\r", '', $resource->description)));
-        	$item['url'] = $this->baseUrl('resources?spotlight=' . $resource->id);
-        	$item['image'] = $this->baseUrl($resource->imageSrc);
-        	$item['createdDate'] = $resource->createdDate->format('Y-m-d h:i a');
-        	$item['modifiedDate'] = $resource->modifiedDate ? $resource->modifiedDate->format('Y-m-d h:i a') : $item['createdDate'];
-        	$item['image'] = $this->baseUrl($resource->imageSrc);
-        	$item['categories'] = [];
-        	foreach ($resource->tags as $tag)
-        	{
-        		$item['categories'][] = $tag->name;
-        	}
+            $item = [];
+            $item['resourceId'] = $resource->id;
+            $item['title'] = rtrim($resource->title);
+            $item['description'] = trim(strip_tags(str_replace("\r", '', $resource->description)));
+            $item['url'] = $this->baseUrl('resources?spotlight=' . $resource->id);
+            $item['image'] = $this->baseUrl($resource->imageSrc);
+            $item['createdDate'] = $resource->createdDate->format('Y-m-d h:i a');
+            $item['modifiedDate'] = $resource->modifiedDate ? $resource->modifiedDate->format('Y-m-d h:i a') : $item['createdDate'];
+            $item['image'] = $this->baseUrl($resource->imageSrc);
+            $item['categories'] = [];
+            foreach ($resource->tags as $tag)
+            {
+                $item['categories'][] = $tag->name;
+            }
 
-        	$formatted['resources'][] = $item;
+            $formatted['resources'][] = $item;
+            if (count($formatted['resources']) == $quantity) break;
         }
 
         echo json_encode($formatted);
