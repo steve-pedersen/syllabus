@@ -95,7 +95,7 @@ class Syllabus_Resources_Controller extends Syllabus_Master_Controller {
         {
             if ($category)
             {
-                $categories[] = $tags->findOne($tags->name->equals(ucwords($category)));
+                $categories[] = $tags->findOne($tags->name->equals($category));
             }
         }
 
