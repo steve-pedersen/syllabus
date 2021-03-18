@@ -24,7 +24,7 @@ class Syllabus_ClassData_Service
     {
         $siteSettings = $app->siteSettings;
         $this->application = $app;
-        $this->urlBase = $siteSettings->getProperty('classdata-api-url') ?? 'http://classdata.dev.at.sfsu.edu/'; // TODO: remove these hardcoded values
+        $this->urlBase = $siteSettings->getProperty('classdata-api-url') ?? 'https://classdata.sfsu.edu/'; // TODO: remove these hardcoded values
         $this->apiKey = $siteSettings->getProperty('classdata-api-key') ?? 'ca1a3f6f-7cac-4e52-9a0a-5cbf82b16bc9';
         $this->apiSecret = $siteSettings->getProperty('classdata-api-secret') ?? '4af2614e-142d-4db8-8512-b3ba13dd0143';
         $this->channel = $channel;
@@ -212,8 +212,8 @@ class Syllabus_ClassData_Service
             $departments = $this->getSchema('Syllabus_AcademicOrganizations_Department');
 
             $allColleges = $colleges->findValues(['name' => 'id']);
-            $allDepartments = $departments->findValues(['name' => 'id']);
-
+            $allDepartments = $departments->findValues(['externalKey' => 'name']);
+            
             foreach ($result as $collegeName => $departmentList)
             {
                 if (!isset($allColleges[$collegeName]))
@@ -228,9 +228,10 @@ class Syllabus_ClassData_Service
 
                 foreach ($departmentList['departments'] as $id => $departmentName)
                 {
-                    if (!isset($allDepartments[$departmentName]))
+                    $department = $departments->findOne($departments->externalKey->equals($id)) ?? $departments->createInstance();
+                    $department->name = $departmentName;
+                    if (!isset($allDepartments[$id]))
                     {
-                        $department = $departments->createInstance();
                         $department->createdDate = new DateTime;
                         $department->modifiedDate = new DateTime;
                         $department->name = $departmentName;
@@ -238,8 +239,9 @@ class Syllabus_ClassData_Service
                         $department->externalKey = $id;
                         $department->abbreviation = $id;
                         $department->save();
-                        $allDepartments[$departmentName] = $department->id;
+                        $allDepartments[$id] = $department->id;
                     }
+                    $department->save();
                 }
             }
         }
