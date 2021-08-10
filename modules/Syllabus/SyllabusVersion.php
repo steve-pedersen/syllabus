@@ -83,9 +83,13 @@ class Syllabus_Syllabus_SyllabusVersion extends Bss_ActiveRecord_Base
                 $sv->log           = $this->sectionVersions->getProperty($oldSv, 'log');
 
                 $sv->normalizedVersion = $sv->section->getNormalizedVersion($sv->id);
-                $sectionVersions[] = $sv;
+
+                $order = str_pad($sv->sortOrder, 3, "0", STR_PAD_LEFT);
+
+                $sectionVersions[$order] = $sv;
             }
         }
+        ksort($sectionVersions, SORT_NATURAL);
 
         return $sectionVersions;
     }
