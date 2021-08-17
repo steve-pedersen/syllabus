@@ -91,7 +91,7 @@
                 
                 <div class="form-group learning-outcome-row row px-2">
                     <div class="col-lg-4 column1">
-                        <textarea disabled rows="3" id="ckeditor-{$i}-1" class="form-control" name="section[real][{$learningOutcomeId}][column1]">{$learningOutcome->column1}</textarea>
+                        <textarea readonly="true" rows="3" id="ckeditor-{$i}-1" class="form-control" name="section[real][{$learningOutcomeId}][column1]">{$learningOutcome->column1}</textarea>
                     </div>
                     <div class="col-lg-4 column2">
                         <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$learningOutcomeId}][column2]" placeholder="Column 2">{$learningOutcome->column2}</textarea>
@@ -140,7 +140,7 @@
         <label class="form-control-label px-2 row-label">Row #{$i + 1}</label>
         <div class="form-group learning-outcome-row row px-2">
             <div class="col-lg-4 column1">
-                <textarea disabled rows="3" id="ckeditor-{$i}-1" class="form-control" name="section[real][{$learningOutcomeId}][column1]"></textarea>
+                <textarea readonly="true" rows="3" id="ckeditor-{$i}-1" class="form-control" name="section[real][{$learningOutcomeId}][column1]"></textarea>
             </div>
             <div class="col-lg-4 column2">
                 <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$learningOutcomeId}][column2]" placeholder="Column 2"></textarea>
