@@ -72,13 +72,13 @@
                         <textarea rows="2" class="form-control wysiwyg wysiwyg-datepicker" name="section[real][{$scheduleId}][column1]" placeholder="Column 1">{$schedule->column1}</textarea>
                     </div>
                     <div class="col-lg-3 column2">
-                        <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$scheduleId}][column2]" placeholder="Column 2">{$schedule->column2}</textarea>
+                        <textarea rows="2" class="form-control wysiwyg wysiwyg-datepicker" name="section[real][{$scheduleId}][column2]" placeholder="Column 2">{$schedule->column2}</textarea>
                     </div>
                     <div class="col-lg-3 column3">
-                        <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$scheduleId}][column3]" placeholder="Column 3">{$schedule->column3}</textarea>
+                        <textarea rows="2" class="form-control wysiwyg wysiwyg-datepicker" name="section[real][{$scheduleId}][column3]" placeholder="Column 3">{$schedule->column3}</textarea>
                     </div>
                     <div class="col-lg-3 column4 collapse" id="collapseColumn" data-parent="#columnAccordion">
-                        <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$scheduleId}][column4]" placeholder="Column 4">{$schedule->column4}</textarea>
+                        <textarea rows="2" class="form-control wysiwyg wysiwyg-datepicker" name="section[real][{$scheduleId}][column4]" placeholder="Column 4">{$schedule->column4}</textarea>
                     </div>
                 </div>
             </div>

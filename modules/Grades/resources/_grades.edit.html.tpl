@@ -66,13 +66,13 @@
                 
                 <div class="form-group grade-row row px-2">
                     <div class="col-lg-4 column1">
-                        <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$gradeId}][column1]" placeholder="Column 1">{$grade->column1}</textarea>
+                        <textarea rows="2" class="form-control wysiwyg wysiwyg-table-cell" name="section[real][{$gradeId}][column1]" placeholder="Column 1">{$grade->column1}</textarea>
                     </div>
                     <div class="col-lg-4 column2">
-                        <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$gradeId}][column2]" placeholder="Column 2">{$grade->column2}</textarea>
+                        <textarea rows="2" class="form-control wysiwyg wysiwyg-table-cell" name="section[real][{$gradeId}][column2]" placeholder="Column 2">{$grade->column2}</textarea>
                     </div>
                     <div class="col-lg-4 column3 collapse" id="collapseColumn" data-parent="#columnAccordion">
-                        <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$gradeId}][column3]" placeholder="Column 3">{$grade->column3}</textarea>
+                        <textarea rows="2" class="form-control wysiwyg wysiwyg-table-cell" name="section[real][{$gradeId}][column3]" placeholder="Column 3">{$grade->column3}</textarea>
                     </div>
                 </div>
             </div>
@@ -115,13 +115,13 @@
         <label class="form-control-label px-2 row-label">Row #{$i + 1}</label>
         <div class="form-group grade-row row px-2">
             <div class="col-lg-4 column1">
-                <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$gradeId}][column1]" placeholder="Column 1"></textarea>
+                <textarea rows="2" class="form-control wysiwyg wysiwyg-table-cell" name="section[real][{$gradeId}][column1]" placeholder="Column 1"></textarea>
             </div>
             <div class="col-lg-4 column2">
-                <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$gradeId}][column2]" placeholder="Column 2"></textarea>
+                <textarea rows="2" class="form-control wysiwyg wysiwyg-table-cell" name="section[real][{$gradeId}][column2]" placeholder="Column 2"></textarea>
             </div>
             <div class="col-lg-4 column3 collapse" id="collapseColumn" data-parent="#columnAccordion">
-                <textarea rows="2" class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$gradeId}][column3]" placeholder="Column 3"></textarea>
+                <textarea rows="2" class="form-control wysiwyg wysiwyg-table-cell" name="section[real][{$gradeId}][column3]" placeholder="Column 3"></textarea>
             </div>
 
             <hr class="fancy-line-2">

@@ -5,7 +5,7 @@
 	{if $realSection->columns == 1}
 	<ul>
 		{foreach $realSection->learningOutcomes as $i => $learningOutcome}
-			<li>{$learningOutcome->column1|strip_tags}</li>
+			<li>{$learningOutcome->column1}</li>
 		{/foreach}
 	</ul>
 	{else}

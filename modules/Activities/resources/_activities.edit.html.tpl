@@ -44,7 +44,7 @@
                 <div class="form-group description row px-3">
                     <label class="col-lg-3 col-form-label form-control-label">Description</label>
                     <div class="col-lg-9">
-                        <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$activityId}][description]" rows="4">{$activity->description}</textarea>
+                        <textarea class="form-control wysiwyg wysiwyg-table-cell" name="section[real][{$activityId}][description]" rows="4">{$activity->description}</textarea>
                     </div>
                 </div>
             </div>
@@ -100,7 +100,7 @@
     <div class="form-group description row">
         <label class="col-lg-3 col-form-label form-control-label">Description</label>
         <div class="col-lg-9">
-            <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$activityId}][description]" rows="4"></textarea>
+            <textarea class="form-control wysiwyg wysiwyg-table-cell" name="section[real][{$activityId}][description]" rows="4"></textarea>
         </div>
     </div>
 </div>  
