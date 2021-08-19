@@ -16,10 +16,10 @@
         </div>
     </div>
     <div class="col-md-8 pl-md-5 pl-sm-2">
-      {include file="{$ctrl->getDragDropUploadFragment()}" action="profile/{$account->id}/upload" singleFile=true uploadedBy={$account->id} profilePhoto=true}
+      {include file="{$ctrl->getDragDropUploadFragment()}" action="profile/{$viewer->id}/upload" singleFile=true uploadedBy={$viewer->id} profilePhoto=true}
         <div class="row mt-4">
         <div class="col">
-        <p class="text-muted"><strong>Profile images can now be used in your syllabus!</strong></p>
+        <!-- <p class="text-muted"><strong>Profile images can now be used in your syllabus!</strong></p> -->
         </div>  
         </div>
     </div>

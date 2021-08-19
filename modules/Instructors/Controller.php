@@ -51,7 +51,7 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
         );
         $this->template->profileData = $data;
         $this->template->profile = $profile;
-        $this->template->account = $profileAccount;
+        // $this->template->account = $profileAccount;
         $this->template->profileImage = $profile ? $profile->imageSrc : $profiles->createInstance()->imageSrc;
     }
 
