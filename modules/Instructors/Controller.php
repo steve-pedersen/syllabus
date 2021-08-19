@@ -23,11 +23,11 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
         {
             $this->accessDenied('nope');
         }
-
+        
         $profiles = $this->schema('Syllabus_Instructors_Profile');
         $profile = $profiles->findOne($profiles->account_id->equals($profileAccount->id), ['orderBy' => '-modifiedDate']);
         $data = $profiles->createInstance()->findProfileData($profileAccount) ?? $profiles->createInstance();
-
+        
         if ($this->request->wasPostedByUser())
         {
             switch ($this->getPostCommand())
@@ -67,17 +67,21 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
         {
             $files = $this->schema('Syllabus_Files_File');
             $file = $files->createInstance();
-            $file->createFromRequest($this->request, 'file', false, self::$imageTypes);
+            $file->createFromRequest($this->request, 'file', false);
 
             if ($file->isValid())
             {
-                $uploadedBy = (int)$this->request->getPostParameter('uploadedBy');
+                $uploadedBy = (int)$this->request->getPostParameter('uploadedBy', $this->getAccount()->id);
                 $file->uploaded_by_id = $uploadedBy;
                 $file->moveToPermanentStorage();
                 $file->save();
 
                 $profiles = $this->schema('Syllabus_Instructors_Profile');
-                $profile = $profiles->findOne($profiles->account_id->equals($uploadedBy));
+                if (!($profile = $profiles->findOne($profiles->account_id->equals($uploadedBy))))
+                {
+                    $profile = $profiles->createInstance();
+                }
+                $profile->account_id = $profile->account_id ? $profile->account_id : $uploadedBy;
                 $profile->image_id = $file->id;
                 $profile->modifiedDate = new DateTime;
                 $profile->save();
