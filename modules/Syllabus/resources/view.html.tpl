@@ -4,11 +4,17 @@
 	<nav class="navbar navbar-expand-lg navbar-dark mobile-anchor-links" id="stickyNavbar">
 
 		<button class="navbar-toggler mr-3 d-block mx-auto text-light p-3" type="button" data-toggle="collapse" data-target="#anchorLinksCollapse" aria-controls="anchorLinksCollapse" aria-expanded="false" aria-label="Toggle navigation">
-			<i class="fas fa-anchor mr-2"></i> Jump to section...
+			<i class="fas fa-anchor mr-2"></i> Jump to...
 		</button>
 
 		<div class="collapse navbar-collapse" id="anchorLinksCollapse">
-			<!-- <span class="navbar-text mr-3 text-light"><strong>{$syllabus->title}</strong></span> -->
+
+			{if $appReturn}
+			<a href="{$appReturn}" class="btn btn-block btn-info btn-lg nav-btn app-return-link mt-3">
+				<strong>Return to iLearn</strong>
+			</a>
+			{/if}
+
 			<ul class="navbar-nav ml-auto">
 				<li class="nav-item sidebar-anchor-item">
 					<a class="nav-link my-3" href="{$smarty.server.REQUEST_URI}#goToTop">
@@ -26,18 +32,25 @@
 				</li>
 				{/if}				
 			{/foreach}
-
 			</ul>
+
 		</div>
 	</nav>
 
-	<!-- <nav class="col-md-2 col-sm-12 col-xs-12 d-sm-block ml-auto anchor-links-sidebar-left bg-white text-dark"> -->
 	<nav class="col-2 ml-auto anchor-links-sidebar-left bg-white text-dark mt-3">
-		<div class="sidebar-sticky mt-5 py-3">
-			<ul class="nav flex-column  text-right text-primary">
+		<div class="sidebar-sticky ">
+			{if $appReturn}
+			<div class="app-return py-1 bg-info text-center">
+				<a href="{$appReturn}" class="nav-link app-return-link text-dark">
+					<strong>Return to iLearn</strong>
+				</a>
+			</div>
+			{/if}
+			<ul class="nav flex-column text-right text-primary mt-2 pb-3">
+
 				<li class="nav-item sidebar-anchor-item">
 					<a class="nav-link" href="{$smarty.server.REQUEST_URI}#goToTop">
-					<strong>Go To Top</strong> <i class="fas fa-arrow-up pl-2"></i> 
+						<strong>Go To Top</strong> <i class="fas fa-arrow-up pl-2"></i> 
 					</a>
 				</li>
 			{foreach $sectionVersions as $i => $sectionVersion}

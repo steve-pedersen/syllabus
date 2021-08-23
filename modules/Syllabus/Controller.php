@@ -1905,6 +1905,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $courseSection = $this->schema('Syllabus_ClassData_CourseSection')->get($courseid);
         if ($courseSection && $courseSection->syllabus)
         {
+            // if ($queries = $this->request->getQueryParameters())
+            // {
+            //     $queries = '?' . http_build_query($this->request->getQueryParameters());
+            // }
+            
             $this->forward('syllabus/' . $courseSection->syllabus->id . '/view');
         }
         $this->forward('syllabus/notfound', [
@@ -1935,7 +1940,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     public function view ()
     { 
         $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id', ['allowNew' => false]);
-        // $viewer = null;
+
         if (!($token = $this->request->getQueryParameter('token')) || !$syllabus->token)
         {
             $viewer = $this->requireLogin();
@@ -1952,7 +1957,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $tempLink->delete();
         }
 
-
         if ($syllabus->file)
         {
             list($type, $courseSection) = $this->getEnrollmentType($syllabus, $viewer);
@@ -1964,6 +1968,20 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             }
         }
 
+        // https://spedersen18.dev.at.sfsu.edu/syllabus/syllabus/2217-8330/view?appReturn=https://google.com
+        if ($appReturn = $this->request->getQueryParameter('appReturn'))
+        {
+            $_SESSION['appReturn'] = $this->request->getQueryParameter('appReturn');
+        }
+        if ($appReturn || isset($_SESSION['appReturn']))
+        {
+            if ($syllabus->hasCourseInformationSection())
+            {
+                // $appReturn = $this->request->getQueryParameter('appReturn', $_SESSION['appReturn']);
+                $appReturn = $appReturn = $this->request->getQueryParameter('appReturn', 'https://google.com');
+            }
+        }
+        
         $this->setSyllabusTemplate();
 
         $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
@@ -2056,6 +2074,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->syllabusVersion = $syllabusVersion;
         $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
         $this->template->organization = $organization;
+        $this->template->appReturn = $appReturn;
     }
 
     public function getPublishedSyllabus ($syllabus)

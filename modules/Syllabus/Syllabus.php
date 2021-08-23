@@ -106,6 +106,20 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_BaseWithAuthorization 
         return ($published ? $published->shareLevel : 'private');
     }
 
+    public function hasCourseInformationSection ()
+    {
+        foreach ($this->latestVersion->getSectionVersionsWithExt(true) as $sv)
+        {
+            if (isset($sv->extension) && $sv->extension->getExtensionKey() === 'course_id' && 
+                isset($sv->resolveSection()->externalKey))
+            {
+                return true;
+            }                        
+        }
+        
+        return false;
+    }
+
     // Ad hoc roles give users permission to edit & view or clone & view other user's syllabi
     public function getAdHocRoles ()
     {
