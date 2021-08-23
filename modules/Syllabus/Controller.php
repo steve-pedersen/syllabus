@@ -1648,7 +1648,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $syllabus->viewUrl = $this->baseUrl("syllabus/$syllabus->id/view");
         $this->template->syllabus = $syllabus;
         $this->template->syllabusVersion = $syllabusVersion;
-        $this->template->courseInfoSection = $syllabusVersion->getCourseInfoSection();
+        $this->template->courseInfoSection = $syllabusVersion ? $syllabusVersion->getCourseInfoSection() : null;
         $this->template->published = $published;
         $this->template->shareLevel = $this->getShareLevel($syllabus);
         $this->template->viewUrl = $this->baseUrl("syllabus/$syllabus->id/view");
@@ -3130,7 +3130,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
 
         $this->template->syllabusVersion = $syllabusVersion;
-        $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
+        $this->template->sectionVersions = $syllabusVersion ? $syllabusVersion->getSectionVersionsWithExt(true) : null;
     }
 
     public function asyncSubmit ()
