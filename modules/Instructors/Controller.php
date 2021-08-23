@@ -51,7 +51,7 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
         );
         $this->template->profileData = $data;
         $this->template->profile = $profile;
-        // $this->template->account = $profileAccount;
+        $this->template->account = $profileAccount;
         $this->template->profileImage = $profile ? $profile->imageSrc : $profiles->createInstance()->imageSrc;
     }
 
@@ -67,21 +67,23 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
         {
             $files = $this->schema('Syllabus_Files_File');
             $file = $files->createInstance();
-            $file->createFromRequest($this->request, 'file', false);
+            $file->createFromRequest($this->request, 'file', false, self::$imageTypes);
 
             if ($file->isValid())
             {
-                $uploadedBy = (int)$this->request->getPostParameter('uploadedBy', $this->getAccount()->id);
+                // $uploadedBy = (int)$this->request->getPostParameter('uploadedBy', $this->getAccount()->id);
+                $uploadedBy = (int)$this->request->getPostParameter('uploadedBy');
                 $file->uploaded_by_id = $uploadedBy;
                 $file->moveToPermanentStorage();
                 $file->save();
 
                 $profiles = $this->schema('Syllabus_Instructors_Profile');
-                if (!($profile = $profiles->findOne($profiles->account_id->equals($uploadedBy))))
-                {
-                    $profile = $profiles->createInstance();
-                }
-                $profile->account_id = $profile->account_id ? $profile->account_id : $uploadedBy;
+                $profile = $profiles->findOne($profiles->account_id->equals($uploadedBy));
+                // if (!($profile = $profiles->findOne($profiles->account_id->equals($uploadedBy))))
+                // {
+                //     $profile = $profiles->createInstance();
+                // }
+                // $profile->account_id = $profile->account_id ? $profile->account_id : $uploadedBy;
                 $profile->image_id = $file->id;
                 $profile->modifiedDate = new DateTime;
                 $profile->save();
