@@ -1655,7 +1655,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->shareLinkEnabled = $syllabus->token !== null && $syllabus->token !== '';
         $this->template->shareLink = $this->baseUrl("syllabus/$syllabus->id/view?token=$syllabus->token");
         $this->template->returnTo = "syllabus/$syllabus->id/share";
-        $this->template->activeStudents = $syllabusVersion->getActiveStudentsEstimation($this) ?? 0;
+        $this->template->activeStudents = $syllabusVersion ? $syllabusVersion->getActiveStudentsEstimation($this) : 0;
     }
 
     public function delete ()
