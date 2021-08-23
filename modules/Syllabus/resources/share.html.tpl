@@ -18,8 +18,10 @@
                 <dt>Syllabus Description</dt>
                 <dd>{$syllabusVersion->description}</dd>
             {/if}
+            {if $syllabusVersion->createdDate}
                 <dt>Last Modified</dt>
                 <dd>{$syllabusVersion->createdDate->format('F jS, Y - h:i a')}</dd>
+            {/if}
 
                 {if $courseInfoSection && $courseInfoSection->classDataCourseSection && $activeStudents > 0}
                 <dt>Syllabus Activity Estimation</dt>
