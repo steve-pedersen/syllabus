@@ -89,10 +89,15 @@ class Syllabus_AuthN_LoginErrorHandler extends Syllabus_Master_ErrorHandler
         unset($_SESSION['appReturn']);
         if ($appReturn = $request->getQueryParameter('appReturn', ''))
         {
-            $_SESSION['appReturn'] = $appReturn;
-
-            $this->getApplication()->response->redirect('login?returnTo=' . $returnTo . '&appReturn=' . $appReturn);
-        }
+            if (preg_match('/[0-9]+-[0-9]+/', $request->getRequestedUri()))
+            {
+                $viewUri = $request->getRequestedUri();
+                $first = strpos($viewUri, '/');
+                $courseid = substr($viewUri, $first+1, strpos($viewUri, '/', $first)+1);
+                
+                $_SESSION['appReturn'][$courseid] = $appReturn;
+            }
+        }     
 
         $this->getApplication()->response->redirect('login?returnTo=' . $returnTo);
         
