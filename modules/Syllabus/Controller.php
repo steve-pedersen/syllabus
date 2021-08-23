@@ -1904,7 +1904,12 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $courseid = $this->getRouteVariable('courseid');
         $courseSection = $this->schema('Syllabus_ClassData_CourseSection')->get($courseid);
         if ($courseSection && $courseSection->syllabus)
-        {      
+        {
+            // if ($queries = $this->request->getQueryParameters())
+            // {
+            //     $queries = '?' . http_build_query($this->request->getQueryParameters());
+            // }
+            
             $this->forward('syllabus/' . $courseSection->syllabus->id . '/view');
         }
         $this->forward('syllabus/notfound', [
@@ -1960,6 +1965,20 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             {
                 $this->saveAccessLog($viewer, $syllabus);
                 $this->response->redirect("files/$syllabus->file_id/download/syllabus");
+            }
+        }
+
+        // https://spedersen18.dev.at.sfsu.edu/syllabus/syllabus/2217-8330/view?appReturn=https://google.com
+        if ($appReturn = $this->request->getQueryParameter('appReturn'))
+        {
+            $_SESSION['appReturn'] = $this->request->getQueryParameter('appReturn');
+        }
+        if ($appReturn || isset($_SESSION['appReturn']))
+        {
+            if ($syllabus->hasCourseInformationSection())
+            {
+                // $appReturn = $this->request->getQueryParameter('appReturn', $_SESSION['appReturn']);
+                $appReturn = $appReturn = $this->request->getQueryParameter('appReturn', 'https://google.com');
             }
         }
         
@@ -2055,7 +2074,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->syllabusVersion = $syllabusVersion;
         $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
         $this->template->organization = $organization;
-        $this->template->appReturn = $this->getAppReturnUrl($syllabus);
+        $this->template->appReturn = $appReturn;
     }
 
     public function getPublishedSyllabus ($syllabus)
@@ -2085,32 +2104,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $publishedSyllabus->save();
 
         return $publishedSyllabus;
-    }
-
-    protected function getAppReturnUrl ($syllabus)
-    {
-        if ($appReturn = $this->request->getQueryParameter('appReturn'))
-        {
-            if ($syllabus->courseSection)
-            {
-                $_SESSION['appReturn'][$syllabus->courseSection->id] = $this->request->getQueryParameter('appReturn');
-            }
-        }
-
-        $sessionAppReturn = null;
-        if ($syllabus->courseSection)
-        {
-            $sessionAppReturn = isset($_SESSION['appReturn']) && isset($_SESSION['appReturn'][$syllabus->courseSection->id]) ? $_SESSION['appReturn'][$syllabus->courseSection->id] : null;
-        }
-        if ($appReturn || $sessionAppReturn)
-        {
-            if ($syllabus->hasCourseInformationSection() && $syllabus->courseSection)
-            {
-                $appReturn = $this->request->getQueryParameter('appReturn', $sessionAppReturn);
-            }
-        }
-
-        return $appReturn;
     }
 
     protected function saveSection ($syllabus, $syllabusVersion, $extKey, $organization=null)
