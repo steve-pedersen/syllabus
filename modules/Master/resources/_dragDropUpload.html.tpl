@@ -19,9 +19,6 @@
 </div>
         </div>
         <div class="box__success">Upload successful! </div>
-        
-{if !$profilePhoto}
-
         {if $publishAction}
         <div id="publishAndReturn" style="display:none;">
             <button type="submit" class="btn btn-info" form="publishAndReturnForm">
@@ -35,20 +32,12 @@
             </a>
         </div>        
         {/if}
-
-{/if}
-
         <div class="box__error">Error! <span></span>. </div>
         <!-- <div class="box__restart"><button class="btn btn-link font-w800">Try Again</button></div> -->
         {generate_form_post_key}
         <input type="hidden" name="uploadedBy" value="{$uploadedBy}">
-
     </form>
-
-{if !$profilePhoto}
     <form method="post" action="{$publishAction}" id="publishAndReturnForm">
         {generate_form_post_key}
     </form>
-
-{/if}
 </div>
