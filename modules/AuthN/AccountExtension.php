@@ -20,7 +20,7 @@ class Syllabus_AuthN_AccountExtension extends Bss_AuthN_AccountExtension impleme
         return [
             'roles' => ['N:M', 'to' => 'Syllabus_AuthN_Role', 'via' => 'syllabus_authn_account_roles', 'fromPrefix' => 'account', 'toPrefix' => 'role'],
             'classDataUser' => ['1:1', 'to' => 'Syllabus_ClassData_User', 'keyMap' => ['username' => 'id']],
-            // 'profile' => ['1:1', 'to' => 'Syllabus_Instructors_Profile', 'keyMap' => ['id' => 'account_id']],
+            'profile' => ['1:1', 'to' => 'Syllabus_Instructors_Profile', 'keyMap' => ['id' => 'account_id']],
         ];
     }
     
