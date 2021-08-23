@@ -40,6 +40,7 @@ class Syllabus_Instructors_Profile extends Bss_ActiveRecord_BaseWithAuthorizatio
     
     public function getAuthorizationId () { return "at:syllabus:instructors/Profile/{$this->id}"; }
     
+    // TODO: get a default profile pic
     public function getImageSrc ($reload=false)
     {
         if (!$this->_imageSrc || $reload)
@@ -54,11 +55,6 @@ class Syllabus_Instructors_Profile extends Bss_ActiveRecord_BaseWithAuthorizatio
             }
         }
         return $this->_imageSrc;
-    }
-
-    public function hasUploadedImage ()
-    {
-        return $this->image;
     }
 
     public function findProfileData ($account)
