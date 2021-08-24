@@ -35,28 +35,28 @@
       e.preventDefault();
     });
 
-    $('[data-src]').each(function () {
-        var url = $(this).attr('data-src');
-        $.ajax(url, {
-            type: 'get',
-            dataType: 'json',
-            timeout: 2000,
-            success: function (o) {
-                switch (o.status) {
-                    case 'success':
-                        $(`[id^='syllabus-${o.syllabusId}']`).attr('src', o.imageSrc);
-                        break;
-                    case 'error':
-                    default:
-                        //console.log('unknown error');
-                        break;
-                }
-            },
-            error: function (){
-                // console.log('Unable to fetch syllabus preview for', url);
-            },
-        });
-    });
+    // $('[data-src]').each(function () {
+    //     var url = $(this).attr('data-src');
+    //     $.ajax(url, {
+    //         type: 'get',
+    //         dataType: 'json',
+    //         timeout: 2000,
+    //         success: function (o) {
+    //             switch (o.status) {
+    //                 case 'success':
+    //                     $(`[id^='syllabus-${o.syllabusId}']`).attr('src', o.imageSrc);
+    //                     break;
+    //                 case 'error':
+    //                 default:
+    //                     //console.log('unknown error');
+    //                     break;
+    //             }
+    //         },
+    //         error: function (){
+    //             // console.log('Unable to fetch syllabus preview for', url);
+    //         },
+    //     });
+    // });
 
     if ($('#printContainer').length) {
         $('.print-button').click();

@@ -487,7 +487,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             $this->requireExists($templateId);
         }
-        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
+        // $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
         
         $roles = $this->schema('Syllabus_AuthN_Role');
         $studentRole = $roles->findOne($roles->name->equals('Student'));
@@ -721,7 +721,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $departmentSchema = $this->schema('Syllabus_AcademicOrganizations_Department');
         $collegeSchema = $this->schema('Syllabus_AcademicOrganizations_College');
         
-        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
+        // $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
         $siteSettings = $this->getApplication()->siteSettings;
         $userId = $siteSettings->getProperty('university-template-user-id');
         $templateId = $siteSettings->getProperty('university-template-id');
@@ -966,8 +966,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $toSyllabusVersion = $this->updateCourseSyllabus($fromSyllabus, $toSyllabus, $toCourse, $toSyllabusVersion);
         }
 
-        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
-        $this->getScreenshotUrl($toSyllabus->id, $screenshotter, false);     
+        // $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
+        // $this->getScreenshotUrl($toSyllabus->id, $screenshotter, false);     
 
         $this->flash(
             'Your Syllabus has been cloned. The new clone has "(Copy)" appended to it\'s title metadata.', 
@@ -2374,11 +2374,11 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
 
         // update preview
-        if ($anyChange && $updateScreenshot)
-        {
-            $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
-            $this->getScreenshotUrl($syllabus->id, $screenshotter, false);            
-        }
+        // if ($anyChange && $updateScreenshot)
+        // {
+        //     $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
+        //     $this->getScreenshotUrl($syllabus->id, $screenshotter, false);            
+        // }
 
         return [$anyChange, $newSyllabusVersion];
     }
@@ -3086,23 +3086,29 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
     public function thumbInfo ()
     {
-        $syllabusId = $this->getRouteVariable('id');
-        $syllabus = $this->schema('Syllabus_Syllabus_Syllabus')->get($syllabusId);
+        // $syllabusId = $this->getRouteVariable('id');
+        // $syllabus = $this->schema('Syllabus_Syllabus_Syllabus')->get($syllabusId);
 
-        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
-        $screenshotter->saveUids(sha1($syllabusId), $syllabusId);
+        // $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
+        // $screenshotter->saveUids(sha1($syllabusId), $syllabusId);
 
-        $urls = [$syllabusId => $this->baseUrl("syllabus/{$syllabusId}/screenshot")];
-        $responseData = $screenshotter->concurrentRequests($urls, true, sha1($syllabusId));
-        $data = json_decode($responseData);
+        // $urls = [$syllabusId => $this->baseUrl("syllabus/{$syllabusId}/screenshot")];
+        // $responseData = $screenshotter->concurrentRequests($urls, true, sha1($syllabusId));
+        // $data = json_decode($responseData);
+
+        // $results = [
+        //     'message' => 'Accepted & Processing',
+        //     'status' => 'success',
+        //     'success' => true,
+        //     'data' => $data,
+        //     'imageSrc' => $data->imageUrls->$syllabusId,
+        //     'syllabusId' => $syllabusId
+        // ];
 
         $results = [
-            'message' => 'Accepted & Processing',
-            'status' => 'success',
-            'success' => true,
-            'data' => $data,
-            'imageSrc' => $data->imageUrls->$syllabusId,
-            'syllabusId' => $syllabusId
+            'message' => '',
+            'success' => false,
+            'status' => 404
         ];
         
         echo json_encode($results);
@@ -3127,7 +3133,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');   
         $syllabus = $this->helper('activeRecord')->fromRoute('Syllabus_Syllabus_Syllabus', 'id');
-        $syllabusVersion = $syllabusVersions->get($this->request->getQueryParameter('v')) ?? $syllabus->latestVersion;
+        $syllabusVersion = $syllabus->latestVersion;
 
         $this->template->syllabusVersion = $syllabusVersion;
         $this->template->sectionVersions = $syllabusVersion ? $syllabusVersion->getSectionVersionsWithExt(true) : null;
@@ -3486,7 +3492,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
 
 
-        $this->getScreenshotUrl($syllabus->id);
+        // $this->getScreenshotUrl($syllabus->id);
 
         if (!$success)
         {

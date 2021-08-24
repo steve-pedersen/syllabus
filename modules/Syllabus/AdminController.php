@@ -44,12 +44,12 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_Controller
                 $syllabi->createdById->equals($userId),
                 ['orderBy' => ['-modifiedDate', '-createdDate']]
             );
-            foreach ($universityTemplates as $template)
-            {
-                $sid = $template->id;
-                $results = $this->getScreenshotUrl($sid);
-                $template->imageUrl = $results->imageUrls->$sid;
-            }
+            // foreach ($universityTemplates as $template)
+            // {
+            //     $sid = $template->id;
+            //     $results = $this->getScreenshotUrl($sid);
+            //     $template->imageUrl = $results->imageUrls->$sid;
+            // }
             $this->template->universityTemplates = $universityTemplates;
         }
 

@@ -219,7 +219,8 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
         $uid = $viewer->id;
         $uid = sha1($syllabusId);
         $checkFailCache = false;
-
+        $results = new stdClass;
+        
         if ($checkFailCache)
         {
             if ($this->cacheFail($syllabusId, true))
@@ -247,14 +248,14 @@ abstract class Syllabus_Master_Controller extends Bss_Master_Controller
         }
         else
         {
-            $sid = $syllabus->id ?? '';
-            $keyPrefix = "{$uid}-";
-            $screenshotter = $screenshotter ?? new Syllabus_Services_Screenshotter($this->getApplication());
-            $screenshotter->saveUids($uid, $sid);
+            // $sid = $syllabus->id ?? '';
+            // $keyPrefix = "{$uid}-";
+            // $screenshotter = $screenshotter ?? new Syllabus_Services_Screenshotter($this->getApplication());
+            // $screenshotter->saveUids($uid, $sid);
 
-            $urls[$sid] = $this->baseUrl("syllabus/{$sid}/screenshot");
-            $results = $screenshotter->concurrentRequests($urls, $cacheImages, $keyPrefix);
-            $results = json_decode($results);
+            // $urls[$sid] = $this->baseUrl("syllabus/{$sid}/screenshot");
+            // $results = $screenshotter->concurrentRequests($urls, $cacheImages, $keyPrefix);
+            // $results = json_decode($results);
         }
 
         return $results;
