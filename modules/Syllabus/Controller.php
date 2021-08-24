@@ -179,6 +179,12 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $this->response->redirect($ilearnReturnUrl);
         }
 
+        $isFileUnpublished = false;
+        if ($courseSection && $courseSection->syllabus && $courseSection->syllabus->file && $fromIlearn) 
+        {
+            $isFileUnpublished = $courseSection->syllabus->getShareLevel() !== 'all' ? true : false;
+        }
+
         if ($this->request->wasPostedByUser())
         {
             switch ($this->getPostCommand())
@@ -208,6 +214,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
         
         $this->template->userCameFromIlearn = $fromIlearn;
+        $this->template->isFileUnpublished = $isFileUnpublished;
         $this->template->courseSection = $courseSection;
         $this->template->pastCourseSyllabi = $courseSection->getRelevantPastCoursesWithSyllabi($viewer, 3);
     }
@@ -223,8 +230,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $schema = $this->schema('Syllabus_Syllabus_PublishedSyllabus');
             $published = $schema->findOne($schema->syllabusId->equals($syllabus->id));
             $published = $this->publishSyllabus($syllabus, 'all', $published);
-            
-            $this->response->redirect($_SESSION['ilearnReturnUrl']);   
+            $returnTo = isset($_SESSION['ilearnReturnUrl']) ? $_SESSION['ilearnReturnUrl'] : '';
+
+            $this->response->redirect($returnTo);   
         }
     }
 
@@ -246,9 +254,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             ];
 
             $files = $this->schema('Syllabus_Files_File');
-            $fid = $this->request->getPostParameter('uploadedFile');
-            if ($oldFile = $files->get($fid))
+            if ($fid = $this->request->getPostParameter('uploadedFile'))
             {
+                $oldFile = $files->get($fid);
                 $oldFile->delete();
             }
 
@@ -286,7 +294,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 }
 
                 // TODO: update based on iLearn API
-                $ilearnReturnUrl = $_SESSION['ilearnReturnUrl'];
+                $ilearnReturnUrl = isset($_SESSION['ilearnReturnUrl']) ? $_SESSION['ilearnReturnUrl'] : '';
 
                 $results = [
                     'message' => 'Your syllabus has been uploaded.',
