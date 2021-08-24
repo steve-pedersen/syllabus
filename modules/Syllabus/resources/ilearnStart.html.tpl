@@ -57,7 +57,6 @@
 			  
 			  <div class="media-body align-self-center">
 			    <h5 class="mt-0">Start from another syllabus or create a new one</h5>
-			    <!-- <p class="mb-0">Start fresh with a new syllabus draft, which includes all SF State requirements.</p> -->
 			  </div>
 				
 			</div>
@@ -84,12 +83,19 @@
 			  </div>
 			</div>
 		</label>
+	{if $courseSection->syllabus->file}
 		{if $isFileUnpublished}
 			<div class="text-center pb-3" id="ilearnStartExisting">
 				<input type="hidden" name="existingSyllabus" value="{$courseSection->syllabus->id}">
 				<input class="btn btn-info" type="submit" name="command[existing]" value="Publish & Return to iLearn">
 			</div>
+		{else}
+			<div class="text-center pb-3" id="ilearnStartExisting">
+				<input type="hidden" name="existingSyllabus" value="{$courseSection->syllabus->id}">
+				<input class="btn btn-info" type="submit" name="command[existing]" value="Return to iLearn">
+			</div>
 		{/if}
+	{/if}
 	</div>
 	{/if}	
 
