@@ -1743,7 +1743,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                             {
                                 foreach ($courseSections as $courseSection)
                                 {
-                                    $courseSection->syllabusId = null;
+                                    $courseSection->syllabus_id = null;
                                     $courseSection->save();
                                 }
                             }
@@ -1911,7 +1911,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
     {
         $courseid = $this->getRouteVariable('courseid');
         $courseSection = $this->schema('Syllabus_ClassData_CourseSection')->get($courseid);
-        if ($courseSection && $courseSection->syllabus)
+        if ($courseSection && $courseSection->syllabus && $courseSection->syllabus->inDatasource)
         {
             $this->forward('syllabus/' . $courseSection->syllabus->id . '/view');
         }
