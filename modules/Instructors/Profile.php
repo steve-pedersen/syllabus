@@ -84,39 +84,36 @@ class Syllabus_Instructors_Profile extends Bss_ActiveRecord_BaseWithAuthorizatio
 
         foreach ($userSyllabi as $syllabus)
         {
-            if ($syllabus->latestVersion)
+            foreach ($syllabus->latestVersion->sectionVersions as $sv)
             {
-                foreach ($syllabus->latestVersion->sectionVersions as $sv)
+                if (isset($sv->instructor_id))
                 {
-                    if (isset($sv->instructor_id))
+                    $instructor = null;
+                    $instructorsSection = $sv->resolveSection();
+                    foreach ($instructorsSection->instructors as $sectionInstructor)
                     {
-                        $instructor = null;
-                        $instructorsSection = $sv->resolveSection();
-                        foreach ($instructorsSection->instructors as $sectionInstructor)
+                        if ($sectionInstructor->email === $account->emailAddress)
                         {
-                            if ($sectionInstructor->email === $account->emailAddress)
-                            {
-                                $instructor = $sectionInstructor;
-                                break;
-                            }
-                        }
-                        if ($instructor)
-                        {
-                            $fieldsFilled = 0;
-                            foreach ($fields as $field)
-                            {
-                                $fieldsFilled = (isset($instructor->$field) && $instructor->$field !== '') ? 
-                                    $fieldsFilled + 1 : $fieldsFilled;
-                            }
-                            
-                            if ($fieldsFilled > $mostFieldsFilled)
-                            {
-                                $mostFieldsFilled = $fieldsFilled;
-                                $data = ['syllabus' => $syllabus];
-                                $data = ['instructor' => $instructor];
-                            }
+                            $instructor = $sectionInstructor;
                             break;
                         }
+                    }
+                    if ($instructor)
+                    {
+                        $fieldsFilled = 0;
+                        foreach ($fields as $field)
+                        {
+                            $fieldsFilled = (isset($instructor->$field) && $instructor->$field !== '') ? 
+                                $fieldsFilled + 1 : $fieldsFilled;
+                        }
+                        
+                        if ($fieldsFilled > $mostFieldsFilled)
+                        {
+                            $mostFieldsFilled = $fieldsFilled;
+                            $data = ['syllabus' => $syllabus];
+                            $data = ['instructor' => $instructor];
+                        }
+                        break;
                     }
                 }
             }
