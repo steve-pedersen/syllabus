@@ -115,7 +115,7 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
         $isTaughtByUser = false;
         foreach ($this->enrollments as $enrollment)
         {
-            if ($enrollment->id === $user->username &&
+            if ($enrollment->user_id === $user->username &&
                 $this->enrollments->getProperty($enrollment, 'role') === 'instructor')
             {
                 $isTaughtByUser = true;

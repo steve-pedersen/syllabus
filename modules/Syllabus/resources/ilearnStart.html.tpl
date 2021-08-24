@@ -84,7 +84,12 @@
 			  </div>
 			</div>
 		</label>
-
+		{if $isFileUnpublished}
+			<div class="text-center pb-3" id="ilearnStartExisting">
+				<input type="hidden" name="existingSyllabus" value="{$courseSection->syllabus->id}">
+				<input class="btn btn-info" type="submit" name="command[existing]" value="Publish & Return to iLearn">
+			</div>
+		{/if}
 	</div>
 	{/if}	
 
