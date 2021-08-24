@@ -109,7 +109,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             unset($_SESSION['ilearnReturnUrl']);
         }
-        elseif ($returnUrl || !isset($_SESSION['ilearnReturnUrl']))
+        elseif ($returnUrl !== '')
         {
             $_SESSION['ilearnReturnUrl'] = $returnUrl;
         }
