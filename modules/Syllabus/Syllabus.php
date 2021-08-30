@@ -197,10 +197,10 @@ class Syllabus_Syllabus_Syllabus extends Bss_ActiveRecord_BaseWithAuthorization 
 
     public function fetchImageUrl ($ctrl)
     {
-        $screenshotter = new Syllabus_Services_Screenshotter($this->application);
-        $sid = $this->id;
-        $results = $ctrl->getScreenshotUrl($sid, $screenshotter);
-        $this->imageUrl = $results->imageUrls->$sid;
+        // $screenshotter = new Syllabus_Services_Screenshotter($this->application);
+        // $sid = $this->id;
+        // $results = $ctrl->getScreenshotUrl($sid, $screenshotter);
+        // $this->imageUrl = $results->imageUrls->$sid;
 
         return $this->imageUrl;
     }
