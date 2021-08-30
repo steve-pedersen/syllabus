@@ -85,7 +85,7 @@ class Syllabus_ClassData_User extends Bss_ActiveRecord_Base
         {
             foreach ($this->enrollments as $cs)
             {
-                if (!isset($orgs[$cs->department->id]))
+                if ($cs->department && !isset($orgs[$cs->department->id]))
                 {
                     $templates[$cs->department->id] = $syllabi->find(
                         $syllabi->templateAuthorizationId->equals($cs->department->templateAuthorizationId),
