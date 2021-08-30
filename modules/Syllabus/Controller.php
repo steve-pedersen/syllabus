@@ -1971,20 +1971,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 $this->response->redirect("files/$syllabus->file_id/download/syllabus");
             }
         }
-
-        if ($appReturn = $this->request->getQueryParameter('appReturn'))
-        {
-            $_SESSION['appReturn'] = $this->request->getQueryParameter('appReturn');
-        }
-        if ($appReturn || isset($_SESSION['appReturn']))
-        {
-            if ($syllabus->hasCourseInformationSection())
-            {
-                $sessionAppReturn = isset($_SESSION['appReturn']) ? $_SESSION['appReturn'] : '';
-                $appReturn = $this->request->getQueryParameter('appReturn', $sessionAppReturn);
-            }
-        }
-        
+       
         $this->setSyllabusTemplate();
 
         $syllabusVersions = $this->schema('Syllabus_Syllabus_SyllabusVersion');
@@ -2077,7 +2064,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->syllabusVersion = $syllabusVersion;
         $this->template->sectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
         $this->template->organization = $organization;
-        $this->template->appReturn = $appReturn;
+        $this->template->appReturn = $this->getAppReturnUrl($syllabus);
     }
 
     public function getPublishedSyllabus ($syllabus)
@@ -2107,6 +2094,32 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $publishedSyllabus->save();
 
         return $publishedSyllabus;
+    }
+
+    protected function getAppReturnUrl ($syllabus)
+    {
+        if ($appReturn = $this->request->getQueryParameter('appReturn'))
+        {
+            if ($syllabus->courseSection)
+            {
+                $_SESSION['appReturn'][$syllabus->courseSection->id] = $this->request->getQueryParameter('appReturn');
+            }
+        }
+
+        $sessionAppReturn = null;
+        if ($syllabus->courseSection)
+        {
+            $sessionAppReturn = isset($_SESSION['appReturn']) && isset($_SESSION['appReturn'][$syllabus->courseSection->id]) ? $_SESSION['appReturn'][$syllabus->courseSection->id] : null;
+        }
+        if ($appReturn || $sessionAppReturn)
+        {
+            if ($syllabus->hasCourseInformationSection() && $syllabus->courseSection)
+            {
+                $appReturn = $this->request->getQueryParameter('appReturn', $sessionAppReturn);
+            }
+        }
+
+        return $appReturn;
     }
 
     protected function saveSection ($syllabus, $syllabusVersion, $extKey, $organization=null)
