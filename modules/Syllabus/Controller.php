@@ -1972,7 +1972,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             }
         }
 
-        // https://spedersen18.dev.at.sfsu.edu/syllabus/syllabus/2217-8330/view?appReturn=https://google.com
         if ($appReturn = $this->request->getQueryParameter('appReturn'))
         {
             $_SESSION['appReturn'] = $this->request->getQueryParameter('appReturn');
@@ -1981,8 +1980,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             if ($syllabus->hasCourseInformationSection())
             {
-                // $appReturn = $this->request->getQueryParameter('appReturn', $_SESSION['appReturn']);
-                $appReturn = $appReturn = $this->request->getQueryParameter('appReturn', 'https://google.com');
+                $sessionAppReturn = isset($_SESSION['appReturn']) ? $_SESSION['appReturn'] : '';
+                $appReturn = $this->request->getQueryParameter('appReturn', $sessionAppReturn);
             }
         }
         
