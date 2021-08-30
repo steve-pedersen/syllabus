@@ -112,13 +112,13 @@ abstract class Syllabus_Organizations_BaseController extends Syllabus_Master_Con
             ['orderBy' => '-createdDate']
         );
         
-        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
-        foreach ($templates as $template)
-        {
-            $tid = $template->id;
-            $results = $this->getScreenshotUrl($tid, $screenshotter);
-            $template->imageUrl = $results->imageUrls->$tid;
-        }
+        // $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
+        // foreach ($templates as $template)
+        // {
+        //     $tid = $template->id;
+        //     $results = $this->getScreenshotUrl($tid, $screenshotter);
+        //     $template->imageUrl = $results->imageUrls->$tid;
+        // }
 
         $this->template->templates = $templates;
         $this->template->organization = $this->_organization;

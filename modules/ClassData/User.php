@@ -79,7 +79,7 @@ class Syllabus_ClassData_User extends Bss_ActiveRecord_Base
         $orgs = [];
         $templates = [];
         $syllabi = $this->getSchema('Syllabus_Syllabus_Syllabus');
-        $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
+        // $screenshotter = new Syllabus_Services_Screenshotter($this->getApplication());
 
         if ($this->enrollments)
         {
@@ -97,12 +97,12 @@ class Syllabus_ClassData_User extends Bss_ActiveRecord_Base
                     }
                     else
                     {
-                        foreach ($templates[$cs->department->id] as $template)
-                        {
-                            $sid = $template->id;
-                            $results = $ctrl->getScreenshotUrl($sid, $screenshotter);
-                            $template->imageUrl = $results->imageUrls->$sid;
-                        }
+                        // foreach ($templates[$cs->department->id] as $template)
+                        // {
+                        //     $sid = $template->id;
+                        //     $results = $ctrl->getScreenshotUrl($sid, $screenshotter);
+                        //     $template->imageUrl = $results->imageUrls->$sid;
+                        // }
                         $orgs[$cs->department->id] = $cs->department;                    
                     }
                 }

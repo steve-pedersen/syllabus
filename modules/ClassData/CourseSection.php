@@ -166,7 +166,7 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
         $max = 3;
         foreach ($results as $syllabus)
         {
-            if (!$syllabus->latestVersion && !$syllabus->latestVersion->courseInfoSection)
+            if ($syllabus->latestVersion && !$syllabus->latestVersion->courseInfoSection)
             {
                 $pastCourseSections[$syllabus->id] = $syllabus;
                 $counter++;

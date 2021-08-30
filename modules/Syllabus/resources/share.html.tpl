@@ -4,7 +4,14 @@
 <div class="data-form mb-4">	
     <div class="row pt-3">
         <div class="col-xl-6 col-lg-6 col-md-12">
-            <h2 class=" pb-3">{$syllabusVersion->title}</h2>
+            <h2 class=" pb-3">
+            {if $syllabus->file}
+                {$syllabus->courseSection->shortName}: 
+                <a href="files/{$syllabus->file->id}/download">{$syllabus->file->remoteName}</a>        
+            {else}
+                {$syllabusVersion->title}
+            {/if}        
+            </h2>
             <dl class="mb-4">
         {if $syllabusVersion && $syllabusVersion->getCourseInfoSection() && $syllabusVersion->getCourseInfoSection()->resolveSection()}
                 {assign var=courseInfoSection value=$syllabusVersion->getCourseInfoSection()->resolveSection()}
@@ -18,8 +25,10 @@
                 <dt>Syllabus Description</dt>
                 <dd>{$syllabusVersion->description}</dd>
             {/if}
+            {if $syllabusVersion->createdDate}
                 <dt>Last Modified</dt>
                 <dd>{$syllabusVersion->createdDate->format('F jS, Y - h:i a')}</dd>
+            {/if}
 
                 {if $courseInfoSection && $courseInfoSection->classDataCourseSection && $activeStudents > 0}
                 <dt>Syllabus Activity Estimation</dt>
@@ -32,6 +41,9 @@
         </div>
         <div class="col-xl-6 col-lg-6 col-md-12 mb-1">
             <div class="" style="text-align:center;justify-content: center;">
+                {if $syllabus->file}
+                    <div class="text-center"><i class="fas fa-file fa-5x text-center"></i></div>
+                {else}
                 <img src="assets/images/placeholder-4.jpg" data-src="syllabus/{$syllabus->id}/thumbinfo" id="syllabus-{$syllabus->id}" alt="{$syllabus->title}" class="img-fluid border border-light text-cente" style="border-width:5px !important;width:350px;">
                 <div class="card-footer bg-white border-0">
                     <small class="d-block"><em class="text-muted">This preview is from when the syllabus was last edited.</em></small>
@@ -40,6 +52,7 @@
                         <a class="px-3" href="{$routeBase}syllabus/{$syllabus->id}/print"><i class="fas fa-print"></i> Print</a>
                     </div>
                 </div>
+                {/if}
             </div>
         </div>
     </div>
@@ -124,6 +137,8 @@
         {generate_form_post_key}
         </form>
     </div>
+
+    {if !$syllabus->file}
     <div class="mb-4">
         
         <div class="col border rounded px-4 py-4 share-card" style="" id="grantEditAccess">
@@ -210,6 +225,8 @@
         </div>
 
     </div>
+    {/if}
+
 </div>
 
 </div>
