@@ -40,7 +40,6 @@ class Syllabus_Instructors_Profile extends Bss_ActiveRecord_BaseWithAuthorizatio
     
     public function getAuthorizationId () { return "at:syllabus:instructors/Profile/{$this->id}"; }
     
-    // TODO: get a default profile pic
     public function getImageSrc ($reload=false)
     {
         if (!$this->_imageSrc || $reload)
@@ -55,6 +54,11 @@ class Syllabus_Instructors_Profile extends Bss_ActiveRecord_BaseWithAuthorizatio
             }
         }
         return $this->_imageSrc;
+    }
+
+    public function hasUploadedImage ()
+    {
+        return $this->image;
     }
 
     public function findProfileData ($account)
@@ -80,36 +84,39 @@ class Syllabus_Instructors_Profile extends Bss_ActiveRecord_BaseWithAuthorizatio
 
         foreach ($userSyllabi as $syllabus)
         {
-            foreach ($syllabus->latestVersion->sectionVersions as $sv)
+            if ($syllabus->latestVersion)
             {
-                if (isset($sv->instructor_id))
+                foreach ($syllabus->latestVersion->sectionVersions as $sv)
                 {
-                    $instructor = null;
-                    $instructorsSection = $sv->resolveSection();
-                    foreach ($instructorsSection->instructors as $sectionInstructor)
+                    if (isset($sv->instructor_id))
                     {
-                        if ($sectionInstructor->email === $account->emailAddress)
+                        $instructor = null;
+                        $instructorsSection = $sv->resolveSection();
+                        foreach ($instructorsSection->instructors as $sectionInstructor)
                         {
-                            $instructor = $sectionInstructor;
+                            if ($sectionInstructor->email === $account->emailAddress)
+                            {
+                                $instructor = $sectionInstructor;
+                                break;
+                            }
+                        }
+                        if ($instructor)
+                        {
+                            $fieldsFilled = 0;
+                            foreach ($fields as $field)
+                            {
+                                $fieldsFilled = (isset($instructor->$field) && $instructor->$field !== '') ? 
+                                    $fieldsFilled + 1 : $fieldsFilled;
+                            }
+                            
+                            if ($fieldsFilled > $mostFieldsFilled)
+                            {
+                                $mostFieldsFilled = $fieldsFilled;
+                                $data = ['syllabus' => $syllabus];
+                                $data = ['instructor' => $instructor];
+                            }
                             break;
                         }
-                    }
-                    if ($instructor)
-                    {
-                        $fieldsFilled = 0;
-                        foreach ($fields as $field)
-                        {
-                            $fieldsFilled = (isset($instructor->$field) && $instructor->$field !== '') ? 
-                                $fieldsFilled + 1 : $fieldsFilled;
-                        }
-                        
-                        if ($fieldsFilled > $mostFieldsFilled)
-                        {
-                            $mostFieldsFilled = $fieldsFilled;
-                            $data = ['syllabus' => $syllabus];
-                            $data = ['instructor' => $instructor];
-                        }
-                        break;
                     }
                 }
             }
