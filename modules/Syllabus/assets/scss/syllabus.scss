@@ -324,6 +324,12 @@ html {
 		position:-webkit-sticky;
 		position:sticky;
 		top:0;
+		.app-return {
+			&:hover, &:focus {
+				cursor: pointer !important;
+				background-color: #F4C69A !important;
+			}
+		}
 		ul {
 			padding-top: 1.5rem;
 			padding-bottom: 1.5rem;
