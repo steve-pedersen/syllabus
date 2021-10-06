@@ -33,7 +33,7 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
             switch ($this->getPostCommand())
             {
                 case 'save':
-                    $profile = $profile->id ? $profile : $profiles->createInstance();
+                    $profile = $profile->inDatasource ? $profile : $profiles->createInstance();
                     $profile->absorbData($this->request->getPostParameters());
                     $profile->account_id = $profileAccount->id;
                     $profile->modifiedDate = new DateTime;
@@ -78,7 +78,14 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
                 $file->save();
 
                 $profiles = $this->schema('Syllabus_Instructors_Profile');
-                $profile = $profiles->findOne($profiles->account_id->equals($uploadedBy));
+                if ($profileId = $this->request->getPostParameter('profileId'))
+                {
+                    $profile = $profiles->get($profileId);
+                }
+                else
+                {
+                    $profile = $profiles->findOne($profiles->account_id->equals($uploadedBy));
+                }
                 // if (!($profile = $profiles->findOne($profiles->account_id->equals($uploadedBy))))
                 // {
                 //     $profile = $profiles->createInstance();

@@ -22,6 +22,35 @@
         </button>
     </div>
 
+    <div class="form-row p-3 row-3">
+        <div class="col-md-12 p-3 bg-light">
+            <h5>Choose photo for this instructor</h5>
+            <span class="text-muted mb-3">You can update your photo by editing your <a href="profile/{$viewer->id}">profile</a></span>
+            <select class="form-control profile-image-selector" id="instructor-{$instructorId}" name="section[real][{$instructorId}][image_id]">
+                <option value="" {if !$instructor->image}selected{/if}>Select an instructor</option>
+                {foreach $instructorProfiles as $profile}
+                <option value="{$profile->image_id}" id="profile-{$profile->id}" {if $instructor->image_id && $instructor->image_id == $profile->image_id}selected{/if}>{$profile->name}</option>
+                {/foreach}
+            </select>
+        </div>
+        <div class="col-md-12 p-3 bg-light image-container">
+            {foreach $instructorProfiles as $profile}
+                <div class="card profile-cards-instructor-{$instructorId} {if $instructor->image_id && $instructor->image_id == $profile->image_id}{else}hidden{/if}" {if $profile->image}style="max-width: 200px;"{/if} id="profile-{$profile->id}-card">
+                    {if $profile->image}
+                    <div class="card-img-top">
+                        <img src="{$profile->image->imageSrc}" class="img-fluid" id="instructor-{$instructorId}-image">
+                    </div>
+                    {else}
+                    <div class="card-body">
+                        <p class="">No profile image uploaded for this instructor.</p>
+                        <p>You can update your photo by editing your <a href="profile/{$viewer->id}">profile</a></p>
+                    </div>
+                    {/if}
+                </div>
+            {/foreach}
+        </div>
+    </div>
+
     <div class="form-row px-3 row-1">
         <div class="col-md-3 mb-3 name">
             <label for="name">Name</label>
@@ -64,6 +93,7 @@
             <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$instructorId}][about]" rows="3">{$instructor->about}</textarea>
         </div>
     </div>
+
 </div>
 
 <div class="tab-pane fade {if !$instructor@last}show active{/if} d-inline-block w-100 px-3" id="nav-view-{$i}" role="tabpanel" aria-labelledby="nav-view-{$i}-tab">
@@ -155,6 +185,57 @@
         <textarea class="form-control wysiwyg wysiwyg-syllabus-standard" name="section[real][{$instructorId}][about]" rows="3">{if $profileData->about}{$profileData->about}{/if}</textarea>
     </div>
 </div>
+<!--     <div class="form-row p-3 row-3">
+        <div class="col-md-6 p-3 bg-light">
+            <h5>Choose photo for this instructor</h5>
+            <span class="text-muted">You can update your photo by editing your <a href="profile/{$viewer->id}">profile</a></span>
+            <select class="form-control profile-image-selector" id="instructor-{$instructorId}" name="section[real][{$instructorId}][image_id]">
+                <option value="" {if !$instructor->image}selected{/if}>Select an instructor</option>
+                {foreach $instructorProfiles as $profile}
+                <option value="{$profile->image_id}">{$profile->name}</option>
+                {/foreach}
+            </select>
+        </div>
+        <div class="col-md-6 p-3 bg-light image-container">
+            {foreach $instructorProfiles as $profile}
+                <div class="card" style="max-width: 150px;display:none;" id="instructor-{$instructorId}-card">
+                    <div class="card-img-top">
+                        <img src="{$profile->image->imageSrc}" class="img-fluid" id="instructor-{$instructorId}-image">
+                    </div>
+                </div>
+            {/foreach}
+        </div>
+    </div> -->
+
+    <div class="form-row p-3 row-3">
+        <div class="col-md-12 p-3 bg-light">
+            <h5>Choose photo for this instructor</h5>
+            <span class="text-muted mb-3">You can update your photo by editing your <a href="profile/{$viewer->id}">profile</a></span>
+            <select class="form-control profile-image-selector" id="instructor-{$instructorId}" name="section[real][{$instructorId}][image_id]">
+                <option value="" selected>Select an instructor</option>
+                {foreach $instructorProfiles as $profile}
+                <option value="{$profile->image_id}" id="profile-{$profile->id}">{$profile->name}</option>
+                {/foreach}
+            </select>
+        </div>
+        <div class="col-md-12 p-3 bg-light image-container">
+            {foreach $instructorProfiles as $profile}
+                <div class="card profile-cards-instructor-{$instructorId} hidden" {if $profile->image}style="max-width: 200px;"{/if} id="profile-{$profile->id}-card">
+                    {if $profile->image}
+                    <div class="card-img-top">
+                        <img src="{$profile->image->imageSrc}" class="img-fluid" id="instructor-{$instructorId}-image">
+                    </div>
+                    {else}
+                    <div class="card-body">
+                        <p class="">No profile image uploaded for this instructor.</p>
+                        <p>You can update your photo by editing your <a href="profile/{$viewer->id}">profile</a></p>
+                    </div>
+                    {/if}
+                </div>
+            {/foreach}
+        </div>
+    </div>
+
 </div>  
 
 

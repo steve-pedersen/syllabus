@@ -73,5 +73,17 @@
       });
     });
 
+
+
+    $('.profile-image-selector').on('change', function (e) {
+      let instructorId = $(this).attr('id');
+      let optionId = this.options[this.selectedIndex].getAttribute('id');
+      $(`.profile-cards-${instructorId}`).hide();
+      if (this.value != '' || optionId) {    
+        $(`.profile-cards-${instructorId}#${optionId}-card`).show();
+      }
+
+    });
+
   });
 })(jQuery);

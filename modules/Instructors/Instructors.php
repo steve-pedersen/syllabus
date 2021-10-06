@@ -59,6 +59,25 @@ class Syllabus_Instructors_Instructors extends Bss_ActiveRecord_Base
                     $obj = $schema->createInstance();
                     if ($save)
                     {
+                        $instructor['image_id'] = isset($instructor['image_id']) && $instructor['image_id'] !== '' ? $instructor['image_id'] : null;
+
+                        //uploaded image?
+                        if (!$instructor['image_id'] && isset($data['file']) && $data['file'] !== '')
+                        {
+                            $file = $this->getSchema('Syllabus_Files_File')->createInstance();
+                            $file->createFromRequest($request, 'file', false);
+                            
+                            if ($file->isValid())
+                            {
+                                echo "<pre>"; var_dump(123); die;
+                                $uploadedBy = (int)$request->getPostParameter('uploadedBy');
+                                $file->uploaded_by_id = $uploadedBy;
+                                $file->moveToPermanentStorage();
+                                $file->save();
+                                $instructor['image_id'] = $file->id;
+                            }
+                        }
+
                         $obj->absorbData($instructor);
                         $obj->name = isset($instructor['name']) ? strip_tags(trim($instructor['name'])) : '';
                         $obj->title = isset($instructor['title']) ? strip_tags(trim($instructor['title'])) : '';

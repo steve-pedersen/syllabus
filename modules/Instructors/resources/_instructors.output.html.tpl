@@ -11,6 +11,9 @@
 				{/if}
 				</h3>
 				{/if}
+				{if $instructor->image}
+					<img src="{$instructor->image->imageSrc}" class="img-fluid" alt="Photo of {$instructor->name}">
+				{/if}
 			</dt>
 			<dd class="col-xl-9 col-lg-8 col-md-8 col-sm-12">
 				<dl class="row mb-0">

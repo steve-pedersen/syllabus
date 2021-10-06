@@ -28,6 +28,7 @@ class Syllabus_Instructors_Instructor extends Bss_ActiveRecord_Base
             'sortOrder' => ['int', 'nativeName' => 'sort_order'],
             // 'imageId' => ['int', 'nativeName' => 'image_id'],
 
+            'image' => ['1:1', 'to' => 'Syllabus_Files_File', 'keyMap' => ['image_id' => 'id']],
             'instructorsSection' => ['1:1', 'to' => 'Syllabus_Instructors_Instructors', 'keyMap' => ['instructors_id' => 'id']],
         ];
     }

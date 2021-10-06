@@ -1271,11 +1271,6 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         // ADD SECTION
         if (!$this->request->wasPostedByUser() && ($realSectionName = $this->request->getQueryParameter('add')))
         {
-            // if ($realSectionName === 'learning_outcomes')
-            // {
-            //     $this->flash('The Student Learning Outcomes section type is unavailable at this time.', 'danger');
-            //     $this->response->redirect('syllabus/' . $syllabus->id);
-            // }
             $realSectionExtension = $sectionVersions->createInstance()->getExtensionByName($realSectionName);
             $canHaveMultiple = true;
             if (!$realSectionExtension->canHaveMultiple())
@@ -1322,6 +1317,13 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                             $this->template->defaultInstructor = $viewer;
                             break;
                         }
+                    }
+
+                    // fetch all course instructors so we can add their photos in 
+                    if ($syllabusVersion->getCourseInfoSection() && $syllabusVersion->getCourseInfoSection()->resolveSection() && $syllabusVersion->getCourseInfoSection()->resolveSection()->classDataCourseSection)
+                    {
+                        $cdCourse = $syllabusVersion->getCourseInfoSection()->resolveSection()->classDataCourseSection;
+                        $this->template->instructorsProfiles = $this->getCourseInstructorProfiles($cdCourse);
                     }
                 }
                 elseif ($realSectionClass === 'Syllabus_Resources_Resources')
@@ -1370,7 +1372,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $realSectionExtension = $sectionVersion->getExtensionByRecord(get_class($realSection));
             if ($realSectionExtension->getExtensionName() === 'course' || $realSectionExtension::getExtensionName() === 'learning_outcomes')
             {
-                $currentCourses = $viewer->classDataUser->getCurrentEnrollments();
+                $currentCourses = $viewer->classDataUser->getCurrentEnrollments();               
                 if ($syllabusVersion->getCourseInfoSection() && $syllabusVersion->getCourseInfoSection()->resolveSection())
                 {
                     $this->template->courseInfoSelected = $syllabusVersion->getCourseInfoSection()->resolveSection();
@@ -1400,6 +1402,14 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                         $profileData = $data['instructor'];
                     }
                 }
+
+                // fetch all course instructors so we can add their photos in 
+                if ($syllabusVersion->getCourseInfoSection() && $syllabusVersion->getCourseInfoSection()->resolveSection() && $syllabusVersion->getCourseInfoSection()->resolveSection()->classDataCourseSection)
+                {
+                    $cdCourse = $syllabusVersion->getCourseInfoSection()->resolveSection()->classDataCourseSection;
+                    $this->template->instructorProfiles = $this->getCourseInstructorProfiles($cdCourse);
+                }
+
                 $this->template->profileData = $profileData;
             }
 
@@ -1462,6 +1472,35 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $this->template->activeStudents = $syllabusVersion->getActiveStudentsEstimation($this) ?? 0;
         $this->template->viewer = $viewer;
         $this->template->justImported = $this->request->getQueryParameter('i', false);
+    }
+
+    private function getCourseInstructorProfiles ($course)
+    {
+        $profiles = $this->schema('Syllabus_Instructors_Profile');
+        $instructorProfiles = [];
+        foreach ($course->enrollments as $enrol)
+        {
+            if ($course->enrollments->getProperty($enrol, 'role') === 'instructor')
+            {
+                
+                $profile = $profiles->findOne(
+                    $profiles->account_id->equals($enrol->account->id), 
+                    ['orderBy' => ['-image_id', '-modifiedDate']]
+                );
+                // create a basic profile if one isn't found
+                if (!$profile)
+                {
+                    $profile = $profiles->createInstance();
+                    $profile->account_id = $enrol->account->id;
+                    $profile->name = $enrol->account->fullName;
+                    $profile->email = $enrol->account->emailAddress;
+                    $profile->save();
+                }
+                $instructorProfiles[] = $profile;
+            }
+        }
+
+        return $instructorProfiles;
     }
 
     public function getTemporaryLink ()
@@ -2166,6 +2205,8 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         $subsections = $this->schema('Syllabus_Syllabus_Subsection');
 
         $data = $paramData ?? $this->request->getPostParameters();
+        // echo "<pre>"; var_dump($data, $data['section']['real'], isset($data['file']) && $data['file'] !== ''); die;
+        
         $anyChange = false;
         $sectionChange = false;
         $sectionDelete = false;

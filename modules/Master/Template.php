@@ -39,6 +39,14 @@ class Syllabus_Master_Template extends Bss_Master_Template
         // template is rendered.
         // $this->assign('someTemplateVariable', 'A value');
         $this->assign('homePage', $this->homePage());
+
+        if ($viewer = @$this->handler->getUserContext()->getAccount())
+        {
+            $profiles = $this->getApplication()->schemaManager->getSchema('Syllabus_Instructors_Profile');
+            $profile = $profiles->findOne($profiles->account_id->equals($viewer->id), ['orderBy' => '-modified_date']);
+            $this->assign('profile', $profile);
+        }
+
     }
 
     public function homePage ()

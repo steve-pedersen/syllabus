@@ -36,6 +36,7 @@
         <!-- <div class="box__restart"><button class="btn btn-link font-w800">Try Again</button></div> -->
         {generate_form_post_key}
         <input type="hidden" name="uploadedBy" value="{$uploadedBy}">
+        <input type="hidden" name="profileId" value="{$profileId}">
     </form>
     <form method="post" action="{$publishAction}" id="publishAndReturnForm">
         {generate_form_post_key}

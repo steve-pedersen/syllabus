@@ -36,6 +36,8 @@ class Syllabus_ClassData_User extends Bss_ActiveRecord_Base
                 ],
                 'orderBy' => ['-_map.year_semester', 'classNumber', 'sectionNumber'],
             ],
+
+            'account' => ['1:1', 'to' => 'Bss_AuthN_Account', 'keyMap' => ['id' => 'username']],
         ];
     }
 
