@@ -261,7 +261,6 @@
 		} else {
 			$('#categoryAddMessage').text('No new resources were selected with this category.').show();
 		}
-
 		setTimeout(() => { $('#categoryAddMessage').hide() }, 2000);
 	});
 	// end select resources by category
