@@ -20,7 +20,7 @@
                
                 <input type="hidden" name="section[real][{$resourceId}][sortOrder]" value="{$sortOrder}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
                 {if $linkedResource}
-                <input type="hidden" name="section[real][{$resourceId}][campusResourcesId]" value="{$resource->campusResourcesId}">
+                <input type="hidden" name="section[real][{$resourceId}][campusResourcesId]" value="{$resource->campusResourcesId}" id="linkedCampusResource{$resource->campusResourcesId}">
                 <input type="hidden" name="section[real][{$resourceId}][imageId]" value="{$resource->imageId}">
                 <input type="hidden" name="section[real][{$resourceId}][isCustom]" value="false">
                 {/if}
@@ -153,28 +153,39 @@
   <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl " role="document">
     <div class="modal-content">
     <div class="modal-header">
-        <div class="modal-title d-block-inline">
-            <h5>
-            <img class="mw-10 mr-3" id="addImage" src="" alt="">
-            <span id="addTitle"></span>
+
+        <div class="d-block-inline">
+            <h5>Select campus resources by category
+                <small class="text-success ml-4" style="display:none;" id="categoryAddMessage"></small>
             </h5>
+            <!-- <span class="text-muted"><small></small></span> -->
+            {foreach $tagList as $tag}
+                <div class="form-check resource-category">
+                    <input class="form-check-input" type="checkbox" value="{$tag->id}" name="tag-{$tag->id}" id="tag-{$tag->id}}">
+                    <label class="form-check-label d-inline" for="tag-{$tag->id}}">
+                        {$tag->name}
+                    </label>
+                </div>
+            {/foreach}
         </div>
+
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
         <span id="addText"></span>
     </div>
     <div class="modal-body">
-
+        <p class="text-muted">Use the syllabus editor to remove any resources that you have already saved to your syllabus.</p>
         <div class="container-fluid campus-resources-overview row">
 
 
         {foreach $campusResources as $i => $campusResource} 
+
             {if $i > 0 && ($i % 3) == 0}
             {/if}
     <div class="col-xl-4 col-lg-6 col-md-12 mb-4">
         <div class="card h-100">
-            <div class="card-body" id="{$i}">
+            <div class="card-body campus-resource-input" id="{$i}" data-id="{$campusResource->id}" data-tags-ids="{$campusResource->getTagListString(true)}">
                 <label class="form-check-label mt-0 pt-0" for="overlayCheck{$i}">
                 <div class="mr-auto text-left mt-0">
                     <div class="form-check mt-0">

@@ -1447,6 +1447,9 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             }
         }
 
+        $tagList = $this->schema('Syllabus_Resources_Tag')->getAll(['orderBy' => 'name']);
+        $this->template->tagList = $tagList;
+
         $syllabus->viewUrl = $this->baseUrl("syllabus/$syllabus->id/view");
         $this->template->sidebarMinimized = true;
         $this->template->hasCourseSection = $hasCourseSection;

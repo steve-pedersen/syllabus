@@ -37,6 +37,19 @@ class Syllabus_Syllabus_CampusResource extends Bss_ActiveRecord_Base
         ];
     }
 
+    public function getTagListString ($idsOnly=false)
+    {
+        $delimiter = $idsOnly ? ' ' : ', ';
+        $tagListString = '';
+        $tagList = [];
+        foreach ($this->tags as $tag)
+        {
+            $tagList[$tag->id] = $idsOnly ? $tag->id : $tag->name;
+        }
+
+        return implode($delimiter, $tagList);
+    }
+
     public function getImageSrc ($reload=false)
     {
         if (!$this->_imageSrc || $reload)
