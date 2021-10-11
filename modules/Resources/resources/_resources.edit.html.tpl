@@ -159,14 +159,6 @@
                 <small class="text-success ml-4" style="display:none;" id="categoryAddMessage"></small>
             </h5>
             <!-- <span class="text-muted"><small></small></span> -->
-            {foreach $tagList as $tag}
-                <div class="form-check resource-category">
-                    <input class="form-check-input" type="checkbox" value="{$tag->id}" name="tag-{$tag->id}" id="tag-{$tag->id}}">
-                    <label class="form-check-label d-inline" for="tag-{$tag->id}}">
-                        {$tag->name}
-                    </label>
-                </div>
-            {/foreach}
         </div>
 
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -174,6 +166,26 @@
         </button>
         <span id="addText"></span>
     </div>
+
+    <div class="p-3">
+        <div class="row">
+            <div class="col-xl-4 col-lg-6 col-md-12">
+        {foreach $tagList as $i => $tag}
+            
+            {if $i > 0 && !$tag@last && ($i % 5) == 0}
+                </div><div class="col-xl-4 col-lg-6 col-md-12">
+            {/if}                
+            <div class="form-check resource-category">
+                <input class="form-check-input" type="checkbox" value="{$tag->id}" name="tag-{$tag->id}" id="tag-{$tag->id}}">
+                <label class="form-check-label d-inline" for="tag-{$tag->id}}">
+                    {$tag->name}
+                </label>
+            </div>
+        {/foreach}
+            </div>
+        </div>
+    </div>
+
     <div class="modal-body">
         <p class="text-muted">Use the syllabus editor to remove any resources that you have already saved to your syllabus.</p>
         <div class="container-fluid campus-resources-overview row">
