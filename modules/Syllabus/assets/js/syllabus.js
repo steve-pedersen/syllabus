@@ -166,6 +166,21 @@
 		$('#addTitle').html(title.html());
 		$('#addImage').attr('src', img.attr('src')).attr('alt', img.attr('alt'));
 		$('#resourceToSyllabiBtn').attr('name','command[resourceToSyllabi]['+resourceId+']');
+
+		if ($('#resourcesSection')) {
+			$('.campus-resource-input').each(function(i, em) {
+				let linkedCampusResource = $('#linkedCampusResource' + $(em).attr('data-id'));
+				// console.log(linkedCampusResource, $(em).attr('data-id'));
+				if (linkedCampusResource && linkedCampusResource.val() == $(em).attr('data-id')) {
+					let input = $(em).find('input');
+					$(input).attr('checked', true);
+					$('#checkIcon' + $(em).attr('id')).show();
+					$(input).attr('readonly', true);
+					$(input).attr('disabled', true);
+					$(em).addClass('bg-light');
+				}	
+			});	
+		}
 	});
 	$('#resourceAddModal').on('hide.bs.modal', function(e) {
 		$(this).find('[id^=overlayCheck]:checked').each(function(i, em) {
@@ -198,6 +213,59 @@
 	$('#resourceAddSummaryModal').on('hidden.bs.modal', function (e) {
 		window.location.replace(window.location.href);
 	});
+
+
+	// select campus resources in the editor modal by category
+	var selectedList = new Array;
+
+	$('.resource-category input').on('change', function (e) {
+		var tagId = $(this).val();
+		var checked = this.checked;
+		var total = 0;
+
+		$('.campus-resource-input').each(function(i, em) {
+			let linkedCampusResource = $('#linkedCampusResource' + $(em).attr('data-id'));
+			let tagIdList = $(em).attr('data-tags-ids').split(' ');
+			let input = $(em).find('input');
+
+			if (checked && tagIdList.includes(tagId)) {
+				if ($(input).prop('disabled') !== true) {
+					$(input).attr('checked', true);
+					$('#checkIcon' + $(em).attr('id')).show();
+					total += 1;
+				}
+			} else if (!checked && tagIdList.includes(tagId)) {
+				if ($(input).prop('disabled') !== true) {
+					$(input).attr('checked', false);
+					$('#checkIcon' + $(em).attr('id')).hide();
+					total += 1;
+				}
+			}
+		});	
+
+		if (checked && !selectedList.includes(tagId)) {
+			selectedList.push(tagId);
+		} else if (!checked) {
+			const index = selectedList.indexOf(tagId);
+			if (index > -1) {
+				selectedList.splice(index, 1);
+			}
+		}
+
+		if (total > 0) {
+			if (checked) {
+				$('#categoryAddMessage').text(total + ' resources selected').show();
+			} else {
+				$('#categoryAddMessage').text(total + ' resources unselected').show();
+			}				
+		} else {
+			$('#categoryAddMessage').text('No new resources were selected with this category.').show();
+		}
+
+		setTimeout(() => { $('#categoryAddMessage').hide() }, 2000);
+	});
+	// end select resources by category
+
 
     var $sidebar   = $(".anchor-links-sidebar > .sidebar-sticky > ul");
     var maxW = 767;
