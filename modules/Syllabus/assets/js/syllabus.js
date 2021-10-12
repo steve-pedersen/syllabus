@@ -193,6 +193,7 @@
 			$('#checkIcon'+id).show();
 		} else {
 			$('#checkIcon'+id).hide();
+			$(this).parents('.resource-card').removeClass('border-warning');
 		}
     });
     var templateId = $('#templateId input[name="template"]');
@@ -231,12 +232,16 @@
 			if (checked && tagIdList.includes(tagId)) {
 				if ($(input).prop('disabled') !== true) {
 					$(input).attr('checked', true);
+					$(input).prop('checked', true);
+					$(em).parent().addClass('border-warning');
 					$('#checkIcon' + $(em).attr('id')).show();
 					total += 1;
 				}
 			} else if (!checked && tagIdList.includes(tagId)) {
 				if ($(input).prop('disabled') !== true) {
 					$(input).attr('checked', false);
+					$(input).prop('checked', false);
+					$(em).parent().removeClass('border-warning');
 					$('#checkIcon' + $(em).attr('id')).hide();
 					total += 1;
 				}
@@ -259,7 +264,11 @@
 				$('#categoryAddMessage').text(total + ' resources unselected').show();
 			}				
 		} else {
-			$('#categoryAddMessage').text('No new resources were selected with this category.').show();
+			if (checked) {
+				$('#categoryAddMessage').text('No new resources were selected with this category.').show();
+			} else {
+				$('#categoryAddMessage').text('No new resources were unselected with this category.').show();
+			}
 		}
 		setTimeout(() => { $('#categoryAddMessage').hide(1000) }, 2000);
 	});

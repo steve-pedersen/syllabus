@@ -196,7 +196,7 @@
             {if $i > 0 && ($i % 3) == 0}
             {/if}
     <div class="col-xl-4 col-lg-6 col-md-12 mb-4">
-        <div class="card h-100">
+        <div class="card resource-card h-100">
             <div class="card-body campus-resource-input" id="{$i}" data-id="{$campusResource->id}" data-tags-ids="{$campusResource->getTagListString(true)}">
                 <label class="form-check-label mt-0 pt-0" for="overlayCheck{$i}">
                 <div class="mr-auto text-left mt-0">
@@ -213,7 +213,7 @@
                         <h5 class="card-title" id="title{$i}">{$campusResource->title|truncate:50}{if $campusResource->abbreviation} <small>({$campusResource->abbreviation})</small>{/if}</h5>
                         <div class="wrap pb-2"><div class="left"></div><div class="right"></div></div>
                         <div class="card-text text-muted" id="text{$i}">
-                            {$campusResource->description|truncate:200|allow_basic_html}
+                            {$campusResource->description|truncate:175|allow_basic_html}
                         </div>
                         <div class="w-100 d-block dont-break-out">
                             <span id="url{$i} text-truncate">{l text="{$campusResource->url}" href=$campusResource->url}</span>
