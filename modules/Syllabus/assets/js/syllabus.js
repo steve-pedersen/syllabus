@@ -258,10 +258,11 @@
 		}
 
 		if (total > 0) {
+			let pluralOrSingular = total === 1 ? 'resource' : 'resources';
 			if (checked) {
-				$('#categoryAddMessage').text(total + ' resources selected').show();
+				$('#categoryAddMessage').text(`${total} ${pluralOrSingular} selected`).show();
 			} else {
-				$('#categoryAddMessage').text(total + ' resources unselected').show();
+				$('#categoryAddMessage').text(`${total} ${pluralOrSingular} unselected`).show();
 			}				
 		} else {
 			if (checked) {
@@ -270,7 +271,7 @@
 				$('#categoryAddMessage').text('No new resources were unselected with this category.').show();
 			}
 		}
-		setTimeout(() => { $('#categoryAddMessage').hide(2000) }, 3000);
+		setTimeout(() => { $('#categoryAddMessage').hide("slow") }, 2000);
 	});
 	// end select resources by category
 
