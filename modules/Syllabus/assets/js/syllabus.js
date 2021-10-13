@@ -186,6 +186,7 @@
 		$(this).find('[id^=overlayCheck]:checked').each(function(i, em) {
 			$(em).click();
 		});
+		$('.resource-category input').attr('checked', false).prop('checked', false);
 	});
     $('[id^=overlayCheck]').on('change', function (e) {
 		var id = $(this).attr('data-index');
