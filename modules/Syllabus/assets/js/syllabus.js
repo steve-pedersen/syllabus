@@ -270,7 +270,7 @@
 				$('#categoryAddMessage').text('No new resources were unselected with this category.').show();
 			}
 		}
-		setTimeout(() => { $('#categoryAddMessage').hide(1000) }, 2000);
+		setTimeout(() => { $('#categoryAddMessage').hide(2000) }, 3000);
 	});
 	// end select resources by category
 
