@@ -73,14 +73,14 @@
             </div>
         </div>
         <div class="nav nav-tabs col-sm-1 col-xs-2 toggle-edit d-inline-block border-0" role="tablist">
-            <a class="btn {if !$resource->isCustom}btn-dark{else}btn-info{/if} py-2" id="nav-edit-{$i}-tab" data-toggle="tab" href="#nav-edit-{$i}" role="tab" aria-controls="nav-edit-{$i}" aria-selected="false">
+            <a class="btn btn-sm {if !$resource->isCustom}btn-dark{else}btn-info{/if} py-2" id="nav-edit-{$i}-tab" data-toggle="tab" href="#nav-edit-{$i}" role="tab" aria-controls="nav-edit-{$i}" aria-selected="false">
             {if !$resource->isCustom}
                 View #{$i+1}
             {else}
                 Edit #{$i+1}
             {/if}
             </a>
-            <a class="btn btn-secondary py-2 active" id="nav-view-{$i}-tab" data-toggle="tab" href="#nav-view-{$i}" role="tab" aria-controls="nav-view-{$i}" aria-selected="true">Minimize #{$i+1}</a>
+            <a class="btn btn-secondary btn-sm py-2 active" id="nav-view-{$i}-tab" data-toggle="tab" href="#nav-view-{$i}" role="tab" aria-controls="nav-view-{$i}" aria-selected="true">Minimize #{$i+1}</a>
         </div>
     </div>
 </div>
