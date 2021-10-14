@@ -21,12 +21,12 @@
         $clone.attr('id', 'newSortItem'+i);
         $clone.find('.sort-order-value').attr('name',`section[real][new-${i}][sortOrder]`).val(sortOrder+1);
         $clone.find('.name').find('input').attr('name',`section[real][new-${i}][name]`).val('').text('');
-        $clone.find('.email').find('input').attr('email',`section[real][new-${i}][email]`).val('').text('');
-        $clone.find('.title').find('input').attr('title',`section[real][new-${i}][title]`).val('').text('');
-        $clone.find('.credentials').find('input').attr('credentials',`section[real][new-${i}][credentials]`).val('').text('');
-        $clone.find('.office').find('input').attr('office',`section[real][new-${i}][office]`).val('').text('');
-        $clone.find('.website').find('input').attr('website',`section[real][new-${i}][website]`).val('').text('');
-        $clone.find('.phone').find('input').attr('phone',`section[real][new-${i}][phone]`).val('').text('');
+        $clone.find('.email').find('input').attr('name',`section[real][new-${i}][email]`).val('').text('');
+        $clone.find('.title').find('input').attr('name',`section[real][new-${i}][title]`).val('').text('');
+        $clone.find('.credentials').find('input').attr('name',`section[real][new-${i}][credentials]`).val('').text('');
+        $clone.find('.office').find('input').attr('name',`section[real][new-${i}][office]`).val('').text('');
+        $clone.find('.website').find('input').attr('name',`section[real][new-${i}][website]`).val('').text('');
+        $clone.find('.phone').find('input').attr('name',`section[real][new-${i}][phone]`).val('').text('');
 
         var rowSize = null;
         var $textarea = $clone.find('.office-hours').find('textarea');
