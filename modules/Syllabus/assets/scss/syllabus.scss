@@ -73,6 +73,14 @@ html {
 	}
 }
 
+#resourceAddModal {
+	.campus-resources-overview {
+		.card-text {
+			font-size: 0.9rem;
+		}
+	}
+}
+
 #shareBtn {
 	&:hover, &:focus {
 		background-color: $alert-success-bg-color;

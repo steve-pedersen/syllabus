@@ -20,7 +20,7 @@
                
                 <input type="hidden" name="section[real][{$resourceId}][sortOrder]" value="{$sortOrder}" class="sort-order-value" id="form-field-{$i+1}-sort-order">
                 {if $linkedResource}
-                <input type="hidden" name="section[real][{$resourceId}][campusResourcesId]" value="{$resource->campusResourcesId}">
+                <input type="hidden" name="section[real][{$resourceId}][campusResourcesId]" value="{$resource->campusResourcesId}" id="linkedCampusResource{$resource->campusResourcesId}">
                 <input type="hidden" name="section[real][{$resourceId}][imageId]" value="{$resource->imageId}">
                 <input type="hidden" name="section[real][{$resourceId}][isCustom]" value="false">
                 {/if}
@@ -73,14 +73,14 @@
             </div>
         </div>
         <div class="nav nav-tabs col-sm-1 col-xs-2 toggle-edit d-inline-block border-0" role="tablist">
-            <a class="btn {if !$resource->isCustom}btn-dark{else}btn-info{/if} py-2" id="nav-edit-{$i}-tab" data-toggle="tab" href="#nav-edit-{$i}" role="tab" aria-controls="nav-edit-{$i}" aria-selected="false">
+            <a class="btn btn-sm {if !$resource->isCustom}btn-dark{else}btn-info{/if} py-2" id="nav-edit-{$i}-tab" data-toggle="tab" href="#nav-edit-{$i}" role="tab" aria-controls="nav-edit-{$i}" aria-selected="false">
             {if !$resource->isCustom}
                 View #{$i+1}
             {else}
                 Edit #{$i+1}
             {/if}
             </a>
-            <a class="btn btn-secondary py-2 active" id="nav-view-{$i}-tab" data-toggle="tab" href="#nav-view-{$i}" role="tab" aria-controls="nav-view-{$i}" aria-selected="true">Minimize #{$i+1}</a>
+            <a class="btn btn-secondary btn-sm py-2 active" id="nav-view-{$i}-tab" data-toggle="tab" href="#nav-view-{$i}" role="tab" aria-controls="nav-view-{$i}" aria-selected="true">Minimize #{$i+1}</a>
         </div>
     </div>
 </div>
@@ -153,28 +153,51 @@
   <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-xl " role="document">
     <div class="modal-content">
     <div class="modal-header">
-        <div class="modal-title d-block-inline">
-            <h5>
-            <img class="mw-10 mr-3" id="addImage" src="" alt="">
-            <span id="addTitle"></span>
+
+        <div class="d-block-inline">
+            <h5>Select campus resources by category
+                <small class="text-success ml-4" style="display:none;" id="categoryAddMessage"></small>
             </h5>
+            <!-- <span class="text-muted"><small></small></span> -->
         </div>
+
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
         <span id="addText"></span>
     </div>
-    <div class="modal-body">
 
+    <div class="p-3">
+        <div class="row">
+            <div class="col-xl-4 col-lg-6 col-md-12">
+        {foreach $tagList as $i => $tag}
+            
+            {if $i > 0 && !$tag@last && ($i % 5) == 0}
+                </div><div class="col-xl-4 col-lg-6 col-md-12">
+            {/if}                
+            <div class="form-check resource-category">
+                <input class="form-check-input" type="checkbox" value="{$tag->id}" name="tag-{$tag->id}" id="tag-{$tag->id}}">
+                <label class="form-check-label d-inline" for="tag-{$tag->id}}">
+                    {$tag->name}
+                </label>
+            </div>
+        {/foreach}
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-body">
+        <p class="text-muted">Use the syllabus editor to remove any resources that you have already saved to your syllabus.</p>
         <div class="container-fluid campus-resources-overview row">
 
 
         {foreach $campusResources as $i => $campusResource} 
+
             {if $i > 0 && ($i % 3) == 0}
             {/if}
     <div class="col-xl-4 col-lg-6 col-md-12 mb-4">
-        <div class="card h-100">
-            <div class="card-body" id="{$i}">
+        <div class="card resource-card h-100">
+            <div class="card-body campus-resource-input" id="{$i}" data-id="{$campusResource->id}" data-tags-ids="{$campusResource->getTagListString(true)}">
                 <label class="form-check-label mt-0 pt-0" for="overlayCheck{$i}">
                 <div class="mr-auto text-left mt-0">
                     <div class="form-check mt-0">
@@ -190,7 +213,7 @@
                         <h5 class="card-title" id="title{$i}">{$campusResource->title|truncate:50}{if $campusResource->abbreviation} <small>({$campusResource->abbreviation})</small>{/if}</h5>
                         <div class="wrap pb-2"><div class="left"></div><div class="right"></div></div>
                         <div class="card-text text-muted" id="text{$i}">
-                            {$campusResource->description|truncate:200|allow_basic_html}
+                            {$campusResource->description|truncate:175|allow_basic_html}
                         </div>
                         <div class="w-100 d-block dont-break-out">
                             <span id="url{$i} text-truncate">{l text="{$campusResource->url}" href=$campusResource->url}</span>
