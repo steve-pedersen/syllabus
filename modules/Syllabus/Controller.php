@@ -1301,21 +1301,16 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                 {
                     $profiles = $this->schema('Syllabus_Instructors_Profile');
                     $profileData = null;
-                    if ($data = $profiles->createInstance()->findProfileData($viewer))
+                    if ($profile = $profiles->findOne($profiles->account_id->equals($viewer->id)))
                     {
-                        if (!empty($data) && isset($data['instructor']) && (!isset($data['syllabus']) || 
-                            isset($data['syllabus']) && $data['syllabus']->id !== $syllabus->id))
+                        $profileData = $profile;
+                    }
+                    elseif ($data = $profiles->createInstance()->findProfileData($viewer))
+                    {
+                        if ((!empty($data) && isset($data['instructor']) && isset($data['syllabus']) && 
+                            $data['syllabus']->id !== $syllabus->id))
                         {
                             $profileData = $data['instructor'];
-                        }
-                    }
-                    $this->template->profileData = $profileData;
-                    foreach ($syllabusVersion->sectionVersions as $sv)
-                    {
-                        if (isset($sv->course_id))
-                        {
-                            $this->template->defaultInstructor = $viewer;
-                            break;
                         }
                     }
 
@@ -1323,8 +1318,10 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
                     if ($syllabusVersion->getCourseInfoSection() && $syllabusVersion->getCourseInfoSection()->resolveSection() && $syllabusVersion->getCourseInfoSection()->resolveSection()->classDataCourseSection)
                     {
                         $cdCourse = $syllabusVersion->getCourseInfoSection()->resolveSection()->classDataCourseSection;
-                        $this->template->instructorsProfiles = $this->getCourseInstructorProfiles($cdCourse);
+                        $this->template->instructorProfiles = $this->getCourseInstructorProfiles($cdCourse);
                     }
+
+                    $this->template->profileData = $profileData;
                 }
                 elseif ($realSectionClass === 'Syllabus_Resources_Resources')
                 {

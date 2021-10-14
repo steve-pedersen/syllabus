@@ -21,12 +21,16 @@
         $clone.attr('id', 'newSortItem'+i);
         $clone.find('.sort-order-value').attr('name',`section[real][new-${i}][sortOrder]`).val(sortOrder+1);
         $clone.find('.name').find('input').attr('name',`section[real][new-${i}][name]`).val('').text('');
-        $clone.find('.email').find('input').attr('email',`section[real][new-${i}][email]`).val('').text('');
-        $clone.find('.title').find('input').attr('title',`section[real][new-${i}][title]`).val('').text('');
-        $clone.find('.credentials').find('input').attr('credentials',`section[real][new-${i}][credentials]`).val('').text('');
-        $clone.find('.office').find('input').attr('office',`section[real][new-${i}][office]`).val('').text('');
-        $clone.find('.website').find('input').attr('website',`section[real][new-${i}][website]`).val('').text('');
-        $clone.find('.phone').find('input').attr('phone',`section[real][new-${i}][phone]`).val('').text('');
+        $clone.find('.email').find('input').attr('name',`section[real][new-${i}][email]`).val('').text('');
+        $clone.find('.title').find('input').attr('name',`section[real][new-${i}][title]`).val('').text('');
+        $clone.find('.credentials').find('input').attr('name',`section[real][new-${i}][credentials]`).val('').text('');
+        $clone.find('.office').find('input').attr('name',`section[real][new-${i}][office]`).val('').text('');
+        $clone.find('.website').find('input').attr('name',`section[real][new-${i}][website]`).val('').text('');
+        $clone.find('.phone').find('input').attr('name',`section[real][new-${i}][phone]`).val('').text('');
+
+        $clone.find('.profile-image-container').find('select').attr('id', `instructor-new-${i}`).attr('name', `section[real][new-${i}][image_id]`);
+        $clone.find('.image-container').find('.card').removeClass(`profile-cards-instructor-new-${i-1}`).addClass(`profile-cards-instructor-new-${i}`).hide();
+        $clone.find('.image-container').find('img').attr('id', `instructor-new-${i}-image`);
 
         var rowSize = null;
         var $textarea = $clone.find('.office-hours').find('textarea');
@@ -55,6 +59,19 @@
         $textarea.ckeditor(config);
 
         $itemToClone.after($clone);
+
+
+        $clone.find('.profile-image-selector').on('change', function (e) {
+          let instructorId = $(this).attr('id');
+          let optionId = this.options[this.selectedIndex].getAttribute('id');
+          console.log(instructorId, optionId);
+          $clone.find(`.profile-cards-${instructorId}`).hide();
+          if (this.value != '' || optionId) {    
+            console.log($clone.find(`.profile-cards-${instructorId}#${optionId}-card`));
+            $clone.find(`.profile-cards-${instructorId}#${optionId}-card`).show();
+          }
+
+        });
       }
 
     });
@@ -77,10 +94,11 @@
 
     $('.profile-image-selector').on('change', function (e) {
       let instructorId = $(this).attr('id');
+      console.log(instructorId);
       let optionId = this.options[this.selectedIndex].getAttribute('id');
-      $(`.profile-cards-${instructorId}`).hide();
+      $(this).parents('.profile-image-container').find(`.profile-cards-${instructorId}`).hide();
       if (this.value != '' || optionId) {    
-        $(`.profile-cards-${instructorId}#${optionId}-card`).show();
+        $(this).parents('.profile-image-container').find(`.profile-cards-${instructorId}#${optionId}-card`).show();
       }
 
     });
