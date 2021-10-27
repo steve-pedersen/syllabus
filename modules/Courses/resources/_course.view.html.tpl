@@ -44,13 +44,6 @@
 					{$sched.info.start_time} to {$sched.info.end_time}
 				</dd>
 			</dl>
-<!-- 			<dl class="row mb-0">
-				<dt class="col-xl-3 col-lg-4 col-md-5 col-sm-12">Schedule</dt>
-				<dd class="col-xl-9 col-lg-8 col-md-7 col-sm-12">
-					<strong class="mr-2">{$sched.info.stnd_mtg_pat}</strong> 
-					{$sched.info.start_time} to {$sched.info.end_time}
-				</dd>
-			</dl> -->
 			{/foreach}
 		</dd>
 	</dl>
