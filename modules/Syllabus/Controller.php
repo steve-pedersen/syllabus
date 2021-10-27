@@ -1437,6 +1437,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
 
         $hasCourseSection = false;
+        $csId = null;
         $syllabusSectionVersions = $syllabusVersion->getSectionVersionsWithExt(true);
         foreach ($syllabusSectionVersions as $sv)
         {
@@ -1444,6 +1445,19 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             if ($sv->extension->getExtensionKey() === 'course_id' && isset($sv->resolveSection()->externalKey))
             {
                 $hasCourseSection = true;
+                $csId = $sv->resolveSection()->externalKey;
+            }
+        }
+
+        if ($hasCourseSection)
+        {
+            $scheduleSchema = $this->schema('Syllabus_ClassData_CourseSchedule');
+            $cond = $scheduleSchema->course_section_id->equals($csId)->andIf($scheduleSchema->userDeleted->isFalse());
+            $scheduleInfo = $scheduleSchema->findOne($cond);
+            if ($scheduleInfo)
+            {
+                $this->template->courseSchedule = $scheduleInfo;
+                $this->template->scheduleData = unserialize($scheduleInfo->schedules);
             }
         }
 
@@ -1828,6 +1842,18 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
             $this->addBreadcrumb('syllabus/'.$syllabus->id.'/view', $syllabusVersion->title);    
         }
 
+        if ($syllabus->courseSection)
+        {
+            $scheduleSchema = $this->schema('Syllabus_ClassData_CourseSchedule');
+            $cond = $scheduleSchema->course_section_id->equals($syllabus->courseSection->id)->andIf($scheduleSchema->userDeleted->isFalse());
+            $scheduleInfo = $scheduleSchema->findOne($cond);
+            if ($scheduleInfo)
+            {
+                $this->template->courseSchedule = $scheduleInfo;
+                $this->template->scheduleData = unserialize($scheduleInfo->schedules);
+            }
+        }
+
         $this->template->token = $token;
         $this->template->syllabus = $syllabus;
         $this->template->syllabusVersion = $syllabusVersion;
@@ -1842,6 +1868,18 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
 
         $this->setExportTemplate();
         $this->setPageTitle('Export Syllabus');
+
+        if ($syllabus->courseSection)
+        {
+            $scheduleSchema = $this->schema('Syllabus_ClassData_CourseSchedule');
+            $cond = $scheduleSchema->course_section_id->equals($syllabus->courseSection->id)->andIf($scheduleSchema->userDeleted->isFalse());
+            $scheduleInfo = $scheduleSchema->findOne($cond);
+            if ($scheduleInfo)
+            {
+                $this->template->courseSchedule = $scheduleInfo;
+                $this->template->scheduleData = unserialize($scheduleInfo->schedules);
+            }
+        }
 
         $this->template->syllabus = $syllabus;
         $this->template->syllabusVersion = $syllabusVersion;
@@ -2057,6 +2095,18 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         }
 
         $this->saveAccessLog($viewer, $syllabus);
+
+        if ($syllabus->courseSection)
+        {
+            $scheduleSchema = $this->schema('Syllabus_ClassData_CourseSchedule');
+            $cond = $scheduleSchema->course_section_id->equals($syllabus->courseSection->id)->andIf($scheduleSchema->userDeleted->isFalse());
+            $scheduleInfo = $scheduleSchema->findOne($cond);
+            if ($scheduleInfo)
+            {
+                $this->template->courseSchedule = $scheduleInfo;
+                $this->template->scheduleData = unserialize($scheduleInfo->schedules);
+            }
+        }
 
         $this->template->tempLink = $tempLink;
         $this->template->token = $token;

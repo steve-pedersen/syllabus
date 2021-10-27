@@ -16,12 +16,30 @@ class Syllabus_ClassData_CronJob extends Bss_Cron_Job
             $service->importOrganizations();
 
             $semesters = $this->schema('Syllabus_Admin_Semester');
-            $activeSemesterCodes = $semesters->findValues('internal', $semesters->active->isTrue());
+            $activeSemesterCodes = $semesters->findValues('internal', $semesters->active->isTrue()->andIf($semesters->endDate->afterOrEquals(new DateTime('-1 year'))));
 
             foreach ($activeSemesterCodes as $semesterCode)
             {
                 $service->import($semesterCode);
             }
+
+            // import schedule info
+            foreach ($semesterCodes as $semesterCode)
+            {
+                $rs = pg_query("
+                    SELECT user_id FROM syllabus_classdata_enrollments
+                    WHERE year_semester = '{$semesterCode}' AND role = 'instructor' 
+                ");                
+
+                $instructors = [];
+                while (($row = pg_fetch_row($rs)))
+                {
+                    $instructors[$row[0]] = $row[0];
+                }
+                
+                $service->importSchedules($semesterCode, $instructors);
+            }
+
 
             return true;
         }
