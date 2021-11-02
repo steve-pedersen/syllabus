@@ -147,6 +147,9 @@
                             '</button>' +
                         '</div>'
                     );
+                    setTimeout(() => {
+                        $('#closeSortAlert').click();
+                    }, 3000);
                 }
             });
         }
