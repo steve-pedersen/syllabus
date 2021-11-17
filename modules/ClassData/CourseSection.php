@@ -138,7 +138,7 @@ class Syllabus_ClassData_CourseSection extends Bss_ActiveRecord_Base
         foreach ($user->classDataUser->enrollments as $courseSection)
         {
             // ensure same course but not same course section as the one that is calling this function.
-            if ($this->course && ($this->course->id === $courseSection->course->id) && ($this->id !== $courseSection->id))
+            if ($this->course && ($this->course->id === @$courseSection->course->id) && ($this->id !== $courseSection->id))
             {
                 if ($courseSection->syllabus)
                 {

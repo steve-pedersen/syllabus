@@ -39,6 +39,24 @@
                 <input disabled class="form-control" type="text" name="section[real][year]" value="{$realSection->year}" placeholder="Placeholder for Year">
             </div>
         </div>
+
+    {if $courseSchedule && $scheduleData}
+        <div class="form-group row">
+            <label class="col-lg-3 col-form-label form-control-label">Schedule Information</label>
+            <div class="col-lg-9">
+            {foreach $scheduleData as $sched}
+            <dl class="row mb-0">
+                <dt class="col-xl-4 col-lg-4 col-md-5 col-sm-12">{$sched.facility.description}</dt>
+                <dd class="col-xl-8 col-lg-8 col-md-7 col-sm-12">
+                    <strong class="mr-2">{$sched.info.stnd_mtg_pat|replace:'R':'Th'}</strong> 
+                    {$sched.info.start_time} to {$sched.info.end_time}
+                </dd>
+            </dl>
+            {/foreach}                
+            </div>
+        </div>
+    {/if}
+
         <div class="row mt-5 mb-2">
             <div class="col-lg-12 text-center alert alert-warning">
                 <strong>The official course information fields above can't be edited.</strong> However, you can still change the syllabus section title & introduction.

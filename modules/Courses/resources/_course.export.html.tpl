@@ -13,4 +13,15 @@
 		<dt>Description</dt>
 		<dd>{$realSection->description}</dd>
 	</dl>
+{if $courseSchedule && $scheduleData}
+	<h4>Schedule Information</h4>
+	<ul>
+	{foreach $scheduleData as $sched}
+		<li>{$sched.facility.description}  &mdash;  
+			<strong class="mr-2">{$sched.info.stnd_mtg_pat|replace:'R':'Th'}</strong> 
+			{$sched.info.start_time} to {$sched.info.end_time}
+		</li>
+	{/foreach}
+	</ul>
+{/if}
 </div>

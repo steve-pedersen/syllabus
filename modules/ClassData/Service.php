@@ -45,6 +45,45 @@ class Syllabus_ClassData_Service
         return $url . '&s=' . sha1($this->apiSecret . $url);
     }
 
+    public function getFacilities ()
+    {
+        $url = $this->signResource("facilities", []);
+        list($code, $data) = $this->request($url);
+
+        if ($code == 200)
+        {
+            return $data;
+        }
+
+        return [$code, $data];
+    }
+
+    public function getUserSchedules ($semester='', $userId='')
+    {
+        $url = $this->signResource("userschedule/$userId/semester/$semester", []);
+        list($code, $data) = $this->request($url);
+
+        if ($code == 200)
+        {
+            return $data;
+        }
+
+        return [$code, $data];
+    }
+
+    public function getSchedules ($semester='', $facilityId='')
+    {
+        $url = $this->signResource("schedules", ['term' => $semester, 'facility' => $facilityId]);
+        list($code, $data) = $this->request($url);
+
+        if ($code == 200)
+        {
+            return $data;
+        }
+
+        return [$code, $data];
+    }
+
     public function getCourseOutcomes ($courseid)
     {
         $url = $this->signResource('outcomes', ['course' => $courseid]);
@@ -188,6 +227,86 @@ class Syllabus_ClassData_Service
         list($code, $data) = $this->request($url);
 
         return [$code, $data];
+    }
+
+    public function importSchedules ($semester, $facultyList)
+    {
+        set_time_limit(0);
+        ini_set('memory_limit', '-1');  
+
+        $facultyList = is_array($facultyList) ? $facultyList : [$facultyList];
+        $ignoreKeys = ['ON', 'OFF'];
+        $scheduleSchema = $this->getSchema('Syllabus_ClassData_CourseSchedule');
+        $facultySchema = $this->getSchema('Syllabus_ClassData_User');
+        $courseSchema = $this->getSchema('Syllabus_ClassData_CourseSection');
+
+        $existingSchedules = $fetchedSchedules = [];
+        foreach ($facultyList as $facultyId)
+        {
+            $matchingSchedules = $scheduleSchema->find(
+                $scheduleSchema->allTrue(
+                    $scheduleSchema->faculty_id->equals($facultyId),
+                    $scheduleSchema->termYear->equals($semester)
+                )
+            );
+
+            $existingSchedules[$facultyId] = [];
+            $fetchedSchedules[$facultyId] = [];
+
+            foreach ($matchingSchedules as $match)
+            {
+                $existingSchedules[$facultyId][$match->course_section_id] = $match;
+            }
+
+            $result = $this->getUserSchedules($semester, $facultyId);
+
+            if (isset($result['courses']))
+            {
+                foreach ($result['courses'] as $cid => $data)
+                {
+                    $course = $courseSchema->get($cid);
+
+                    $newAdd = false;
+                    if (!isset($existingSchedules[$facultyId][$course->id]))
+                    {
+                        $schedule = $scheduleSchema->createInstance();
+                        $schedule->createdDate = new DateTime;
+                        $newAdd = true;
+                    }
+                    else
+                    {
+                        $schedule = $existingSchedules[$facultyId][$course->id];
+                    }
+
+                    $schedule->course_section_id = $course->id;
+                    $schedule->faculty_id = $facultyId;
+                    $schedule->termYear = $semester;
+                    $schedule->schedules = serialize($data['schedule']);
+                    $schedule->userDeleted = false;
+                    $schedule->save();
+
+                    $fetchedSchedules[$facultyId][$course->id] = $schedule;
+                    if ($newAdd)
+                    {
+                        $existingSchedules[$facultyId][$course->id] = $schedule;
+                    }
+                }                  
+            }
+
+        }
+
+        // user is no longer scheduled in this course
+        foreach ($existingSchedules as $instructor => $courses)
+        {
+            foreach ($courses as $courseId => $schedule)
+            {   
+                if (!isset($fetchedSchedules[$instructor][$courseId]))
+                {
+                    $schedule->userDeleted = true;
+                    $schedule->save();
+                }
+            }
+        }  
     }
 
     // TODO: implement transaction
