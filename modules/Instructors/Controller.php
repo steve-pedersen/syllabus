@@ -11,6 +11,7 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
         return [       
             '/profile/:id' => ['callback' => 'profile', ':id' => '[0-9]+'],
             '/profile/:id/upload' => ['callback' => 'upload', ':id' => '[0-9]+'],
+            '/instructors/uploadphoto' => ['callback' => 'uploadPhoto'],
         ];
     }
 
@@ -53,6 +54,108 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
         $this->template->profile = $profile;
         $this->template->account = $profileAccount;
         $this->template->profileImage = $profile ? $profile->imageSrc : $profiles->createInstance()->imageSrc;
+    }
+
+    // Used in the Instructor section edit page.
+    // Editors can either choose a pre-existing profile photo or upload a new one on the spot.
+    public function uploadPhoto ()
+    {
+        $results = [
+            'message' => 'Server error when uploading.',
+            'code' => 500,
+            'status' => 'error',
+            'success' => false,
+            'file' => $this->request->getPostParameters()
+        ];
+
+        if ($this->request->wasPostedByUser())
+        {
+            $files = $this->schema('Syllabus_Files_File');
+            $file = $files->createInstance();
+            $file->createFromRequest($this->request, 'file', false);
+
+            if ($file->isValid())
+            {
+                // $uploadedBy = (int)$this->request->getPostParameter('uploadedBy', $this->getAccount()->id);
+                $uploadedBy = (int)$this->request->getPostParameter('uploadedBy');
+                $file->uploaded_by_id = $uploadedBy;
+                $file->moveToPermanentStorage();
+                $file->save();
+
+                $instructors = $this->schema('Syllabus_Instructors_Instructor');
+                if ($instructorId = $this->request->getPostParameter('instructorId'))
+                {
+                    $instructor = $instructors->get($instructorId);
+                }
+                else
+                {
+                    $instructor = $instructors->createInstance();
+                }
+
+                $instructor->image_id = $file->id;
+                $instructor->save();
+
+                $results = [
+                    'message' => 'Success',
+                    'code' => 200,
+                    'status' => 'success',
+                    'success' => true,
+                    'fileId' => $file->id,
+                    'fileName' => $file->remoteName,
+                    'instructorId' => $instructor->id,
+                    'imageSrc' => 'files/' . $file->id . '/download'
+                ];                
+            }
+
+
+        }
+
+        // if ($this->request->wasPostedByUser())
+        // {
+        //     $files = $this->schema('Syllabus_Files_File');
+        //     $file = $files->createInstance();
+        //     $file->createFromRequest($this->request, 'file', false, self::$imageTypes);
+
+        //     if ($file->isValid())
+        //     {
+        //         // $uploadedBy = (int)$this->request->getPostParameter('uploadedBy', $this->getAccount()->id);
+        //         $uploadedBy = (int)$this->request->getPostParameter('uploadedBy');
+        //         $file->uploaded_by_id = $uploadedBy;
+        //         $file->moveToPermanentStorage();
+        //         $file->save();
+
+        //         $instructors = $this->schema('Syllabus_Instructors_Instructor');
+        //         if ($instructorId = $this->request->getPostParameter('instructorId'))
+        //         {
+        //             $instructor = $instructors->get($instructorId);
+        //         }
+        //         else
+        //         {
+        //             $instructor = $instructors->createInstance();
+        //         }
+
+        //         $instructor->image_id = $file->id;
+        //         $instructor->save();
+
+        //         $results = [
+        //             'message' => 'Your file has been uploaded.',
+        //             'status' => 'success',
+        //             'code' => 200,
+        //             'success' => true,
+        //             'instructorId' => $instructor->id,
+        //             'imageSrc' => 'files/' . $file->id . '/download'
+        //         ];
+        //     }
+        //     else
+        //     {
+        //         $messages = 'Incorrect file type or file too large.';
+        //         $results['status'] = $messages !== '' ? 400 : 422;
+        //         $results['message'] = $messages;
+        //     }
+        // }
+
+        echo json_encode($results);
+        exit;   
     }
 
     public function upload ()

@@ -1,6 +1,88 @@
 (function ($) {
   $(function () {
 
+    $('.profile-image-selector').on('change', function (e) {
+
+      let instructorId = $(this).attr('id');
+      let optionId = this.options[this.selectedIndex].getAttribute('id');
+
+      $(`.profile-cards-${instructorId}`).hide();
+      if (this.value != '' || optionId) {  
+        // $(this).parents('.profile-image-container').find(`.profile-cards-${instructorId}`).removeClass('hidden').show(); // new
+        $(`.profile-cards-${instructorId}#${optionId}-card`).removeClass('hidden').show();
+      }
+
+      instructorId = instructorId.substring(instructorId.indexOf('-')+1, instructorId.length);
+      if ($(`#instructorUploadedImage${instructorId}`).length) {
+        $(`#instructorUploadedImage${instructorId}`).hide();
+      }
+
+    });
+
+    function updateUploadedInstructorPhoto (data) {
+      // console.log(data, $(`#uploadInstructorPhoto${data.instructorId}`));
+
+      // update the instructor id on form in case it was a new instructor this was uploaded for
+      // todo: add upload to new instructor form part.
+
+      // remove image from profile selector div
+      if ($(`.instructor-${data.instructorId}-image`).length) {
+        $(`.instructor-${data.instructorId}-image`).css('display', 'none');
+      }
+      $(`#instructor-${data.instructorId}`).val(data.fileId).append(
+        `<option value="${data.fileId}" selected>${data.fileName}</option>`
+      );
+
+      // add image to upload div
+      $('#instructorUploadedImage' + data.instructorId).attr('src', data.imageSrc).show();
+
+      // clear file inputs
+      $('#uploadInstructorPhoto').find('input[name="file"]').remove();
+      $('#uploadInstructorPhoto').find('input[name="instructorId"]').remove();
+      $('#instructorPhoto' + data.instructorId).val('');
+    }
+
+    $('.submitInstructorPhoto').on('click', function (e) {
+      e.preventDefault();
+
+      var instructorId = $(this).attr('data-instructor-id');
+      var photoInput = $('#instructorPhoto' + instructorId);
+      // console.log(instructorId, photoInput);
+      if (!photoInput.val()) {
+        $(`#uploadErrorMessage${instructorId}`).css('display', 'block');
+      } else {
+
+        // ajax submit
+        $('#uploadInstructorPhoto').append(`<input type="hidden" name="file" value="${photoInput.val()}" />`);
+        $('#uploadInstructorPhoto').append(`<input type="hidden" name="instructorId" value="${instructorId}" />`);
+        var formData = new FormData(document.getElementById('uploadInstructorPhoto'));
+
+        $.ajax({
+            url: $('#uploadInstructorPhoto').attr('action'),
+            type: "POST",
+            data: formData,
+            contentType: false, // required param
+            processData: false, // required param
+            success: function(o) {
+              o = JSON.parse(o);
+              switch (o.status) {
+                case 'success':
+                  updateUploadedInstructorPhoto(o);
+                  break;
+                case 'error':
+                  // updateUploadedInstructorPhoto(o);
+                  $(`#uploadErrorMessage${instructorId}`).css('display', 'block').text('There was an error with your upload. Please save your work and reload the page.');
+                  break;
+                default:
+                  // console.log('default', o);
+                  break;
+              }
+            }
+        });
+
+      }
+    });
+
   	$('#instructorsSection #addInstructorsSectionItemBtn').on('click', function (e) {
   		e.stopPropagation();
   		e.preventDefault();
@@ -88,19 +170,6 @@
       container.css({"background-color": "#f8d7da"}).fadeTo(250, 0.1).slideUp(250, function () {
         container.detach();
       });
-    });
-
-
-
-    $('.profile-image-selector').on('change', function (e) {
-      let instructorId = $(this).attr('id');
-      console.log(instructorId);
-      let optionId = this.options[this.selectedIndex].getAttribute('id');
-      $(this).parents('.profile-image-container').find(`.profile-cards-${instructorId}`).hide();
-      if (this.value != '' || optionId) {    
-        $(this).parents('.profile-image-container').find(`.profile-cards-${instructorId}#${optionId}-card`).show();
-      }
-
     });
 
   });

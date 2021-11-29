@@ -24,6 +24,13 @@
 		<!-- ADD SECTION FORM -->
 		<form action="{$smarty.server.REQUEST_URI}" method="get" class="form" role="form" id="addSection">
 		</form>
+
+		<!-- UPLOAD INSTRUCTOR PHOTO FORM -->
+		<form action="instructors/uploadphoto" method="form" class="form" role="form" id="uploadInstructorPhoto" enctype="multipart/form-data">
+			<input type="hidden" name="uploadedBy" value="{$viewer->id}">
+			{generate_form_post_key}
+		</form>
+		<iframe id="upload_target" name="upload_target" src="#" style="width:0;height:0;border:0px solid #fff;"></iframe>
 		
 		{if !$organization && $syllabus->inDatasource && $hasCourseSection}
 		<div class="d-flex justify-content-end pb-2 pt-1 pr-2 bg-light edit-page-share">
