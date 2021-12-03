@@ -27,7 +27,7 @@
         <div class="col-md-6">
         <div class="col-md-12 p-3 bg-light">
             <h5>Choose existing profile photo for this instructor</h5>
-            <span class="text-muted mb-3">You can update your own photo by editing your <a href="profile/{$viewer->id}">profile</a></span>
+            <span class="text-muted mb-3">You can update your own photo by <a href="profile/{$viewer->id}"><strong>editing your profile</strong></a></span>
             <select class="form-control profile-image-selector" id="instructor-{$instructorId}" name="section[real][{$instructorId}][image_id]">
                 <option value="" {if !$instructor->image}selected{/if}>Select an instructor / image</option>
                 {foreach $instructorProfiles as $profile}
@@ -49,7 +49,7 @@
                     {else}
                     <div class="card-body">
                         <p class="">No profile image uploaded for this instructor.</p>
-                        <p>You can update your own photo by editing your <a href="profile/{$viewer->id}">profile</a></p>
+                        <p>You can update your own photo by <a href="profile/{$viewer->id}"><strong>editing your profile</strong></a></p>
                     </div>
                     {/if}
                 </div>
@@ -59,7 +59,7 @@
         <div class="col-md-6 bg-light">
             <div class="col-md-12 p-3 ">
                 <h5>Upload a new photo for this instructor</h5>
-                <span class="text-muted mb-3">If this instructor does not have a profile photo already you can upload one here.</span>
+                <span class="text-muted mb-3">If this instructor does not have a profile photo you can upload an image to be used for this syllabus.</span>
                 <input type="hidden" name="instructorId" value="{$instructorId}">
                 <div class="mt-3">
                     <input type="file" name="file" id="instructorPhoto{$instructorId}" class="box__file" form="uploadInstructorPhoto" />
@@ -171,13 +171,18 @@
 <input type="hidden" name="section[real][{$instructorId}][sortOrder]" value="{$sortOrder}" class="sort-order-value" id="form-field-{$sortOrder}-sort-order">
 
     <div class="form-row p-3 row-3 profile-image-container">
+        <div class="col-md-6">
         <div class="col-md-12 p-3 bg-light">
             <h5>Choose existing profile photo for this instructor</h5>
-            <span class="text-muted mb-3">You can update your own photo by editing your <a href="profile/{$viewer->id}">profile</a></span>
+            <span class="text-muted mb-3">You can update your own photo by <a href="profile/{$viewer->id}"><strong>editing your profile</strong></a></span>
             <select class="form-control profile-image-selector" id="instructor-{$instructorId}" name="section[real][{$instructorId}][image_id]">
                 <option value="" selected>Select an instructor</option>
                 {foreach $instructorProfiles as $profile}
-                <option value="{$profile->image_id}" id="profile-{$profile->id}">{$profile->name}</option>
+                {if $profile->image}
+                    <option value="{$profile->image_id}" id="profile-{$profile->id}">{$profile->name}</option>
+                {else}
+                    <option value="{$profile->image_id}" id="profile-{$profile->id}" disabled>{$profile->name} (No profile image)</option>
+                {/if}
                 {/foreach}
             </select>
         </div>
@@ -191,11 +196,31 @@
                     {else}
                     <div class="card-body">
                         <p class="">No profile image uploaded for this instructor.</p>
-                        <p>You can update your own photo by editing your <a href="profile/{$viewer->id}">profile</a></p>
+                        <p>You can update your own photo by <a href="profile/{$viewer->id}"><strong>editing your profile</strong></a></p>
                     </div>
                     {/if}
                 </div>
             {/foreach}
+        </div>
+        </div>
+        <div class="col-md-6 bg-light">
+            <div class="col-md-12 p-3 ">
+                <h5>Upload a new photo for this instructor</h5>
+                <span class="text-muted mb-3">If this instructor does not have a profile photo already you can upload one here.</span>
+                <!-- <input type="hidden" name="instructorId" value="{$instructorId}"> -->
+                <div class="mt-3">
+                    <input type="file" name="file{$instructorId}" id="instructorPhoto{$instructorId}" class="box__file" form="uploadInstructorPhoto" />
+                    <button class="box__button btn btn-primary mt-3 submitInstructorPhoto new" data-instructor-id="{$instructorId}" type="submit" form="uploadInstructorPhoto">Upload Now</button>
+                    <span class="text-danger mt-2" id="uploadErrorMessage{$instructorId}" style="display:none;" >You must choose a file to upload.</span>
+                </div>
+                <div class="mt-2">
+                    {if $instructor->image && !$usingProfilePhoto}
+                    <img src="{$instructor->imageSrc}" style="max-width:200px;" class="img-fluid uploadedImage{$instructorId}" id="instructorUploadedImage{$instructorId}">
+                    {else}
+                    <img src="" style="max-width:200px; display:none;" class="img-fluid uploadedImage{$instructorId}" id="instructorUploadedImage{$instructorId}">
+                    {/if}
+                </div>
+            </div>
         </div>
     </div>
 

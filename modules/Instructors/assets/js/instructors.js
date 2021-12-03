@@ -20,11 +20,6 @@
     });
 
     function updateUploadedInstructorPhoto (data) {
-      // console.log(data, $(`#uploadInstructorPhoto${data.instructorId}`));
-
-      // update the instructor id on form in case it was a new instructor this was uploaded for
-      // todo: add upload to new instructor form part.
-
       // remove image from profile selector div
       if ($(`.instructor-${data.instructorId}-image`).length) {
         $(`.instructor-${data.instructorId}-image`).css('display', 'none');
@@ -47,7 +42,11 @@
 
       var instructorId = $(this).attr('data-instructor-id');
       var photoInput = $('#instructorPhoto' + instructorId);
-      // console.log(instructorId, photoInput);
+
+      if (instructorId.includes('new-')) {
+        photoInput.attr('name', 'file');
+      }
+
       if (!photoInput.val()) {
         $(`#uploadErrorMessage${instructorId}`).css('display', 'block');
       } else {
@@ -65,6 +64,7 @@
             processData: false, // required param
             success: function(o) {
               o = JSON.parse(o);
+              console.log(o);
               switch (o.status) {
                 case 'success':
                   updateUploadedInstructorPhoto(o);
@@ -113,6 +113,9 @@
         $clone.find('.profile-image-container').find('select').attr('id', `instructor-new-${i}`).attr('name', `section[real][new-${i}][image_id]`);
         $clone.find('.image-container').find('.card').removeClass(`profile-cards-instructor-new-${i-1}`).addClass(`profile-cards-instructor-new-${i}`).hide();
         $clone.find('.image-container').find('img').attr('id', `instructor-new-${i}-image`);
+
+        $itemToClone.find('input[name="file"]').attr('name', `filenew-${i-1}`).val();
+        $clone.find(`input[name^="file"]`).attr('id', `#instructorPhotonew-${i}`).attr('name',`file`).val('');
 
         var rowSize = null;
         var $textarea = $clone.find('.office-hours').find('textarea');

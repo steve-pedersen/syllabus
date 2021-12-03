@@ -3160,7 +3160,7 @@ class Syllabus_Syllabus_Controller extends Syllabus_Master_Controller {
         {
             $courseSection = $syllabus->courseSection;
         }
-        elseif ($sectionVersion = $syllabus->latestVersion->getCourseInfoSection())
+        elseif ($syllabus->latestVersion && ($sectionVersion = $syllabus->latestVersion->getCourseInfoSection()))
         {
             $courseSection = $sectionVersion->resolveSection()->classDataCourseSection;
         }

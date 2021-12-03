@@ -65,7 +65,7 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
             'code' => 500,
             'status' => 'error',
             'success' => false,
-            'file' => $this->request->getPostParameters()
+            // 'file' => $this->request->getPostParameters()
         ];
 
         if ($this->request->wasPostedByUser())
@@ -76,19 +76,21 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
 
             if ($file->isValid())
             {
-                // $uploadedBy = (int)$this->request->getPostParameter('uploadedBy', $this->getAccount()->id);
                 $uploadedBy = (int)$this->request->getPostParameter('uploadedBy');
                 $file->uploaded_by_id = $uploadedBy;
                 $file->moveToPermanentStorage();
                 $file->save();
 
+                $isNew = false;
                 $instructors = $this->schema('Syllabus_Instructors_Instructor');
-                if ($instructorId = $this->request->getPostParameter('instructorId'))
+                $instructorId = $this->request->getPostParameter('instructorId');
+                if (is_numeric($instructorId))
                 {
                     $instructor = $instructors->get($instructorId);
                 }
                 else
                 {
+                    $isNew = true;
                     $instructor = $instructors->createInstance();
                 }
 
@@ -100,59 +102,14 @@ class Syllabus_Instructors_Controller extends Syllabus_Master_Controller
                     'code' => 200,
                     'status' => 'success',
                     'success' => true,
+                    'file' => $this->request->getPostParameter('file'),
                     'fileId' => $file->id,
                     'fileName' => $file->remoteName,
-                    'instructorId' => $instructor->id,
+                    'instructorId' => ($isNew ? $instructorId : $instructor->id),
                     'imageSrc' => 'files/' . $file->id . '/download'
                 ];                
             }
-
-
         }
-
-        // if ($this->request->wasPostedByUser())
-        // {
-        //     $files = $this->schema('Syllabus_Files_File');
-        //     $file = $files->createInstance();
-        //     $file->createFromRequest($this->request, 'file', false, self::$imageTypes);
-
-        //     if ($file->isValid())
-        //     {
-        //         // $uploadedBy = (int)$this->request->getPostParameter('uploadedBy', $this->getAccount()->id);
-        //         $uploadedBy = (int)$this->request->getPostParameter('uploadedBy');
-        //         $file->uploaded_by_id = $uploadedBy;
-        //         $file->moveToPermanentStorage();
-        //         $file->save();
-
-        //         $instructors = $this->schema('Syllabus_Instructors_Instructor');
-        //         if ($instructorId = $this->request->getPostParameter('instructorId'))
-        //         {
-        //             $instructor = $instructors->get($instructorId);
-        //         }
-        //         else
-        //         {
-        //             $instructor = $instructors->createInstance();
-        //         }
-
-        //         $instructor->image_id = $file->id;
-        //         $instructor->save();
-
-        //         $results = [
-        //             'message' => 'Your file has been uploaded.',
-        //             'status' => 'success',
-        //             'code' => 200,
-        //             'success' => true,
-        //             'instructorId' => $instructor->id,
-        //             'imageSrc' => 'files/' . $file->id . '/download'
-        //         ];
-        //     }
-        //     else
-        //     {
-        //         $messages = 'Incorrect file type or file too large.';
-        //         $results['status'] = $messages !== '' ? 400 : 422;
-        //         $results['message'] = $messages;
-        //     }
-        // }
 
         echo json_encode($results);
         exit;   
