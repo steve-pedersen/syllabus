@@ -50,7 +50,7 @@
 			{/if}
 
 			<div class="editor-metadata">
-				<a class="d-block bg-white border p-2 section-collapse-link- {if !$editMetadata && $syllabus->inDataSource}collapsed{/if}" 
+				<a class="d-block bg-white border p-2 section-collapse-link {if !$editMetadata && $syllabus->inDataSource}collapsed{/if}" 
 					data-toggle="collapse" href="#metadataCollapse" role="button" aria-expanded="false" aria-controls="metadataCollapse">			
 					<div class="text-left d-inline-block" id="metadataHeading"> 
 						<span class="mb-0 section-title text-dark">
@@ -59,7 +59,7 @@
 						 - <small class="text-dark">Information about this syllabus that is not displayed inside the syllabus itself <span class="ml-3">(Click to hide/show)</span></small>
 					</div>
 				</a>
-				<div class="collapse {if $editMetadata || !$syllabus->inDataSource}show{/if} section-collapsible" id="metadataCollapse">
+				<div class="show section-collapsible" id="metadataCollapse">
 					{if $editMetadata || !$syllabus->inDataSource}
 						{include file="partial:_metadata.edit.html.tpl"}
 					{else}
