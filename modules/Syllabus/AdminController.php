@@ -8,6 +8,7 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_Controller
             'admin/templates/university' => ['callback' => 'universityTemplates'],
             'admin/syllabus/resources' => ['callback' => 'campusResources'],
             'admin/syllabus/guidedocs' => ['callback' => 'guideDocs'],
+            'admin/syllabus/statistics'=> ['callback' => 'statistics'],
         ];
     }
 
@@ -16,6 +17,121 @@ class Syllabus_Syllabus_AdminController extends Syllabus_Master_Controller
 		parent::beforeCallback($callback);
 		$this->requirePermission('admin');
 	}
+
+    public function statistics ()
+    {
+        $this->template->addBreadcrumb('admin', 'Admin');
+
+        $_semesters = $this->schema('Syllabus_Admin_Semester');
+
+        if ($code = $this->request->getQueryParameter('semester'))
+        {
+            $year = $code[0].'0'.$code[1].$code[2];
+            $semester = $code[3];
+        }
+        else
+        {
+            list($year, $semester) = Syllabus_Admin_Semester::guessActiveSemester(false);
+            $code = $year . $semester;
+            $year = $year[0].'0'.$year[1].$year[2];
+        }
+        $activeSemester = $_semesters->findOne($_semesters->internal->equals($code));
+        $semesterOnline = 0;
+        $totalOnline = 0;
+        $semesterFiles = 0;
+        $totalFiles = 0;
+        $semesterInstructors = 0;
+        $totalInstructors = 0;
+
+        // PUBLISHED ONLINE SYLLABI
+        $rs = pg_query("
+            select count(s.*) from syllabus_syllabus s, syllabus_published_syllabus p, syllabus_classdata_course_sections c where 
+                p.share_level = 'all' and 
+                p.syllabus_id = s.id and 
+                (s.id = c.syllabus_id or s.course_section_id = c.id) and 
+                s.file_id is null and
+                c.semester = '{$semester}' and 
+                c.year = '{$year}';
+        ");
+        while (($row = pg_fetch_row($rs)))
+        {
+            $semesterOnline = $row[0][0];
+        }
+        $rs = pg_query("
+            select count(s.*) from syllabus_syllabus s, syllabus_published_syllabus p, syllabus_classdata_course_sections c where 
+                p.share_level = 'all' and 
+                p.syllabus_id = s.id and 
+                (s.id = c.syllabus_id or s.course_section_id = c.id) and 
+                s.file_id is null;
+        ");
+        while (($row = pg_fetch_row($rs)))
+        {
+            $totalOnline = $row[0][0];
+        }       
+
+        // PUBLISHED FILE SYLLABI
+        $rs = pg_query("
+            select count(s.*) from syllabus_syllabus s, syllabus_published_syllabus p, syllabus_classdata_course_sections c where 
+                p.share_level = 'all' and 
+                p.syllabus_id = s.id and 
+                (s.id = c.syllabus_id or s.course_section_id = c.id) and 
+                s.file_id is null and
+                c.semester = '{$semester}' and 
+                c.year = '{$year}';
+        ");
+        while (($row = pg_fetch_row($rs)))
+        {
+            $semesterFiles = $row[0][0];
+        }
+        $rs = pg_query("
+            select count(s.*) from syllabus_syllabus s, syllabus_published_syllabus p, syllabus_classdata_course_sections c where 
+                p.share_level = 'all' and 
+                p.syllabus_id = s.id and 
+                (s.id = c.syllabus_id or s.course_section_id = c.id) and 
+                s.file_id is not null;
+        ");
+        while (($row = pg_fetch_row($rs)))
+        {
+            $totalFiles = $row[0][0];
+        }    
+
+        // INSTRUCTORS
+        $rs = pg_query("
+            select count(distinct(s.created_by_id)) 
+            from syllabus_syllabus s, syllabus_published_syllabus p, syllabus_classdata_course_sections c where 
+                p.share_level = 'all' and 
+                p.syllabus_id = s.id and 
+                (s.id = c.syllabus_id or s.course_section_id = c.id) and 
+                c.semester = '{$semester}' and 
+                c.year = '{$year}';
+        ");
+        while (($row = pg_fetch_row($rs)))
+        {
+            $semesterInstructors = $row[0][0];
+        }
+        $rs = pg_query("
+            select count(distinct(s.created_by_id)) 
+            from syllabus_syllabus s, syllabus_published_syllabus p, syllabus_classdata_course_sections c where 
+                p.share_level = 'all' and 
+                p.syllabus_id = s.id and 
+                (s.id = c.syllabus_id or s.course_section_id = c.id);
+        ");
+        while (($row = pg_fetch_row($rs)))
+        {
+            $totalInstructors = $row[0][0];
+        }    
+        
+        $this->template->semesterOnline = $semesterOnline;
+        $this->template->totalOnline = $totalOnline;
+        $this->template->semesterFiles = $semesterFiles;
+        $this->template->totalFiles = $totalFiles;
+        $this->template->semesterInstructors = $semesterInstructors;
+        $this->template->totalInstructors = $totalInstructors;
+        $this->template->semesters = $_semesters->getAll(['orderBy' => '-internal']);
+        $this->template->activeSemester = $activeSemester;
+        $this->template->display = $activeSemester->display;
+        $this->template->internal = $activeSemester->internal;
+    }
 
     public function universityTemplates ()
     {
