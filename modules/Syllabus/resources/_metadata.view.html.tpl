@@ -13,7 +13,7 @@
                     This syllabus is being used for <strong>{$courseInfoSection->classDataCourseSection->getFullSummary()}</strong>.{if $activeStudents > 0} <br>Approximately {$activeStudents} out of {count($courseInfoSection->classDataCourseSection->enrollments) - 1} students have accessed the syllabus this semester.{/if}
                 </p>
                 <p>
-                    <a href="{$courseInfoSection->classDataCourseSection->id}/logs">View access logs for this syllabus</a>
+                    <a href="syllabus/{$courseInfoSection->classDataCourseSection->id}/logs">View access logs for this syllabus</a>
                 </p>
             {/if}
         {/if}
