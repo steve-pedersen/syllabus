@@ -2,7 +2,7 @@
 {assign var=extName value=$ext::getExtensionName()}
 {assign var=realSectionClass value=$ext->getRecordClass()}
 {assign var=sectionVersionId value=$sectionVersion->id}
-{assign var=editable value=(!$sectionVersion->readOnly || ($sectionVersion->readOnly && $sectionVersion->canEditReadOnly))}
+{assign var=editable value=($pAdmin || !$sectionVersion->readOnly || ($sectionVersion->readOnly && $sectionVersion->canEditReadOnly))}
 {assign var=sortOrder value="{str_pad($i+1, 3, '0', STR_PAD_LEFT)}"}
 
 <div class="sort-item editor-{$extName} mt-3 {if !$editable}text-muted{/if}" id="section{$extName}{$i}">
